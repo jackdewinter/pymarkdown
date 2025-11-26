@@ -36,7 +36,7 @@ jobs:
       id: set-matrix
       run: |
         echo "Branch Name: ${GITHUB_REF_NAME}"
-        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$GITHUB_REF_NAME) or (.runOn=="current")) )' .github/workflows/matrix_includes.json)
+        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$branchName) or (.runOn=="current")) )' .github/workflows/matrix_includes.json)
         echo "Matrix: $matrix"
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
@@ -60,7 +60,7 @@ jobs:
       id: set-matrix
       run: |
         echo "Branch Name: ${GITHUB_REF_NAME}"
-        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$GITHUB_REF_NAME) or (.runOn=="previous")) )' .github/workflows/matrix_includes.json)
+        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$branchName) or (.runOn=="previous")) )' .github/workflows/matrix_includes.json)
         echo "Matrix: $matrix"
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
