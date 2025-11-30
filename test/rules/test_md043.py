@@ -781,6 +781,43 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star() -> No
         expected_output, expected_error, expected_return_code
     )
 
+@pytest.mark.rules
+def test_md043_bad_double_heading_setext_with_double_rule_unmatching_1_star() -> None:
+    """
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern that does not match the first, followed by wildcard.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md043", "good_double_heading_setext.md"
+    )
+    supplied_arguments = [
+        "--set",
+        "plugins.md043.headings=# A single heading,*",
+        "--strict-config",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:1:1: "
+        + "MD043: Required heading structure "
+        + "[Wildcard heading match failed.] (required-headings,required-headers)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_with_double_rule_matching_star_2() -> None:
