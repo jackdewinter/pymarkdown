@@ -1086,6 +1086,988 @@ title: abc
         expected_output, expected_error, expected_return_code
     )
 
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_no_pragma() -> None:
+    """
+    Test to make sure this rule handles a single trigger of this rule without any containers
+    and without any pragmas.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """#Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single trigger of this rule without any containers
+    and with a single pragma on the line before.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+#Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single trigger of this rule without any containers
+    and with a single pragma two lines before with a blank line between.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+#Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_list_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """1. #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_list_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+1. #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_list_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+1. #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_block_quote_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """> #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_block_quote_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+> #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_single_trigger_within_block_quote_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+> #Heading 1
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_no_pragma() -> None:
+    """
+    Test to make sure this rule handles a double trigger of this rule without any containers
+    and without any pragmas.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """#Heading 1
+more text here
+##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a double trigger of this rule without any containers
+    and with a single pragma on the line before.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+#Heading 1
+more text here
+<!-- pyml disable-next-line line-length -->
+##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single trigger of this rule without any containers
+    and with a single pragma two lines before with a blank line between.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+#Heading 1
+more text here
+<!-- pyml disable-next-line line-length -->
+
+##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_list_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """1. #Heading 1
+   more text here
+   ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_list_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+1. #Heading 1
+   more text here
+<!-- pyml disable-next-line line-length -->
+   ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_list_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+1. #Heading 1
+   more text here
+<!-- pyml disable-next-line line-length -->
+
+   ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_block_quote_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """> #Heading 1
+> more text here
+> ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_block_quote_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+> #Heading 1
+> more text here
+<!-- pyml disable-next-line line-length -->
+> ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_double_trigger_within_block_quote_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+> #Heading 1
+> some text
+<!-- pyml disable-next-line line-length -->
+
+> ##Heading 2
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "-d", "md028,md041",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_no_pragma() -> None:
+    """
+    Test to make sure this rule handles a triple trigger of this rule without any containers
+    and without any pragmas.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """#Heading 1
+more text here
+##Heading 2
+more text here
+###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a double trigger of this rule without any containers
+    and with a single pragma on the line before.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+#Heading 1
+more text here
+<!-- pyml disable-next-line line-length -->
+##Heading 2
+more text here
+<!-- pyml disable-next-line line-length -->
+###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:8:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single trigger of this rule without any containers
+    and with a single pragma two lines before with a blank line between.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+#Heading 1
+more text here
+<!-- pyml disable-next-line line-length -->
+
+##Heading 2
+more text here
+<!-- pyml disable-next-line line-length -->
+
+###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:11:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_list_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """1. #Heading 1
+   more text here
+   ##Heading 2
+   more text here
+   ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_list_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+1. #Heading 1
+   more text here
+<!-- pyml disable-next-line line-length -->
+   ##Heading 2
+   more text here
+<!-- pyml disable-next-line line-length -->
+   ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:8:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_list_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+1. #Heading 1
+   more text here
+<!-- pyml disable-next-line line-length -->
+
+   ##Heading 2
+   more text here
+<!-- pyml disable-next-line line-length -->
+
+   ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:11:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_block_quote_no_pragma() -> None:
+    """
+    Test to make sure this rule handles 
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """> #Heading 1
+> some text
+> ##Heading 2
+> some text
+> ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:1:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_without_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+> #Heading 1
+> some text
+<!-- pyml disable-next-line line-length -->
+> ##Heading 2
+> some text
+<!-- pyml disable-next-line line-length -->
+> ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:2:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:5:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:8:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """<!-- pyml disable-next-line line-length -->
+
+> #Heading 1
+> some text
+<!-- pyml disable-next-line line-length -->
+
+> ##Heading 2
+> some text
+<!-- pyml disable-next-line line-length -->
+
+> ###Heading 3
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "-d", "md028,md041",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{source_path}:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:7:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{source_path}:11:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 def test_md018_query_config() -> None:
     config_test = pluginQueryConfigTest(

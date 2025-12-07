@@ -69,6 +69,7 @@ class PluginManager:
         self.__document_pragmas: Dict[int, Set[str]] = {}
         self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
         self.__general_pragma_ranges: List[Tuple[int, int, str]]
+        self.__pragma_line_numbers : List[int]
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -384,13 +385,15 @@ class PluginManager:
         """
 
         rule_id = scan_failure.rule_id.lower()
-        if (
-            self.__document_pragmas
-            and scan_failure.line_number in self.__document_pragmas
-        ):
-            id_set = self.__document_pragmas[scan_failure.line_number]
-            if rule_id in id_set:
-                return
+        if (            self.__document_pragmas        ):
+            if scan_failure.line_number in self.__document_pragmas:
+                id_set = self.__document_pragmas[scan_failure.line_number]
+                if rule_id in id_set:
+                    return
+            if scan_failure.is_error_token_prefaced_by_blank_line and (scan_failure.line_number - 1) in self.__document_pragmas:
+                id_set = self.__document_pragmas[scan_failure.line_number -1]
+                if rule_id in id_set:
+                    return
 
         if self.__document_pragma_ranges:
             for i, j, k in self.__document_pragma_ranges:
@@ -417,6 +420,7 @@ class PluginManager:
             scan_failure.rule_name,
             scan_failure.rule_description,
             extra_info,
+            False
         )
         self.__presentation.print_scan_failure(adjusted_failure)
         self.number_of_scan_failures += 1
@@ -437,6 +441,7 @@ class PluginManager:
 
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
 
+        self.__pragma_line_numbers :List[int] = []
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -448,6 +453,7 @@ class PluginManager:
                 self.__general_pragma_ranges,
                 active_general_pragmas,
                 self.log_pragma_failure,
+                self.__pragma_line_numbers,
             )
         PragmaExtension.end(active_general_pragmas, self.__general_pragma_ranges)
 
@@ -913,6 +919,9 @@ class PluginManager:
 
         return [next_plugin.plugin_id for next_plugin in self.__registered_plugins]
 
+    def is_pragma_on_line(self, line_number:int) -> bool:
+        return line_number in self.__pragma_line_numbers
+
     @classmethod
     def __find_configuration_for_plugin(
         cls,
@@ -990,6 +999,7 @@ class PluginManager:
     def starting_new_file(
         self,
         file_being_started: str,
+        actual_tokens: List[MarkdownToken],
         fix_mode: bool = False,
         temp_output: Optional[TextIOWrapper] = None,
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]] = None,
@@ -1002,6 +1012,7 @@ class PluginManager:
         self.__document_pragmas = {}
         self.__document_pragma_ranges = []
         self.__general_pragma_ranges = []
+        self.__pragma_line_numbers = []
 
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
             if constraint_id_list and next_plugin.plugin_id not in constraint_id_list:
@@ -1018,6 +1029,7 @@ class PluginManager:
         context = PluginScanContext(
             self,
             file_being_started,
+            actual_tokens,
             fix_mode,
             temp_output,
             fix_token_map,

@@ -134,7 +134,7 @@ class RuleMd027(RulePlugin):
             self.report_next_token_error(
                 context,
                 token,
-                line_number_delta=line_number_delta,
+                line_number_delta=line_number_delta +  context.calc_pragma_offset(token, line_number_delta),
                 column_number_delta=column_number_delta,
             )
         return keep_going

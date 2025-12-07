@@ -164,7 +164,7 @@ class RuleMd044(RulePlugin):
                     context,
                     token,
                     extra_error_information=extra_data,
-                    line_number_delta=line_adjust,
+                    line_number_delta=line_adjust + context.calc_pragma_offset(token, line_adjust),
                     column_number_delta=col_adjust,
                 )
 

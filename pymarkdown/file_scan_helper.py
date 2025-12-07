@@ -161,7 +161,7 @@ class FileScanHelper:
         """
 
         POGGER.info("Scanning file '$'.", next_file_name)
-        context = self.__plugins.starting_new_file(next_file_name)
+        context = None
 
         try:
             POGGER.info("Starting file '$'.", next_file_name)
@@ -170,6 +170,7 @@ class FileScanHelper:
             actual_tokens = self.__tokenizer.transform_from_provider(
                 source_provider, do_add_end_of_stream_token=True
             )
+            context = self.__plugins.starting_new_file(next_file_name, actual_tokens)
 
             source_provider.reset_to_start()
             self.__process_file_scan(
@@ -179,7 +180,8 @@ class FileScanHelper:
             context.report_on_triggered_rules()
             POGGER.info("Ending file '$'.", next_file_name)
         except Exception:
-            context.report_on_triggered_rules()
+            if context:
+                context.report_on_triggered_rules()
             POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
 
@@ -516,12 +518,13 @@ class FileScanHelper:
             POGGER.info("Scanning before line-by-line fixes.")
             fix_context = self.__plugins.starting_new_file(
                 next_file_name,
+                actual_tokens,
                 fix_mode=True,
                 temp_output=source_file,
                 fix_token_map=None,
             )
             report_context = self.__plugins.starting_new_file(
-                next_file_name, constraint_id_list=collect_list
+                next_file_name, actual_tokens, constraint_id_list=collect_list
             )
             context_map: Dict[str, PluginScanContext] = {
                 i: fix_context for i in fix_list
@@ -578,7 +581,7 @@ class FileScanHelper:
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
         replace_tokens_list: List[ReplaceTokensRecord] = []
         fix_context = self.__plugins.starting_new_file(
-            next_file_name,
+            next_file_name,actual_tokens,
             fix_mode=True,
             temp_output=None,
             fix_token_map=fix_token_map,
@@ -586,7 +589,7 @@ class FileScanHelper:
             replace_tokens_list=replace_tokens_list,
         )
         report_context = self.__plugins.starting_new_file(
-            next_file_name, constraint_id_list=collect_list
+            next_file_name, actual_tokens, constraint_id_list=collect_list
         )
 
         context_map = {i: fix_context for i in fix_list}

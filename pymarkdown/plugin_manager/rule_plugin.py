@@ -188,6 +188,7 @@ class RulePlugin(ABC):
         else:
             line_number = token.line_number
             column_number = token.column_number
+        error_token = token
 
         does_support_fix = False
         plugin_details = self.get_details()
@@ -208,6 +209,7 @@ class RulePlugin(ABC):
             plugin_details.plugin_description,
             extra_error_information,
             does_support_fix,
+            error_token=error_token
         )
 
     # pylint: enable=too-many-arguments

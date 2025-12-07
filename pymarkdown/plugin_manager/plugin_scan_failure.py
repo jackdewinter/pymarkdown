@@ -19,6 +19,7 @@ class PluginScanFailure:
     rule_name: str
     rule_description: str
     extra_error_information: Optional[str]
+    is_error_token_prefaced_by_blank_line: bool
 
     def __lt__(self, other: "PluginScanFailure") -> bool:
         # This is required to allow for sorting of the failures before display.

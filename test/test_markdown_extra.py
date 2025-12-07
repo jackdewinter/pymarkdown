@@ -16513,6 +16513,100 @@ def test_extra_055x() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_extra_056x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> this is a block quote
+<!-- pyml disable-next-line blanks-around-lists -->
++ a list
++ still a list
+<!-- pyml disable-next-line blanks-around-lists -->
++ still still a list
+> this is a block quote
+"""
+    expected_tokens = ['[block-quote(1,1)::> ]',
+                       '[para(1,3):]', '[text(1,3):this is a block quote:]', '[end-para:::True]',
+                       '[end-block-quote:::True]',
+                       '[ulist(3,1):+::2:]',
+                       '[para(3,3):]', '[text(3,3):a list:]', '[end-para:::True]',
+                       '[li(4,1):2::]',
+                       '[para(4,3):]', '[text(4,3):still a list:]', '[end-para:::True]',
+                       '[li(6,1):2::]',
+                       '[para(6,3):]', '[text(6,3):still still a list:]', '[end-para:::True]',
+                       '[end-ulist:::True]',
+                       '[block-quote(7,1)::> \n]', '[para(7,3):]', '[text(7,3):this is a block quote:]', '[end-para:::True]', '[end-block-quote:::True]', '[BLANK(8,1):]', '[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;5:<!-- pyml disable-next-line blanks-around-lists -->]']
+    expected_gfm = """<blockquote>
+<p>this is a block quote</p>
+</blockquote>
+<ul>
+<li>a list</li>
+<li>still a list</li>
+<li>still still a list</li>
+</ul>
+<blockquote>
+<p>this is a block quote</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_056a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> this is a block quote
+<!-- pyml disable-next-line blanks-around-lists -->
+
++ a list
++ still a list
+<!-- pyml disable-next-line blanks-around-lists -->
+
++ still still a list
+> this is a block quote
+"""
+    expected_tokens = [
+        '[block-quote(1,1)::> \n]',
+        '[para(1,3):]', '[text(1,3):this is a block quote:]', '[end-para:::True]',
+        '[end-block-quote:::True]',
+        '[BLANK(3,1):]',
+        '[ulist(4,1):+::2::]',
+        '[para(4,3):]', '[text(4,3):a list:]', '[end-para:::True]',
+        '[li(5,1):2::]',
+        '[para(5,3):]', '[text(5,3):still a list:]', '[end-para:::True]',
+        '[BLANK(7,1):]',
+        '[li(8,1):2::]', '[para(8,3):]', '[text(8,3):still still a list:]', '[end-para:::True]', '[end-ulist:::True]',
+        '[block-quote(9,1)::> \n]',
+        '[para(9,3):]', '[text(9,3):this is a block quote:]', '[end-para:::True]',
+        '[end-block-quote:::True]',
+        '[BLANK(10,1):]',
+        '[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;6:<!-- pyml disable-next-line blanks-around-lists -->]']
+    expected_gfm = """<blockquote>
+<p>this is a block quote</p>
+</blockquote>
+<ul>
+<li>
+<p>a list</p>
+</li>
+<li>
+<p>still a list</p>
+</li>
+<li>
+<p>still still a list</p>
+</li>
+</ul>
+<blockquote>
+<p>this is a block quote</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_extra_999() -> None:

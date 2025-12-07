@@ -32,6 +32,7 @@ class PluginScanContext(PluginModifyContext):
         self,
         owning_manager: PluginManager,
         scan_file: str,
+        actual_tokens: List[MarkdownToken],
         fix_mode: bool,
         file_output: Optional[TextIOWrapper],
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]],
@@ -50,6 +51,7 @@ class PluginScanContext(PluginModifyContext):
         self.__file_output = file_output
         self.__fix_token_map = fix_token_map
         self.__replace_token_list = replace_tokens_list
+        self.__actual_tokens = actual_tokens
 
     # pylint: enable=too-many-arguments
 
@@ -181,6 +183,7 @@ class PluginScanContext(PluginModifyContext):
         rule_description: str,
         extra_error_information: Optional[str],
         does_support_fix: bool,
+        error_token: Optional[MarkdownToken] = None,
     ) -> None:
         """
         Add the triggering information for a rule.
@@ -191,6 +194,63 @@ class PluginScanContext(PluginModifyContext):
                     formatted_message=f"Plugin {rule_id}({rule_name}) reported a triggered rule while in fix mode."
                 )
             return
+        
+        is_error_token_prefaced_by_blank_line = False
+        if error_token is not None:
+            for i,j in enumerate(self.__actual_tokens):
+                if (
+                    j.line_number == error_token.line_number
+                    and j.column_number == error_token.column_number
+                    and j.token_name == error_token.token_name
+                ):
+                    index_to_check = i# - 1
+                    current_token = error_token
+                    dd = False
+
+                    # For an inline, rewind back to the last text token.  If the text token was
+                    # not on the same line as the inline token, by definition there is text on
+                    # the line, so break out of this check.
+                    #
+                    # Note that in special cases, such as a link being at the start of a parapgrah,
+                    # we may not have any text element before the paragraph element.
+                    if not current_token.is_leaf and not current_token.is_container and not current_token.is_text:
+                        while index_to_check >= 0 and not self.__actual_tokens[index_to_check].is_text and not self.__actual_tokens[index_to_check].is_paragraph:
+                            index_to_check -= 1
+                        assert index_to_check >= 0
+                        if current_token.line_number != self.__actual_tokens[index_to_check].line_number:
+                            break
+                        current_token = self.__actual_tokens[index_to_check]
+                        dd = True
+
+                    if current_token.is_text:
+                        # Text blocks can only occur within leaf elements, so work backwards until
+                        # we hit a leaf element.
+                        while index_to_check >= 0 and not self.__actual_tokens[index_to_check].is_leaf:
+                            index_to_check -= 1
+                        if index_to_check > 0:
+                            index_to_check -= 1
+                        current_token = self.__actual_tokens[index_to_check]
+                        dd = True
+                    elif current_token.is_paragraph:
+                        if index_to_check > 0:
+                            index_to_check-= 1
+                        current_token = self.__actual_tokens[index_to_check]
+
+                    # Lists can have trailing 
+                    if current_token.is_list_start:
+                        while index_to_check >= 0 and self.__actual_tokens[index_to_check-1].is_list_end:
+                            index_to_check -= 1
+                            # should we be doing this more generally? i.e. list closing and opening a fcb... ?
+                            # assert False  -- check to see if we need is_list_end or is_block_quote_end
+                        if index_to_check > 0:
+                            index_to_check -= 1
+                        current_token = self.__actual_tokens[index_to_check]
+                        dd = True
+                    if index_to_check >= 0:
+                        if not dd and index_to_check > 0:
+                            index_to_check -= 1
+                        is_error_token_prefaced_by_blank_line = self.__actual_tokens[index_to_check].is_blank_line
+                    break
 
         new_entry = PluginScanFailure(
             scan_file,
@@ -200,6 +260,7 @@ class PluginScanContext(PluginModifyContext):
             rule_name,
             rule_description,
             extra_error_information,
+            is_error_token_prefaced_by_blank_line
         )
         self.__reported.append(new_entry)
 
@@ -221,5 +282,13 @@ class PluginScanContext(PluginModifyContext):
         """
         return {next_entry.rule_id.lower() for next_entry in self.__reported}
 
+
+    def calc_pragma_offset(self, token: MarkdownToken, line_number_delta:int) -> int:
+        pragma_offset = 0
+        for line_index in range(line_number_delta):
+            modified_line_number = token.line_number +line_index + 1 +pragma_offset
+            if self.owning_manager.is_pragma_on_line(modified_line_number):
+                pragma_offset += 1
+        return pragma_offset
 
 # pylint: enable=too-many-instance-attributes
