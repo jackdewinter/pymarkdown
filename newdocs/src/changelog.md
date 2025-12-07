@@ -40,6 +40,9 @@
     - adding missing tests for Md043 and SetExt headings
     - fixed an issue with Md043 where the bottom of the SetExt
       token was being reported instead of the top
+- [Issue 1514](https://github.com/jackdewinter/pymarkdown/issues/1514)
+    - when parsing inline elements from a text block, pragmas were not
+      been considered, resulting in reported lines being off
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

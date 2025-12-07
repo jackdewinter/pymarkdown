@@ -222,7 +222,7 @@ class RuleMd037(RulePlugin):
         self.report_next_token_error(
             context,
             elibible_before.text_token,
-            line_number_delta=line_number_delta,
+            line_number_delta=line_number_delta +  context.calc_pragma_offset(elibible_before.text_token, line_number_delta),
             column_number_delta=(column_number_delta + column_adjust),
         )
 

@@ -203,7 +203,7 @@ class PluginScanContext(PluginModifyContext):
                     and j.column_number == error_token.column_number
                     and j.token_name == error_token.token_name
                 ):
-                    index_to_check = i# - 1
+                    index_to_check = i
                     current_token = error_token
                     dd = False
 

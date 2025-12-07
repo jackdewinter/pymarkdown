@@ -16609,6 +16609,222 @@ def test_extra_056a() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+def test_extra_057xx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with an image embedded
+<!-- pyml disable-next-line no-inline-html -->
+in something other <img src="fred"> than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n]',
+        '[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]',
+        '[raw-html(3,20):img src="fred"]',
+        '[text(3,36): than the first line.:]',
+        '[end-para:::True]',
+        '[BLANK(4,1):]',
+        '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with an image embedded
+in something other <img src="fred"> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057xa() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with an image embedded
+<!-- pyml disable-next-line no-inline-html -->
+in something other <img
+<!-- pyml disable-next-line no-inline-html -->
+src="fred"> than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n\n]',
+        '[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]',
+        '[raw-html(3,20):img\nsrc="fred"]',
+        '[text(5,12): than the first line.:]',
+        '[end-para:::True]',
+        '[BLANK(6,1):]',
+        '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with an image embedded
+in something other <img
+src="fred"> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with a code span
+<!-- pyml disable-next-line no-inline-html -->
+in something other `than the` than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n]',
+        '[text(1,1):This is a paragraph with a code span\nin something other ::\n]',
+        '[icode-span(3,20):than the:`::]',
+        '[text(3,30): than the first line.:]',
+        '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with a code span
+in something other <code>than the</code> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057b() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with a code span
+<!-- pyml disable-next-line no-inline-html -->
+in something other `than
+<!-- pyml disable-next-line no-inline-html -->
+the` than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n\n]',
+        '[text(1,1):This is a paragraph with a code span\nin something other ::\n]',
+        '[icode-span(3,20):than\a\n\a \athe:`::]',
+        '[text(5,5): than the first line.:]',
+        '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with a code span
+in something other <code>than the</code> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057c() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with emphasis
+<!-- pyml disable-next-line no-inline-html -->
+in something other *than the* than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n]',
+        '[text(1,1):This is a paragraph with emphasis\nin something other ::\n]',
+        '[emphasis(3,20):1:*]', '[text(3,21):than the:]', '[end-emphasis(3,29)::]', '[text(3,30): than the first line.:]', '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with emphasis
+in something other <em>than the</em> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057d() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with emphasis
+<!-- pyml disable-next-line no-inline-html -->
+in something other *than
+<!-- pyml disable-next-line no-inline-html -->
+the* than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n\n]',
+        '[text(1,1):This is a paragraph with emphasis\nin something other ::\n]',
+        '[emphasis(3,20):1:*]', '[text(3,21):than\nthe::\n]', '[end-emphasis(5,4)::]',
+        '[text(5,5): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with emphasis
+in something other <em>than
+the</em> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_057e() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with link
+<!-- pyml disable-next-line no-inline-html -->
+in something other [than the](/url) than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n]',
+        '[text(1,1):This is a paragraph with link\nin something other ::\n]',
+        '[link(3,20):inline:/url:::::than the:False::::]', '[text(3,21):than the:]', '[end-link::]', '[text(3,36): than the first line.:]', '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with link
+in something other <a href="/url">than the</a> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+@pytest.mark.gfm
+def test_extra_057f() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with link
+<!-- pyml disable-next-line no-inline-html -->
+in something other [than
+<!-- pyml disable-next-line no-inline-html -->
+the](/url) than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n\n]',
+        '[text(1,1):This is a paragraph with link\nin something other ::\n]',
+        '[link(3,20):inline:/url:::::than\nthe:False::::]',
+        '[text(3,21):than\nthe::\n]', '[end-link::]',
+        '[text(5,11): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with link
+in something other <a href="/url">than
+the</a> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+@pytest.mark.gfm
+def test_extra_057g() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is a paragraph with link
+<!-- pyml disable-next-line no-inline-html -->
+in something other [than the](/url "my
+<!-- pyml disable-next-line no-inline-html -->
+title") than the first line.
+"""
+    expected_tokens = [
+        '[para(1,1):\n\n]', '[text(1,1):This is a paragraph with link\nin something other ::\n]',
+        '[link(3,20):inline:/url:my\ntitle::::than the:False:":: :]', '[text(3,21):than the:]', '[end-link::]',
+        '[text(5,8): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+    expected_gfm = """<p>This is a paragraph with link
+in something other <a href="/url" title="my
+title">than the</a> than the first line.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
 def test_extra_999() -> None:
     """
     Temporary test to keep coverage up while consistency checks disabled.

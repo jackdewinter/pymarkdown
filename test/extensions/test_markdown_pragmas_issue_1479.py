@@ -36,7 +36,7 @@ from test.utils import create_temporary_configuration_file
 # Rule Md011 -- Line
 # Rule Md012 -- Token - Bl                                      - Covered & Verified
 # Rule Md013 -- Line
-# Rule Md014 -- Token                           -- FCB and pragmas within
+# Rule Md014 -- Token                                                                   -- FCB and pragmas within
 # Rule Md018 -- Token - Atx                                     - Covered & Verified
 # Rule Md019 -- Token - Atx                                     - Covered & Verified
 # Rule Md020 -- Token - Atx                                     - Covered & Verified
@@ -50,25 +50,25 @@ from test.utils import create_temporary_configuration_file
 # Rule Md028 -- Token - Bl                                      - Covered & Verified
 # Rule Md029 -- Token - Ol                                      - Covered & Verified
 # Rule Md030 -- Token - Ul, Ol, Li                              - Covered & Verified
-# Rule Md031 --                                 -- needs more cases -- FCB and pragmas within
-# Rule Md032 -- Token - Ul, Ol, Li                              - Covered
-# Rule Md033 -- Token - Html, Inline-Html                       - Covered               - (pragma with text block)
-# Rule Md034 -- Token - Para/Text                               - Covered               - (pragma with text block)
+# Rule Md031 --                                 -- needs more cases                     -- FCB and pragmas within
+# Rule Md032 -- Token - Ul, Ol, Li                              - Covered               - (pragma with back reference)
+# Rule Md033 -- Token - Html, Inline-Html                       - Covered & Verified
+# Rule Md034 -- Token - Para/Text                               - Covered & Verified
 # Rule Md035 -- Token - Tb                                      - Covered & Verified
 # Rule Md036 -- Token - Para/text                               - Covered & Verified
-# Rule Md037 -- Token - Para/Text                               - Covered               - (pragma with text block)
-# Rule Md038 -- Token - Codespan                                - Covered               - (pragma with text block)
-# Rule Md039 -- Token - Link                                    - Covered               - (pragma with text block)
+# Rule Md037 -- Token - Para/Text                               - Covered & Verified
+# Rule Md038 -- Token - Codespan                                - Covered & Verified
+# Rule Md039 -- Token - Link                                    - Covered & Verified
 # Rule Md040 -- Token - Fcb                                     - Covered & Verified
 # Rule Md041 -- Token - Atx, SetExt, Html, Fcb (not previous)   - Covered - could use more
-# Rule Md042 -- Token - Link                                    - Covered               - (pragma with text block)
+# Rule Md042 -- Token - Link                                    - Covered & Verified
 # Rule Md043 -- Token - Atx, SetExt                             - Covered & Verified
-# Rule Md044 -- Token - Text, link, image, lrd, codespan        - Covered               - (pragma with text block)(rewind logic with pragma)
-# Rule Md045 -- Token - Link                                    - Covered               - (pragma with text block)
+# Rule Md044 -- Token - Text, link, image, lrd, codespan        - Covered               - (rewind logic with pragma)
+# Rule Md045 -- Token - Link                                    - Covered & Verified
 # Rule Md046 -- Token - Fcb, Icb                                - Covered & Verified
 # Rule Md047 -- Line
 # Rule Md048 -- Token - Fcb                                     - Covered & Verified
-# Rule Pml100 -- Token - Html, Inline-Html                      - Covered               - (pragma with text block)
+# Rule Pml100 -- Token - Html, Inline-Html                      - Covered & Verified
 # Rule Pml101 -- Token - Ul, Ol, Li                             - Covered & Verified
 
 
@@ -5523,13 +5523,10 @@ in something other <img src="fred"> than the first line.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md033_pragma_without_space_then_text_with_non_first_line_inline_html() -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: failed element reported at 2:20 instead of 3:20. pragma not being taken into account.
     """
 
     # Arrange
@@ -5717,13 +5714,10 @@ http URL http://www.google.com in it.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md034_pragma_without_space_then_para_with_url_second_line() -> None:
     """
     Test the case where we have Md034 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: calculations within text block not taking pragma into account
     """
 
     # Arrange
@@ -6111,13 +6105,10 @@ this text * is* in italics
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md037_pragma_without_space_then_text_with_space_within_emphasis_second_line() -> None:
     """
     Test the case where we have Md037 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: pragma not being taken into account
     """
 
     # Arrange
@@ -6305,13 +6296,10 @@ this is ` bad code span` text
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md038_pragma_without_space_then_text_with_code_span_second_line() -> None:
     """
     Test the case where we have Md038 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: token does not consider the pragma
     """
 
     # Arrange
@@ -6499,13 +6487,10 @@ this is not [ a proper ](https://www.example.com) link
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md039_pragma_without_space_then_text_with_link_second_line() -> None:
     """
     Test the case where we have Md039 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: pragma not taken into account
     """
 
     # Arrange
@@ -7126,8 +7111,6 @@ this is not a [valid](#) link
 def test_pragmas_issue_1479_Md042_pragma_with_space_then_text_with_link_first_line() -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
-
-    FIX: inlines cannot have blank previous
     """
 
     # Arrange
@@ -7188,13 +7171,10 @@ this is not a [valid](#) link
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md042_pragma_without_space_then_text_with_link_second_line() -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: inline not taking pragma into account
     """
 
     # Arrange
@@ -8396,7 +8376,6 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md044_pragma_without_space_then_link_in_first_and_second_line() -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
@@ -8609,7 +8588,6 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_in_first_and_second_line() -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
@@ -9372,7 +9350,6 @@ with `a paragraph in a` code span.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md044_pragma_without_space_then_code_span_in_second_line() -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
@@ -9689,13 +9666,10 @@ this ![ ](image.png) should have alternate text.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Md045_pragma_without_space_then_para_with_image_second_line() -> None:
     """
     Test the case where we have Md045 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: inline does not take pragma into account
     """
 
     # Arrange
@@ -10418,13 +10392,10 @@ This html <noframes> is in a text block.
     )
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="inline does not recognize pragma")
 def test_pragmas_issue_1479_Pml100_pragma_without_space_then_inline_html_second_line() -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
-
-    FIX: inline does not recognize pragma
     """
 
     # Arrange
