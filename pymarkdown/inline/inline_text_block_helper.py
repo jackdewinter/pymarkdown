@@ -43,6 +43,7 @@ class InlineTextBlockHelper:
         is_setext: bool,
         para_space: Optional[str],
     ) -> Tuple[str, Optional[List[str]]]:
+
         if whitespace_to_recombine:
             source_text, _ = ParserHelper.recombine_string_with_whitespace(
                 source_text, whitespace_to_recombine
@@ -56,6 +57,34 @@ class InlineTextBlockHelper:
             split_para_space = para_space.split(ParserHelper.newline_character)
 
         return source_text, split_para_space
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_inline_text_block_start(
+        parser_properties: ParseBlockPassProperties,
+        source_text: str,
+        whitespace_to_recombine: Optional[str],
+        is_para: bool,
+        is_setext: bool,
+        para_space: Optional[str],
+        start_index: int,
+    ) -> Tuple[int, Set[int], str, Optional[List[str]]]:
+        pragma_line_numbers: Set[int] = set(list(parser_properties.pragma_lines.keys()))
+
+        source_text, split_para_space = (
+            InlineTextBlockHelper.__process_inline_text_block_prepare(
+                source_text, whitespace_to_recombine, is_para, is_setext, para_space
+            )
+        )
+
+        next_index = ParserHelper.index_any_of(
+            source_text,
+            InlineHandlerHelper.valid_inline_text_block_sequence_starts,
+            start_index,
+        )
+        return next_index, pragma_line_numbers, source_text, split_para_space
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod  # noqa: C901
@@ -88,22 +117,21 @@ class InlineTextBlockHelper:
             current_string_unresolved,
         ) = (line_number, column_number, "", "")
         start_index = 0
+        newlines_encountered = 0
         inline_blocks: List[MarkdownToken] = []
         end_string: Optional[str] = ""
-        pragma_line_numbers : Set[int]= set(list(parser_properties.pragma_lines.keys()))
 
-        source_text, split_para_space = (
-            InlineTextBlockHelper.__process_inline_text_block_prepare(
-                source_text, whitespace_to_recombine, is_para, is_setext, para_space
+        next_index, pragma_line_numbers, source_text, split_para_space = (
+            InlineTextBlockHelper.__process_inline_text_block_start(
+                parser_properties,
+                source_text,
+                whitespace_to_recombine,
+                is_para,
+                is_setext,
+                para_space,
+                start_index,
             )
         )
-
-        next_index = ParserHelper.index_any_of(
-            source_text,
-            InlineHandlerHelper.valid_inline_text_block_sequence_starts,
-            start_index,
-        )
-        newlines_encountered = 0
         while next_index != -1:
             old_next_index = next_index
             (
@@ -189,7 +217,7 @@ class InlineTextBlockHelper:
         tabified_text: Optional[str],
         newlines_encountered: int,
         is_in_table: bool,
-        pragma_line_numbers : Set[int],
+        pragma_line_numbers: Set[int],
         para_space: Optional[str] = None,
     ) -> Tuple[
         int,
@@ -263,7 +291,7 @@ class InlineTextBlockHelper:
             para_owner,
             tabified_text,
             tabified_remaining_line,
-            pragma_line_numbers
+            pragma_line_numbers,
         )
 
         (
@@ -329,7 +357,7 @@ class InlineTextBlockHelper:
             last_line_number,
             last_column_number,
             end_string,
-            pragma_line_numbers
+            pragma_line_numbers,
         )
 
         return (
@@ -581,7 +609,7 @@ class InlineTextBlockHelper:
         para_owner: Optional[ParagraphMarkdownToken],
         tabified_text: Optional[str],
         tabified_remaining_line: Optional[str],
-        pragma_line_numbers : Set[int],
+        pragma_line_numbers: Set[int],
     ) -> Tuple[
         InlineResponse,
         int,
@@ -612,7 +640,7 @@ class InlineTextBlockHelper:
                 line_number,
                 column_number,
                 coalesced_stack,
-                pragma_line_numbers
+                pragma_line_numbers,
             )
             if inline_response.reduce_remaining_line_by:
                 (
@@ -818,7 +846,7 @@ class InlineTextBlockHelper:
         last_line_number: int,
         last_column_number: int,
         end_string: Optional[str],
-        pragma_line_numbers : Set[int]
+        pragma_line_numbers: Set[int],
     ) -> Tuple[
         int,
         int,
@@ -844,7 +872,7 @@ class InlineTextBlockHelper:
             remaining_line,
             did_line_number_change,
             was_column_number_reset,
-            pragma_line_numbers
+            pragma_line_numbers,
         )
 
         (
@@ -914,7 +942,7 @@ class InlineTextBlockHelper:
         remaining_line: str,
         did_line_number_change: bool,
         was_column_number_reset: bool,
-        pragma_line_numbers : Set[int]
+        pragma_line_numbers: Set[int],
     ) -> Tuple[int, int, Optional[List[str]]]:
         if was_new_line:
             column_number = 1

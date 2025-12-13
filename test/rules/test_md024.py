@@ -637,6 +637,7 @@ def test_md024_bad_same_heading_content_setext() -> None:
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_then_setext() -> None:
     """
@@ -650,7 +651,8 @@ def test_md024_bad_same_heading_content_atx_then_setext() -> None:
         "test", "resources", "rules", "md024", "same_heading_content_atx_then_setext.md"
     )
     supplied_arguments = [
-        "-d", "md003",
+        "-d",
+        "md003",
         "scan",
         source_path,
     ]
@@ -669,6 +671,7 @@ def test_md024_bad_same_heading_content_atx_then_setext() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_setext() -> None:

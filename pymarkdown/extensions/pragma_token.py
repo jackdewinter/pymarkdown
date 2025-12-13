@@ -158,7 +158,7 @@ class PragmaExtension(ParserExtension):
         general_pragma_ranges: List[Tuple[int, int, str]],
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
         log_pragma_failure: LogPragmaFailureProtocol,
-        actual_pragma_line_numbers:List[int]
+        actual_pragma_line_numbers: List[int],
     ) -> None:
         """
         Compile a single pragma line, validating it before adding it to the dictionary of pragmas.

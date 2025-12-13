@@ -5,6 +5,12 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- [Issue 1479](https://github.com/jackdewinter/pymarkdown/issues/1479)
+    - Support for having a pragma to disable the rule for the next line
+      is extended to include a single blank line between the pragma and
+      the line where the failure occurs.
+    - Added large number of tests (see work in fixed section) to ensure
+      that next-line pragmas are consistently working for all rules.
 - [Issue 1490](https://github.com/jackdewinter/pymarkdown/issues/1490)
     - Added work to measure "extra" test coverage, with goals to keep scenario
       coverage but reduce redundant code coverage

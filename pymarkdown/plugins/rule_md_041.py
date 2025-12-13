@@ -118,7 +118,9 @@ class RuleMd041(RulePlugin):
         atx_token = cast(AtxHeadingMarkdownToken, token)
         self.__have_seen_first_token = True
         if atx_token.hash_count != self.__start_level:
-            self.report_next_token_error(context, token, use_original_position=token.is_setext_heading)
+            self.report_next_token_error(
+                context, token, use_original_position=token.is_setext_heading
+            )
         self.__have_seen_first_token = True
 
     def __handle_front_matter(self, token: MarkdownToken) -> None:

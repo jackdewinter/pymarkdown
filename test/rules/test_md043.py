@@ -781,6 +781,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star() -> No
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md043_bad_double_heading_setext_with_double_rule_unmatching_1_star() -> None:
     """
@@ -818,6 +819,7 @@ def test_md043_bad_double_heading_setext_with_double_rule_unmatching_1_star() ->
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_with_double_rule_matching_star_2() -> None:

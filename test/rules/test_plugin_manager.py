@@ -1333,9 +1333,9 @@ def test_markdown_with_plugins_list_only() -> None:
   md029   ol-prefix                       True       True       0.6.0    Yes
   md030   list-marker-space               True       True       0.6.0    Yes
   md031   blanks-around-fences            True       True       0.7.0    Yes
-  md032   blanks-around-lists             True       True       0.5.0    No
+  md032   blanks-around-lists             True       True       0.5.1    No
   md033   no-inline-html                  True       True       0.6.0    No
-  md034   no-bare-urls                    True       True       0.5.0    No
+  md034   no-bare-urls                    True       True       0.5.1    No
   md035   hr-style                        True       True       0.6.0    Yes
   md036   no-emphasis-as-heading, no-emp  True       True       0.6.0    No
           hasis-as-header
@@ -1417,9 +1417,9 @@ def test_markdown_with_plugins_list_only_all() -> None:
   md029   ol-prefix                       True       True       0.6.0    Yes
   md030   list-marker-space               True       True       0.6.0    Yes
   md031   blanks-around-fences            True       True       0.7.0    Yes
-  md032   blanks-around-lists             True       True       0.5.0    No
+  md032   blanks-around-lists             True       True       0.5.1    No
   md033   no-inline-html                  True       True       0.6.0    No
-  md034   no-bare-urls                    True       True       0.5.0    No
+  md034   no-bare-urls                    True       True       0.5.1    No
   md035   hr-style                        True       True       0.6.0    Yes
   md036   no-emphasis-as-heading, no-emp  True       True       0.6.0    No
           hasis-as-header
@@ -1500,9 +1500,9 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules() -> No
   md029   ol-prefix                       True       False      0.6.0    Yes
   md030   list-marker-space               True       False      0.6.0    Yes
   md031   blanks-around-fences            True       False      0.7.0    Yes
-  md032   blanks-around-lists             True       False      0.5.0    No
+  md032   blanks-around-lists             True       False      0.5.1    No
   md033   no-inline-html                  True       False      0.6.0    No
-  md034   no-bare-urls                    True       False      0.5.0    No
+  md034   no-bare-urls                    True       False      0.5.1    No
   md035   hr-style                        True       False      0.6.0    Yes
   md036   no-emphasis-as-heading, no-emp  True       False      0.6.0    No
           hasis-as-header
@@ -1588,9 +1588,9 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> N
   md029   ol-prefix                       True       False      0.6.0    Yes
   md030   list-marker-space               True       False      0.6.0    Yes
   md031   blanks-around-fences            True       False      0.7.0    Yes
-  md032   blanks-around-lists             True       False      0.5.0    No
+  md032   blanks-around-lists             True       False      0.5.1    No
   md033   no-inline-html                  True       False      0.6.0    No
-  md034   no-bare-urls                    True       False      0.5.0    No
+  md034   no-bare-urls                    True       False      0.5.1    No
   md035   hr-style                        True       False      0.6.0    Yes
   md036   no-emphasis-as-heading, no-emp  True       False      0.6.0    No
           hasis-as-header
@@ -1680,9 +1680,9 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md029   ol-prefix                       True       False      0.6.0    Yes
   md030   list-marker-space               True       False      0.6.0    Yes
   md031   blanks-around-fences            True       False      0.7.0    Yes
-  md032   blanks-around-lists             True       False      0.5.0    No
+  md032   blanks-around-lists             True       False      0.5.1    No
   md033   no-inline-html                  True       False      0.6.0    No
-  md034   no-bare-urls                    True       False      0.5.0    No
+  md034   no-bare-urls                    True       False      0.5.1    No
   md035   hr-style                        True       False      0.6.0    Yes
   md036   no-emphasis-as-heading, no-emp  True       False      0.6.0    No
           hasis-as-header

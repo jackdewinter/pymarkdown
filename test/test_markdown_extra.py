@@ -15,6 +15,8 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 
 # pylint: disable=too-many-lines
 
+tables_config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
+
 
 @pytest.mark.gfm
 def test_extra_001() -> None:
@@ -16513,6 +16515,7 @@ def test_extra_055x() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_056x() -> None:
     """
@@ -16528,17 +16531,33 @@ def test_extra_056x() -> None:
 + still still a list
 > this is a block quote
 """
-    expected_tokens = ['[block-quote(1,1)::> ]',
-                       '[para(1,3):]', '[text(1,3):this is a block quote:]', '[end-para:::True]',
-                       '[end-block-quote:::True]',
-                       '[ulist(3,1):+::2:]',
-                       '[para(3,3):]', '[text(3,3):a list:]', '[end-para:::True]',
-                       '[li(4,1):2::]',
-                       '[para(4,3):]', '[text(4,3):still a list:]', '[end-para:::True]',
-                       '[li(6,1):2::]',
-                       '[para(6,3):]', '[text(6,3):still still a list:]', '[end-para:::True]',
-                       '[end-ulist:::True]',
-                       '[block-quote(7,1)::> \n]', '[para(7,3):]', '[text(7,3):this is a block quote:]', '[end-para:::True]', '[end-block-quote:::True]', '[BLANK(8,1):]', '[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;5:<!-- pyml disable-next-line blanks-around-lists -->]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[ulist(3,1):+::2:]",
+        "[para(3,3):]",
+        "[text(3,3):a list:]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[text(4,3):still a list:]",
+        "[end-para:::True]",
+        "[li(6,1):2::]",
+        "[para(6,3):]",
+        "[text(6,3):still still a list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(7,1)::> \n]",
+        "[para(7,3):]",
+        "[text(7,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;5:<!-- pyml disable-next-line blanks-around-lists -->]",
+    ]
     expected_gfm = """<blockquote>
 <p>this is a block quote</p>
 </blockquote>
@@ -16553,6 +16572,7 @@ def test_extra_056x() -> None:
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_056a() -> None:
@@ -16572,21 +16592,34 @@ def test_extra_056a() -> None:
 > this is a block quote
 """
     expected_tokens = [
-        '[block-quote(1,1)::> \n]',
-        '[para(1,3):]', '[text(1,3):this is a block quote:]', '[end-para:::True]',
-        '[end-block-quote:::True]',
-        '[BLANK(3,1):]',
-        '[ulist(4,1):+::2::]',
-        '[para(4,3):]', '[text(4,3):a list:]', '[end-para:::True]',
-        '[li(5,1):2::]',
-        '[para(5,3):]', '[text(5,3):still a list:]', '[end-para:::True]',
-        '[BLANK(7,1):]',
-        '[li(8,1):2::]', '[para(8,3):]', '[text(8,3):still still a list:]', '[end-para:::True]', '[end-ulist:::True]',
-        '[block-quote(9,1)::> \n]',
-        '[para(9,3):]', '[text(9,3):this is a block quote:]', '[end-para:::True]',
-        '[end-block-quote:::True]',
-        '[BLANK(10,1):]',
-        '[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;6:<!-- pyml disable-next-line blanks-around-lists -->]']
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):]",
+        "[text(1,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+        "[ulist(4,1):+::2::]",
+        "[para(4,3):]",
+        "[text(4,3):a list:]",
+        "[end-para:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):]",
+        "[text(5,3):still a list:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[li(8,1):2::]",
+        "[para(8,3):]",
+        "[text(8,3):still still a list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(9,1)::> \n]",
+        "[para(9,3):]",
+        "[text(9,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+        "[pragma:2:<!-- pyml disable-next-line blanks-around-lists -->;6:<!-- pyml disable-next-line blanks-around-lists -->]",
+    ]
     expected_gfm = """<blockquote>
 <p>this is a block quote</p>
 </blockquote>
@@ -16608,6 +16641,7 @@ def test_extra_056a() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_057xx() -> None:
     """
@@ -16620,18 +16654,20 @@ def test_extra_057xx() -> None:
 in something other <img src="fred"> than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n]',
-        '[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]',
+        "[para(1,1):\n]",
+        "[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]",
         '[raw-html(3,20):img src="fred"]',
-        '[text(3,36): than the first line.:]',
-        '[end-para:::True]',
-        '[BLANK(4,1):]',
-        '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+        "[text(3,36): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with an image embedded
 in something other <img src="fred"> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057xa() -> None:
@@ -16647,19 +16683,21 @@ in something other <img
 src="fred"> than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n\n]',
-        '[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]',
+        "[para(1,1):\n\n]",
+        "[text(1,1):This is a paragraph with an image embedded\nin something other ::\n]",
         '[raw-html(3,20):img\nsrc="fred"]',
-        '[text(5,12): than the first line.:]',
-        '[end-para:::True]',
-        '[BLANK(6,1):]',
-        '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+        "[text(5,12): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with an image embedded
 in something other <img
 src="fred"> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057a() -> None:
@@ -16673,16 +16711,20 @@ def test_extra_057a() -> None:
 in something other `than the` than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n]',
-        '[text(1,1):This is a paragraph with a code span\nin something other ::\n]',
-        '[icode-span(3,20):than the:`::]',
-        '[text(3,30): than the first line.:]',
-        '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n]",
+        "[text(1,1):This is a paragraph with a code span\nin something other ::\n]",
+        "[icode-span(3,20):than the:`::]",
+        "[text(3,30): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with a code span
 in something other <code>than the</code> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057b() -> None:
@@ -16691,23 +16733,26 @@ def test_extra_057b() -> None:
     """
 
     # Arrange
-    source_markdown = """This is a paragraph with a code span
-<!-- pyml disable-next-line no-inline-html -->
-in something other `than
-<!-- pyml disable-next-line no-inline-html -->
-the` than the first line.
+    source_markdown = """```shell
+<!-- pyml disable-next-line commands-show-output -->
+$ ls /my/dir
+$ cat /my/dir/file
+```
 """
     expected_tokens = [
-        '[para(1,1):\n\n]',
-        '[text(1,1):This is a paragraph with a code span\nin something other ::\n]',
-        '[icode-span(3,20):than\a\n\a \athe:`::]',
-        '[text(5,5): than the first line.:]',
-        '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
-    expected_gfm = """<p>This is a paragraph with a code span
-in something other <code>than the</code> than the first line.</p>"""
+        "[fcode-block(1,1):`:3:shell:::::]",
+        "[text(3,1):$ ls /my/dir\n$ cat /my/dir/file:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line commands-show-output -->]",
+    ]
+    expected_gfm = """<pre><code class="language-shell">$ ls /my/dir
+$ cat /my/dir/file
+</code></pre>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057c() -> None:
@@ -16721,14 +16766,22 @@ def test_extra_057c() -> None:
 in something other *than the* than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n]',
-        '[text(1,1):This is a paragraph with emphasis\nin something other ::\n]',
-        '[emphasis(3,20):1:*]', '[text(3,21):than the:]', '[end-emphasis(3,29)::]', '[text(3,30): than the first line.:]', '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n]",
+        "[text(1,1):This is a paragraph with emphasis\nin something other ::\n]",
+        "[emphasis(3,20):1:*]",
+        "[text(3,21):than the:]",
+        "[end-emphasis(3,29)::]",
+        "[text(3,30): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with emphasis
 in something other <em>than the</em> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057d() -> None:
@@ -16744,16 +16797,23 @@ in something other *than
 the* than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n\n]',
-        '[text(1,1):This is a paragraph with emphasis\nin something other ::\n]',
-        '[emphasis(3,20):1:*]', '[text(3,21):than\nthe::\n]', '[end-emphasis(5,4)::]',
-        '[text(5,5): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n\n]",
+        "[text(1,1):This is a paragraph with emphasis\nin something other ::\n]",
+        "[emphasis(3,20):1:*]",
+        "[text(3,21):than\nthe::\n]",
+        "[end-emphasis(5,4)::]",
+        "[text(5,5): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with emphasis
 in something other <em>than
 the</em> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_057e() -> None:
@@ -16767,14 +16827,23 @@ def test_extra_057e() -> None:
 in something other [than the](/url) than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n]',
-        '[text(1,1):This is a paragraph with link\nin something other ::\n]',
-        '[link(3,20):inline:/url:::::than the:False::::]', '[text(3,21):than the:]', '[end-link::]', '[text(3,36): than the first line.:]', '[end-para:::True]', '[BLANK(4,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n]",
+        "[text(1,1):This is a paragraph with link\nin something other ::\n]",
+        "[link(3,20):inline:/url:::::than the:False::::]",
+        "[text(3,21):than the:]",
+        "[end-link::]",
+        "[text(3,36): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with link
 in something other <a href="/url">than the</a> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_extra_057f() -> None:
     """
@@ -16789,17 +16858,24 @@ in something other [than
 the](/url) than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n\n]',
-        '[text(1,1):This is a paragraph with link\nin something other ::\n]',
-        '[link(3,20):inline:/url:::::than\nthe:False::::]',
-        '[text(3,21):than\nthe::\n]', '[end-link::]',
-        '[text(5,11): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n\n]",
+        "[text(1,1):This is a paragraph with link\nin something other ::\n]",
+        "[link(3,20):inline:/url:::::than\nthe:False::::]",
+        "[text(3,21):than\nthe::\n]",
+        "[end-link::]",
+        "[text(5,11): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with link
 in something other <a href="/url">than
 the</a> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_extra_057g() -> None:
     """
@@ -16814,15 +16890,263 @@ in something other [than the](/url "my
 title") than the first line.
 """
     expected_tokens = [
-        '[para(1,1):\n\n]', '[text(1,1):This is a paragraph with link\nin something other ::\n]',
-        '[link(3,20):inline:/url:my\ntitle::::than the:False:":: :]', '[text(3,21):than the:]', '[end-link::]',
-        '[text(5,8): than the first line.:]', '[end-para:::True]', '[BLANK(6,1):]', '[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]']
+        "[para(1,1):\n\n]",
+        "[text(1,1):This is a paragraph with link\nin something other ::\n]",
+        '[link(3,20):inline:/url:my\ntitle::::than the:False:":: :]',
+        "[text(3,21):than the:]",
+        "[end-link::]",
+        "[text(5,8): than the first line.:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line no-inline-html -->;4:<!-- pyml disable-next-line no-inline-html -->]",
+    ]
     expected_gfm = """<p>This is a paragraph with link
 in something other <a href="/url" title="my
 title">than the</a> than the first line.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_057h() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """```shell
+<!-- pyml disable-next-line commands-show-output -->
+$ ls /my/dir
+$ cat /my/dir/file
+```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3:shell:::::]",
+        "[text(3,1):$ ls /my/dir\n$ cat /my/dir/file:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(6,1):]",
+        "[pragma:2:<!-- pyml disable-next-line commands-show-output -->]",
+    ]
+    expected_gfm = """<pre><code class="language-shell">$ ls /my/dir
+$ cat /my/dir/file
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_058x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. still still a list
+[lrd]: /url
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n]",
+        "[para(1,4):\n]",
+        "[text(1,4):still still a list\n[lrd]: /url::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>still still a list
+[lrd]: /url</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_058a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """[lrd]: /url
+1. still still a list
+[lrd]: /url
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::lrd:: :/url:::::]",
+        "[olist(2,1):.:1:3::\n]",
+        "[para(2,4):\n]",
+        "[text(2,4):still still a list\n::\n]",
+        "[link(3,1):shortcut:/url:::::lrd:False::::]",
+        "[text(3,2):lrd:]",
+        "[end-link::]",
+        "[text(3,6):: /url:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>still still a list
+<a href="/url">lrd</a>: /url</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_058b() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """| abc | def |
+| --- | --- |
+1. still still a list
+"""
+    expected_tokens = [
+        "[table(1,1)]",
+        "[table-header(1,1)]",
+        "[table-header-item(1,1)]",
+        "[text(1,1):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,1)]",
+        "[text(1,1):def:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[olist(3,1):.:1:3::]",
+        "[para(3,4):]",
+        "[text(3,4):still still a list:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+</table>
+<ol>
+<li>still still a list</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058c() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """| abc | def |
+| --- | --- |
+1. still still a list
+| abc | def |
+| --- | --- |
+"""
+    expected_tokens = [
+        "[table(1,1)]",
+        "[table-header(1,1)]",
+        "[table-header-item(1,1)]",
+        "[text(1,1):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,1)]",
+        "[text(1,1):def:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[olist(3,1):.:1:3::\n\n\n]",
+        "[para(3,4):\n\n]",
+        "[text(3,4):still still a list\n| abc | def |\n| --- | --- |::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+</table>
+<ol>
+<li>still still a list
+| abc | def |
+| --- | --- |</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058d() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. a list
+1. still a list
+   <script>
+<!-- pyml disable-next-line blanks-around-lists -->
+
+   </script>
+<script>
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n\n   ]",
+        "[para(1,4):]",
+        "[text(1,4):a list:]",
+        "[end-para:::True]",
+        "[li(2,1):3::1]",
+        "[para(2,4):]",
+        "[text(2,4):still a list:]",
+        "[end-para:::False]",
+        "[html-block(3,4)]",
+        "[text(3,4):<script>:]",
+        "[BLANK(5,1):]",
+        "[text(6,4):</script>:]",
+        "[end-html-block:::False]",
+        "[end-olist:::True]",
+        "[html-block(7,1)]",
+        "[text(7,1):<script>\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(9,1):]",
+        "[pragma:4:<!-- pyml disable-next-line blanks-around-lists -->]",
+    ]
+    expected_gfm = """<ol>
+<li>a list</li>
+<li>still a list
+<script>
+
+</script>
+</li>
+</ol>
+<script>
+</script>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
 
 @pytest.mark.gfm
 def test_extra_999() -> None:

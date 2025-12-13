@@ -2,6 +2,8 @@
 Module to implement a plugin to ensure all files end with a blank line.
 """
 
+from typing import Optional
+
 from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -14,7 +16,8 @@ class RuleMd047(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__last_line: str = ""
+        self.__last_line: Optional[str] = None
+        self.__previous_last_line: Optional[str] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -35,13 +38,16 @@ class RuleMd047(RulePlugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__last_line = ""
+        self.__last_line = None
+        self.__previous_last_line = None
 
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
         _ = context
+        if self.__last_line is not None:
+            self.__previous_last_line = self.__last_line
         self.__last_line = line
 
     def completed_file(self, context: PluginScanContext) -> None:
@@ -55,4 +61,13 @@ class RuleMd047(RulePlugin):
             ):
                 context.set_current_fix_line("\n")
         elif self.__last_line:
-            self.report_next_line_error(context, len(self.__last_line), -1)
+            override_is_error_token_prefaced_by_blank_line = (
+                self.__previous_last_line is not None
+                and not self.__previous_last_line.strip()
+            )
+            self.report_next_line_error(
+                context,
+                len(self.__last_line),
+                -1,
+                override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
+            )

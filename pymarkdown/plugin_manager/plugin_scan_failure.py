@@ -5,6 +5,8 @@ Module to contain information about a failure reported by one of the rule plugin
 from dataclasses import dataclass
 from typing import Optional
 
+# pylint: disable=too-many-instance-attributes
+
 
 @dataclass(frozen=True)
 class PluginScanFailure:
@@ -31,3 +33,6 @@ class PluginScanFailure:
         if self.column_number != other.column_number:
             return self.column_number < other.column_number
         return self.rule_id < other.rule_id
+
+
+# pylint: enable=too-many-instance-attributes

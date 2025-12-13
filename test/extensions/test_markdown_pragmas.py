@@ -7,8 +7,6 @@ from test.markdown_scanner import MarkdownScanner
 
 import pytest
 
-from test.utils import create_temporary_configuration_file
-
 
 @pytest.mark.gfm
 def test_pragmas_no_command() -> None:
@@ -1378,4 +1376,3 @@ def test_pragmas_multiple_enable_with_no_rules() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
-

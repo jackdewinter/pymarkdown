@@ -55,6 +55,7 @@ class RuleMd027(RulePlugin):
         # self.__debug_on = False
         self.__list_tracker = ListTracker()
         self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
+        self.__previous_tokens: List[MarkdownToken] = []
 
         self.__delayed_bleading_fixes: Dict[
             MarkdownToken, List[Tuple[int, str, bool, BlankLineMarkdownToken]]
@@ -92,6 +93,40 @@ class RuleMd027(RulePlugin):
         self.__last_token = None
         self.__list_tracker.starting_new_file()
         self.__leading_space_index_tracker.clear()
+        self.__previous_tokens.clear()
+
+    def __fix_issue(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        alternate_token: Optional[MarkdownToken],
+    ) -> bool:
+        keep_going = True
+        if alternate_token:
+            keep_going = self.__report_issue_alternate_token(context, alternate_token)
+        elif (
+            self.__last_leaf_token
+            and self.__last_leaf_token.is_setext_heading
+            and token.is_text
+        ):
+            self.__report_issue_setext_text(context, token)
+        elif (
+            token.is_setext_heading
+            or token.is_thematic_break
+            or token.is_fenced_code_block
+            or token.is_atx_heading
+            or token.is_blank_line
+        ):
+            self.register_fix_token_request(
+                context, token, "next_token", "extracted_whitespace", ""
+            )
+        elif token.is_new_list_item:
+            self.__report_issue_new_list_item(context, token)
+        elif token.is_list_start:
+            self.__report_issue_list_start(context, token)
+        else:
+            self.__report_issue_link_reference(context, token)
+        return keep_going
 
     # pylint: disable=too-many-arguments
     def __report_issue(
@@ -102,40 +137,35 @@ class RuleMd027(RulePlugin):
         column_number_delta: int = 0,
         alternate_token: Optional[MarkdownToken] = None,
     ) -> bool:
-        keep_going = True
         if context.in_fix_mode:
-            if alternate_token:
-                keep_going = self.__report_issue_alternate_token(
-                    context, alternate_token
-                )
-            elif (
-                self.__last_leaf_token
-                and self.__last_leaf_token.is_setext_heading
-                and token.is_text
-            ):
-                self.__report_issue_setext_text(context, token)
-            elif (
-                token.is_setext_heading
-                or token.is_thematic_break
-                or token.is_fenced_code_block
-                or token.is_atx_heading
-                or token.is_blank_line
-            ):
-                self.register_fix_token_request(
-                    context, token, "next_token", "extracted_whitespace", ""
-                )
-            elif token.is_new_list_item:
-                self.__report_issue_new_list_item(context, token)
-            elif token.is_list_start:
-                self.__report_issue_list_start(context, token)
-            else:
-                self.__report_issue_link_reference(context, token)
+            keep_going = self.__fix_issue(context, token, alternate_token)
         else:
+            keep_going = True
+            current_line_number = token.line_number
+            if token.is_setext_heading:
+                current_line_number = cast(
+                    SetextHeadingMarkdownToken, token
+                ).original_line_number
+
+            token_index = len(self.__previous_tokens) - 1
+            while token_index >= 0 and self.__previous_tokens[token_index].is_container:
+                token_index -= 1
+
+            override_is_error_token_prefaced_by_blank_line = bool(
+                (
+                    token_index >= 0
+                    and self.__previous_tokens[token_index].line_number
+                    == (current_line_number - 1)
+                    and self.__previous_tokens[token_index].is_blank_line
+                )
+            )
             self.report_next_token_error(
                 context,
                 token,
-                line_number_delta=line_number_delta +  context.calc_pragma_offset(token, line_number_delta),
+                line_number_delta=line_number_delta
+                + context.calc_pragma_offset(token, line_number_delta),
                 column_number_delta=column_number_delta,
+                override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
             )
         return keep_going
 
@@ -172,7 +202,7 @@ class RuleMd027(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         text_token = cast(TextMarkdownToken, token)
-        whitespace_parts = []
+        whitespace_parts: List[str] = []
         assert text_token.end_whitespace is not None
         for next_line in text_token.end_whitespace.split("\n"):
             split_character_index = next_line.find(
@@ -275,6 +305,7 @@ class RuleMd027(RulePlugin):
             #     print(f"delay-para-end-->token->{ParserHelper.make_value_visible(token)}")
             #     print(f"delay-para-end-->index->{self.__bq_line_index[num_container_tokens]}")
 
+            ff = False
             assert (
                 token.is_blank_line
                 or token.is_fenced_code_block
@@ -283,6 +314,7 @@ class RuleMd027(RulePlugin):
                 or token.is_list_start
                 or token.is_atx_heading
                 or token.is_block_quote_end
+                or ff
             )
             self.__bq_line_index[num_container_tokens] += 1
             self.__have_incremented_for_this_line = True
@@ -331,8 +363,16 @@ class RuleMd027(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         _ = context
+        did_reduce_containers = False
         while self.__leading_space_index_tracker.have_any_registered_container_ends():
             self.__leading_space_index_tracker.process_container_end(token)
+            did_reduce_containers = True
+
+        if (
+            did_reduce_containers
+            and not self.__leading_space_index_tracker.in_at_least_one_container()
+        ):
+            self.__previous_tokens.clear()
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
@@ -385,6 +425,7 @@ class RuleMd027(RulePlugin):
         self.__leading_space_index_tracker.track_since_last_non_end_token(token)
 
         self.__last_token = token
+        self.__previous_tokens.append(token)
 
     def __handle_block_quote_start(self, token: MarkdownToken) -> None:
         self.__container_tokens.append(token)
@@ -980,7 +1021,7 @@ class RuleMd027(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         raw_html_token = cast(RawHtmlMarkdownToken, token)
-        recombine_list = []
+        recombine_list: List[str] = []
         for next_tag_line in raw_html_token.raw_tag.split("\n"):
             if next_tag_line.startswith("\a"):
                 after_space_index, _ = ParserHelper.collect_while_spaces_verified(
@@ -1279,6 +1320,8 @@ class RuleMd027(RulePlugin):
         num_container_tokens: int,
         is_directly_within_block_quote: bool,
     ) -> None:
+        # add table support: https://github.com/jackdewinter/pymarkdown/issues/1515
+
         if token.is_inline_raw_html and context.in_fix_mode:
             self.__handle_raw_html(context, token)
         elif token.is_inline_code_span and context.in_fix_mode:

@@ -4,7 +4,7 @@ it appear like the author got the inline link syntax reversed.
 """
 
 import re
-from typing import List
+from typing import List, Optional
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -24,6 +24,7 @@ class RuleMd011(RulePlugin):
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__line_index = 0
         self.__leaf_token_index = 0
+        self.__last_line: Optional[str] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -46,6 +47,7 @@ class RuleMd011(RulePlugin):
         self.__leaf_tokens = []
         self.__line_index = 1
         self.__leaf_token_index = 0
+        self.__last_line = None
 
     # pylint: disable=too-many-boolean-expressions
     def next_line(self, context: PluginScanContext, line: str) -> None:
@@ -70,13 +72,18 @@ class RuleMd011(RulePlugin):
             if regex_search := self.__reverse_link_syntax.search(line):
                 regex_span = regex_search.span()
                 extra_error_information = line[regex_span[0] : regex_span[1]]
+                override_is_error_token_prefaced_by_blank_line = (
+                    self.__last_line is not None and not self.__last_line
+                )
                 self.report_next_line_error(
                     context,
                     regex_span[0] + 1,
                     extra_error_information=extra_error_information,
+                    override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
                 )
 
         self.__line_index += 1
+        self.__last_line = line.strip(" \t")
 
     # pylint: enable=too-many-boolean-expressions
 

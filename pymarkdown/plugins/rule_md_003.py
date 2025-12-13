@@ -172,7 +172,10 @@ class RuleMd003(RulePlugin):
                     f"Expected: {expected_style_type}; Actual: {heading_style_type}"
                 )
                 self.report_next_token_error(
-                    context, token, extra_error_information=extra_data, use_original_position=token.is_setext_heading
+                    context,
+                    token,
+                    extra_error_information=extra_data,
+                    use_original_position=token.is_setext_heading,
                 )
 
     @classmethod

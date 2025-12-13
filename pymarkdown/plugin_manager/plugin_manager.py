@@ -69,7 +69,7 @@ class PluginManager:
         self.__document_pragmas: Dict[int, Set[str]] = {}
         self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
         self.__general_pragma_ranges: List[Tuple[int, int, str]]
-        self.__pragma_line_numbers : List[int]
+        self.__pragma_line_numbers: List[int]
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -385,13 +385,16 @@ class PluginManager:
         """
 
         rule_id = scan_failure.rule_id.lower()
-        if (            self.__document_pragmas        ):
+        if self.__document_pragmas:
             if scan_failure.line_number in self.__document_pragmas:
                 id_set = self.__document_pragmas[scan_failure.line_number]
                 if rule_id in id_set:
                     return
-            if scan_failure.is_error_token_prefaced_by_blank_line and (scan_failure.line_number - 1) in self.__document_pragmas:
-                id_set = self.__document_pragmas[scan_failure.line_number -1]
+            if (
+                scan_failure.is_error_token_prefaced_by_blank_line
+                and (scan_failure.line_number - 1) in self.__document_pragmas
+            ):
+                id_set = self.__document_pragmas[scan_failure.line_number - 1]
                 if rule_id in id_set:
                     return
 
@@ -420,7 +423,7 @@ class PluginManager:
             scan_failure.rule_name,
             scan_failure.rule_description,
             extra_info,
-            False
+            False,
         )
         self.__presentation.print_scan_failure(adjusted_failure)
         self.number_of_scan_failures += 1
@@ -441,7 +444,7 @@ class PluginManager:
 
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
 
-        self.__pragma_line_numbers :List[int] = []
+        self.__pragma_line_numbers = []
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -919,7 +922,10 @@ class PluginManager:
 
         return [next_plugin.plugin_id for next_plugin in self.__registered_plugins]
 
-    def is_pragma_on_line(self, line_number:int) -> bool:
+    def is_pragma_on_line(self, line_number: int) -> bool:
+        """
+        Determine if there is a pragma on the specified line.
+        """
         return line_number in self.__pragma_line_numbers
 
     @classmethod

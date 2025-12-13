@@ -237,12 +237,18 @@ class RuleMd043(RulePlugin):
         )
         if failure_token:
             self.report_next_token_error(
-                context, failure_token, extra_error_information=failure_reason, use_original_position=failure_token.is_setext_heading
+                context,
+                failure_token,
+                extra_error_information=failure_reason,
+                use_original_position=failure_token.is_setext_heading,
             )
         elif end_index < len(self.__all_tokens):
             anchor_token = self.__all_tokens[end_index][0]
             self.report_next_token_error(
-                context, anchor_token, extra_error_information="Extra heading", use_original_position=anchor_token.is_setext_heading
+                context,
+                anchor_token,
+                extra_error_information="Extra heading",
+                use_original_position=anchor_token.is_setext_heading,
             )
 
     def __handle_wildcard_prefix(
@@ -529,14 +535,14 @@ class RuleMd043(RulePlugin):
                         context,
                         remaining_tokens[0][0],
                         extra_error_information="Multiple wildcard matching failed.",
-                        use_original_position=remaining_tokens[0][0].is_setext_heading
+                        use_original_position=remaining_tokens[0][0].is_setext_heading,
                     )
         if failure_token:
             self.report_next_token_error(
                 context,
                 failure_token,
                 extra_error_information="Wildcard heading match failed.",
-                use_original_position=failure_token.is_setext_heading
+                use_original_position=failure_token.is_setext_heading,
             )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:

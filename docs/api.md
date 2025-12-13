@@ -428,7 +428,7 @@ Create a new instance of the `PyMarkdownApi` class.
 
                 PyMarkdownApi().log_warning_and_above().scan_path("file.md")
 
-    `scan_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: Optional[str] = None) ‑> api.PyMarkdownScanPathResult`
+    `scan_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str | None = None) ‑> api.PyMarkdownScanPathResult`
     :   Scan any eligible Markdown files found on the provided path.  For more information,
         check out our User's Guide sections on [Basic Scanning](../user-guide.md#basic-scanning)
         and [Command Line Arguments](../user-guide.md#command-line-arguments).
@@ -684,7 +684,7 @@ Create a new instance of the `PyMarkdownApi` class.
     Attributes:
         files_fixed (List[str]): List of zero or more files that were fixed.
 
-    ### Class variables
+    ### Instance variables
 
     `critical_errors: List[str]`
     :   List of zero or more critical errors that were encountered during the fixing of the files. Only
@@ -704,7 +704,7 @@ Create a new instance of the `PyMarkdownApi` class.
         was_fixed (bool): Whether the string, interpretted as a Markdown document, was fixed.
         fixed_file (str): String that was passed into the `fix_string` function, with any fixes applied to it.
 
-    ### Class variables
+    ### Instance variables
 
     `fixed_file: str`
     :   String that was passed into the `fix_string` function, with any fixes applied
@@ -722,7 +722,7 @@ Create a new instance of the `PyMarkdownApi` class.
     Attributes:
         matching_files (List[str]): List of filenames that match the specifications of the requested path.
 
-    ### Class variables
+    ### Instance variables
 
     `matching_files: List[str]`
     :   List of filenames that match the specifications of the requested path.
@@ -746,7 +746,7 @@ Create a new instance of the `PyMarkdownApi` class.
         line_number (int): Line number where the pragma is contained.
         pragma_error (str): Specific information about the error.
 
-    ### Class variables
+    ### Instance variables
 
     `file_path: str`
     :   Path to the file that contains the improperly constructed pragma.
@@ -757,7 +757,7 @@ Create a new instance of the `PyMarkdownApi` class.
     `pragma_error: str`
     :   Specific information about the error.
 
-`PyMarkdownScanFailure(scan_file: str, line_number: int, column_number: int, rule_id: str, rule_name: str, rule_description: str, extra_error_information: Optional[str])`
+`PyMarkdownScanFailure(scan_file: str, line_number: int, column_number: int, rule_id: str, rule_name: str, rule_description: str, extra_error_information: str | None)`
 :   Class to contain information about a failure reported by one of the rule plugins.
 
     Each instance of this class specifies a single scan failure that was encountered
@@ -784,12 +784,12 @@ Create a new instance of the `PyMarkdownApi` class.
         rule_description (str): Longer description of the rule that was triggered.
         extra_error_information (Optional[str]): String providing more information on why the rule was triggered.
 
-    ### Class variables
+    ### Instance variables
 
     `column_number: int`
     :   Column number of the triggered rule failure.
 
-    `extra_error_information: Optional[str]`
+    `extra_error_information: str | None`
     :   Optional string providing more information on why the rule was triggered.
 
     `line_number: int`
@@ -823,7 +823,7 @@ Create a new instance of the `PyMarkdownApi` class.
         scan_failures (List[PyMarkdownScanFailure]): Zero or more `PyMarkdownScanFailure` objects.
         pragma_errors (List[PyMarkdownPragmaError]): Zero or more `PyMarkdownPragmaError` objects.
 
-    ### Class variables
+    ### Instance variables
 
     `critical_errors: List[str]`
     :   List of zero or more critical errors that were encountered during the scan. Only

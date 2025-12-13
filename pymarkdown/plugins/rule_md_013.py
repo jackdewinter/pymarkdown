@@ -2,7 +2,7 @@
 Module to implement a plugin that looks for excessively long lines in the file.
 """
 
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import (
@@ -36,6 +36,7 @@ class RuleMd013(RulePlugin):
         self.__headings_active = False
         self.__strict_mode = False
         self.__stern_mode = False
+        self.__last_line: Optional[str] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -132,6 +133,7 @@ class RuleMd013(RulePlugin):
         self.__leaf_tokens = []
         self.__line_index = 1
         self.__leaf_token_index = 0
+        self.__last_line = None
 
     def __is_really_longer(
         self, line_length: int, compare_length: int
@@ -196,10 +198,17 @@ class RuleMd013(RulePlugin):
                 extra_error_information = (
                     f"Expected: {compare_length}, Actual: {line_length}"
                 )
+                override_is_error_token_prefaced_by_blank_line = (
+                    self.__last_line is not None and not self.__last_line
+                )
                 self.report_next_line_error(
-                    context, 1, extra_error_information=extra_error_information
+                    context,
+                    1,
+                    extra_error_information=extra_error_information,
+                    override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
                 )
         self.__line_index += 1
+        self.__last_line = line.strip(" \t")
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

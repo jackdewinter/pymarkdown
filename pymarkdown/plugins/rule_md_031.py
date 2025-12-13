@@ -1199,12 +1199,25 @@ class RuleMd031(RulePlugin):
                 self.__fix_spacing(context, token, False, False)
             else:
                 assert self.__last_non_end_token
+                if self.__last_non_end_token.is_text:
+                    text_token = cast(TextMarkdownToken, self.__last_non_end_token)
+                    override_is_error_token_prefaced_by_blank_line = (
+                        text_token.token_text.endswith(
+                            ParserHelper.newline_character
+                            + ParserHelper.replace_noop_character
+                        )
+                    )
+                else:
+                    override_is_error_token_prefaced_by_blank_line = False
                 line_number_delta, column_number_delta = self.__calculate_end_deltas()
+                error_token = self.__end_fenced_code_block_token.start_markdown_token
                 self.report_next_token_error(
                     context,
-                    self.__end_fenced_code_block_token.start_markdown_token,
-                    line_number_delta=line_number_delta,
+                    error_token,
+                    line_number_delta=line_number_delta
+                    + context.calc_pragma_offset(error_token, line_number_delta),
                     column_number_delta=column_number_delta,
+                    override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
                 )
         self.__end_fenced_code_block_token = None
 

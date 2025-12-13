@@ -1086,6 +1086,7 @@ title: abc
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_no_pragma() -> None:
     """
@@ -1117,6 +1118,7 @@ def test_md018_issue_1479_single_trigger_no_pragma() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_pragma_without_blank() -> None:
@@ -1150,6 +1152,7 @@ def test_md018_issue_1479_single_trigger_pragma_without_blank() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_pragma_with_blank() -> None:
@@ -1185,10 +1188,11 @@ def test_md018_issue_1479_single_trigger_pragma_with_blank() -> None:
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_within_list_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1215,6 +1219,7 @@ def test_md018_issue_1479_single_trigger_within_list_no_pragma() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_within_list_pragma_without_blank() -> None:
@@ -1247,6 +1252,7 @@ def test_md018_issue_1479_single_trigger_within_list_pragma_without_blank() -> N
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_within_list_pragma_with_blank() -> None:
@@ -1281,10 +1287,11 @@ def test_md018_issue_1479_single_trigger_within_list_pragma_with_blank() -> None
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_within_block_quote_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1312,8 +1319,11 @@ def test_md018_issue_1479_single_trigger_within_block_quote_no_pragma() -> None:
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
-def test_md018_issue_1479_single_trigger_within_block_quote_pragma_without_blank() -> None:
+def test_md018_issue_1479_single_trigger_within_block_quote_pragma_without_blank() -> (
+    None
+):
     """
     Test to make sure this rule handles a single pragma that occurs
     """
@@ -1343,6 +1353,7 @@ def test_md018_issue_1479_single_trigger_within_block_quote_pragma_without_blank
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_single_trigger_within_block_quote_pragma_with_blank() -> None:
@@ -1376,6 +1387,7 @@ def test_md018_issue_1479_single_trigger_within_block_quote_pragma_with_blank() 
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_no_pragma() -> None:
@@ -1411,6 +1423,7 @@ more text here
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_pragma_without_blank() -> None:
@@ -1448,6 +1461,7 @@ more text here
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_pragma_with_blank() -> None:
@@ -1488,10 +1502,11 @@ more text here
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_within_list_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1521,6 +1536,7 @@ def test_md018_issue_1479_double_trigger_within_list_no_pragma() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_within_list_pragma_without_blank() -> None:
@@ -1557,6 +1573,7 @@ def test_md018_issue_1479_double_trigger_within_list_pragma_without_blank() -> N
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_within_list_pragma_with_blank() -> None:
@@ -1596,10 +1613,11 @@ def test_md018_issue_1479_double_trigger_within_list_pragma_with_blank() -> None
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_within_block_quote_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1630,8 +1648,11 @@ def test_md018_issue_1479_double_trigger_within_block_quote_no_pragma() -> None:
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
-def test_md018_issue_1479_double_trigger_within_block_quote_pragma_without_blank() -> None:
+def test_md018_issue_1479_double_trigger_within_block_quote_pragma_without_blank() -> (
+    None
+):
     """
     Test to make sure this rule handles a single pragma that occurs
     """
@@ -1666,6 +1687,7 @@ def test_md018_issue_1479_double_trigger_within_block_quote_pragma_without_blank
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_double_trigger_within_block_quote_pragma_with_blank() -> None:
     """
@@ -1687,7 +1709,8 @@ def test_md018_issue_1479_double_trigger_within_block_quote_pragma_with_blank() 
         source_file_contents, file_name_suffix=".md"
     ) as source_path:
         supplied_arguments = [
-            "-d", "md028,md041",
+            "-d",
+            "md028,md041",
             "scan",
             source_path,
         ]
@@ -1704,6 +1727,7 @@ def test_md018_issue_1479_double_trigger_within_block_quote_pragma_with_blank() 
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_no_pragma() -> None:
@@ -1742,6 +1766,7 @@ more text here
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_pragma_without_blank() -> None:
@@ -1783,6 +1808,7 @@ more text here
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_pragma_with_blank() -> None:
@@ -1828,10 +1854,11 @@ more text here
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_within_list_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1864,6 +1891,7 @@ def test_md018_issue_1479_triple_trigger_within_list_no_pragma() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_within_list_pragma_without_blank() -> None:
@@ -1904,6 +1932,7 @@ def test_md018_issue_1479_triple_trigger_within_list_pragma_without_blank() -> N
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_within_list_pragma_with_blank() -> None:
@@ -1948,10 +1977,11 @@ def test_md018_issue_1479_triple_trigger_within_list_pragma_with_blank() -> None
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_within_block_quote_no_pragma() -> None:
     """
-    Test to make sure this rule handles 
+    Test to make sure this rule handles
     """
 
     # Arrange
@@ -1985,8 +2015,11 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_no_pragma() -> None:
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
-def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_without_blank() -> None:
+def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_without_blank() -> (
+    None
+):
     """
     Test to make sure this rule handles a single pragma that occurs
     """
@@ -2025,6 +2058,7 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_without_blank
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() -> None:
     """
@@ -2050,7 +2084,8 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() 
         source_file_contents, file_name_suffix=".md"
     ) as source_path:
         supplied_arguments = [
-            "-d", "md028,md041",
+            "-d",
+            "md028,md041",
             "scan",
             source_path,
         ]
@@ -2068,6 +2103,7 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() 
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 def test_md018_query_config() -> None:
     config_test = pluginQueryConfigTest(

@@ -581,7 +581,8 @@ class FileScanHelper:
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
         replace_tokens_list: List[ReplaceTokensRecord] = []
         fix_context = self.__plugins.starting_new_file(
-            next_file_name,actual_tokens,
+            next_file_name,
+            actual_tokens,
             fix_mode=True,
             temp_output=None,
             fix_token_map=fix_token_map,

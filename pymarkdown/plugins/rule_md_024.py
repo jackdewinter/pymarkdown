@@ -14,6 +14,7 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd024(RulePlugin):
@@ -94,7 +95,8 @@ class RuleMd024(RulePlugin):
         if not skip_this_token and self.__heading_text is not None:
             new_token_debug = token.debug_string(include_column_row_info=False)
             if token.is_text and not self.__heading_text:
-                suffix_to_look_for = f":{token.extracted_whitespace}]"
+                text_token = cast(TextMarkdownToken, token)
+                suffix_to_look_for = f":{text_token.extracted_whitespace}]"
                 if new_token_debug.endswith(suffix_to_look_for):
                     new_token_debug = f"{new_token_debug[:-len(suffix_to_look_for)]}:]"
             self.__heading_text += new_token_debug

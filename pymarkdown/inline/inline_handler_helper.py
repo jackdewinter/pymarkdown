@@ -686,7 +686,7 @@ class InlineHandlerHelper:
         line_number: int,
         column_number: int,
         coalesced_stack: List[MarkdownToken],
-        pragma_line_numbers : Set[int],
+        pragma_line_numbers: Set[int],
     ) -> Tuple[InlineResponse, int, int, bool, bool]:
         """
         Process the handler specified by the next character.

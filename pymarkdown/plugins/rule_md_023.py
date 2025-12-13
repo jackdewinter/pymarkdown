@@ -147,7 +147,9 @@ class RuleMd023(RulePlugin):
 
         if self.__any_leading_whitespace_detected:
             assert self.__setext_start_token is not None
-            self.report_next_token_error(context, self.__setext_start_token, use_original_position=True)
+            self.report_next_token_error(
+                context, self.__setext_start_token, use_original_position=True
+            )
         self.__setext_start_token = None
 
     def __handle_text_split_end(
