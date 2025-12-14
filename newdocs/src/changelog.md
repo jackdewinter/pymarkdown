@@ -2,6 +2,8 @@
 
 ## Unversioned
 
+- Upgraded minimum version from Python 3.9 to 3.10
+
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 

@@ -87,7 +87,7 @@ PROJECT_URLS = {
 MODULE_NAME = "pymarkdown"
 PACKAGE_NAME = "pymarkdownlnt"
 SEMANTIC_VERSION = get_semantic_version()
-MINIMUM_PYTHON_VERSION = "3.9.0"
+MINIMUM_PYTHON_VERSION = "3.10.0"
 
 ONE_LINE_DESCRIPTION = get_description()
 LONG_DESCRIPTION = load_readme_file()
@@ -98,7 +98,6 @@ PROJECT_CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
