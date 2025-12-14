@@ -54,7 +54,7 @@ class RuleMd003(RulePlugin):
             plugin_id="MD003",
             plugin_enabled_by_default=True,
             plugin_description="Heading style should be consistent throughout the document.",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md003.md",
             plugin_configuration="style",
         )

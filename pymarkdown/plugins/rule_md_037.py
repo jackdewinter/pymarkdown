@@ -58,7 +58,7 @@ class RuleMd037(RulePlugin):
             plugin_id="MD037",
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside emphasis markers",
-            plugin_version="0.5.1",
+            plugin_version="0.5.2",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md037.md",
             plugin_supports_fix=True,
         )

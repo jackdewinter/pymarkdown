@@ -41,7 +41,7 @@ class RuleMd041(RulePlugin):
             plugin_id="MD041",
             plugin_enabled_by_default=True,
             plugin_description="First line in file should be a top level heading",
-            plugin_version="0.7.0",
+            plugin_version="0.7.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md041.md",
             plugin_configuration="level,front_matter_title",
         )

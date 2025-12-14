@@ -93,7 +93,7 @@ class RuleMd031(RulePlugin):
             plugin_id="MD031",
             plugin_enabled_by_default=True,
             plugin_description="Fenced code blocks should be surrounded by blank lines",
-            plugin_version="0.7.0",
+            plugin_version="0.7.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md031.md",
             plugin_configuration="list_items",
             plugin_supports_fix=True,

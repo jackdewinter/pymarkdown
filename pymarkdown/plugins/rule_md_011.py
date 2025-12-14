@@ -35,7 +35,7 @@ class RuleMd011(RulePlugin):
             plugin_id="MD011",
             plugin_enabled_by_default=True,
             plugin_description="Reversed link syntax",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_interface_version=1,
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md011.md",
         )

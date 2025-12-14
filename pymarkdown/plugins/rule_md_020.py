@@ -70,7 +70,7 @@ class RuleMd020(RulePlugin):
             plugin_id="MD020",
             plugin_enabled_by_default=True,
             plugin_description="No space present inside of the hashes on a possible Atx Closed Heading.",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_interface_version=1,
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md020.md",
         )

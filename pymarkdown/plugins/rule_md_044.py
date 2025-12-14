@@ -62,7 +62,7 @@ class RuleMd044(RulePlugin):
             plugin_id="MD044",
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
-            plugin_version="0.7.0",
+            plugin_version="0.7.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md044.md",
             plugin_configuration="names,code_blocks",
             plugin_supports_fix=True,

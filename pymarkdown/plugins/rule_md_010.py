@@ -41,7 +41,7 @@ class RuleMd010(RulePlugin):
             plugin_id="MD010",
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md010.md",
             plugin_configuration="code_blocks",
             plugin_supports_fix=True,

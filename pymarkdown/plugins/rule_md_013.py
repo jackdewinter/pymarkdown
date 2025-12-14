@@ -47,7 +47,7 @@ class RuleMd013(RulePlugin):
             plugin_id="MD013",
             plugin_enabled_by_default=True,
             plugin_description="Line length",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md013.md",
             plugin_configuration="line_length,heading_line_length,code_block_line_length,"
             + "code_blocks,headings,strict,stern",

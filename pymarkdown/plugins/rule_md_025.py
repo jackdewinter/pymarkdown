@@ -36,7 +36,7 @@ class RuleMd025(RulePlugin):
             plugin_id="MD025",
             plugin_enabled_by_default=True,
             plugin_description="Multiple top-level headings in the same document",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md025.md",
             plugin_configuration="level, front_matter_title",
         )

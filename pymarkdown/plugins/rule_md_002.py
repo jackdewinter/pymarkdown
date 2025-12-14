@@ -36,7 +36,7 @@ class RuleMd002(RulePlugin):
             plugin_id="MD002",
             plugin_enabled_by_default=False,
             plugin_description="First heading of the document should be a top level heading.",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md002.md",
             plugin_configuration="level",
         )

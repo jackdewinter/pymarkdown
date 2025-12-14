@@ -41,7 +41,7 @@ class RuleMd023(RulePlugin):
             plugin_id="MD023",
             plugin_enabled_by_default=True,
             plugin_description="Headings must start at the beginning of the line.",
-            plugin_version="0.5.2",
+            plugin_version="0.5.3",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md023.md",
             plugin_supports_fix=True,
         )

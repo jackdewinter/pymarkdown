@@ -45,7 +45,7 @@ class RuleMd009(RulePlugin):
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md009.md",
             plugin_configuration="br_spaces,list_item_empty_lines,strict",
             plugin_supports_fix=True,
