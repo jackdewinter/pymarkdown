@@ -30,6 +30,7 @@ class RuleMd010(RulePlugin):
         self.__leaf_token_index = -1
         self.__check_in_code_blocks: bool = False
         self.__last_fenced_code_end_token: Optional[EndMarkdownToken] = None
+        self.__last_line: Optional[str] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -40,7 +41,7 @@ class RuleMd010(RulePlugin):
             plugin_id="MD010",
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md010.md",
             plugin_configuration="code_blocks",
             plugin_supports_fix=True,
@@ -75,6 +76,7 @@ class RuleMd010(RulePlugin):
         self.__line_index = 1
         self.__leaf_token_index = 0
         self.__last_fenced_code_end_token = None
+        self.__last_line = None
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
@@ -163,11 +165,16 @@ class RuleMd010(RulePlugin):
                         line_before_tab
                     )
                     column_number_of_tab = len(untabified_line_before_tab) + 1
+                    override_is_error_token_prefaced_by_blank_line = (
+                        self.__last_line is not None and not self.__last_line
+                    )
                     self.report_next_line_error(
                         context,
                         column_number_of_tab,
                         extra_error_information=f"Column: {column_number_of_tab}",
+                        override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
                     )
                     next_index = line.find("\t", next_index + 1)
 
         self.__line_index += 1
+        self.__last_line = line.strip(" \t")

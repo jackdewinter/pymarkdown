@@ -34,7 +34,7 @@ class RuleMd034(RulePlugin):
             plugin_id="MD034",
             plugin_enabled_by_default=True,
             plugin_description="Bare URL used",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_interface_version=1,
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md034.md",
         )
@@ -73,7 +73,8 @@ class RuleMd034(RulePlugin):
                 self.report_next_token_error(
                     context,
                     token,
-                    line_number_delta=line_number_delta,
+                    line_number_delta=line_number_delta
+                    + context.calc_pragma_offset(token, line_number_delta),
                     column_number_delta=column_number_delta,
                 )
 

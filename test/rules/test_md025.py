@@ -362,14 +362,14 @@ def test_md025_bad_top_level_atx_top_level_setext() -> None:
     )
     supplied_arguments = [
         "--disable-rules",
-        "md003",
+        "md003,md024",
         "scan",
         source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:6:1: "
+        f"{source_path}:5:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -406,7 +406,7 @@ def test_md025_bad_top_level_setext_top_level_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:7:1: "
+        f"{source_path}:6:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -434,7 +434,7 @@ def test_md025_bad_top_level_setext_top_level_atx() -> None:
     )
     supplied_arguments = [
         "--disable-rules",
-        "md003",
+        "md003,md024",
         "scan",
         source_path,
     ]
@@ -547,7 +547,7 @@ def test_md025_bad_front_matter_title_top_level_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:8:1: "
+        f"{source_path}:7:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""

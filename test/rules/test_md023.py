@@ -137,10 +137,10 @@ Very
 -----------------
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:9:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:14:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:22:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:8:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:13:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:18:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""Some text
 
@@ -199,10 +199,10 @@ Long Heading
 >
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:14:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:22:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:3:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:8:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:13:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:18:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""> Some text
 >
@@ -275,8 +275,8 @@ Long Heading
   ---------
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:9:6: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
-{temp_source_path}:22:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:8:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:18:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""- Some text
 
@@ -360,7 +360,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""> heading 1
 > ----
@@ -374,7 +374,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""> heading 1
 > ----
@@ -388,7 +388,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""> heading 1
 > ----
@@ -404,7 +404,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""> heading 1
 > part 2
@@ -511,7 +511,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""+ heading 1
   ----
@@ -527,7 +527,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""+ heading 1
   part 2
@@ -556,7 +556,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:2:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 + heading 1\a\a
@@ -632,7 +632,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024,md047",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:6:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 + heading 1
@@ -671,7 +671,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:13:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:10:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 + heading 1
@@ -712,7 +712,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:2:6: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""+ heading 0
   1. heading 1
@@ -732,7 +732,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:2:7: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 0
    1. heading 1
@@ -752,7 +752,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:2:6: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 0
    + heading 1
@@ -860,7 +860,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    ----
@@ -876,7 +876,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    part 2
@@ -899,7 +899,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    part 2
@@ -925,7 +925,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    part 2
@@ -950,7 +950,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:6:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    part 2
@@ -977,7 +977,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""1. heading 1
    part 2
@@ -1011,7 +1011,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:2:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 1. heading 2\a\a
@@ -1050,7 +1050,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024,md047",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:6:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 1. heading 1
@@ -1089,7 +1089,7 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:13:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+        scan_expected_output="""{temp_source_path}:10:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
 1. heading 1

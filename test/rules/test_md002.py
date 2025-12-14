@@ -42,7 +42,7 @@ def test_md002_all_samples() -> None:
         f"{source_path}improper_atx_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
-        + f"{source_path}improper_setext_heading_start.md:2:1: "
+        + f"{source_path}improper_setext_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -331,12 +331,14 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration() ->
 
 
 @pytest.mark.plugins
-@pytest.mark.user_properties({"DupCov": {"W002": {}}})
-@pytest.mark.skip(reason="Duplicate coverage")
 def test_md002_bad_improper_setext_heading_start() -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 SetExt Heading at the
     start of the document.
+
+    Note that this test is a required scenario as it is the only one
+    that reports an error with a SetExt heading at the start of the
+    document.
     """
 
     # Arrange
@@ -349,7 +351,7 @@ def test_md002_bad_improper_setext_heading_start() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}improper_setext_heading_start.md:2:1: "
+        f"{source_path}improper_setext_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )

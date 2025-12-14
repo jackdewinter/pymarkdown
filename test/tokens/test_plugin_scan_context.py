@@ -29,6 +29,7 @@ def test_plugin_scan_context_register_token_fix_no_map() -> None:
     scan_context = PluginScanContext(
         PluginManager(MainPresentation()),
         "scan_file",
+        [],
         fix_mode=True,
         file_output=None,
         fix_token_map=None,
@@ -53,6 +54,7 @@ def test_plugin_scan_context_register_token_first_one() -> None:
     scan_context = PluginScanContext(
         PluginManager(MainPresentation()),
         "scan_file",
+        [],
         fix_mode=True,
         file_output=None,
         fix_token_map=token_map,
@@ -83,6 +85,7 @@ def test_plugin_scan_context_register_token_second_one() -> None:
     scan_context = PluginScanContext(
         PluginManager(MainPresentation()),
         "scan_file",
+        [],
         fix_mode=True,
         file_output=None,
         fix_token_map=token_map,

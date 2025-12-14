@@ -7,6 +7,12 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- [Issue 1479](https://github.com/jackdewinter/pymarkdown/issues/1479)
+    - Support for having a pragma to disable the rule for the next line
+      is extended to include a single blank line between the pragma and
+      the line where the failure occurs.
+    - Added large number of tests (see work in fixed section) to ensure
+      that next-line pragmas are consistently working for all rules.
 - [Issue 1490](https://github.com/jackdewinter/pymarkdown/issues/1490)
     - Added work to measure "extra" test coverage, with goals to keep scenario
       coverage but reduce redundant code coverage
@@ -16,8 +22,35 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1426](https://github.com/jackdewinter/pymarkdown/issues/1426)
+    - from previous work, but also asked reporter how to enhance this rule
 - [Issue 1475](https://github.com/jackdewinter/pymarkdown/issues/1475)
     - fixed typo in documentation
+- [Issue 1505](https://github.com/jackdewinter/pymarkdown/issues/1505)
+    - fixed an issue with Md002/Md041 where the bottom of the SetExt
+      token was being reported instead of the top
+    - additionally, fixed a small issue with empty documents falsely
+      reporting the end-of-stream token as a "bad" heading
+- [Issue 1506](https://github.com/jackdewinter/pymarkdown/issues/1506)
+    - fixed an issue with Md003 where the bottom of the SetExt
+      token was being reported instead of the top
+- [Issue 1507](https://github.com/jackdewinter/pymarkdown/issues/1507)
+    - fixed an issue with Md023 where the bottom of the SetExt
+      token was being reported instead of the top
+- [Issue 1508](https://github.com/jackdewinter/pymarkdown/issues/1508)
+    - fixed an issue with Md024 where the accumulated text for the Atx Heading
+      and the accumulated text for the SetExt heading with the same text
+      differed
+- [Issue 1510](https://github.com/jackdewinter/pymarkdown/issues/1510)
+    - fixed an issue with Md025 where the bottom of the SetExt
+      token was being reported instead of the top
+- [Issue 1512](https://github.com/jackdewinter/pymarkdown/issues/1512)
+    - adding missing tests for Md043 and SetExt headings
+    - fixed an issue with Md043 where the bottom of the SetExt
+      token was being reported instead of the top
+- [Issue 1514](https://github.com/jackdewinter/pymarkdown/issues/1514)
+    - when parsing inline elements from a text block, pragmas were not
+      been considered, resulting in reported lines being off
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
@@ -25,6 +58,9 @@
 - [Issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462)
     - added `system.exclude_path` to provide configuration option for the
       command-line `--exclude`
+- [Issue 1504](https://github.com/jackdewinter/pymarkdown/issues/1504)
+    - clarified documentation for rule Md001 and the first heading of
+      a document
 
 ## Version 0.9.33 - 2025-10-22
 

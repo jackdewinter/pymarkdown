@@ -41,7 +41,7 @@ class RuleMd023(RulePlugin):
             plugin_id="MD023",
             plugin_enabled_by_default=True,
             plugin_description="Headings must start at the beginning of the line.",
-            plugin_version="0.5.2",
+            plugin_version="0.5.3",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md023.md",
             plugin_supports_fix=True,
         )
@@ -147,7 +147,9 @@ class RuleMd023(RulePlugin):
 
         if self.__any_leading_whitespace_detected:
             assert self.__setext_start_token is not None
-            self.report_next_token_error(context, self.__setext_start_token)
+            self.report_next_token_error(
+                context, self.__setext_start_token, use_original_position=True
+            )
         self.__setext_start_token = None
 
     def __handle_text_split_end(

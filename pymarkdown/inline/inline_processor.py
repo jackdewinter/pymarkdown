@@ -467,7 +467,7 @@ class InlineProcessor:
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         encoded_text = InlineHelper.append_text("", text_token.token_text)
         if coalesced_list[-1].is_fenced_code_block:
-            line_number_delta = 1
+            line_number_delta = text_token.line_number - coalesced_list[-1].line_number
 
             # POGGER.info("coalesced_stack:$<", coalesced_stack)
             if coalesced_stack:

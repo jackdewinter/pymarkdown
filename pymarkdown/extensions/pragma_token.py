@@ -158,6 +158,7 @@ class PragmaExtension(ParserExtension):
         general_pragma_ranges: List[Tuple[int, int, str]],
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
         log_pragma_failure: LogPragmaFailureProtocol,
+        actual_pragma_line_numbers: List[int],
     ) -> None:
         """
         Compile a single pragma line, validating it before adding it to the dictionary of pragmas.
@@ -170,6 +171,8 @@ class PragmaExtension(ParserExtension):
             prefix_length = len(PragmaToken.pragma_alternate_prefix)
             actual_line_number = -next_line_number
             suffix_to_use = PragmaToken.pragma_alternate_suffix
+
+        actual_pragma_line_numbers.append(actual_line_number)
 
         line_after_prefix = pragma_lines[next_line_number][prefix_length:]
         after_whitespace_index, _ = ParserHelper.extract_spaces_verified(

@@ -5,7 +5,7 @@ Module to provide context when reporting any errors.
 from __future__ import annotations
 
 from io import TextIOWrapper
-from typing import TYPE_CHECKING, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple, Union
 
 from typing_extensions import override
 
@@ -32,6 +32,7 @@ class PluginScanContext(PluginModifyContext):
         self,
         owning_manager: PluginManager,
         scan_file: str,
+        actual_tokens: List[MarkdownToken],
         fix_mode: bool,
         file_output: Optional[TextIOWrapper],
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]],
@@ -50,6 +51,7 @@ class PluginScanContext(PluginModifyContext):
         self.__file_output = file_output
         self.__fix_token_map = fix_token_map
         self.__replace_token_list = replace_tokens_list
+        self.__actual_tokens = actual_tokens
 
     # pylint: enable=too-many-arguments
 
@@ -181,6 +183,8 @@ class PluginScanContext(PluginModifyContext):
         rule_description: str,
         extra_error_information: Optional[str],
         does_support_fix: bool,
+        error_token: Optional[MarkdownToken] = None,
+        override_is_error_token_prefaced_by_blank_line: Optional[bool] = None,
     ) -> None:
         """
         Add the triggering information for a rule.
@@ -192,6 +196,13 @@ class PluginScanContext(PluginModifyContext):
                 )
             return
 
+        if override_is_error_token_prefaced_by_blank_line is not None:
+            is_error_token_prefaced_by_blank_line = (
+                override_is_error_token_prefaced_by_blank_line
+            )
+        else:
+            is_error_token_prefaced_by_blank_line = self.__calc_x(error_token)
+
         new_entry = PluginScanFailure(
             scan_file,
             line_number,
@@ -200,18 +211,119 @@ class PluginScanContext(PluginModifyContext):
             rule_name,
             rule_description,
             extra_error_information,
+            is_error_token_prefaced_by_blank_line,
         )
         self.__reported.append(new_entry)
 
     # pylint: enable=too-many-arguments
+
+    def __calc_x_rewind_if_inline(
+        self, index_to_check: int, current_token: MarkdownToken, dd: bool
+    ) -> Tuple[int, MarkdownToken, bool, bool]:
+        # For an inline, rewind back to the last text token.  If the text token was
+        # not on the same line as the inline token, by definition there is text on
+        # the line, so break out of this check.
+        #
+        # Note that in special cases, such as a link being at the start of a parapgrah,
+        # we may not have any text element before the paragraph element.
+        do_break = False
+        if (
+            not current_token.is_leaf
+            and not current_token.is_container
+            and not current_token.is_text
+        ):
+            while (
+                index_to_check >= 0
+                and not self.__actual_tokens[index_to_check].is_text
+                and not self.__actual_tokens[index_to_check].is_paragraph
+            ):
+                index_to_check -= 1
+            assert index_to_check >= 0
+            if (
+                current_token.line_number
+                != self.__actual_tokens[index_to_check].line_number
+            ):
+                do_break = True
+            else:
+                current_token = self.__actual_tokens[index_to_check]
+                dd = True
+        return index_to_check, current_token, dd, do_break
+
+    def __calc_x_rewind_if_text(
+        self, index_to_check: int, current_token: MarkdownToken, dd: bool
+    ) -> Tuple[int, MarkdownToken, bool]:
+        if current_token.is_text:
+            # Text blocks can only occur within leaf elements, so work backwards until
+            # we hit a leaf element.
+            while (
+                index_to_check >= 0 and not self.__actual_tokens[index_to_check].is_leaf
+            ):
+                index_to_check -= 1
+            if index_to_check > 0:
+                index_to_check -= 1
+            current_token = self.__actual_tokens[index_to_check]
+            dd = True
+        elif current_token.is_paragraph:
+            if index_to_check > 0:
+                index_to_check -= 1
+            current_token = self.__actual_tokens[index_to_check]
+        return index_to_check, current_token, dd
+
+    def __calc_x(self, error_token: Optional[MarkdownToken]) -> bool:
+        if error_token is None:
+            return False
+
+        is_error_token_prefaced_by_blank_line = False
+        for i, j in enumerate(self.__actual_tokens):  # pragma: no cover
+            if not (
+                j.line_number == error_token.line_number
+                and j.column_number == error_token.column_number
+                and j.token_name == error_token.token_name
+            ):
+                continue
+
+            index_to_check = i
+            current_token = error_token
+            dd = False
+
+            index_to_check, current_token, dd, do_break = (
+                self.__calc_x_rewind_if_inline(index_to_check, current_token, dd)
+            )
+            if do_break:
+                break
+
+            index_to_check, current_token, dd = self.__calc_x_rewind_if_text(
+                index_to_check, current_token, dd
+            )
+
+            # Lists can have trailing
+            if current_token.is_list_start:
+                while (
+                    index_to_check >= 0
+                    and self.__actual_tokens[index_to_check - 1].is_list_end
+                ):
+                    index_to_check -= 1
+                    # should we be doing this more generally? i.e. list closing and opening a fcb... ?
+                    # assert False  -- check to see if we need is_list_end or is_block_quote_end
+                if index_to_check > 0:
+                    index_to_check -= 1
+                current_token = self.__actual_tokens[index_to_check]
+                dd = True
+            assert index_to_check >= 0
+            if not dd and index_to_check > 0:
+                index_to_check -= 1
+            is_error_token_prefaced_by_blank_line = self.__actual_tokens[
+                index_to_check
+            ].is_blank_line
+            break
+        return is_error_token_prefaced_by_blank_line
 
     def report_on_triggered_rules(self) -> None:
         """
         Report on the various points where rules were triggered,
         in sorted order.
         """
-        reported_and_sorted = sorted(self.__reported)
-        for next_entry in reported_and_sorted:
+        for next_entry in sorted(self.__reported):
             self.owning_manager.log_scan_failure(next_entry)
         self.__reported.clear()
 
@@ -220,6 +332,23 @@ class PluginScanContext(PluginModifyContext):
         Get information on any rules that were triggered.
         """
         return {next_entry.rule_id.lower() for next_entry in self.__reported}
+
+    def is_pragma_on_line(self, line_number: int) -> bool:
+        """
+        Determine if there is a pragma on the specified line.
+        """
+        return self.owning_manager.is_pragma_on_line(line_number)
+
+    def calc_pragma_offset(self, token: MarkdownToken, line_number_delta: int) -> int:
+        """
+        Calculate the pragma offset for a given token and line number delta.
+        """
+        pragma_offset = 0
+        for line_index in range(line_number_delta):
+            modified_line_number = token.line_number + line_index + 1 + pragma_offset
+            if self.owning_manager.is_pragma_on_line(modified_line_number):
+                pragma_offset += 1
+        return pragma_offset
 
 
 # pylint: enable=too-many-instance-attributes

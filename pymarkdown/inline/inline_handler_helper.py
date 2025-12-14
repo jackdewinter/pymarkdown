@@ -3,7 +3,7 @@ Module to orchestrate the handling of the different inline elements.
 """
 
 import logging
-from typing import Dict, List, Optional, Tuple, cast
+from typing import Dict, List, Optional, Set, Tuple, cast
 
 from typing_extensions import Protocol
 
@@ -686,6 +686,7 @@ class InlineHandlerHelper:
         line_number: int,
         column_number: int,
         coalesced_stack: List[MarkdownToken],
+        pragma_line_numbers: Set[int],
     ) -> Tuple[InlineResponse, int, int, bool, bool]:
         """
         Process the handler specified by the next character.
@@ -695,7 +696,11 @@ class InlineHandlerHelper:
         # assert proc_fn is not None
         inline_response = proc_fn(parser_properties, inline_request)
 
-        line_number += inline_response.delta_line_number
+        for _ in range(inline_response.delta_line_number):
+            line_number += 1
+            while line_number in pragma_line_numbers:
+                line_number += 1
+
         did_line_number_change = bool(inline_response.delta_line_number)
         was_column_number_reset = inline_response.delta_column_number < 0
         column_number = (

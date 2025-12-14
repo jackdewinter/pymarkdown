@@ -41,7 +41,7 @@ class RuleMd041(RulePlugin):
             plugin_id="MD041",
             plugin_enabled_by_default=True,
             plugin_description="First line in file should be a top level heading",
-            plugin_version="0.7.0",
+            plugin_version="0.7.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md041.md",
             plugin_configuration="level,front_matter_title",
         )
@@ -118,7 +118,9 @@ class RuleMd041(RulePlugin):
         atx_token = cast(AtxHeadingMarkdownToken, token)
         self.__have_seen_first_token = True
         if atx_token.hash_count != self.__start_level:
-            self.report_next_token_error(context, token)
+            self.report_next_token_error(
+                context, token, use_original_position=token.is_setext_heading
+            )
         self.__have_seen_first_token = True
 
     def __handle_front_matter(self, token: MarkdownToken) -> None:
@@ -164,6 +166,6 @@ class RuleMd041(RulePlugin):
             self.__seen_html_block_start = token
         elif self.__seen_html_block_start:
             self.__handle_html_block_started(context, token)
-        elif not token.is_blank_line:
+        elif not token.is_blank_line and not token.is_end_of_stream:
             self.report_next_token_error(context, token)
             self.__have_seen_first_token = True

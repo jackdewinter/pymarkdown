@@ -357,6 +357,6 @@ def test_api_plugins_disable_multiple_enable_one() -> None:
         PyMarkdownScanFailure(source_path_1, 1, 1, "MD002", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(source_path_2, 2, 1, "MD002", "", "", None)
+        PyMarkdownScanFailure(source_path_2, 1, 1, "MD002", "", "", None)
     )
     assert not scan_result.pragma_errors

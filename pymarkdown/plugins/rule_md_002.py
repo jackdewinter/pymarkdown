@@ -36,7 +36,7 @@ class RuleMd002(RulePlugin):
             plugin_id="MD002",
             plugin_enabled_by_default=False,
             plugin_description="First heading of the document should be a top level heading.",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md002.md",
             plugin_configuration="level",
         )
@@ -85,5 +85,8 @@ class RuleMd002(RulePlugin):
             if hash_count != self.__start_level:
                 extra_data = f"Expected: h{self.__start_level}; Actual: h{hash_count}"
                 self.report_next_token_error(
-                    context, token, extra_error_information=extra_data
+                    context,
+                    token,
+                    extra_error_information=extra_data,
+                    use_original_position=token.is_setext_heading,
                 )

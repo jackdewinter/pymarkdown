@@ -275,6 +275,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.extensions.test_markdown_pragmas_issue_1479",
+            "totalTests": 447,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 7,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.gfm.test_markdown_atx_headings",
             "totalTests": 18,
             "failedTests": 0,
@@ -1135,7 +1143,7 @@
             "totalTests": 12,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 5,
+            "skippedTests": 4,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1228,7 +1236,7 @@
         },
         {
             "name": "test.rules.test_md018",
-            "totalTests": 30,
+            "totalTests": 57,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1276,7 +1284,7 @@
         },
         {
             "name": "test.rules.test_md024",
-            "totalTests": 25,
+            "totalTests": 26,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1444,7 +1452,7 @@
         },
         {
             "name": "test.rules.test_md041",
-            "totalTests": 32,
+            "totalTests": 33,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1460,7 +1468,7 @@
         },
         {
             "name": "test.rules.test_md043",
-            "totalTests": 33,
+            "totalTests": 34,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,7 +1628,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 329,
+            "totalTests": 346,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,

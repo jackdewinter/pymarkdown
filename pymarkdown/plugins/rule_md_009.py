@@ -34,6 +34,7 @@ class RuleMd009(RulePlugin):
         self.__break_spaces = 0
         self.__strict_mode = False
         self.__list_item_empty_lines_mode = False
+        self.__last_line: Optional[str] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -44,7 +45,7 @@ class RuleMd009(RulePlugin):
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md009.md",
             plugin_configuration="br_spaces,list_item_empty_lines,strict",
             plugin_supports_fix=True,
@@ -104,6 +105,7 @@ class RuleMd009(RulePlugin):
         self.__leaf_token_index = 0
         self.__inline_token_index = 0
         self.__container_token_stack = []
+        self.__last_line = None
 
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """
@@ -132,6 +134,7 @@ class RuleMd009(RulePlugin):
         ):
             self.__next_line_check_for_error(line, context)
         self.__line_index += 1
+        self.__last_line = line.strip(" \t")
 
     def __next_line_check_for_error(
         self, line: str, context: PluginScanContext
@@ -219,10 +222,14 @@ class RuleMd009(RulePlugin):
         else:
             extra_error_information = f"0 or {self.__break_spaces}"
         extra_error_information = f"Expected: {extra_error_information}; Actual: {extracted_whitespace_length}"
+        override_is_error_token_prefaced_by_blank_line = (
+            self.__last_line is not None and not self.__last_line
+        )
         self.report_next_line_error(
             context,
             first_non_whitespace_index + 1,
             extra_error_information=extra_error_information,
+            override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
         )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:

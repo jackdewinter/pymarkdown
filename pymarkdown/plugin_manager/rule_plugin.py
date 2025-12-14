@@ -142,12 +142,14 @@ class RulePlugin(ABC):
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     def report_next_line_error(
         self,
         context: PluginScanContext,
         column_number: int,
         line_number_delta: int = 0,
         extra_error_information: Optional[str] = None,
+        override_is_error_token_prefaced_by_blank_line: Optional[bool] = None,
     ) -> None:
         """
         Report an error with the current line being processed.
@@ -166,7 +168,10 @@ class RulePlugin(ABC):
             plugin_details.plugin_description,
             extra_error_information,
             does_support_fix,
+            override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def report_next_token_error(
@@ -177,6 +182,7 @@ class RulePlugin(ABC):
         line_number_delta: int = 0,
         column_number_delta: int = 0,
         use_original_position: bool = False,
+        override_is_error_token_prefaced_by_blank_line: Optional[bool] = None,
     ) -> None:
         """
         Report an error with the current token being processed.
@@ -188,6 +194,7 @@ class RulePlugin(ABC):
         else:
             line_number = token.line_number
             column_number = token.column_number
+        error_token = token
 
         does_support_fix = False
         plugin_details = self.get_details()
@@ -208,6 +215,8 @@ class RulePlugin(ABC):
             plugin_details.plugin_description,
             extra_error_information,
             does_support_fix,
+            error_token=error_token,
+            override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
         )
 
     # pylint: enable=too-many-arguments

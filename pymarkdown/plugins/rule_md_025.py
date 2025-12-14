@@ -36,7 +36,7 @@ class RuleMd025(RulePlugin):
             plugin_id="MD025",
             plugin_enabled_by_default=True,
             plugin_description="Multiple top-level headings in the same document",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md025.md",
             plugin_configuration="level, front_matter_title",
         )
@@ -93,7 +93,9 @@ class RuleMd025(RulePlugin):
         if is_token_heading := token.is_atx_heading or token.is_setext_heading:
             atx_token = cast(AtxHeadingMarkdownToken, token)
             if atx_token.hash_count == self.__level and self.__have_top_level:
-                self.report_next_token_error(context, token)
+                self.report_next_token_error(
+                    context, token, use_original_position=token.is_setext_heading
+                )
             elif (atx_token.hash_count == self.__level) or (not is_token_heading):
                 self.__have_top_level = True
         elif token.is_front_matter:

@@ -639,6 +639,41 @@ def test_md024_bad_same_heading_content_setext() -> None:
 
 
 @pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_then_setext() -> None:
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading and then a SetExt heading, with duplicate content.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_content_atx_then_setext.md"
+    )
+    supplied_arguments = [
+        "-d",
+        "md003",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:3:1: "
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that

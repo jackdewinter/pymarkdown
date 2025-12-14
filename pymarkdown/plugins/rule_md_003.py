@@ -54,7 +54,7 @@ class RuleMd003(RulePlugin):
             plugin_id="MD003",
             plugin_enabled_by_default=True,
             plugin_description="Heading style should be consistent throughout the document.",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md003.md",
             plugin_configuration="style",
         )
@@ -172,7 +172,10 @@ class RuleMd003(RulePlugin):
                     f"Expected: {expected_style_type}; Actual: {heading_style_type}"
                 )
                 self.report_next_token_error(
-                    context, token, extra_error_information=extra_data
+                    context,
+                    token,
+                    extra_error_information=extra_data,
+                    use_original_position=token.is_setext_heading,
                 )
 
     @classmethod

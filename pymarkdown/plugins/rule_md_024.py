@@ -14,6 +14,7 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd024(RulePlugin):
@@ -40,7 +41,7 @@ class RuleMd024(RulePlugin):
             plugin_id="MD024",
             plugin_enabled_by_default=True,
             plugin_description="Multiple headings cannot contain the same content.",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md024.md",
             plugin_configuration="siblings_only, allow_different_nesting",
         )
@@ -92,7 +93,13 @@ class RuleMd024(RulePlugin):
             self.handler_heading_end(context, token)
 
         if not skip_this_token and self.__heading_text is not None:
-            self.__heading_text += token.debug_string(include_column_row_info=False)
+            new_token_debug = token.debug_string(include_column_row_info=False)
+            if token.is_text and not self.__heading_text:
+                text_token = cast(TextMarkdownToken, token)
+                suffix_to_look_for = f":{text_token.extracted_whitespace}]"
+                if new_token_debug.endswith(suffix_to_look_for):
+                    new_token_debug = f"{new_token_debug[:-len(suffix_to_look_for)]}:]"
+            self.__heading_text += new_token_debug
 
     def handle_heading_start(self, token: AtxHeadingMarkdownToken) -> None:
         """
