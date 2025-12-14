@@ -53,7 +53,8 @@
       been considered, resulting in reported lines being off
 - [Issue 1516](https://github.com/jackdewinter/pymarkdown/issues/1516)
     - when rewinding a failed LRD that included pragmas, the pragmas
-      were not being rewound themselves
+      were not being rewound themselves, resulting in bad line numbers
+      for any following tokens
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
