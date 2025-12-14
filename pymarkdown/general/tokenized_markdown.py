@@ -424,9 +424,7 @@ class TokenizedMarkdown:
         did_started_close: bool,
     ) -> Tuple[int, bool, bool, Optional[str], bool, bool]:
         (line_number, ignore_link_definition_start, ignore_table_start) = (
-            TokenizedMarkdown.__handle_parse_increment_line(
-                line_number, requeue_line_info, requeue
-            )
+            self.__handle_parse_increment_line(line_number, requeue_line_info, requeue)
         )
 
         POGGER.debug(
@@ -461,8 +459,8 @@ class TokenizedMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    @staticmethod
     def __handle_parse_increment_line(
+        self,
         line_number: int,
         requeue_line_info: Optional[RequeueLineInfo],
         requeue: List[str],
@@ -470,10 +468,25 @@ class TokenizedMarkdown:
         if requeue_line_info:
             number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
             POGGER.debug("\n\n---lines_to_requeue>>$", number_of_lines_to_requeue)
-            line_number -= number_of_lines_to_requeue - 1
+            assert len(requeue_line_info.lines_to_requeue) > 0
+            assert self.__parse_properties is not None
 
-            for i in requeue_line_info.lines_to_requeue:
-                requeue.insert(0, i)
+            requeue.insert(0, requeue_line_info.lines_to_requeue[0])
+            del requeue_line_info.lines_to_requeue[0]
+            c = number_of_lines_to_requeue - 1
+            while c > 0:
+                line_number -= 1
+                while line_number in self.__parse_properties.pragma_lines:
+                    x = self.__parse_properties.pragma_lines[line_number]
+                    del self.__parse_properties.pragma_lines[line_number]
+                    requeue.insert(0, x)
+                    line_number -= 1
+                x = requeue_line_info.lines_to_requeue[0]
+                del requeue_line_info.lines_to_requeue[0]
+                requeue.insert(0, x)
+                c -= 1
+            # for i in requeue_line_info.lines_to_requeue:
+            #     requeue.insert(0, i)
             ignore_link_definition_start = requeue_line_info.force_ignore_first_as_lrd
             ignore_table_start = requeue_line_info.force_ignore_first_as_table
         else:

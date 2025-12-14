@@ -53,7 +53,7 @@ import pytest
 # Rule Md041 -- Token - Atx, SetExt, Html, Fcb (not previous)   - Covered & Verified
 # Rule Md042 -- Token - Link                                    - Covered & Verified
 # Rule Md043 -- Token - Atx, SetExt                             - Covered & Verified
-# Rule Md044 -- Token - Text, link, image, lrd, codespan        - Covered               - (rewind logic with pragma)
+# Rule Md044 -- Token - Text, link, image, lrd, codespan        - Covered & Verified
 # Rule Md045 -- Token - Link                                    - Covered & Verified
 # Rule Md046 -- Token - Fcb, Icb                                - Covered & Verified
 # Rule Md047 -- Line                                            - Covered & Verified
@@ -15528,7 +15528,6 @@ LRD.
 
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1516")
 def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_in_second_line_title() -> (
     None
 ):
