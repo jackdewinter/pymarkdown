@@ -17149,6 +17149,153 @@ def test_extra_058d() -> None:
 
 
 @pytest.mark.gfm
+def test_extra_058e() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml disable-next-line proper-names -->
+
+[lrd with a paragraph]: http://www.google.com "a
+<!-- pyml disable-next-line proper-names -->
+
+paragraph"
+LRD.
+"""
+    expected_tokens = [
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        '[text(3,1):[lrd with a paragraph]: http://www.google.com \a"\a&quot;\aa:]',
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[para(6,1):\n]",
+        '[text(6,1):paragraph\a"\a&quot;\a\nLRD.::\n]',
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[pragma:1:<!-- pyml disable-next-line proper-names -->;4:<!-- pyml disable-next-line proper-names -->]",
+    ]
+    expected_gfm = """<p>[lrd with a paragraph]: http://www.google.com &quot;a</p>
+<p>paragraph&quot;
+LRD.</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058f() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml disable-next-line proper-names -->
+
+[lrd with a paragraph]: http://www.google.com "a
+<!-- pyml disable-next-line line-length -->
+<!-- pyml disable-next-line proper-names -->
+
+paragraph"
+LRD.
+"""
+    expected_tokens = [
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        '[text(3,1):[lrd with a paragraph]: http://www.google.com \a"\a&quot;\aa:]',
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[para(7,1):\n]",
+        '[text(7,1):paragraph\a"\a&quot;\a\nLRD.::\n]',
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[pragma:1:<!-- pyml disable-next-line proper-names -->;4:<!-- pyml disable-next-line line-length -->;5:<!-- pyml disable-next-line proper-names -->]",
+    ]
+    expected_gfm = """<p>[lrd with a paragraph]: http://www.google.com &quot;a</p>
+<p>paragraph&quot;
+LRD.</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058g() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml disable-next-line proper-names -->
+
+[lrd with a paragraph]: http://www.google.com "a
+<!-- pyml disable-next-line line-length -->
+<!-- pyml disable-next-line proper-names -->
+" xx
+paragraph"
+LRD.
+"""
+    expected_tokens = [
+        "[BLANK(2,1):]",
+        "[para(3,1):\n\n\n]",
+        '[text(3,1):[lrd with a paragraph]: http://www.google.com \a"\a&quot;\aa\n\a"\a&quot;\a xx\nparagraph\a"\a&quot;\a\nLRD.::\n\n\n]',
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[pragma:1:<!-- pyml disable-next-line proper-names -->;4:<!-- pyml disable-next-line line-length -->;5:<!-- pyml disable-next-line proper-names -->]",
+    ]
+    expected_gfm = """<p>[lrd with a paragraph]: http://www.google.com &quot;a
+&quot; xx
+paragraph&quot;
+LRD.</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058h() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml disable-next-line proper-names -->
+
+[lrd with a paragraph]: http://www.google.com "a
+<!-- pyml disable-next-line line-length -->
+abc
+<!-- pyml disable-next-line proper-names -->
+" xx
+paragraph"
+LRD.
+"""
+    expected_tokens = [
+        "[BLANK(2,1):]",
+        "[para(3,1):\n\n\n\n]",
+        '[text(3,1):[lrd with a paragraph]: http://www.google.com \a"\a&quot;\aa\nabc\n\a"\a&quot;\a xx\nparagraph\a"\a&quot;\a\nLRD.::\n\n\n\n]',
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[pragma:1:<!-- pyml disable-next-line proper-names -->;4:<!-- pyml disable-next-line line-length -->;6:<!-- pyml disable-next-line proper-names -->]",
+    ]
+    expected_gfm = """<p>[lrd with a paragraph]: http://www.google.com &quot;a
+abc
+&quot; xx
+paragraph&quot;
+LRD.</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
 def test_extra_999() -> None:
     """
     Temporary test to keep coverage up while consistency checks disabled.
