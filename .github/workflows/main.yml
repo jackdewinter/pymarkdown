@@ -108,7 +108,7 @@ jobs:
         run: pipenv run pytest --cov-fail-under=80 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
 
       - name: Archive coverage artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           name: ${{ matrix.platform }} Coverage
@@ -249,7 +249,7 @@ jobs:
           pipenv run twine check dist/*    
 
       - name: Upload Package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: packaged-library
           path: ${{github.workspace}}/dist/
