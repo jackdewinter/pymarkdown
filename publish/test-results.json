@@ -636,7 +636,7 @@
         },
         {
             "name": "test.gfm.test_markdown_tables_extension",
-            "totalTests": 161,
+            "totalTests": 162,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 8,
@@ -1628,7 +1628,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 350,
+            "totalTests": 351,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,

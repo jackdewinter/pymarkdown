@@ -308,11 +308,16 @@ class RuleMd027(RulePlugin):
             ff = False
             assert (
                 token.is_blank_line
-                or token.is_fenced_code_block
                 or token.is_thematic_break
-                or token.is_html_block
-                or token.is_list_start
                 or token.is_atx_heading
+                # setext
+                # icb
+                or token.is_fenced_code_block
+                or token.is_html_block
+                # lrd
+                # para
+                # tables
+                or token.is_list_start
                 or token.is_block_quote_end
                 or ff
             )
@@ -1322,7 +1327,11 @@ class RuleMd027(RulePlugin):
     ) -> None:
         # add table support: https://github.com/jackdewinter/pymarkdown/issues/1515
 
-        if token.is_inline_raw_html and context.in_fix_mode:
+        if token.is_table:
+            self.__last_leaf_token = token
+        elif token.is_table_end:
+            self.__last_leaf_token = None
+        elif token.is_inline_raw_html and context.in_fix_mode:
             self.__handle_raw_html(context, token)
         elif token.is_inline_code_span and context.in_fix_mode:
             self.__handle_code_span(context, token)

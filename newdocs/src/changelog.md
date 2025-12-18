@@ -65,6 +65,10 @@
 - [Issue 1504](https://github.com/jackdewinter/pymarkdown/issues/1504)
     - clarified documentation for rule Md001 and the first heading of
       a document
+- [Issue 1522](https://github.com/jackdewinter/pymarkdown/issues/1522)
+    - properly assigned line/column numbers to table elements, and ensured
+      that all table tokens were properly serializing their relevant data,
+      to allow sight reading of their contents
 
 ## Version 0.9.33 - 2025-10-22
 

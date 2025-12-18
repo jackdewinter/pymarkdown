@@ -6140,6 +6140,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 >  /url
 > "title"
@@ -6156,7 +6157,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
         ]
 
         expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
         expected_error = ""
 
         # Act
@@ -6180,6 +6181,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  /url
@@ -6220,6 +6222,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -6383,6 +6386,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 >  | abc | def |
 > | --- | --- |
 > a real test

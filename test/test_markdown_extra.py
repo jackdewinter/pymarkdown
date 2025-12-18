@@ -17009,12 +17009,12 @@ def test_extra_058b() -> None:
 """
     expected_tokens = [
         "[table(1,1)]",
-        "[table-header(1,1)]",
-        "[table-header-item(1,1)]",
-        "[text(1,1):abc:]",
+        "[table-header(1,1):::True:| --- | --- |]",
+        "[table-header-item(1,3): :]",
+        "[text(1,3):abc:]",
         "[end-table-header-item: |::False]",
-        "[table-header-item(1,1)]",
-        "[text(1,1):def:]",
+        "[table-header-item(1,9): :]",
+        "[text(1,9):def:]",
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[end-table:::False]",
@@ -17044,7 +17044,7 @@ def test_extra_058b() -> None:
 
 
 @pytest.mark.gfm
-def test_extra_058c() -> None:
+def test_extra_058cx() -> None:
     """
     TBD
     """
@@ -17058,16 +17058,16 @@ def test_extra_058c() -> None:
 """
     expected_tokens = [
         "[table(1,1)]",
-        "[table-header(1,1)]",
-        "[table-header-item(1,1)]",
-        "[text(1,1):abc:]",
+        "[table-header(1,1):::True:| --- | --- |]",
+        "[table-header-item(1,3): :]",
+        "[text(1,3):abc:]",
         "[end-table-header-item: |::False]",
-        "[table-header-item(1,1)]",
-        "[text(1,1):def:]",
+        "[table-header-item(1,9): :]",
+        "[text(1,9):def:]",
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[end-table:::False]",
-        "[olist(3,1):.:1:3::\n\n\n]",
+        "[olist(3,1):.:1:3::\n\n]",
         "[para(3,4):\n\n]",
         "[text(3,4):still still a list\n| abc | def |\n| --- | --- |::\n\n]",
         "[end-para:::True]",
@@ -17087,6 +17087,93 @@ def test_extra_058c() -> None:
 | abc | def |
 | --- | --- |</li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_extra_058ca() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """  |  abc | def |\a
+ |  --- | :---: |\a
+  |  abc  | def |\a
+1. still still a list
+
+| abc | def |
+| --- | --- |
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[table(1,3)]",
+        "[table-header(1,3):  : :True: |  --- | :---: | ]",
+        "[table-header-item(1,6):  :]",
+        "[text(1,6):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,12): :center]",
+        "[text(1,12):def:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,1)]",
+        "[table-row(3,1):  : :True:0]",
+        "[table-row-item(3,4):  :]",
+        "[text(3,4):abc:]",
+        "[end-table-row-item:  |::False]",
+        "[table-row-item(3,11): :center]",
+        "[text(3,11):def:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[olist(4,1):.:1:3::]",
+        "[para(4,4):]",
+        "[text(4,4):still still a list:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[table(6,1)]",
+        "[table-header(6,1):::True:| --- | --- |]",
+        "[table-header-item(6,3): :]",
+        "[text(6,3):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(6,9): :]",
+        "[text(6,9):def:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[BLANK(8,1):]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>abc</th>
+<th align="center">def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abc</td>
+<td align="center">def</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>still still a list</li>
+</ol><table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+</table>"""
 
     # Act & Assert
     act_and_assert(

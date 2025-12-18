@@ -101,7 +101,7 @@ class TableMarkdownToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = (transform_state, next_token)
+        _ = next_token
 
         token_parts: List[str] = []
         if (
@@ -135,25 +135,46 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         separator_table_row: TableRow,
         position_marker: PositionMarker,
     ) -> None:
+        self.__header_row_leading_whitespace: Optional[str] = None
+        self.__header_row_trailing_whitespace: Optional[str] = None
+        self.__did_header_row_start_with_separator = False
         if header_table_row:
-            self.header_row_leading_whitespace = header_table_row.extracted_whitespace
-            self.header_row_trailing_whitespace = header_table_row.trailing_whitespace
-            self.did_header_row_start_with_separator = (
+            self.__header_row_leading_whitespace = header_table_row.extracted_whitespace
+            self.__header_row_trailing_whitespace = header_table_row.trailing_whitespace
+            self.__did_header_row_start_with_separator = (
                 header_table_row.did_start_with_separator
             )
-            self.separator_table_row = separator_table_row
+            self.__separator_table_row = separator_table_row
+
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_header,
-            extra_data=None,
+            extra_data=self.__compose_extra_data_field(),
             position_marker=position_marker,
             extracted_whitespace="",
             requires_end_token=True,
         )
 
-        # header_row_leading_whitespace
-        # did_header_row_start_with_separator
-        # header_row_trailing_whitespace
+    def __compose_extra_data_field(self) -> Optional[str]:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        if self.__header_row_leading_whitespace is None:
+            self._set_extra_data(None)
+            return None
+
+        assert self.__header_row_trailing_whitespace is not None
+        assert self.__header_row_trailing_whitespace is not None
+        composed_field = MarkdownToken.extra_data_separator.join(
+            [
+                self.__header_row_leading_whitespace,
+                self.__header_row_trailing_whitespace,
+                str(self.__did_header_row_start_with_separator),
+                TableMarkdownHeaderToken.__xx(self),
+            ]
+        )
+        self._set_extra_data(composed_field)
+        return composed_field
 
     # pylint: disable=protected-access
     @staticmethod
@@ -164,6 +185,10 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         return MarkdownToken._token_table_header
 
     # pylint: enable=protected-access
+
+    @property
+    def did_header_row_start_with_separator(self) -> bool:
+        return self.__did_header_row_start_with_separator
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
@@ -191,14 +216,26 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
 
         header_start_text = cast(
             TableMarkdownHeaderToken, current_token
-        ).header_row_leading_whitespace
+        ).__header_row_leading_whitespace
+        assert header_start_text is not None
         return header_start_text + (
             "|"
             if cast(
                 TableMarkdownHeaderToken, current_token
-            ).did_header_row_start_with_separator
+            ).__did_header_row_start_with_separator
             else ""
         )
+
+    @staticmethod
+    def __xx(start_token: "TableMarkdownHeaderToken") -> str:
+        header_end_text = start_token.__separator_table_row.extracted_whitespace
+        header_end_text += (
+            "|" if start_token.__separator_table_row.did_start_with_separator else ""
+        )
+        for i in start_token.__separator_table_row.columns:
+            header_end_text += i.leading_whitespace + i.text + i.trailing_whitespace
+        header_end_text += start_token.__separator_table_row.trailing_whitespace
+        return header_end_text
 
     @staticmethod
     def __rehydrate_table_header_end(
@@ -216,15 +253,11 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
             TableMarkdownHeaderToken,
             cast(EndMarkdownToken, current_token).start_markdown_token,
         )
-        header_end_text = start_token.separator_table_row.extracted_whitespace
-        header_end_text += (
-            "|" if start_token.separator_table_row.did_start_with_separator else ""
-        )
-        for i in start_token.separator_table_row.columns:
-            header_end_text += i.leading_whitespace + i.text + i.trailing_whitespace
-        header_end_text += start_token.separator_table_row.trailing_whitespace
+
+        header_end_text = TableMarkdownHeaderToken.__xx(start_token)
+        assert start_token.__header_row_trailing_whitespace is not None
         return (
-            start_token.header_row_trailing_whitespace + "\n" + header_end_text + "\n"
+            start_token.__header_row_trailing_whitespace + "\n" + header_end_text + "\n"
         )
 
     @staticmethod
@@ -286,13 +319,17 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
         self,
         leading_whitespace: str,
         column_alignment: Optional[str],
-        position_marker: PositionMarker,
+        line_number: int,
+        column_number: int,
     ) -> None:
+        self.__leading_whitespace: str = leading_whitespace
+        self.__column_alignment = column_alignment
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_header_item,
-            extra_data=column_alignment,
-            position_marker=position_marker,
+            extra_data=self.__compose_extra_data_field(),
+            line_number=line_number,
+            column_number=column_number,
             extracted_whitespace=leading_whitespace,
             requires_end_token=True,
         )
@@ -306,6 +343,19 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
         return MarkdownToken._token_table_header_item
 
     # pylint: enable=protected-access
+
+    def __compose_extra_data_field(self) -> Optional[str]:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        composed_field = MarkdownToken.extra_data_separator.join(
+            [
+                self.__leading_whitespace,
+                self.__column_alignment if self.__column_alignment is not None else "",
+            ]
+        )
+        self._set_extra_data(composed_field)
+        return composed_field
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
@@ -365,8 +415,9 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
     ) -> str:
         _ = (transform_state, next_token)
 
-        if next_token.extra_data:
-            text_to_add = f'<th align="{next_token.extra_data}">'
+        table_token = cast(TableMarkdownHeaderItemToken, next_token)
+        if table_token.__column_alignment:
+            text_to_add = f'<th align="{table_token.__column_alignment}">'
         else:
             text_to_add = "<th>"
         return "".join(
@@ -398,15 +449,13 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the table header markdown token.
     """
 
-    def __init__(
-        self,
-        position_marker: PositionMarker,
-    ) -> None:
+    def __init__(self, line_number: int, column_number: int) -> None:
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_body,
             extra_data=None,
-            position_marker=position_marker,
+            line_number=line_number,
+            column_number=column_number,
             extracted_whitespace="",
             requires_end_token=True,
         )
@@ -510,22 +559,39 @@ class TableMarkdownRowToken(LeafMarkdownToken):
         trailing_whitespace: str,
         did_start_with_separator: bool,
         delta: int,
-        position_marker: PositionMarker,
+        line_number: int,
+        column_number: int,
     ) -> None:
-        self.leading_whitespace = leading_whitespace
-        self.trailing_whitespace = trailing_whitespace
-        self.did_start_with_separator = did_start_with_separator
-        self.delta = delta
+        self.__leading_whitespace = leading_whitespace
+        self.__trailing_whitespace = trailing_whitespace
+        self.__did_start_with_separator = did_start_with_separator
+        self.__delta = delta
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_row,
-            extra_data=None,
-            position_marker=position_marker,
+            extra_data=self.__compose_extra_data_field(),
+            line_number=line_number,
+            column_number=column_number,
             extracted_whitespace="",
             requires_end_token=True,
         )
 
     # pylint: enable=too-many-arguments
+
+    def __compose_extra_data_field(self) -> Optional[str]:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        composed_field = MarkdownToken.extra_data_separator.join(
+            [
+                self.__leading_whitespace,
+                self.__trailing_whitespace,
+                str(self.__did_start_with_separator),
+                str(self.__delta),
+            ]
+        )
+        self._set_extra_data(composed_field)
+        return composed_field
 
     # pylint: disable=protected-access
     @staticmethod
@@ -560,9 +626,9 @@ class TableMarkdownRowToken(LeafMarkdownToken):
         """
         _ = (previous_token, current_token, context)
         context.block_stack.append(current_token)
-        return cast(TableMarkdownRowToken, current_token).leading_whitespace + (
+        return cast(TableMarkdownRowToken, current_token).__leading_whitespace + (
             "|"
-            if cast(TableMarkdownRowToken, current_token).did_start_with_separator
+            if cast(TableMarkdownRowToken, current_token).__did_start_with_separator
             else ""
         )
 
@@ -583,7 +649,7 @@ class TableMarkdownRowToken(LeafMarkdownToken):
             + cast(
                 TableMarkdownRowToken,
                 cast(EndMarkdownToken, current_token).start_markdown_token,
-            ).trailing_whitespace
+            ).__trailing_whitespace
             + "\n"
         )
 
@@ -629,7 +695,7 @@ class TableMarkdownRowToken(LeafMarkdownToken):
             cast(
                 TableMarkdownRowToken,
                 cast(EndMarkdownToken, next_token).start_markdown_token,
-            ).delta
+            ).__delta
         ):
             ff.append("<td></td>\n")
         ff.extend(("</tr>", ParserHelper.newline_character))
@@ -645,13 +711,17 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         self,
         leading_whitespace: str,
         column_alignment: Optional[str],
-        position_marker: PositionMarker,
+        line_number: int,
+        column_number: int,
     ) -> None:
+        self.__leading_whitespace: str = leading_whitespace
+        self.__column_alignment = column_alignment
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_row_item,
-            extra_data=column_alignment,
-            position_marker=position_marker,
+            extra_data=self.__compose_extra_data_field(),
+            line_number=line_number,
+            column_number=column_number,
             extracted_whitespace=leading_whitespace,
             requires_end_token=True,
         )
@@ -665,6 +735,19 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         return MarkdownToken._token_table_row_item
 
     # pylint: enable=protected-access
+
+    def __compose_extra_data_field(self) -> Optional[str]:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        composed_field = MarkdownToken.extra_data_separator.join(
+            [
+                self.__leading_whitespace,
+                self.__column_alignment if self.__column_alignment is not None else "",
+            ]
+        )
+        self._set_extra_data(composed_field)
+        return composed_field
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
@@ -688,7 +771,7 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         Rehydrate the link reference definition from the token.
         """
         _ = (previous_token, current_token, context)
-        return cast(TableMarkdownRowItemToken, current_token).extracted_whitespace
+        return cast(TableMarkdownRowItemToken, current_token).__leading_whitespace
 
     @staticmethod
     def __rehydrate_table_row_item_end(
@@ -724,8 +807,9 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
     ) -> str:
         _ = (transform_state, next_token)
 
-        if next_token.extra_data:
-            text_to_add = f'<td align="{next_token.extra_data}">'
+        table_token = cast(TableMarkdownRowItemToken, next_token)
+        if table_token.__column_alignment:
+            text_to_add = f'<td align="{table_token.__column_alignment}">'
         else:
             text_to_add = "<td>"
         return "".join(
