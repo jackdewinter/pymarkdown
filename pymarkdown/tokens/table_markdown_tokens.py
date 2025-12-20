@@ -2,7 +2,9 @@
 Module to provide for an encapsulation of the table header markdown token.
 """
 
-from typing import List, Optional, Union, cast, override
+from typing import List, Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
