@@ -443,12 +443,12 @@ class MarkdownToken:
             == MarkdownToken._end_token_prefix + MarkdownToken._token_atx_heading
         )
 
-    # @property
-    # def is_table(self) -> bool:
-    #     return (
-    #         self.token_name
-    #         == self.token_name == MarkdownToken._token_table_main
-    #     )
+    @property
+    def is_table(self) -> bool:
+        """
+        Returns whether the current token is a table main element.
+        """
+        return self.token_name == MarkdownToken._token_table_main
 
     @property
     def is_table_end(self) -> bool:
@@ -457,9 +457,15 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_table_main
         )
+
+    @property
+    def is_table_header(self) -> bool:
+        """
+        Returns whether the current token is a header item from a table.
+        """
+        return self.token_name == self.token_name == MarkdownToken._token_table_header
 
     @property
     def is_table_header_item(self) -> bool:
@@ -469,6 +475,13 @@ class MarkdownToken:
         return (
             self.token_name == self.token_name == MarkdownToken._token_table_header_item
         )
+
+    @property
+    def is_table_row(self) -> bool:
+        """
+        Returns whether the current token is a row item from a table.
+        """
+        return self.token_name == self.token_name == MarkdownToken._token_table_row
 
     @property
     def is_table_row_item(self) -> bool:

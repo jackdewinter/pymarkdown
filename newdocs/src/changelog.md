@@ -51,6 +51,8 @@
 - [Issue 1514](https://github.com/jackdewinter/pymarkdown/issues/1514)
     - when parsing inline elements from a text block, pragmas were not
       been considered, resulting in reported lines being off
+- [Issue 1515](https://github.com/jackdewinter/pymarkdown/issues/1515)
+    - Rule Md027 was not adapted to handle Table tokens
 - [Issue 1516](https://github.com/jackdewinter/pymarkdown/issues/1516)
     - when rewinding a failed LRD that included pragmas, the pragmas
       were not being rewound themselves, resulting in bad line numbers
@@ -65,6 +67,10 @@
 - [Issue 1504](https://github.com/jackdewinter/pymarkdown/issues/1504)
     - clarified documentation for rule Md001 and the first heading of
       a document
+- [Issue 1522](https://github.com/jackdewinter/pymarkdown/issues/1522)
+    - properly assigned line/column numbers to table elements, and ensured
+      that all table tokens were properly serializing their relevant data,
+      to allow sight reading of their contents
 
 ## Version 0.9.33 - 2025-10-22
 

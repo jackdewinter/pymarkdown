@@ -144,15 +144,20 @@ class TableBlockContinuationHelper:
 
             new_tokens: List[MarkdownToken] = (
                 TableBlockContinuationHelper.__create_new_tokens(
-                    table_stack_token, parsed_table_tuple, extracted_whitespace, False
+                    parser_state,
+                    table_stack_token,
+                    parsed_table_tuple,
+                    extracted_whitespace,
+                    False,
                 )
             )
 
             del parser_state.token_stack[-1]
             ## Different from LRD.
-            TableBlockContinuationHelper.__stop_table_continuation_end(
-                parser_state, new_tokens
-            )
+            assert not parser_state.token_stack[-1].is_paragraph
+            # TableBlockContinuationHelper.__stop_table_continuation_end(
+            #     parser_state, new_tokens
+            # )
             ## Different from LRD.
             return did_pause_table, len(lines_to_requeue) > 1, new_tokens
 
@@ -162,6 +167,7 @@ class TableBlockContinuationHelper:
     ## Different from LRD.
     @staticmethod
     def __create_new_tokens(
+        parser_state: ParserState,
         table_stack_token: TableBlockStackToken,
         parsed_table_tuple: TableTuple,
         extracted_whitespace: str,
@@ -186,13 +192,23 @@ class TableBlockContinuationHelper:
         )
         new_tokens.extend((start_token, start_header_token))
 
+        line_number = table_stack_token.start_position_marker.line_number
+        column_number = (
+            table_stack_token.start_position_marker.index_number
+            + table_stack_token.start_position_marker.index_indent
+            + 1
+        )
+        if start_header_token.did_header_row_start_with_separator:
+            column_number += 1
         for next_column_index, next_column in enumerate(
             parsed_table_tuple.xyz[0].columns
         ):
+            column_number += len(next_column.leading_whitespace)
             start_header_item_token = TableMarkdownHeaderItemToken(
                 next_column.leading_whitespace,
                 parsed_table_tuple.col_as[next_column_index],
-                position_marker=table_stack_token.start_position_marker,
+                line_number=line_number,
+                column_number=column_number,
             )
             new_tokens.extend(
                 (
@@ -200,12 +216,16 @@ class TableBlockContinuationHelper:
                     TextMarkdownToken(
                         next_column.text,
                         "",
-                        position_marker=table_stack_token.start_position_marker,
+                        line_number=line_number,
+                        column_number=column_number,
                     ),
                     start_header_item_token.generate_close_markdown_token_from_markdown_token(
                         next_column.trailing_whitespace, ""
                     ),
                 )
+            )
+            column_number += len(next_column.text) + len(
+                next_column.trailing_whitespace
             )
         new_tokens.append(
             start_header_token.generate_close_markdown_token_from_markdown_token("", "")
@@ -213,7 +233,7 @@ class TableBlockContinuationHelper:
 
         if len(parsed_table_tuple.xyz) > 2:
             TableBlockContinuationHelper.__stop_table_continuation_body(
-                new_tokens, table_stack_token, parsed_table_tuple
+                parser_state, new_tokens, table_stack_token, parsed_table_tuple
             )
 
         new_tokens.append(
@@ -224,87 +244,132 @@ class TableBlockContinuationHelper:
     ## Different from LRD.
 
     ## Different from LRD.
+    # @staticmethod
+    # def __stop_table_continuation_end(
+    #     parser_state: ParserState, new_tokens: List[MarkdownToken]
+    # ) -> None:
+    #     if parser_state.token_stack[-1].is_paragraph:
+    #         tokens_from_close, _ = parser_state.close_open_blocks_fn(
+    #             parser_state,
+    #             until_this_index=(len(parser_state.token_stack) - 1),
+    #         )
+    #         assert len(tokens_from_close) == 1, "Only one token should be returned."
+    #         new_tokens.insert(0, tokens_from_close[0])
+
+    ## Different from LRD.
+
     @staticmethod
-    def __stop_table_continuation_end(
-        parser_state: ParserState, new_tokens: List[MarkdownToken]
+    def __stop_table_continuation_body_next_row(
+        new_tokens: List[MarkdownToken],
+        parsed_table_tuple: TableTuple,
+        next_row_index: int,
+        line_number: int,
+        base_column_number: int,
     ) -> None:
-        if parser_state.token_stack[-1].is_paragraph:
-            tokens_from_close, _ = parser_state.close_open_blocks_fn(
-                parser_state,
-                until_this_index=(len(parser_state.token_stack) - 1),
+        next_table_row = parsed_table_tuple.xyz[next_row_index]
+        abc = next_table_row.columns[: len(parsed_table_tuple.col_as)]
+        abc_after = next_table_row.columns[len(parsed_table_tuple.col_as) :]
+        aaa_string = (
+            "".join(
+                f"{ii.leading_whitespace}{ii.text}{ii.trailing_whitespace}"
+                for ii in abc_after
             )
-            assert len(tokens_from_close) == 1, "Only one token should be returned."
-            new_tokens.insert(0, tokens_from_close[0])
+            if abc_after
+            else ""
+        )
+        delta = len(parsed_table_tuple.col_as) - len(abc)
+
+        start_row_token = TableMarkdownRowToken(
+            next_table_row.extracted_whitespace,
+            next_table_row.trailing_whitespace,
+            next_table_row.did_start_with_separator,
+            delta,
+            line_number=line_number,
+            column_number=base_column_number + len(next_table_row.extracted_whitespace),
+        )
+        new_tokens.append(start_row_token)
+
+        column_number = base_column_number + int(
+            next_table_row.did_start_with_separator
+        )
+
+        for next_column_index, next_column in enumerate(abc):
+
+            column_number += len(next_column.leading_whitespace)
+            start_row_item_token = TableMarkdownRowItemToken(
+                next_column.leading_whitespace,
+                parsed_table_tuple.col_as[next_column_index],
+                line_number=line_number,
+                column_number=column_number,
+            )
+
+            new_tokens.extend(
+                (
+                    start_row_item_token,
+                    TextMarkdownToken(
+                        next_column.text,
+                        "",
+                        line_number=line_number,
+                        column_number=column_number,
+                    ),
+                    start_row_item_token.generate_close_markdown_token_from_markdown_token(
+                        next_column.trailing_whitespace, ""
+                    ),
+                )
+            )
+            column_number += len(next_column.text) + len(
+                next_column.trailing_whitespace
+            )
+        new_tokens.append(
+            start_row_token.generate_close_markdown_token_from_markdown_token(
+                aaa_string, ""
+            )
+        )
 
     ## Different from LRD.
-
-    ## Different from LRD.
-    # pylint: disable=too-many-locals
     @staticmethod
     def __stop_table_continuation_body(
+        parser_state: ParserState,
         new_tokens: List[MarkdownToken],
         table_stack_token: TableBlockStackToken,
         parsed_table_tuple: TableTuple,
     ) -> None:
+        line_number = table_stack_token.start_position_marker.line_number
+        for _ in range(2, 0, -1):
+            line_number += 1
+            if line_number in parser_state.parse_properties.pragma_lines:
+                line_number += 1
+        extracted_ws_len = (
+            len(table_stack_token.extracted_whitespace)
+            if table_stack_token.extracted_whitespace is not None
+            else 0
+        )
+        base_column_number = (
+            table_stack_token.start_position_marker.index_number
+            + table_stack_token.start_position_marker.index_indent
+            + 1
+            - extracted_ws_len
+        )
+
         start_body_token = TableMarkdownBodyToken(
-            position_marker=table_stack_token.start_position_marker
+            line_number=line_number, column_number=base_column_number
         )
         new_tokens.append(start_body_token)
 
         for next_row_index in range(2, len(parsed_table_tuple.xyz)):
-            x = parsed_table_tuple.xyz[next_row_index]
-
-            abc = x.columns[: len(parsed_table_tuple.col_as)]
-            if abc_after := x.columns[len(parsed_table_tuple.col_as) :]:
-                aaa: List[str] = []
-                for ii in abc_after:
-                    aaa.extend((ii.leading_whitespace, ii.text, ii.trailing_whitespace))
-                aaa_string = "".join(aaa)
-            else:
-                aaa_string = ""
-            delta = len(parsed_table_tuple.col_as) - len(abc)
-
-            start_row_token = TableMarkdownRowToken(
-                x.extracted_whitespace,
-                x.trailing_whitespace,
-                x.did_start_with_separator,
-                delta,
-                position_marker=table_stack_token.start_position_marker,
+            TableBlockContinuationHelper.__stop_table_continuation_body_next_row(
+                new_tokens,
+                parsed_table_tuple,
+                next_row_index,
+                line_number,
+                base_column_number,
             )
-            new_tokens.append(start_row_token)
-
-            for next_column_index, next_column in enumerate(abc):
-                start_row_item_token = TableMarkdownRowItemToken(
-                    next_column.leading_whitespace,
-                    parsed_table_tuple.col_as[next_column_index],
-                    position_marker=table_stack_token.start_position_marker,
-                )
-
-                new_tokens.extend(
-                    (
-                        start_row_item_token,
-                        TextMarkdownToken(
-                            next_column.text,
-                            "",
-                            position_marker=table_stack_token.start_position_marker,
-                        ),
-                        start_row_item_token.generate_close_markdown_token_from_markdown_token(
-                            next_column.trailing_whitespace, ""
-                        ),
-                    )
-                )
-            new_tokens.append(
-                start_row_token.generate_close_markdown_token_from_markdown_token(
-                    aaa_string, ""
-                )
-            )
+            line_number += 1
         new_tokens.append(
             start_body_token.generate_close_markdown_token_from_markdown_token("", "")
         )
 
     ## Different from LRD.
-
-    # pylint: enable=too-many-locals
 
     @staticmethod
     def __stop_table_continuation_with_tab(

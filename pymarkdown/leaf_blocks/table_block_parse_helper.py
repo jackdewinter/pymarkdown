@@ -380,9 +380,8 @@ class TableParseHelper:
         a proper table will have a pipe character `|` at least once in every line.
         """
 
-        # TODO comment out
-        # if parser_state.token_stack[-1].is_paragraph:
-        #     return False
+        if parser_state.token_stack[-1].is_paragraph:
+            return False
 
         POGGER.debug(
             "__is_table_start - extracted_whitespace:>:$:<",

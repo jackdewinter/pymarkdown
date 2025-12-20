@@ -6019,6 +6019,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 >  [abc]:
 > /url
 > "title"
@@ -6035,7 +6036,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
         ]
 
         expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
         expected_error = ""
 
         # Act
@@ -6059,6 +6060,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  [abc]:
 > /url
@@ -6140,6 +6142,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 >  /url
 > "title"
@@ -6156,7 +6159,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
         ]
 
         expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
         expected_error = ""
 
         # Act
@@ -6180,6 +6183,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  /url
@@ -6220,6 +6224,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -6261,6 +6266,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 > /url
 >  "title"
@@ -6277,7 +6283,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
         ]
 
         expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_output = f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
         expected_error = ""
 
         # Act
@@ -6301,6 +6307,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 > /url
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6341,6 +6348,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 > [abc]:
 > /url
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6372,7 +6380,6 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
 def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_first_line() -> (
     None
 ):
@@ -6383,136 +6390,9 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
+>
 >  | abc | def |
 > | --- | --- |
-> a real test
-"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
-    ) as markdown_file_path:
-        supplied_arguments = [
-            "--enable-extensions",
-            "markdown-tables",
-            "-d",
-            "md022,md023,md041",
-            "scan",
-            markdown_file_path,
-        ]
-
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_first_line() -> (
-    None
-):
-    """
-    Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
-    and we expect the rule not to fire.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_markdown = """> this is text
-<!-- pyml disable-next-line no-multiple-space-blockquote -->
->  | abc | def |
-> | --- | --- |
-> a real test
-"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
-    ) as markdown_file_path:
-        supplied_arguments = [
-            "--enable-extensions",
-            "markdown-tables",
-            "-d",
-            "md022,md023,md041",
-            "scan",
-            markdown_file_path,
-        ]
-
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_first_line() -> (
-    None
-):
-    """
-    Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_markdown = """> this is text
-> [abc]:
-> /url
-<!-- pyml disable-next-line no-multiple-space-blockquote -->
-
->  "title"
-> a real test
-"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
-    ) as markdown_file_path:
-        supplied_arguments = [
-            "--enable-extensions",
-            "markdown-tables",
-            "-d",
-            "md028,md041",
-            "scan",
-            markdown_file_path,
-        ]
-
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_second_line() -> (
-    None
-):
-    """
-    Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_markdown = """> this is text
-> | abc | def |
->  | --- | --- |
 > a real test
 """
     with create_temporary_configuration_file(
@@ -6541,7 +6421,133 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
 
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_first_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
+    and we expect the rule not to fire.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote -->
+>  | abc | def |
+> | --- | --- |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md022,md023,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_first_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote -->
+
+>  | abc | def |
+> | --- | --- |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md028,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_second_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+> | abc | def |
+>  | --- | --- |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md022,md023,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
 def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_second_line() -> (
     None
 ):
@@ -6553,8 +6559,9 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
-<!-- pyml disable-next-line no-multiple-space-blockquote -->
+>
 > | abc | def |
+<!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  | --- | --- |
 > a real test
 """
@@ -6584,22 +6591,156 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 
 
 @pytest.mark.gfm
-@pytest.mark.skip(reason="https://github.com/jackdewinter/pymarkdown/issues/1515")
 def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_second_line() -> (
     None
 ):
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
+
+    Note: the newline breaks the two parts of the header table into two separate block quotes,
+        rendering the "table" as two paragraphs in two block quotes.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     source_markdown = """> this is text
-> [abc]:
-> /url
+>
+> | abc | def |
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
->  "title"
+>  | --- | --- |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md028,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_third_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+> | abc | def |
+> | --- | --- |
+>  | abc | def |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md022,md023,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_third_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
+    and we expect the rule not to fire.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+> | abc | def |
+> | --- | --- |
+<!-- pyml disable-next-line no-multiple-space-blockquote -->
+>  | abc | def |
+> a real test
+"""
+    with create_temporary_configuration_file(
+        supplied_configuration=source_markdown, file_name_suffix=".md"
+    ) as markdown_file_path:
+        supplied_arguments = [
+            "--enable-extensions",
+            "markdown-tables",
+            "-d",
+            "md022,md023,md041",
+            "scan",
+            markdown_file_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_third_line() -> (
+    None
+):
+    """
+    Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
+
+    Note: The inserted line breaks the table.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_markdown = """> this is text
+>
+> | abc | def |
+> | --- | --- |
+<!-- pyml disable-next-line no-multiple-space-blockquote -->
+
+>  | abc | def |
 > a real test
 """
     with create_temporary_configuration_file(
