@@ -461,6 +461,13 @@ class MarkdownToken:
         )
 
     @property
+    def is_table_header(self) -> bool:
+        """
+        Returns whether the current token is a header item from a table.
+        """
+        return self.token_name == self.token_name == MarkdownToken._token_table_header
+
+    @property
     def is_table_header_item(self) -> bool:
         """
         Returns whether the current token is a header item from a table.
@@ -468,6 +475,13 @@ class MarkdownToken:
         return (
             self.token_name == self.token_name == MarkdownToken._token_table_header_item
         )
+
+    @property
+    def is_table_row(self) -> bool:
+        """
+        Returns whether the current token is a row item from a table.
+        """
+        return self.token_name == self.token_name == MarkdownToken._token_table_row
 
     @property
     def is_table_row_item(self) -> bool:

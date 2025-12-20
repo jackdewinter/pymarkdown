@@ -276,10 +276,10 @@
         },
         {
             "name": "test.extensions.test_markdown_pragmas_issue_1479",
-            "totalTests": 447,
+            "totalTests": 450,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 6,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -636,7 +636,7 @@
         },
         {
             "name": "test.gfm.test_markdown_tables_extension",
-            "totalTests": 162,
+            "totalTests": 165,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 8,
@@ -1308,7 +1308,7 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 128,
+            "totalTests": 137,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

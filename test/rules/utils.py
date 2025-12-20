@@ -47,6 +47,7 @@ class pluginRuleTest:
     use_fix_debug: bool = False
     disable_rules: str = ""
     enable_rules: str = ""
+    enable_extensions: str = ""
     scan_expected_return_code: int = 0
     scan_expected_output: str = ""
     scan_expected_error: str = ""
@@ -109,6 +110,8 @@ def build_arguments(
         supplied_arguments: List[str] = []
         if test.use_debug:
             supplied_arguments.append("--stack-trace")
+        if test.enable_extensions:
+            supplied_arguments.extend(("--enable-extensions", test.enable_extensions))
         if test.add_plugin_path:
             supplied_arguments.extend(("--add-plugin", test.add_plugin_path))
         if test.use_strict_config:
@@ -217,9 +220,12 @@ def execute_scan_test(
 
 
 def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
+    def calculate_description(reporting_test: pluginRuleTest) -> str:
+        return "xxx"
+
     return [
         (
-            pytest.param(i, marks=pytest.mark.skip)  # type: ignore
+            pytest.param(i, marks=pytest.mark.skip(calculate_description(i)))  # type: ignore
             if i.mark_scan_as_skipped
             else i
         )
@@ -228,9 +234,12 @@ def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest
 
 
 def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
+    def calculate_description(reporting_test: pluginRuleTest) -> str:
+        return "yyy"
+
     return [
         (
-            pytest.param(i, marks=pytest.mark.skip)  # type: ignore
+            pytest.param(i, marks=pytest.mark.skip(calculate_description(i)))  # type: ignore
             if i.mark_fix_as_skipped or i.mark_scan_as_skipped
             else i
         )

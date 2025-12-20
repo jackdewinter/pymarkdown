@@ -17122,7 +17122,7 @@ def test_extra_058ca() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(3,1)]",
-        "[table-row(3,1):  : :True:0]",
+        "[table-row(3,3):  : :True:0]",
         "[table-row-item(3,4):  :]",
         "[text(3,4):abc:]",
         "[end-table-row-item:  |::False]",

@@ -2,11 +2,76 @@
 https://github.github.com/gfm/#tables-extension-
 """
 
+from test.tokens.mock_plugin_modify_context import MockPluginModifyContext
 from test.utils import act_and_assert
 
 import pytest
 
+from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.leaf_blocks.table_block_tuple import TableRow
+from pymarkdown.tokens.table_markdown_tokens import (
+    TableMarkdownHeaderToken,
+    TableMarkdownRowToken,
+)
+
 config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
+
+
+def test_table_heading_markdown_token_modify_with_bad_name() -> None:
+    """
+    Test to make sure that try to change this token with a bad name fails.
+    """
+
+    # Arrange
+    modification_context = MockPluginModifyContext()
+    header_table_row = TableRow(
+        extracted_whitespace="",
+        trailing_whitespace="",
+        columns=[],
+        end_of_row=None,
+        did_start_with_separator=False,
+    )
+    separator_table_row = TableRow(
+        extracted_whitespace="",
+        trailing_whitespace="",
+        columns=[],
+        end_of_row=None,
+        did_start_with_separator=False,
+    )
+    original_token = TableMarkdownHeaderToken(
+        header_table_row=header_table_row,
+        separator_table_row=separator_table_row,
+        position_marker=PositionMarker(1, 1, "", 1),
+    )
+
+    # Act
+    did_modify = original_token.modify_token(modification_context, "bad_name", "")
+
+    # Assert
+    assert not did_modify
+
+
+def test_table_row_markdown_token_modify_with_bad_name() -> None:
+    """
+    Test to make sure that try to change this token with a bad name fails.
+    """
+
+    # Arrange
+    modification_context = MockPluginModifyContext()
+    original_token = TableMarkdownRowToken(
+        leading_whitespace="",
+        trailing_whitespace="",
+        did_start_with_separator=False,
+        delta=0,
+        line_number=1,
+        column_number=1,
+    )
+
+    # Act
+    did_modify = original_token.modify_token(modification_context, "bad_name", "")
+
+    # Assert
+    assert not did_modify
 
 
 def test_tables_extension_198_disabled() -> None:
@@ -105,7 +170,7 @@ def test_tables_extension_198_enabled_with_leading_same() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(3,1)]",
-        "[table-row(3,1): ::True:0]",
+        "[table-row(3,2): ::True:0]",
         "[table-row-item(3,3): :]",
         "[text(3,3):baz:]",
         "[end-table-row-item: |::False]",
@@ -495,6 +560,58 @@ bar | baz"""
         "[table-header-item(1,9): :right]",
         "[text(1,9):defghi:]",
         "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,1)]",
+        "[table-row(3,1):::False:0]",
+        "[table-row-item(3,1)::center]",
+        "[text(3,1):bar:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,7): :right]",
+        "[text(3,7):baz:]",
+        "[end-table-row-item:::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th align="center">abc</th>
+<th align="right">defghi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">bar</td>
+<td align="right">baz</td>
+</tr>
+</tbody>
+</table>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+def test_tables_extension_199_enabled_only_middle_markers_on_all_lines() -> None:
+    """
+    Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
+    """
+
+    # Arrange
+    source_markdown = """ abc | defghi
+:-: | -----------:
+bar | baz"""
+    expected_tokens = [
+        "[table(1,2)]",
+        "[table-header(1,2): ::False::-: | -----------:]",
+        "[table-header-item(1,2)::center]",
+        "[text(1,2):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,8): :right]",
+        "[text(1,8):defghi:]",
+        "[end-table-header-item:::False]",
         "[end-table-header:::False]",
         "[table-body(3,1)]",
         "[table-row(3,1):::False:0]",
@@ -3228,7 +3345,7 @@ def test_whitespaces_tables_extension_with_spaces_extra_within_ulist() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,3)]",
-        "[table-row(5,3):  ::True:0]",
+        "[table-row(5,5):  ::True:0]",
         "[table-row-item(5,5): :]",
         "[text(5,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -3349,7 +3466,7 @@ def test_whitespaces_tables_extension_with_spaces_extra_within_olist() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,4)]",
-        "[table-row(5,4): ::True:0]",
+        "[table-row(5,5): ::True:0]",
         "[table-row-item(5,6): :]",
         "[text(5,6):baz:]",
         "[end-table-row-item: |::False]",
@@ -6337,7 +6454,7 @@ def test_whitespaces_tables_with_tabs_before_within_unordered_list_x() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,3)]",
-        "[table-row(5,3):\t::True:0]",
+        "[table-row(5,4):\t::True:0]",
         "[table-row-item(5,5): :]",
         "[text(5,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -6410,7 +6527,7 @@ def test_whitespaces_tables_with_tabs_before_within_unordered_list_and_single_sp
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,3)]",
-        "[table-row(5,3):\t::True:0]",
+        "[table-row(5,4):\t::True:0]",
         "[table-row-item(5,5): :]",
         "[text(5,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -6481,7 +6598,7 @@ def test_whitespaces_tables_with_tabs_before_within_unordered_list_and_spaces() 
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,3)]",
-        "[table-row(5,3):\t::True:0]",
+        "[table-row(5,4):\t::True:0]",
         "[table-row-item(5,5): :]",
         "[text(5,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -6556,7 +6673,7 @@ def test_whitespaces_tables_with_tabs_before_within_unordered_double_list() -> N
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(6,5)]",
-        "[table-row(6,5):\t::True:0]",
+        "[table-row(6,6):\t::True:0]",
         "[table-row-item(6,7): :]",
         "[text(6,7):baz:]",
         "[end-table-row-item: |::False]",
@@ -6630,7 +6747,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_list_x() -> None:
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,4)]",
-        "[table-row(5,4):\t::True:0]",
+        "[table-row(5,5):\t::True:0]",
         "[table-row-item(5,6): :]",
         "[text(5,6):baz:]",
         "[end-table-row-item: |::False]",
@@ -6701,7 +6818,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_list_and_single_spac
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,4)]",
-        "[table-row(5,4):\t::True:0]",
+        "[table-row(5,5):\t::True:0]",
         "[table-row-item(5,6): :]",
         "[text(5,6):baz:]",
         "[end-table-row-item: |::False]",
@@ -6770,7 +6887,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_list_and_spaces() ->
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(5,4)]",
-        "[table-row(5,4):\t::True:0]",
+        "[table-row(5,5):\t::True:0]",
         "[table-row-item(5,6): :]",
         "[text(5,6):baz:]",
         "[end-table-row-item: |::False]",
@@ -6844,7 +6961,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_x() -> N
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(6,7)]",
-        "[table-row(6,7):\t  ::True:0]",
+        "[table-row(6,10):\t  ::True:0]",
         "[table-row-item(6,9): :]",
         "[text(6,9):baz:]",
         "[end-table-row-item: |::False]",
@@ -7069,7 +7186,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_two_spac
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(6,7)]",
-        "[table-row(6,7):\t  ::True:0]",
+        "[table-row(6,10):\t  ::True:0]",
         "[table-row-item(6,9): :]",
         "[text(6,9):baz:]",
         "[end-table-row-item: |::False]",
@@ -7221,7 +7338,7 @@ def test_whitespaces_tables_with_tabs_before_within_block_quotes_repeat() -> Non
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(6,3)]",
-        "[table-row(6,3):\t::True:0]",
+        "[table-row(6,4):\t::True:0]",
         "[table-row-item(6,5): :]",
         "[text(6,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -7287,7 +7404,7 @@ def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_repeat() -
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(3,3)]",
-        "[table-row(3,3):\t::True:0]",
+        "[table-row(3,4):\t::True:0]",
         "[table-row-item(3,5): :]",
         "[text(3,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -7351,7 +7468,7 @@ def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_with_many_
         "[end-table-header-item:\t|::False]",
         "[end-table-header:::False]",
         "[table-body(3,3)]",
-        "[table-row(3,3):\t::True:0]",
+        "[table-row(3,4):\t::True:0]",
         "[table-row-item(3,5):\t:]",
         "[text(3,5):baz:]",
         "[end-table-row-item:\t|::False]",
@@ -7415,7 +7532,7 @@ def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_with_space
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(3,3)]",
-        "[table-row(3,3):\t::True:0]",
+        "[table-row(3,4):\t::True:0]",
         "[table-row-item(3,5): :]",
         "[text(3,5):baz:]",
         "[end-table-row-item: |::False]",
@@ -7632,7 +7749,7 @@ def test_whitespaces_tables_with_tabs_before_within_list_single_over_two_lines_b
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
         "[table-body(6,5)]",
-        "[table-row(6,5):\t::True:0]",
+        "[table-row(6,6):\t::True:0]",
         "[table-row-item(6,7): :]",
         "[text(6,7):baz:]",
         "[end-table-row-item: |::False]",

@@ -199,7 +199,7 @@
         "pymarkdown/leaf_blocks/table_block_continuation_helper.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 3,
-            "too-many-locals": 2
+            "too-many-locals": 1
         },
         "pymarkdown/leaf_blocks/table_block_parse_helper.py": {},
         "pymarkdown/leaf_blocks/table_block_processor.py": {},
@@ -534,7 +534,7 @@
         "too-many-public-methods": 5,
         "too-few-public-methods": 40,
         "too-many-arguments": 268,
-        "too-many-locals": 54,
+        "too-many-locals": 53,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 8,
         "protected-access": 31,
