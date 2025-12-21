@@ -241,12 +241,12 @@ jobs:
       - name: Setup
         run: |
           export PYTHONIOENCODING=utf-8
-          pipenv run python setup.py sdist bdist_wheel
+          pipenv run python -Im build
 
       - name: Twine
         run: |
           export PYTHONIOENCODING=utf-8
-          pipenv run twine check dist/*    
+          pipenv run twine check --strict dist/*    
 
       - name: Upload Package
         uses: actions/upload-artifact@v5
@@ -254,12 +254,12 @@ jobs:
           name: packaged-library
           path: ${{github.workspace}}/dist/
 
-  publish-to-testpypi:
-    # See https://github.com/pypa/gh-action-pypi-publish/tree/release/v1/
+  publish-to-pypi:
+    # See https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
     needs: [packaging]
     name: Publish Python 🐍 distribution 📦 to PyPI
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     environment:
       name: pypi
       url: https://pypi.org/p/pymarkdownlnt
@@ -271,5 +271,5 @@ jobs:
       with:
         name: python-package-dist
         path: dist/
-    - name: Publish distribution 📦 to TestPyPI
+    - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
