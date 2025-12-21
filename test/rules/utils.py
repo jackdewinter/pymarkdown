@@ -59,6 +59,7 @@ class pluginRuleTest:
     is_mix_test: bool = True
     mark_scan_as_skipped: bool = False
     mark_fix_as_skipped: bool = False
+    fix_skip_reason: Optional[str] = None
     notes: str = ""
     scan_duplicate_coverage: Optional[
         Union[SuppressDuplicateCoverage, List[SuppressDuplicateCoverage]]
@@ -235,12 +236,12 @@ def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest
 
 def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
     def calculate_description(reporting_test: pluginRuleTest) -> str:
-        return "yyy"
+        return reporting_test.fix_skip_reason or "Fix marked with generic skip."
 
     return [
         (
             pytest.param(i, marks=pytest.mark.skip(calculate_description(i)))  # type: ignore
-            if i.mark_fix_as_skipped or i.mark_scan_as_skipped
+            if (i.mark_fix_as_skipped or i.fix_skip_reason) or i.mark_scan_as_skipped
             else i
         )
         for i in scanTests

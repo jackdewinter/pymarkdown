@@ -3209,7 +3209,9 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xd() -> None:
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
 def test_tables_extension_extra_in_block_in_block_after_first_line_xe() -> None:
@@ -3602,8 +3604,7 @@ def test_whitespaces_tables_extension_with_spaces_extra_within_block_quote() -> 
     )
 
 
-@pytest.mark.skip
-def test_whitespaces_tables_extension_with_spaces_after_block_quote() -> None:
+def test_whitespaces_tables_extension_with_spaces_right_after_block_quote() -> None:
     """
     Test case: TAble after text within single block quote, without any block quote start character.
         As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
@@ -3618,16 +3619,78 @@ def test_whitespaces_tables_extension_with_spaces_after_block_quote() -> None:
   | --- | --- |
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n\n]",
-        "[para(1,3):\n\n  \n]",
-        "[text(1,3):abc\ndef\n[fred]: /url\n[fred]::\n\n\n]",
+        "[block-quote(1,1)::> \n> \n\n\n]",
+        "[para(1,3):\n\n  \n  ]",
+        "[text(1,3):abc\ndef\n| foo | bar |\n| --- | --- |::\n\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
     ]
-    expected_gfm = """needs regen"""
+    expected_gfm = """<blockquote>
+<p>abc
+def
+| foo | bar |
+| --- | --- |</p>
+</blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+def test_whitespaces_tables_extension_with_spaces_after_block_quote() -> None:
+    """
+    Test case: TAble after text within single block quote, without any block quote start character.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_lrd_with_spaces_after_block_quote
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> # def
+  | foo | bar |
+  | --- | --- |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[atx(2,3):1:0:]",
+        "[text(2,5):def: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[table(3,3)]",
+        "[table-header(3,3):  ::True:  | --- | --- |]",
+        "[table-header-item(3,5): :]",
+        "[text(3,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,11): :]",
+        "[text(3,11):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<h1>def</h1>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+</table>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
 def test_whitespaces_tables_extension_with_some_spaces_after_double_block_quotes() -> (
@@ -3665,7 +3728,9 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
 def test_whitespaces_tables_extension_with_extra_spaces_after_double_block_quotes() -> (
@@ -3706,17 +3771,20 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
-@pytest.mark.skip
-def test_whitespaces_tables_extension_with_spaces_within_single_block_quote_after_double_block_quote() -> (
+def test_whitespaces_tables_extension_with_spaces_within_single_block_quote_right_after_double_block_quote() -> (
     None
 ):
     """
     Test case: Table after text within single block quote, occurring after a double block quote.
 
     Related: test_whitespaces_lrd_with_spaces_within_single_block_quote_after_double_block_quote
+
+    Note: The text in the double block quote continue to the "table" text.
     """
 
     # Arrange
@@ -3742,13 +3810,74 @@ def test_whitespaces_tables_extension_with_spaces_within_single_block_quote_afte
 <p>abc</p>
 <blockquote>
 <p>def
-[fred]: /url
-[fred]</p>
+| foo | bar |
+| --- | --- |</p>
 </blockquote>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+def test_whitespaces_tables_extension_with_spaces_within_single_block_quote_after_double_block_quote() -> (
+    None
+):
+    """
+    Test case: Table after text within single block quote, occurring after a double block quote.
+
+    Related: test_whitespaces_lrd_with_spaces_within_single_block_quote_after_double_block_quote
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > ## def
+>   | foo | bar |
+>   | --- | --- |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[atx(2,5):2:0:]",
+        "[text(2,8):def: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[table(3,5)]",
+        "[table-header(3,5):  ::True:  | --- | --- |]",
+        "[table-header-item(3,7): :]",
+        "[text(3,7):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,13): :]",
+        "[text(3,13):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<h2>def</h2>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
 def test_tables_extension_extra_in_block_in_block_xx() -> None:
@@ -3928,7 +4057,9 @@ some other text</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
 
 
 @pytest.mark.gfm
@@ -5875,7 +6006,6 @@ def test_tables_extension_extra_in_list_after_lrd() -> None:
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=False,
     )
 
 
@@ -5949,7 +6079,6 @@ def test_tables_extension_extra_in_block_quote_after_lrd() -> None:
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=False,
     )
 
 
@@ -6030,7 +6159,6 @@ def test_tables_extension_extra_in_block_quote_after_lrd_a() -> None:
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=False,
     )
 
 
@@ -6393,7 +6521,6 @@ def test_tables_extension_extra_in_block_chb() -> None:
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=False,
     )
 
 
@@ -7618,8 +7745,7 @@ def test_whitespaces_tables_with_tabs_before_within_double_block_quotes() -> Non
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_single_x() -> (
+def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_right_with_single_x() -> (
     None
 ):
     """
@@ -7638,8 +7764,8 @@ def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_sin
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n>\n> \n> \n]",
-        "[para(2,5):\n\t\n  \n  ]",
+        "[block-quote(2,1)::> > \n>\n>\n>\n]",
+        "[para(2,5):\n\t\n\t\n\t]",
         "[text(2,5):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -7662,12 +7788,88 @@ def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_sin
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=True,
     )
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_single_x() -> (
+    None
+):
+    """
+    Test case:  table preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > # def
+>\t| foo | bar |
+>\t| --- | --- |
+>\t| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n>\n>]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[atx(2,5):1:0:]",
+        "[text(2,7):def: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[table(3,5)]",
+        "[table-header(3,5):\t::True:\t| --- | --- |]",
+        "[table-header-item(3,7): :]",
+        "[text(3,7):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,13): :]",
+        "[text(3,13):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(5,3)]",
+        "[table-row(5,4):\t::True:0]",
+        "[table-row-item(5,5): :]",
+        "[text(5,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(5,11): :]",
+        "[text(5,11):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<h1>def</h1>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
 def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_single_a() -> (
     None
 ):
@@ -7681,26 +7883,27 @@ def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_sin
 >\t# heading
 """
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n>\n> \n> \n]",
-        "[para(2,5):\n\t\n  \n  ]",
-        "[text(2,5):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
-        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n>]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[end-block-quote::>:True]",
+        "[atx(3,5):1:0:\t]",
+        "[text(3,7):heading: ]",
+        "[end-atx::]",
         "[end-block-quote:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(6,1):]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 <p>abc</p>
 <blockquote>
-<p>def
-| foo | bar |
-| --- | --- |
-| baz | bim |</p>
+<p>def</p>
 </blockquote>
+<h1>heading</h1>
 </blockquote>"""
 
     # Act & Assert
@@ -7830,7 +8033,6 @@ def test_whitespaces_tables_with_too_many_spaces_before() -> None:
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_tables_with_too_many_spaces_before_after_first() -> None:
     """
     Test case:  table preceeded by tabs.
@@ -7843,56 +8045,13 @@ def test_whitespaces_tables_with_too_many_spaces_before_after_first() -> None:
     | --- | --- |
     | baz | bim |"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::True]",
-        "[ulist(2,3):-::4:  :\n  \n  \n  \n]",
-        "[para(2,5):]",
-        "[text(2,5):def:]",
-        "[end-para:::True]",
-        "[BLANK(3,1):]",
-        "[table(4,5)]",
-        "[table-header(4,5)]",
-        "[table-header-item(4,5)]",
-        "[text(4,5):foo:]",
-        "[end-table-header-item: |::False]",
-        "[table-header-item(4,5)]",
-        "[text(4,5):bar:]",
-        "[end-table-header-item: |::False]",
-        "[end-table-header:::False]",
-        "[table-body(4,5)]",
-        "[table-row(4,5)]",
-        "[table-row-item(4,5)]",
-        "[text(4,5):baz:]",
-        "[end-table-row-item: |::False]",
-        "[table-row-item(4,5)]",
-        "[text(4,5):bim:]",
-        "[end-table-row-item: |::False]",
-        "[end-table-row:::False]",
-        "[end-table-body:::False]",
-        "[end-table:::False]",
-        "[BLANK(7,1):]",
-        "[end-ulist:::True]",
-        "[end-ulist:::True]",
-        "[para(8,1):]",
-        "[text(8,1):[fred]:]",
+        "[para(1,1):\n    \n    ]",
+        "[text(1,1):| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<table>
-<thead>
-<tr>
-<th>foo</th>
-<th>bar</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>baz</td>
-<td>bim</td>
-</tr>
-</tbody>
-</table>"""
+    expected_gfm = """<p>| foo | bar |
+| --- | --- |
+| baz | bim |</p>"""
 
     # Act & Assert
     act_and_assert(
@@ -8573,8 +8732,7 @@ def test_whitespaces_tables_with_block_quote_before_with_only_blank_in_bq() -> N
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_tables_with_block_quote_before_with_no_blank_in_bq() -> None:
+def test_whitespaces_tables_with_block_quote_right_before_with_no_blank_in_bq() -> None:
     """
     Test case:  Tables with block quote before.
 
@@ -8588,36 +8746,73 @@ def test_whitespaces_tables_with_block_quote_before_with_no_blank_in_bq() -> Non
 | baz | bim |
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n>]",
-        "[para(1,3):]",
-        "[text(1,3):this is a block quote:]",
+        "[block-quote(1,1)::> \n\n\n\n]",
+        "[para(1,3):\n\n\n]",
+        "[text(1,3):this is a block quote\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
         "[end-para:::True]",
-        "[BLANK(2,2):]",
         "[end-block-quote:::True]",
-        "[table(3,1)]",
-        "[table-header(3,1)]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):foo:]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is a block quote
+| foo | bar |
+| --- | --- |
+| baz | bim |</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_block_quote_before_with_no_blank_in_bq() -> None:
+    """
+    Test case:  Tables with block quote before.
+
+    test_link_reference_definitions_183fx
+    """
+
+    # Arrange
+    source_markdown = """> ## this is a block quote
+| foo | bar |
+| --- | --- |
+| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[atx(1,3):2:0:]",
+        "[text(1,6):this is a block quote: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[table(2,1)]",
+        "[table-header(2,1):::True:| --- | --- |]",
+        "[table-header-item(2,3): :]",
+        "[text(2,3):foo:]",
         "[end-table-header-item: |::False]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):bar:]",
+        "[table-header-item(2,9): :]",
+        "[text(2,9):bar:]",
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
-        "[table-body(3,1)]",
-        "[table-row(3,1)]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):baz:]",
+        "[table-body(4,1)]",
+        "[table-row(4,1):::True:0]",
+        "[table-row-item(4,3): :]",
+        "[text(4,3):baz:]",
         "[end-table-row-item: |::False]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):bim:]",
+        "[table-row-item(4,9): :]",
+        "[text(4,9):bim:]",
         "[end-table-row-item: |::False]",
         "[end-table-row:::False]",
         "[end-table-body:::False]",
         "[end-table:::False]",
-        "[BLANK(6,1):]",
+        "[BLANK(5,1):]",
     ]
     expected_gfm = """<blockquote>
-<p>this is a block quote</p>
+<h2>this is a block quote</h2>
 </blockquote>
 <table>
 <thead>
@@ -8780,8 +8975,7 @@ def test_whitespaces_tables_with_unordered_before_with_only_blank_in_list() -> N
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_tables_with_unordered_before_with_no_blank_in_list() -> None:
+def test_whitespaces_tables_with_unordered_right_before_with_no_blank_in_list() -> None:
     """
     Test case:  Tables with block quote before.
 
@@ -8795,28 +8989,67 @@ def test_whitespaces_tables_with_unordered_before_with_no_blank_in_list() -> Non
 | baz | bim |
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n>]",
-        "[para(1,3):]",
-        "[text(1,3):this is a block quote:]",
+        "[ulist(1,1):-::2::\n\n\n]",
+        "[para(1,3):\n\n\n]",
+        "[text(1,3):this is a block quote\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
         "[end-para:::True]",
-        "[BLANK(2,2):]",
-        "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>this is a block quote
+| foo | bar |
+| --- | --- |
+| baz | bim |</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_unordered_before_with_no_blank_in_list() -> None:
+    """
+    Test case:  Tables with block quote before.
+
+    test_link_reference_definitions_183gxx
+    """
+
+    # Arrange
+    source_markdown = """- this is in a list
+
+| foo | bar |
+| --- | --- |
+| baz | bim |
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):this is in a list:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[end-ulist:::True]",
         "[table(3,1)]",
-        "[table-header(3,1)]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):foo:]",
+        "[table-header(3,1):::True:| --- | --- |]",
+        "[table-header-item(3,3): :]",
+        "[text(3,3):foo:]",
         "[end-table-header-item: |::False]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):bar:]",
+        "[table-header-item(3,9): :]",
+        "[text(3,9):bar:]",
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
-        "[table-body(3,1)]",
-        "[table-row(3,1)]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):baz:]",
+        "[table-body(5,1)]",
+        "[table-row(5,1):::True:0]",
+        "[table-row-item(5,3): :]",
+        "[text(5,3):baz:]",
         "[end-table-row-item: |::False]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):bim:]",
+        "[table-row-item(5,9): :]",
+        "[text(5,9):bim:]",
         "[end-table-row-item: |::False]",
         "[end-table-row:::False]",
         "[end-table-body:::False]",
@@ -8824,9 +9057,7 @@ def test_whitespaces_tables_with_unordered_before_with_no_blank_in_list() -> Non
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ul>
-<li>
-<p>this is a block quote</p>
-</li>
+<li>this is in a list</li>
 </ul><table>
 <thead>
 <tr>
@@ -8988,7 +9219,6 @@ def test_whitespaces_tables_with_ordered_before_with_only_blank_in_list() -> Non
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_tables_with_ordered_before_with_no_blank_in_list() -> None:
     """
     Test case:  Tables with block quote before.
@@ -8998,44 +9228,43 @@ def test_whitespaces_tables_with_ordered_before_with_no_blank_in_list() -> None:
 
     # Arrange
     source_markdown = """1. this is a block quote
+
 | foo | bar |
 | --- | --- |
 | baz | bim |
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n>]",
-        "[para(1,3):]",
-        "[text(1,3):this is a block quote:]",
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):this is a block quote:]",
         "[end-para:::True]",
-        "[BLANK(2,2):]",
-        "[end-block-quote:::True]",
+        "[BLANK(2,1):]",
+        "[end-olist:::True]",
         "[table(3,1)]",
-        "[table-header(3,1)]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):foo:]",
+        "[table-header(3,1):::True:| --- | --- |]",
+        "[table-header-item(3,3): :]",
+        "[text(3,3):foo:]",
         "[end-table-header-item: |::False]",
-        "[table-header-item(3,1)]",
-        "[text(3,1):bar:]",
+        "[table-header-item(3,9): :]",
+        "[text(3,9):bar:]",
         "[end-table-header-item: |::False]",
         "[end-table-header:::False]",
-        "[table-body(3,1)]",
-        "[table-row(3,1)]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):baz:]",
+        "[table-body(5,1)]",
+        "[table-row(5,1):::True:0]",
+        "[table-row-item(5,3): :]",
+        "[text(5,3):baz:]",
         "[end-table-row-item: |::False]",
-        "[table-row-item(3,1)]",
-        "[text(3,1):bim:]",
+        "[table-row-item(5,9): :]",
+        "[text(5,9):bim:]",
         "[end-table-row-item: |::False]",
         "[end-table-row:::False]",
         "[end-table-body:::False]",
         "[end-table:::False]",
         "[BLANK(6,1):]",
     ]
-    expected_gfm = """<ul>
-<li>
-<p>this is a block quote</p>
-</li>
-</ul><table>
+    expected_gfm = """<ol>
+<li>this is a block quote</li>
+</ol><table>
 <thead>
 <tr>
 <th>foo</th>

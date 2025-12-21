@@ -299,7 +299,7 @@ def test_list_blocks_236() -> None:
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+@pytest.mark.skip("https://github.com/jackdewinter/pymarkdown/issues/830")
 def test_list_blocks_237x() -> None:
     """
     Test case 237:  The spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
@@ -548,7 +548,7 @@ def test_list_blocks_237e() -> None:
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+@pytest.mark.skip("https://github.com/jackdewinter/pymarkdown/issues/830")
 def test_list_blocks_237f() -> None:
     """
     Test case 237:  variation of 237 with blank lines before and after
@@ -593,7 +593,7 @@ def test_list_blocks_237f() -> None:
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+@pytest.mark.skip("https://github.com/jackdewinter/pymarkdown/issues/830")
 def test_list_blocks_237g() -> None:
     """
     Test case 237:  variation of 237 where bq starts before
@@ -674,7 +674,7 @@ def test_list_blocks_238x() -> None:
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+@pytest.mark.skip("https://github.com/jackdewinter/pymarkdown/issues/831")
 def test_list_blocks_238a() -> None:
     """
     Test case 238a:  variation of 238 with  more spacing

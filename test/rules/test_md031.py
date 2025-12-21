@@ -3522,7 +3522,7 @@ ______
 """,
         disable_rules="md032,md035",
         # use_fix_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""> > + ______
 > >   + list 1
 > >     list 2
@@ -3990,7 +3990,7 @@ A code block
 {temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""1. > +
    >   list 3
    > + list 3
@@ -5287,7 +5287,7 @@ A code block
 {temp_source_path}:8:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         fix_expected_file_contents="""1. > > ----
    > > + list 1
@@ -5319,7 +5319,7 @@ A code block
 {temp_source_path}:8:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         fix_expected_file_contents="""1. > > ----
    > > + list 1
@@ -6254,7 +6254,7 @@ another list
         disable_rules="md032",
         use_debug=True,
         # xxx
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""> + > -----
 >   > > block 1
 >   > > block 2
@@ -6732,7 +6732,7 @@ another list
 {temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md027",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""> + > -----
@@ -6944,8 +6944,7 @@ another list
 """,
         disable_rules="md032",
         use_debug=True,
-        # xxx
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         fix_expected_file_contents="""> + + -----
 >     > block 1
@@ -7065,7 +7064,7 @@ another list
         disable_rules="md032,md027",
         use_debug=True,
         # use_fix_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""> + + -----
 >     > block 1
 >     > block 2
@@ -7096,7 +7095,7 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         fix_expected_file_contents="""> + + -----
 >     > block 1
@@ -7574,7 +7573,7 @@ another list
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""+ + list 1
@@ -8542,7 +8541,7 @@ another list
 {temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -8728,7 +8727,7 @@ another list
 """,
         disable_rules="md032",
         use_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         fix_expected_file_contents="""+ + + -----
       > block 1
       > block 2
@@ -8757,7 +8756,7 @@ another list
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         use_debug=True,
         fix_expected_file_contents="""+ + + -----
       > block 1
@@ -9125,7 +9124,7 @@ another list
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""+ + + -----
@@ -9156,7 +9155,7 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1442",
         use_debug=True,
         fix_expected_file_contents="""+ + + -----
       + list 1

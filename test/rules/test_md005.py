@@ -448,7 +448,7 @@ scanTests = [
     + Item 2a
     + Item 2b
 """,
-        mark_fix_as_skipped=True,
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1445",
     ),
     pluginRuleTest(
         "bad_ordered_right_unordered_x_2",

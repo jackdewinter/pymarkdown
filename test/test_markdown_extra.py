@@ -6166,7 +6166,7 @@ un-block</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+@pytest.mark.skip("https://github.com/jackdewinter/pymarkdown/issues/1524")
 def test_extra_044jec() -> None:
     """
     TBD

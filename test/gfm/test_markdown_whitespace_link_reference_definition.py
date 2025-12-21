@@ -1053,7 +1053,6 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_x() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_formfeeds_before_within_list_a() -> None:
     """
@@ -1084,7 +1083,7 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_a() -> None:
     expected_gfm = """<ul>
 <li>abc</li>
 </ul>
-<p> \u000C \u000C[fred]: /url</p>
+<p>[fred]: /url</p>
 <p>[fred]</p>"""
 
     # Act & Assert
@@ -4377,7 +4376,6 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_over_two_lines_1
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_ordered_list_bare_over_two_lines_1ea() -> (
     None
@@ -4405,7 +4403,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_bare_over_two_line
     ]
     expected_gfm = """<ol>
 <li>abc
-[fred]:
+[fred]:\t
 /url</li>
 </ol>
 <p>[fred]</p>"""
