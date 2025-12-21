@@ -2,6 +2,26 @@
 
 ## Unversioned
 
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.34 - 2025-12-21
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
 - Upgraded minimum version from Python 3.9 to 3.10
 
 <!-- pyml disable-next-line no-duplicate-heading-->
