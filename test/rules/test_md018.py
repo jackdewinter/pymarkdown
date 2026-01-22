@@ -156,9 +156,9 @@ def test_md018_bad_missing_atx_start_spacing() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:1: "
+        + f"{os.path.abspath(source_path)}:3:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -192,9 +192,9 @@ def test_md018_bad_missing_atx_start_spacing_in_list() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:4: "
+        f"{os.path.abspath(source_path)}:1:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:4: "
+        + f"{os.path.abspath(source_path)}:3:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -228,9 +228,9 @@ def test_md018_bad_missing_atx_start_spacing_in_block_quote() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
+        f"{os.path.abspath(source_path)}:1:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:3: "
+        + f"{os.path.abspath(source_path)}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -361,9 +361,9 @@ def test_md018_bad_multiple_within_paragraph() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:2:1: "
+        + f"{os.path.abspath(source_path)}:2:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -401,9 +401,9 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:1: "
+        + f"{os.path.abspath(source_path)}:3:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -441,9 +441,9 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan_multi() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:4:1: "
+        + f"{os.path.abspath(source_path)}:4:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -482,7 +482,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi() -
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -523,7 +523,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi() ->
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -562,7 +562,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi() -> N
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:8:3: "
+        f"{os.path.abspath(source_path)}:8:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -601,7 +601,7 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi() -> Non
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:3: "
+        f"{os.path.abspath(source_path)}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -640,7 +640,7 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi() ->
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -679,7 +679,7 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi() -
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -718,7 +718,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi() -> No
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:8:3: "
+        f"{os.path.abspath(source_path)}:8:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -757,7 +757,7 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi() -> None
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:3: "
+        f"{os.path.abspath(source_path)}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -796,7 +796,7 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi() -> 
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -835,7 +835,7 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi() ->
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:3: "
+        f"{os.path.abspath(source_path)}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -873,7 +873,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi() 
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:3: "
+        f"{os.path.abspath(source_path)}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -907,13 +907,13 @@ def test_md018_bad_paragraphs_with_starting_whitespace() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:2: "
+        + f"{os.path.abspath(source_path)}:3:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:5:3: "
+        + f"{os.path.abspath(source_path)}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:7:4: "
+        + f"{os.path.abspath(source_path)}:7:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -947,13 +947,13 @@ def test_md018_bad_single_paragraph_with_starting_space() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:2:2: "
+        + f"{os.path.abspath(source_path)}:2:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:3:3: "
+        + f"{os.path.abspath(source_path)}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:4:4: "
+        + f"{os.path.abspath(source_path)}:4:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -993,7 +993,7 @@ def test_md018_bad_single_paragraph_with_starting_whitespace() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -1029,9 +1029,9 @@ def test_md018_bad_single_paragraph_with_whitespace() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + f"{source_path}:2:2: "
+        + f"{os.path.abspath(source_path)}:2:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""

@@ -352,7 +352,7 @@ def test_md013_good_small_line_with_config() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 25, Actual: 38] (line-length)"
     )
@@ -420,7 +420,7 @@ def test_md013_good_medium_line_with_config() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 50, Actual: 80] (line-length)"
     )
@@ -454,7 +454,7 @@ def test_md013_good_long_line() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 100] (line-length)"
     )
@@ -565,7 +565,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict() -> None
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -607,7 +607,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -646,7 +646,7 @@ def test_md013_bad_medium_line_with_long_last_word() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -688,7 +688,7 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -764,7 +764,7 @@ def test_md013_bad_paragraph_with_long_line_in_middle() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 91] (line-length)"
     )
@@ -827,7 +827,7 @@ def test_md013_bad_fenced_code_block() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)"
     expected_error = ""
 
     # Act
@@ -861,7 +861,7 @@ def test_md013_bad_fenced_code_block_with_config() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)"
     expected_error = ""
 
     # Act
@@ -956,7 +956,7 @@ def test_md013_bad_indented_code_block() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)"
     expected_error = ""
 
     # Act
@@ -990,7 +990,7 @@ def test_md013_bad_indented_code_block_with_config() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)"
     expected_error = ""
 
     # Act
@@ -1084,7 +1084,7 @@ def test_md013_bad_thematic_break() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)"
     expected_error = ""
 
     # Act
@@ -1178,7 +1178,7 @@ def test_md013_bad_atx_heading() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"
     expected_error = ""
 
     # Act
@@ -1306,7 +1306,7 @@ def test_md013_bad_setext_heading() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)"
     expected_error = ""
 
     # Act
@@ -1434,7 +1434,7 @@ def test_md013_bad_html_block() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)"
+    expected_output = f"{os.path.abspath(source_path)}:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)"
     expected_error = ""
 
     # Act

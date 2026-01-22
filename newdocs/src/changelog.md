@@ -38,6 +38,9 @@
       coverage but reduce redundant code coverage
     - i.e. if two scenarios are different enough but have the same code coverage,
       have a way to mark them as such
+- [Issue 1503](https://github.com/jackdewinter/pymarkdown/issues/1503)
+    - Added support for `--respect-gitignore` flags to respect any Git
+      directories and their `.gitignore` files.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

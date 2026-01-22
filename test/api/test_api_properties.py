@@ -254,16 +254,16 @@ def test_api_properties_without_strict_and_bad_extension_initialize() -> None:
     assert not scan_result.pragma_errors
     assert len(scan_result.scan_failures) == 4
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(source_path, 1, 1, "MD041", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 1, 1, "MD041", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 1, "MD022", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 1, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PyMarkdownScanFailure(source_path, 6, 1, "MD003", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 6, 1, "MD003", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PyMarkdownScanFailure(source_path, 8, 1, "MD003", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 8, 1, "MD003", "", "", None)
     )
 
 

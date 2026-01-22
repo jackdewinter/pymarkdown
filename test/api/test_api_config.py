@@ -324,7 +324,7 @@ def test_api_config_with_exception_during_scanning() -> None:
     supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
     expected_output = """BadPluginError encountered while scanning '{path}':
 (1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.""".replace(
-        "{path}", source_path
+        "{path}", os.path.abspath(source_path)
     )
 
     with create_temporary_configuration_file(

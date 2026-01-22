@@ -31,7 +31,8 @@ def test_markdown_return_code_command_line_bad() -> None:
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 main.py: error: argument --return-code-scheme: invalid __validate_return_code_scheme value: 'invalid'"""
 
@@ -96,10 +97,7 @@ def test_markdown_return_code_default_no_files_to_scan(
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist.
-
-
-No matching files found."""
+    expected_error = """Provided path 'does-not-exist.md' does not exist."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -131,7 +129,7 @@ def test_markdown_return_code_default_command_line_error() -> None:
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: the following arguments are required: path
 """
@@ -217,7 +215,7 @@ def test_markdown_return_code_default_scan_triggered_at_least_once() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD009: Trailing spaces "
         + "[Expected: 0; Actual: 2] (no-trailing-spaces)"
     )
@@ -325,10 +323,7 @@ def test_markdown_return_code_minimal_no_files_to_scan(
 
     expected_return_code = 0
     expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist.
-
-
-No matching files found."""
+    expected_error = """Provided path 'does-not-exist.md' does not exist."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -358,7 +353,7 @@ def test_markdown_return_code_minimal_command_line_error() -> None:
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: the following arguments are required: path
 """
@@ -443,7 +438,7 @@ def test_markdown_return_code_minimal_scan_triggered_at_least_once() -> None:
 
     expected_return_code = 0
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD009: Trailing spaces "
         + "[Expected: 0; Actual: 2] (no-trailing-spaces)"
     )

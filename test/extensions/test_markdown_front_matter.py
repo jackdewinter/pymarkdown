@@ -876,13 +876,13 @@ def test_front_matter_21a() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: MD041: First line in file should be a top level heading "
+        f"{os.path.abspath(source_path)}:1:1: MD041: First line in file should be a top level heading "
         + "(first-line-heading,first-line-h1)\n"
-        + f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
+        + f"{os.path.abspath(source_path)}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}:6:1: MD003: Heading style should be consistent throughout the document. "
+        + f"{os.path.abspath(source_path)}:6:1: MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + f"{source_path}:8:1: MD003: Heading style should be consistent throughout the document. "
+        + f"{os.path.abspath(source_path)}:8:1: MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)"
     )
     expected_error = ""
@@ -952,13 +952,13 @@ def test_front_matter_21c() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: MD041: First line in file should be a top level heading "
+        f"{os.path.abspath(source_path)}:1:1: MD041: First line in file should be a top level heading "
         + "(first-line-heading,first-line-h1)\n"
-        + f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
+        + f"{os.path.abspath(source_path)}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}:6:1: MD003: Heading style should be consistent throughout the document. "
+        + f"{os.path.abspath(source_path)}:6:1: MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + f"{source_path}:8:1: MD003: Heading style should be consistent throughout the document. "
+        + f"{os.path.abspath(source_path)}:8:1: MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)"
     )
     expected_error = ""

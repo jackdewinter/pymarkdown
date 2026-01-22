@@ -89,7 +89,7 @@ def test_md026_bad_ends_with_punctuation_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:18: "
+        f"{os.path.abspath(source_path)}:1:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -253,7 +253,7 @@ def test_md026_bad_ends_with_punctuation_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:18: "
+        f"{os.path.abspath(source_path)}:1:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -290,7 +290,7 @@ def test_md026_bad_ends_with_punctuation_setext_multiline() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:18: "
+        f"{os.path.abspath(source_path)}:2:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""

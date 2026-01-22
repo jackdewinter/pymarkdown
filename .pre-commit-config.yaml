@@ -98,7 +98,7 @@ repos:
       name: "Scan:   MyPy"
       args: [--warn-return-any, --strict, pymarkdown, stubs]
       additional_dependencies: [
-          "application_properties",
+          "application_properties","application_file_scanner==0.6.4",
           "types-pyyaml",
           pytest, types-PyYAML, application_properties, columnar
       ]
@@ -110,7 +110,7 @@ repos:
       name: "Scan:   MyPy (test)"
       args: [--warn-return-any, --exclude, test/resources, --strict, test, stubs  ]
       additional_dependencies: [
-          "application_properties",
+          "application_properties","application_file_scanner==0.6.4",
           "types-pyyaml",
           pytest, types-PyYAML, application_properties, columnar
       ]

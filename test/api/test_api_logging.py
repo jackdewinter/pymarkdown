@@ -65,7 +65,9 @@ def test_api_logging_single_file(caplog: LogCaptureFixture) -> None:
     list_result = PyMarkdownApi().list_path(source_path)
 
     # Assert
-    assert_if_lists_different(list_result.matching_files, [source_path])
+    assert_if_lists_different(
+        list_result.matching_files, [os.path.abspath(source_path)]
+    )
     assert caplog.text == ""
 
 
@@ -79,7 +81,7 @@ def test_api_logging_debug(caplog: LogCaptureFixture) -> None:
     source_path = "my-bad-path"
     expected_log_levels = ["DEBUG", "INFO", "WARNING"]
 
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -101,7 +103,7 @@ def test_api_logging_debug_to_file() -> None:
     source_path = "my-bad-path"
     expected_log_levels = ["DEBUG", "INFO", "WARNING"]
 
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     with create_temporary_file_for_reuse() as log_path:
         # Act & Assert
@@ -174,7 +176,7 @@ def test_api_logging_info(caplog: LogCaptureFixture) -> None:
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = ["INFO", "WARNING"]
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -195,7 +197,7 @@ def test_api_logging_warning(caplog: LogCaptureFixture) -> None:
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = ["WARNING"]
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -218,7 +220,7 @@ def test_api_logging_error(caplog: LogCaptureFixture) -> None:
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels: List[str] = []
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -242,7 +244,7 @@ def test_api_logging_critical(caplog: LogCaptureFixture) -> None:
     source_path = "my-bad-path"
     expected_log_levels: List[str] = []
 
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -323,7 +325,7 @@ def test_api_logging_inheriting_logging(caplog: LogCaptureFixture) -> None:
             ApplicationLogging.translate_log_level(ApplicationLogging.log_level_debug)
         )
 
-        expected_output = f"Provided path '{source_path}' does not exist."
+        expected_output = "No matching files found."
 
         assert_that_exception_is_raised(
             PyMarkdownApiNoFilesFoundException,

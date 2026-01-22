@@ -139,3 +139,6 @@ build/
 project_summarizer.egg-info/*
 dist/
 report.xml
+
+# Testing gitignore support
+*.abc

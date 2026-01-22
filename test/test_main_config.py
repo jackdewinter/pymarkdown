@@ -559,7 +559,7 @@ MD999>>token:[atx(1,1):1:0:]
         expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.
 """.replace(
-            "{source_path}", source_path
+            "{source_path}", os.path.abspath(source_path)
         )
 
         # Act

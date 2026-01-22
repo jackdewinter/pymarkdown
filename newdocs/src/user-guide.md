@@ -402,15 +402,34 @@ times to specify multiple paths to ignore, one argument for each path. This is
 primarily because the exclude paths may include character sequences that make a
 comma-separated list unfeasible.
 
-These exclude paths are evaluated using algorithms that are like the ones
-described in the `path` section below, with the exception
-that exclude paths that do not match are ignored. After the path algorithm creates
-the complete list of files to scan, the exclude path algorithm removes any paths
-from that list that match any one of the evaluated exclude paths.
+These exclude paths are evaluated using the [py-walk](https://github.com/pacha/py-walk)
+package which compares input using entries specified using the
+[.gitignore format](https://www.atlassian.com/git/tutorials/saving-changes/gitignore).
+This process takes all paths specified by the `path` section below and attempts
+to match the paths against the excluded paths. If a path does match, it is not
+included in the final list.  If it does not match, it is included in the final
+list.
 
 Note that the `-l` or `--list-files` argument can be helpful in debugging any
 issues that arrive in evaluating exclude paths and (include) paths when calling
 PyMarkdown.
+
+##### --respect-gitignore
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.35**
+
+The `--respect-gitignore` flag instructs PyMarkdown to follow any `.gitignore`
+files setup for the current Git repository.  To ensure that the multiple layers
+of possible `.gitignore` files are honored, PyMarkdown performs external calls
+to the locally installed Git instance.  Not only does this ensure integrity
+with the current repository, but it reduces the execution time as well.
+
+There is a slight performance penalty at the start of the application when PyMarkdown
+is trying to form a complete list of file to scan, as this feature calls externally
+to Git.  If performance is an issue, it is strongly recommended trying to reproduce
+the desired `.gitignore` file behavior using multiple `--exclude` arguments as mentioned
+in the previous section.  
 
 ##### path
 

@@ -45,6 +45,23 @@ class SchemeDefinition(ABC):
         return scheme_mapping[application_result]
 
 
+class ExplicitScheme(SchemeDefinition):
+    """
+    Class to contain the default return code scheme.
+    """
+
+    @override
+    def get_scheme_mapping(self) -> Dict[ApplicationResult, int]:
+        return {
+            ApplicationResult.SUCCESS: 0,
+            ApplicationResult.NO_FILES_TO_SCAN: 1,
+            ApplicationResult.COMMAND_LINE_ERROR: 2,
+            ApplicationResult.FIXED_AT_LEAST_ONE_FILE: 3,
+            ApplicationResult.SCAN_TRIGGERED_AT_LEAST_ONCE: 4,
+            ApplicationResult.SYSTEM_ERROR: 5,
+        }
+
+
 class DefaultScheme(SchemeDefinition):
     """
     Class to contain the default return code scheme.
@@ -86,10 +103,12 @@ class ReturnCodeHelper:
 
     __DEFAULT_SCHEME_NAME = "default"
     __MINIMAL_SCHEME_NAME = "minimal"
+    __EXPLICIT_SCHEME_NAME = "explicit"
 
     __available_schemes: Dict[str, SchemeDefinition] = {
         __DEFAULT_SCHEME_NAME: DefaultScheme(),
         __MINIMAL_SCHEME_NAME: MinimalScheme(),
+        __EXPLICIT_SCHEME_NAME: ExplicitScheme(),
     }
     __helper_name = threading.local()
 

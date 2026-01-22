@@ -4,14 +4,11 @@
         "pymarkdown/__main__.py": {},
         "pymarkdown/api.py": {
             "too-many-instance-attributes": 1,
-            "too-many-public-methods": 1
+            "too-many-public-methods": 1,
+            "too-many-arguments": 4
         },
         "pymarkdown/application_configuration_helper.py": {
             "too-few-public-methods": 1
-        },
-        "pymarkdown/application_file_scanner.py": {
-            "too-few-public-methods": 1,
-            "too-many-arguments": 2
         },
         "pymarkdown/application_logging.py": {},
         "pymarkdown/block_quotes/block_quote_count_helper.py": {
@@ -532,8 +529,8 @@
     "disables-by-name": {
         "too-many-instance-attributes": 28,
         "too-many-public-methods": 5,
-        "too-few-public-methods": 40,
-        "too-many-arguments": 268,
+        "too-many-arguments": 270,
+        "too-few-public-methods": 39,
         "too-many-locals": 53,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 8,

@@ -9,16 +9,17 @@ import runpy
 import traceback
 from typing import List, Optional, Tuple, cast
 
+from application_file_scanner import (
+    ApplicationFileScanner,
+    ApplicationFileScannerOptions,
+    ApplicationFileScannerOutputProtocol,
+)
 from application_properties import ApplicationProperties
 from application_properties.application_properties_utilities import (
     ApplicationPropertiesUtilities,
 )
 
 from pymarkdown.application_configuration_helper import ApplicationConfigurationHelper
-from pymarkdown.application_file_scanner import (
-    ApplicationFileScanner,
-    ApplicationFileScannerOutputProtocol,
-)
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.file_scan_helper import FileScanHelper
@@ -219,8 +220,13 @@ class PyMarkdownLint:
         return parse_arguments
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
+
+        # Set the return code first, to ensure any command line flags take effect as soon as possible.
+        ReturnCodeHelper.set_initial_state(args, self.__properties)
         if self.__logging:
             self.__logging.pre_initialize_with_args(args)
+
+        # return code helper initial state
 
         ApplicationConfigurationHelper.apply_configuration_layers(
             args, self.__properties, self.__handle_error
@@ -363,9 +369,10 @@ class PyMarkdownLint:
         did_error_scanning_files: bool,
     ) -> ApplicationResult:  # sourcery skip: extract-method
         did_fix_any_files = False
-        if did_error_scanning_files:
-            self.__handle_error("No matching files found.", None, exit_on_error=False)
-            return ApplicationResult.NO_FILES_TO_SCAN
+        assert not did_error_scanning_files
+        # if did_error_scanning_files:
+        #     self.__handle_error("No matching files found.", None, exit_on_error=False)
+        #     return ApplicationResult.NO_FILES_TO_SCAN
 
         POGGER.info("Initializing parser.")
         self.__initialize_parser()
@@ -411,15 +418,17 @@ class PyMarkdownLint:
         files_to_scan, did_error_scanning_files, did_only_list_files = (
             ApplicationFileScanner.determine_files_to_scan_with_args(
                 args,
-                cast(
+                ".md",
+                handle_output=cast(
                     ApplicationFileScannerOutputProtocol,
                     self.__handle_file_scanner_output,
                 ),
-                cast(
+                handle_error=cast(
                     ApplicationFileScannerOutputProtocol,
                     self.__handle_file_scanner_error,
                 ),
-                paths_to_exclude,
+                exclude_paths=paths_to_exclude,
+                scanner_options=ApplicationFileScannerOptions(),
             )
         )
         return (
@@ -443,16 +452,19 @@ class PyMarkdownLint:
                 did_error_scanning_files,
                 did_only_list_files,
             ) = self.__find_files_to_scan(args)
-            if did_only_list_files:
+            if use_standard_in or files_to_scan:
                 scan_result = (
                     ApplicationResult.SUCCESS
-                    if files_to_scan
-                    else ApplicationResult.NO_FILES_TO_SCAN
+                    if did_only_list_files
+                    else self.__scan_files_if_no_errors(
+                        args,
+                        use_standard_in,
+                        files_to_scan,
+                        did_error_scanning_files,
+                    )
                 )
             else:
-                scan_result = self.__scan_files_if_no_errors(
-                    args, use_standard_in, files_to_scan, did_error_scanning_files
-                )
+                scan_result = ApplicationResult.NO_FILES_TO_SCAN
             ReturnCodeHelper.exit_application(scan_result)
         except ValueError as this_exception:
             formatted_error = f"Configuration Error: {this_exception}"

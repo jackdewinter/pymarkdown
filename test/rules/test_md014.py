@@ -89,7 +89,7 @@ def test_md014_bad_shell_example() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD014: Dollar signs used before commands without showing output (commands-show-output)"
     )
     expected_error = ""
@@ -123,7 +123,7 @@ def test_md014_bad_shell_example_with_leading_space() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:2: "
+        f"{os.path.abspath(source_path)}:2:2: "
         + "MD014: Dollar signs used before commands without showing output (commands-show-output)"
     )
     expected_error = ""
@@ -156,7 +156,7 @@ def test_md014_bad_shell_example_indented() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:5: "
+        f"{os.path.abspath(source_path)}:3:5: "
         + "MD014: Dollar signs used before commands without showing output (commands-show-output)"
     )
     expected_error = ""

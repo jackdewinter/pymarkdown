@@ -63,7 +63,7 @@ def test_md045_bad_inline_image() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""
@@ -90,7 +90,6 @@ def test_md045_bad_inline_image_whitespace_only() -> None:
         "test", "resources", "rules", "md045", "bad_inline_image_whitespace_only.md"
     )
     supplied_arguments = [
-        # "--stack-trace",
         "--disable-rules",
         "md039",
         "--set",
@@ -101,7 +100,7 @@ def test_md045_bad_inline_image_whitespace_only() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""
@@ -206,7 +205,7 @@ def test_md045_bad_full_image() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""

@@ -138,17 +138,17 @@ def test_md033_bad_html_block_present() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + f"{source_path}:12:1: MD033: Inline HTML [Element: ?] (no-inline-html)\n"
-        + f"{source_path}:16:1: "
+        + f"{os.path.abspath(source_path)}:12:1: MD033: Inline HTML [Element: ?] (no-inline-html)\n"
+        + f"{os.path.abspath(source_path)}:16:1: "
         + "MD033: Inline HTML "
         + "[Element: !A] (no-inline-html)\n"
-        + f"{source_path}:24:1: "
+        + f"{os.path.abspath(source_path)}:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
-        + f"{source_path}:28:1: "
+        + f"{os.path.abspath(source_path)}:28:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + f"{source_path}:34:1: "
+        + f"{os.path.abspath(source_path)}:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
     )
     expected_error = ""
@@ -185,25 +185,25 @@ def test_md033_bad_html_block_present_with_configuration() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + f"{source_path}:7:1: "
+        + f"{os.path.abspath(source_path)}:7:1: "
         + "MD033: Inline HTML "
         + "[Element: !--] (no-inline-html)\n"
-        + f"{source_path}:12:1: "
+        + f"{os.path.abspath(source_path)}:12:1: "
         + "MD033: Inline HTML "
         + "[Element: ?] (no-inline-html)\n"
-        + f"{source_path}:16:1: "
+        + f"{os.path.abspath(source_path)}:16:1: "
         + "MD033: Inline HTML "
         + "[Element: !A] (no-inline-html)\n"
-        + f"{source_path}:20:1: "
+        + f"{os.path.abspath(source_path)}:20:1: "
         + "MD033: Inline HTML "
         + "[Element: ![CDATA[] (no-inline-html)\n"
-        + f"{source_path}:24:1: "
+        + f"{os.path.abspath(source_path)}:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
-        + f"{source_path}:28:1: "
+        + f"{os.path.abspath(source_path)}:28:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + f"{source_path}:34:1: "
+        + f"{os.path.abspath(source_path)}:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
     )
     expected_error = ""
@@ -240,15 +240,15 @@ def test_md033_bad_html_block_present_with_other_configuration() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + f"{source_path}:7:1: "
+        + f"{os.path.abspath(source_path)}:7:1: "
         + "MD033: Inline HTML "
         + "[Element: !--] (no-inline-html)\n"
-        + f"{source_path}:12:1: "
+        + f"{os.path.abspath(source_path)}:12:1: "
         + "MD033: Inline HTML "
         + "[Element: ?] (no-inline-html)\n"
-        + f"{source_path}:20:1: "
+        + f"{os.path.abspath(source_path)}:20:1: "
         + "MD033: Inline HTML "
         + "[Element: ![CDATA[] (no-inline-html)"
     )
@@ -281,9 +281,7 @@ def test_md033_bad_inline_html_present() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:9: MD033: Inline HTML [Element: a] (no-inline-html)"
-    )
+    expected_output = f"{os.path.abspath(source_path)}:3:9: MD033: Inline HTML [Element: a] (no-inline-html)"
 
     expected_error = ""
 
@@ -315,10 +313,10 @@ def test_md033_bad_html_in_atx_heading() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
+        f"{os.path.abspath(source_path)}:1:3: "
         + "MD033: Inline HTML "
         + "[Element: foo] (no-inline-html)\n"
-        + f"{source_path}:1:14: "
+        + f"{os.path.abspath(source_path)}:1:14: "
         + "MD033: Inline HTML "
         + "[Element: foo] (no-inline-html) "
     )
@@ -416,7 +414,7 @@ def test_md033_good_html_image_heading_with_config() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -450,7 +448,7 @@ def test_md033_bad_html_heading() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -484,7 +482,7 @@ def test_md033_bad_html_image_heading_blank() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -518,7 +516,7 @@ def test_md033_bad_html_image_with_other() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -582,7 +580,7 @@ def test_md033_bad_html_dangling() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -645,9 +643,7 @@ def test_md033_bad_html_declaration() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:1:1: MD033: Inline HTML [Element: !OTHER] (no-inline-html)"
-    )
+    expected_output = f"{os.path.abspath(source_path)}:1:1: MD033: Inline HTML [Element: !OTHER] (no-inline-html)"
 
     expected_error = ""
 

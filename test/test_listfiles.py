@@ -33,7 +33,7 @@ def test_markdown_with_dash_h() -> None:
 
     expected_return_code = 0
     expected_output = f"""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 
 positional arguments:
@@ -52,6 +52,7 @@ positional arguments:
   {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
+  --respect-gitignore   respect any setting in the local .gitignore file.
 """
     expected_error = ""
 
@@ -79,7 +80,7 @@ def test_markdown_with_dash_l_only() -> None:
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: the following arguments are required: path
 """
@@ -161,12 +162,13 @@ def test_markdown_with_dash_l_on_md_directory() -> None:
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
     supplied_arguments = ["scan", "-l", source_path]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = """{source_path}simple.md
-""".replace(
-        "{source_path}", source_path
-    )
+    expected_output = f"""{xsource_path}simple.md
+"""
     expected_error = ""
 
     # Act
@@ -452,11 +454,14 @@ def test_markdown_with_dash_l_on_mixed_directories() -> None:
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
     supplied_arguments = ["scan", "-l", "only-text", source_path]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
     expected_output = """{source_path}simple.md
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", xsource_path
     )
     expected_error = ""
 
@@ -482,14 +487,14 @@ def test_markdown_with_dash_l_on_non_md_file() -> None:
     scanner = MarkdownScanner()
     source_path = os.path.join("only-text", "simple_text_file.txt")
     supplied_arguments = ["scan", "-l", source_path]
+    xsource_path = os.path.abspath(
+        os.path.join(scanner.resource_directory, source_path)
+    )
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """Provided file path '{source_path}' is not a valid file. Skipping.
-
-
-No matching files found.""".replace(
-        "{source_path}", source_path
+    expected_error = """No matching files found.""".replace(
+        "{source_path}", xsource_path
     )
 
     # Act
@@ -513,11 +518,14 @@ def test_markdown_with_dash_l_on_md_file() -> None:
     scanner = MarkdownScanner()
     source_path = os.path.join("simple", "simple.md")
     supplied_arguments = ["scan", "-l", source_path]
+    xsource_path = os.path.abspath(
+        os.path.join(scanner.resource_directory, source_path)
+    )
 
     expected_return_code = 0
     expected_output = """{source_path}
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", xsource_path
     )
     expected_error = ""
 
@@ -548,15 +556,13 @@ def test_markdown_with_dash_l_on_mixed_files() -> None:
         nonexisting_source_path,
         existing_source_path,
     ]
-
-    expected_return_code = 1
-    expected_output = """"""
-    expected_error = """Provided file path '{nonexisting_source_path}' is not a valid file. Skipping.
-
-
-No matching files found.""".replace(
-        "{nonexisting_source_path}", nonexisting_source_path
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, "simple")) + os.sep
     )
+
+    expected_return_code = 0
+    expected_output = f"""{xsource_path}simple.md"""
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -579,6 +585,9 @@ def test_markdown_with_dash_l_on_globbed_files() -> None:
     scanner = MarkdownScanner()
     source_path = os.path.join("rules", "md001") + os.sep
     supplied_arguments = ["scan", "-l", f"{source_path}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
     expected_output = """{source_path}empty.md
@@ -589,7 +598,7 @@ def test_markdown_with_dash_l_on_globbed_files() -> None:
 {source_path}improper_setext_heading_incrementing.md
 {source_path}proper_atx_heading_incrementing.md
 {source_path}proper_setext_heading_incrementing.md""".replace(
-        "{source_path}", source_path
+        "{source_path}", xsource_path
     )
     expected_error = """"""
 
@@ -615,12 +624,15 @@ def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion() -> None:
     scanner = MarkdownScanner()
     source_path = "complex" + os.sep
     supplied_arguments = ["scan", "-l", "-r", f"{source_path}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
     expected_output = """{source_path}README.md
 {source_path}one.md
 {source_path}two.md""".replace(
-        "{source_path}", source_path
+        "{source_path}", xsource_path
     )
 
     expected_error = """"""
@@ -646,17 +658,20 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion() -> None:
     scanner = MarkdownScanner()
     source_path = "complex"
     supplied_arguments = ["scan", "-l", f"**{os.sep}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""README.md
-dir_one{os.sep}README.md
-dir_one{os.sep}one_one.md
-dir_two{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}README.md
+{xsource_path}dir_one{os.sep}README.md
+{xsource_path}dir_one{os.sep}one_one.md
+{xsource_path}dir_two{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -690,16 +705,19 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
         f"dir_one{os.sep}README.md",
         f"**{os.sep}*.md",
     ]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""README.md
-dir_one{os.sep}one_one.md
-dir_two{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}README.md
+{xsource_path}dir_one{os.sep}one_one.md
+{xsource_path}dir_two{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -727,15 +745,18 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
     scanner = MarkdownScanner()
     source_path = "complex"
     supplied_arguments = ["scan", "-l", "-e", "dir_one", f"**{os.sep}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""README.md
-dir_two{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}README.md
+{xsource_path}dir_two{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -763,16 +784,19 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
     scanner = MarkdownScanner()
     source_path = "complex"
     supplied_arguments = ["scan", "-l", "-e", f"dir_one{os.sep}one*", f"**{os.sep}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""README.md
-dir_one{os.sep}README.md
-dir_two{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}README.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}README.md
+{xsource_path}dir_one{os.sep}README.md
+{xsource_path}dir_two{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}README.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -801,13 +825,16 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
     source_path = "complex"
     glob_to_exclude = f"**{os.sep}README.md"
     supplied_arguments = ["scan", "-l", "-e", glob_to_exclude, f"**{os.sep}*.md"]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""dir_one{os.sep}one_one.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}dir_one{os.sep}one_one.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -842,13 +869,16 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
         "-l",
         f"**{os.sep}*.md",
     ]
+    xsource_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = f"""dir_one{os.sep}one_one.md
-dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
-dir_two{os.sep}two_one.md
-one.md
-two.md"""
+    expected_output = f"""{xsource_path}dir_one{os.sep}one_one.md
+{xsource_path}dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+{xsource_path}dir_two{os.sep}two_one.md
+{xsource_path}one.md
+{xsource_path}two.md"""
 
     expected_error = """"""
 
@@ -876,9 +906,12 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
     scanner = MarkdownScanner()
     source_path = "complex"
     supplied_arguments = ["scan", "-l", "-e", "dir_two", f"**{os.sep}one.md"]
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = """one.md"""
+    expected_output = f"""{source_path}one.md"""
 
     expected_error = """"""
 
@@ -906,9 +939,12 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
     scanner = MarkdownScanner()
     source_path = "complex"
     supplied_arguments = ["scan", "-l", "-e", "README.md", f"**{os.sep}one.md"]
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = """one.md"""
+    expected_output = f"""{source_path}one.md"""
 
     expected_error = """"""
 
@@ -942,9 +978,12 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
         f"**{os.sep}README.md",
         f"**{os.sep}one.md",
     ]
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = """one.md"""
+    expected_output = f"""{source_path}one.md"""
 
     expected_error = """"""
 
@@ -973,9 +1012,13 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files() -> None:
     source_path = os.path.join("rules", "md001", "z*.md")
     supplied_arguments = ["scan", "-l", source_path]
 
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
+
     expected_return_code = 1
-    expected_output = """"""
-    expected_error = f"Provided glob path '{source_path}' did not match any files.\n\n\nNo matching files found."
+    expected_output = ""
+    expected_error = "No matching files found."
 
     # Act
     execute_results = scanner.invoke_main(
@@ -998,9 +1041,12 @@ def test_markdown_with_dash_l_on_directory() -> None:
     scanner = MarkdownScanner()
     source_path = os.path.join("..", "..", "docs") + os.sep
     supplied_arguments = ["scan", "-l", source_path]
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
 
     expected_return_code = 0
-    expected_output = """{source_path}advanced_configuration.md
+    expected_output = f"""{source_path}advanced_configuration.md
 {source_path}advanced_plugins.md
 {source_path}advanced_scanning.md
 {source_path}api-usage.md
@@ -1011,9 +1057,7 @@ def test_markdown_with_dash_l_on_directory() -> None:
 {source_path}old_README.md
 {source_path}pre-commit.md
 {source_path}rules.md
-{source_path}writing_rule_plugins.md""".replace(
-        "{source_path}", source_path
-    )
+{source_path}writing_rule_plugins.md"""
     expected_error = ""
 
     # Act
@@ -1037,9 +1081,23 @@ def test_markdown_with_dash_l_and_dash_r_on_directory() -> None:
     # Arrange
     scanner = MarkdownScanner()
     source_path = os.path.join("..", "..", "docs") + os.sep
-    extensions_source_path = os.path.join("..", "..", "docs", "extensions") + os.sep
-    rules_source_path = os.path.join("..", "..", "docs", "rules") + os.sep
     supplied_arguments = ["scan", "-l", "-r", source_path]
+
+    source_path = (
+        os.path.abspath(os.path.join(scanner.resource_directory, source_path)) + os.sep
+    )
+    extensions_source_path = (
+        os.path.abspath(
+            os.path.join(scanner.resource_directory, "..", "..", "docs", "extensions")
+        )
+        + os.sep
+    )
+    rules_source_path = (
+        os.path.abspath(
+            os.path.join(scanner.resource_directory, "..", "..", "docs", "rules")
+        )
+        + os.sep
+    )
 
     expected_return_code = 0
     expected_output = (

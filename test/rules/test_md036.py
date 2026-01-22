@@ -365,9 +365,9 @@ def test_md036_bad_proper_emphasis_ending_with_punctuation_with_configuration() 
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:1:1: "
+            f"{os.path.abspath(source_path)}:1:1: "
             + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-            + f"{source_path}:5:1: "
+            + f"{os.path.abspath(source_path)}:5:1: "
             + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
         )
 
@@ -401,9 +401,9 @@ def test_md036_bad_valid_emphasis_headings() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + f"{source_path}:5:1: "
+        + f"{os.path.abspath(source_path)}:5:1: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""
@@ -436,9 +436,9 @@ def test_md036_bad_valid_emphasis_headings_in_list() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
+        f"{os.path.abspath(source_path)}:1:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + f"{source_path}:5:3: "
+        + f"{os.path.abspath(source_path)}:5:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""
@@ -475,9 +475,9 @@ def test_md036_bad_valid_emphasis_headings_in_block_quote() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
+        f"{os.path.abspath(source_path)}:1:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + f"{source_path}:5:3: "
+        + f"{os.path.abspath(source_path)}:5:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""

@@ -25,7 +25,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension() -> None:
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = f"Provided file path '{file_to_scan}' is not a valid file. Skipping.\n\n\nNo matching files found."
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -118,7 +118,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period() -> None:
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period."""
 
@@ -151,7 +151,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum() -> None
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period."""
 
@@ -184,7 +184,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period() -> None
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period."""
 
@@ -217,7 +217,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep() ->
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' must only contain alphanumeric characters after the period."""
 
@@ -250,9 +250,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty() -> None:
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS]
+                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension '' must start with a period."""
+main.py scan: error: argument -ae/--alternate-extensions: Alternate extensions cannot be an empty string."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -279,8 +279,8 @@ def test_markdown_with_dash_ae_xxx1() -> None:
     ]
 
     expected_return_code = 0
-    expected_output = f"{directory_to_scan}{os.sep}test.qmd"
-    expected_error = f"Provided file path '{directory_to_scan}{os.sep}README.md' is not a valid file. Skipping."
+    expected_output = f"{os.path.abspath(directory_to_scan)}{os.sep}test.qmd"
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -307,7 +307,7 @@ def test_markdown_with_dash_ae_xxx2() -> None:
     ]
 
     expected_return_code = 0
-    expected_output = f"{directory_to_scan}{os.sep}test.qmd"
+    expected_output = f"{os.path.abspath(directory_to_scan)}{os.sep}test.qmd"
     expected_error = ""
 
     # Act
