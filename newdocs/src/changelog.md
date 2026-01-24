@@ -12,7 +12,12 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1484](https://github.com/jackdewinter/pymarkdown/issues/1484)
+    - Made [change](https://github.com/jackdewinter/application_properties/issues/318)
+      in `application_properties` package to properly apply section header when
+      using the `--config` flag.
+    - Added tests to this repository to verify that both implicit and explicit
+      TOML files can be used.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

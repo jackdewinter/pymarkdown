@@ -37,7 +37,8 @@ class ApplicationConfigurationHelper:
         """
 
         options = MultisourceConfigurationLoaderOptions(
-            load_json_files_as_json5=args.use_json5_for_configuration
+            load_json_files_as_json5=args.use_json5_for_configuration,
+            section_header_if_toml=ApplicationConfigurationHelper.__pyproject_section_header,
         )
         loader = MultisourceConfigurationLoader(options)
         loader.add_local_pyproject_toml_file(
