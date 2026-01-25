@@ -24,6 +24,30 @@
 
 - None
 
+## Version 0.9.35 - 2026-01-24
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1503](https://github.com/jackdewinter/pymarkdown/issues/1503)
+    - Added support for `--respect-gitignore` flags to respect any Git
+      directories and their `.gitignore` files.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1484](https://github.com/jackdewinter/pymarkdown/issues/1484)
+    - Made [change](https://github.com/jackdewinter/application_properties/issues/318)
+      in `application_properties` package to properly apply section header when
+      using the `--config` flag.
+    - Added tests to this repository to verify that both implicit and explicit
+      TOML files can be used.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
 ## Version 0.9.34 - 2025-12-21
 
 <!-- pyml disable-next-line no-duplicate-heading-->
