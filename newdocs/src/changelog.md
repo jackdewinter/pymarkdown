@@ -5,6 +5,23 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.35 - 2026-01-24
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1503](https://github.com/jackdewinter/pymarkdown/issues/1503)
     - Added support for `--respect-gitignore` flags to respect any Git
       directories and their `.gitignore` files.
