@@ -54,8 +54,82 @@ of the `application_properties` project documentation.
 
 ## Configuration Files
 
+PyMarkdown supports configuration files in JSON, YAML, and TOML formats by using
+the [application_properties](https://github.com/jackdewinter/application_properties)
+package.
+
 See the [Configuration Files section](https://application-properties.readthedocs.io/en/latest/file-types/)
-of the `application_properties` project documentation.
+of the `application_properties` project documentation for more information.
+
+### Examples
+
+These three example files are in different file formats, but all provide the same
+configuration information to PyMarkdown.  To ensure that this documentation is
+consistent, the `test_markdown_documentation_advanced_configuration_` tests in
+this project verify the behavior stated below.
+
+#### JSON
+
+Valid file names for JSON files are:
+
+- implicitly loaded: `.pymarkdown` in current directory
+- explicitly loaded with `--config`: `anything`, `anything.json`
+
+```json
+{
+    "system" : {
+        "exclude_path" : "temp/"
+    },
+    "extensions": {
+        "markdown-tables": {
+            "enabled" : true
+        }
+    },
+    "plugins": {
+        "md013": {
+            "enabled": true,
+            "line_length": 100
+        }
+    }
+}
+```
+
+#### YAML
+
+Valid file names for YAML files are:
+
+- implicitly loaded: `.pymarkdown.yml` and `.pymarkdown.yaml` in current directory
+- explicitly loaded with `--config`: `anything`, `anything.yml`, `anything.yaml`
+
+```yaml
+system:
+  exclude_path: temp/
+extensions:
+  markdown-tables:
+    enabled: true
+plugins:
+  md013:
+    enabled: true
+    line_length: 100
+```
+
+#### TOML
+
+Valid file names for TOML files are:
+
+- implicitly loaded: `project.toml` in current directory
+- explicitly loaded with `--config`: `anything`, `anything.toml`
+
+```toml
+[tool.pymarkdown]
+
+system.exclude_path = "temp/"
+
+extensions.markdown-tables.enabled = true
+
+plugins.md013.enabled = true
+plugins.md013.line_length = 100
+```
 
 ### Which One Is Best - Addendum for PyMarkdown
 

@@ -5,7 +5,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
+    - Added documentation under the extensions section to provide
+      information on the tables extension.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -15,7 +17,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 1527](https://github.com/jackdewinter/pymarkdown/issues/1527)
+    - Updated documentation to give more examples, includig examples of
+      TOML configurations.
 
 ## Version 0.9.35 - 2026-01-24
 

@@ -44,6 +44,17 @@ such as static website generators.  The front-matter is used to supply metadata
 about each Markdown document, metadata used to classify, annotate, and
 augment the Markdown document.
 
+## Markdown Tables
+
+[Full Documentation](./extensions/markdown-tables.md)
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+This extension follows the GitHub Flavored Markdown
+[rules](https://github.github.com/gfm/#tables-extension-)
+to provide for simple tables in Markdown documents.
+
 ## Pragmas
 
 [Full Documentation](./extensions/pragmas.md)
