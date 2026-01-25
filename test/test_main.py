@@ -50,7 +50,8 @@ def test_markdown_with_no_parameters() -> None:
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -89,7 +90,7 @@ positional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal}
+  --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
                         code""".replace(
             "{ARGPARSE_X}", ARGPARSE_X
@@ -129,7 +130,7 @@ def test_markdown_with_no_parameters_through_module() -> None:
                    [--stack-trace] [--continue-on-error]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
-                   [--return-code-scheme {default,minimal}]
+                   [--return-code-scheme {default,minimal,explicit}]
                    {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -168,7 +169,7 @@ positional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal}
+  --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
                         code""".replace(
             "{ARGPARSE_X}", ARGPARSE_X
@@ -207,7 +208,8 @@ def test_markdown_with_no_parameters_through_main() -> None:
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -246,7 +248,7 @@ positional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal}
+  --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
                         code""".replace(
             "{ARGPARSE_X}", ARGPARSE_X
@@ -284,7 +286,8 @@ def test_markdown_with_dash_h() -> None:
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -323,7 +326,7 @@ positional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal}
+  --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
                         code""".replace(
             "{ARGPARSE_X}", ARGPARSE_X
@@ -390,10 +393,7 @@ def test_markdown_with_direct_args(caplog: LogCaptureFixture) -> None:
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist.
-
-
-No matching files found."""
+    expected_error = """Provided path 'does-not-exist.md' does not exist."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -421,10 +421,7 @@ def test_markdown_without_direct_args(caplog: LogCaptureFixture) -> None:
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist.
-
-
-No matching files found."""
+    expected_error = """Provided path 'does-not-exist.md' does not exist."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -543,20 +540,20 @@ def test_markdown_with_multiple_errors_reported() -> None:
     ]
 
     expected_output = (
-        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
+        f"{os.path.abspath(source_path)}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}:1:12: "
+        + f"{os.path.abspath(source_path)}:1:12: "
         + "MD010: Hard tabs "
         + "[Column: 12] (no-hard-tabs)\n"
-        + f"{source_path}:2:2: "
+        + f"{os.path.abspath(source_path)}:2:2: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + f"{source_path}:2:2: "
+        + f"{os.path.abspath(source_path)}:2:2: "
         + "MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}:2:2: "
+        + f"{os.path.abspath(source_path)}:2:2: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:2:14: "
+        + f"{os.path.abspath(source_path)}:2:14: "
         + "MD010: Hard tabs "
         + "[Column: 14] (no-hard-tabs)"
     )

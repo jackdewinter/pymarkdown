@@ -413,7 +413,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file() -> None
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -453,7 +453,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
     expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.]]]]
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -491,7 +491,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file() -> None:
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -529,7 +529,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line() -> None:
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -567,7 +567,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix() -> None:
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -612,7 +612,7 @@ Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -674,7 +674,7 @@ Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -730,7 +730,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token() -> None:
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -778,7 +778,7 @@ Caused by: Exception:
    bad next_token
 Traceback (most recent call last):
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -2075,7 +2075,7 @@ def test_markdown_with_plugins_and_alternate_output() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"[pso[[psf[{source_path}improper_atx_heading_incrementing.md:3:1: "
+        f"[pso[[psf[{os.path.abspath(source_path)}{os.sep}improper_atx_heading_incrementing.md:3:1: "
         + "MD001: Heading levels should only increment by one level at a time. "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]\n"
     )
@@ -2115,7 +2115,7 @@ def test_markdown_detect_issue_report_in_fix_mode() -> None:
     expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.]]]]
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act
@@ -2156,7 +2156,7 @@ Actual Line: # This is a test
 Caused by: BadPluginError:
    Plugin MDE003(bad-next-line) reported a triggered rule while in fix mode.]]]]
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
 
     # Act

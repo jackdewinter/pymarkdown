@@ -58,7 +58,7 @@ def test_md028_bad_split_block_quote() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -97,9 +97,9 @@ def test_md028_bad_split_block_quote_multiple_blanks() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)\n"
-        + f"{source_path}:3:1: "
+        + f"{os.path.abspath(source_path)}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -227,7 +227,7 @@ def test_md028_bad_blank_paragraph() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -291,7 +291,7 @@ def test_md028_bad_split_block_quote_in_list() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -328,7 +328,7 @@ def test_md028_bad_para_and_split_block_quote_in_list() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -361,7 +361,7 @@ def test_md028_bad_split_blank_with_nested_bq() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""

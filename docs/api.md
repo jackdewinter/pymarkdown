@@ -194,7 +194,7 @@ Create a new instance of the `PyMarkdownApi` class.
 
                 PyMarkdownApi().enable_strict_configuration().scan_path("file.md")
 
-    `fix_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: Any = None) ‑> api.PyMarkdownFixResult`
+    `fix_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: Any = None, exclude_patterns: List[str] | None = None, respect_gitignore: bool = False) ‑> api.PyMarkdownFixResult`
     :   Fix any eligible Markdown files found on the provided path that have scan failures that
         can be automatically fixed.
 
@@ -207,6 +207,10 @@ Create a new instance of the `PyMarkdownApi` class.
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`
@@ -258,7 +262,7 @@ Create a new instance of the `PyMarkdownApi` class.
                 except PyMarkdownApiException as this_exception:
                     print(f"API Exception: {this_exception}", file=sys.stderr)
 
-    `list_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str = '') ‑> api.PyMarkdownListPathResult`
+    `list_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str = '', exclude_patterns: List[str] | None = None, respect_gitignore: bool = False) ‑> api.PyMarkdownListPathResult`
     :   List any eligible files found when scanning the specified path for eligible markdown files.
         This function is provided for debugging situations to provide confidence that one or more
         Markdown files are indeed being scanned by PyMarkdown.
@@ -272,6 +276,10 @@ Create a new instance of the `PyMarkdownApi` class.
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`
@@ -428,7 +436,7 @@ Create a new instance of the `PyMarkdownApi` class.
 
                 PyMarkdownApi().log_warning_and_above().scan_path("file.md")
 
-    `scan_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str | None = None) ‑> api.PyMarkdownScanPathResult`
+    `scan_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str | None = None, exclude_patterns: List[str] | None = None, respect_gitignore: bool = False) ‑> api.PyMarkdownScanPathResult`
     :   Scan any eligible Markdown files found on the provided path.  For more information,
         check out our User's Guide sections on [Basic Scanning](../user-guide.md#basic-scanning)
         and [Command Line Arguments](../user-guide.md#command-line-arguments).
@@ -442,6 +450,10 @@ Create a new instance of the `PyMarkdownApi` class.
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`

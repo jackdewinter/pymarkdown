@@ -92,7 +92,7 @@ def test_md040_bad_fenced_block_with_no_language() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD040: Fenced code blocks should have a language specified (fenced-code-language)"
     )
     expected_error = ""
@@ -125,7 +125,7 @@ def test_md040_bad_fenced_block_with_whitespace() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:1: "
+        f"{os.path.abspath(source_path)}:4:1: "
         + "MD040: Fenced code blocks should have a language specified (fenced-code-language)"
     )
     expected_error = ""

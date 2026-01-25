@@ -39,10 +39,10 @@ def test_md002_all_samples() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}improper_atx_heading_start.md:1:1: "
+        f"{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
-        + f"{source_path}improper_setext_heading_start.md:1:1: "
+        + f"{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -280,7 +280,7 @@ def test_md002_bad_improper_atx_heading_start() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}improper_atx_heading_start.md:1:1: "
+        f"{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -351,7 +351,7 @@ def test_md002_bad_improper_setext_heading_start() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}improper_setext_heading_start.md:1:1: "
+        f"{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )

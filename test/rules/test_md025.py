@@ -334,7 +334,7 @@ def test_md025_bad_top_level_atx_top_level_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:1: "
+        f"{os.path.abspath(source_path)}:5:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -369,7 +369,7 @@ def test_md025_bad_top_level_atx_top_level_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:1: "
+        f"{os.path.abspath(source_path)}:5:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -406,7 +406,7 @@ def test_md025_bad_top_level_setext_top_level_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:6:1: "
+        f"{os.path.abspath(source_path)}:6:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -441,7 +441,7 @@ def test_md025_bad_top_level_setext_top_level_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:6:1: "
+        f"{os.path.abspath(source_path)}:6:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -508,7 +508,7 @@ def test_md025_bad_front_matter_title_top_level_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:7:1: "
+        f"{os.path.abspath(source_path)}:7:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -547,7 +547,7 @@ def test_md025_bad_front_matter_title_top_level_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:7:1: "
+        f"{os.path.abspath(source_path)}:7:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""

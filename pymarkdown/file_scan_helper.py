@@ -12,7 +12,8 @@ import sys
 import tempfile
 from typing import Callable, Dict, List, Optional, Set, Tuple, Union, cast
 
-from pymarkdown.application_file_scanner import ApplicationFileScanner
+from application_file_scanner import ApplicationFileScanner
+
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.general.main_presentation import MainPresentation
@@ -967,7 +968,7 @@ class FileScanHelper:
             help=f"{subparser_action} the Markdown files in any specified paths",
         )
         ApplicationFileScanner.add_default_command_line_arguments(
-            new_sub_parser, ".md", "Markdown"
+            new_sub_parser, ".md", "Markdown", show_respect_gitignore=True
         )
 
         if not is_fix_mode:

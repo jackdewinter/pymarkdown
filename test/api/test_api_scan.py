@@ -10,7 +10,7 @@ from test.utils import (
     create_temporary_configuration_file,
     write_temporary_configuration,
 )
-from typing import cast
+from typing import List, cast
 
 import pytest
 
@@ -110,7 +110,7 @@ def test_api_scan_for_non_existant_file() -> None:
     # Arrange
     source_path = "does-not-exist.md"
 
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -133,7 +133,7 @@ def test_api_scan_for_non_matching_glob() -> None:
     # Arrange
     source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
 
-    expected_output = f"Provided glob path '{source_path}' did not match any files."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -156,7 +156,7 @@ def test_api_scan_for_non_markdown_file() -> None:
     # Arrange
     source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
 
-    expected_output = f"Provided glob path '{source_path}' did not match any files."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -202,9 +202,10 @@ def test_api_scan_recursive_for_directory() -> None:
 
     # Arrange
     base_path = os.path.join("docs")
-    docs_prefix = "docs" + os.sep
+    docs_prefix = os.path.abspath("docs") + os.sep
     extensions_prefix = docs_prefix + "extensions" + os.sep
     rules_prefix = docs_prefix + "rules" + os.sep
+
     expected_failure_paths = [
         f"{docs_prefix}advanced_configuration.md",
         f"{docs_prefix}advanced_scanning.md",
@@ -251,9 +252,9 @@ def test_api_scan_recursive_for_directory() -> None:
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 135
+    assert len(scan_result.scan_failures) == 141
 
-    scan_failures = []
+    scan_failures: List[str] = []
     for i in scan_result.scan_failures:
         if i.scan_file not in scan_failures:
             scan_failures.append(i.scan_file)
@@ -287,22 +288,26 @@ def test_api_scan_with_multiple_scan_issues() -> None:
     assert len(scan_result.scan_failures) == 6
     print(scan_result.scan_failures)
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(source_path, 1, 1, "MD022", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 1, 1, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(source_path, 1, 12, "MD010", "", "", None)
+        PyMarkdownScanFailure(
+            os.path.abspath(source_path), 1, 12, "MD010", "", "", None
+        )
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 2, "MD021", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD021", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 2, "MD022", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[4].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 2, "MD023", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD023", "", "", None)
     )
     assert scan_result.scan_failures[5].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 14, "MD010", "", "", None)
+        PyMarkdownScanFailure(
+            os.path.abspath(source_path), 2, 14, "MD010", "", "", None
+        )
     )
 
     # TODO, same, but disable rules
@@ -334,11 +339,13 @@ def test_api_scan_with_pragma_failure() -> None:
     assert scan_result
     assert len(scan_result.scan_failures) == 1
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 1, "MD019", "", "", None)
+        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 1, "MD019", "", "", None)
     )
     assert len(scan_result.pragma_errors) == 1
     assert scan_result.pragma_errors[0] == PyMarkdownPragmaError(
-        source_path, 1, "Inline configuration specified without command."
+        os.path.abspath(source_path),
+        1,
+        "Inline configuration specified without command.",
     )
 
 

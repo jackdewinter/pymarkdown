@@ -228,7 +228,7 @@ def test_api_plugins_add_with_bad_starting_new_file() -> None:
     plugin_path = os.path.join(
         "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
     )
-    expected_output = f"BadPluginError encountered while scanning '{source_path}':\nPlugin id 'MDE001' had a critical failure during the 'starting_new_file' action."
+    expected_output = f"BadPluginError encountered while scanning '{os.path.abspath(source_path)}':\nPlugin id 'MDE001' had a critical failure during the 'starting_new_file' action."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -255,7 +255,7 @@ def test_api_plugins_add_with_bad_next_token() -> None:
         "test", "resources", "plugins", "bad", "bad_next_token.py"
     )
 
-    expected_output = f"BadPluginError encountered while scanning '{source_path}':\n(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."
+    expected_output = f"BadPluginError encountered while scanning '{os.path.abspath(source_path)}':\n(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -285,7 +285,7 @@ def test_api_plugins_add_with_bad_next_token_and_stack_trace() -> None:
 
     expected_output = """BadPluginError encountered while scanning '{path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.""".replace(
-        "{path}", source_path
+        "{path}", os.path.abspath(source_path)
     )
 
     # Act & Assert
@@ -354,9 +354,13 @@ def test_api_plugins_disable_multiple_enable_one() -> None:
     assert scan_result
     assert len(scan_result.scan_failures) == 2
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(source_path_1, 1, 1, "MD002", "", "", None)
+        PyMarkdownScanFailure(
+            os.path.abspath(source_path_1), 1, 1, "MD002", "", "", None
+        )
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(source_path_2, 1, 1, "MD002", "", "", None)
+        PyMarkdownScanFailure(
+            os.path.abspath(source_path_2), 1, 1, "MD002", "", "", None
+        )
     )
     assert not scan_result.pragma_errors

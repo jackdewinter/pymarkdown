@@ -6,7 +6,7 @@ import argparse
 import sys
 from test.utils import assert_that_exception_is_raised, compare_expected_to_actual
 
-from pymarkdown.application_file_scanner import ApplicationFileScanner
+from application_file_scanner import ApplicationFileScanner
 
 if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
@@ -64,7 +64,7 @@ def test_application_file_scanner_args_bad_extension() -> None:
     """
 
     # Arrange
-    expected_output = "Extension '*.md' is not a valid extension: Extension '*.md' must start with a period."
+    expected_output = "Extension '*.md' must start with a period."
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act & Assert

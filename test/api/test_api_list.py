@@ -3,8 +3,12 @@ Module for directly using PyMarkdown's list api.
 """
 
 import os
-from test.utils import assert_if_lists_different, assert_that_exception_is_raised
-from typing import cast
+from test.utils import (
+    assert_if_lists_different,
+    assert_that_exception_is_raised,
+    create_temporary_configuration_file,
+)
+from typing import List, cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -76,7 +80,9 @@ def test_api_list_single_file() -> None:
     list_result = PyMarkdownApi().list_path(source_path)
 
     # Assert
-    assert_if_lists_different(list_result.matching_files, [source_path])
+    assert_if_lists_different(
+        list_result.matching_files, [os.path.abspath(source_path)]
+    )
 
 
 def test_api_list_for_non_existant_file() -> None:
@@ -90,7 +96,7 @@ def test_api_list_for_non_existant_file() -> None:
 
     # Arrange
     source_path = "my-bad-path"
-    expected_output = f"Provided path '{source_path}' does not exist."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -112,7 +118,7 @@ def test_api_list_for_directory_without_markdown_files() -> None:
 
     # Arrange
     source_path = os.path.join("test", "resources", "only-text")
-    expected_output = ""
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -140,7 +146,9 @@ def test_api_list_for_directory_with_markdown_files() -> None:
     list_result = PyMarkdownApi().list_path(source_path)
 
     # Assert
-    assert_if_lists_different(list_result.matching_files, [expected_path])
+    assert_if_lists_different(
+        list_result.matching_files, [os.path.abspath(expected_path)]
+    )
 
 
 def test_api_list_for_non_matching_glob() -> None:
@@ -154,7 +162,7 @@ def test_api_list_for_non_matching_glob() -> None:
 
     # Arrange
     source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
-    expected_output = f"Provided glob path '{source_path}' did not match any files."
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -177,9 +185,7 @@ def test_api_list_for_non_markdown_file() -> None:
 
     # Arrange
     source_path = os.path.join("test", "resources", "only-text", "simple_text_file.txt")
-    expected_output = (
-        f"Provided file path '{source_path}' is not a valid file. Skipping."
-    )
+    expected_output = "No matching files found."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -210,7 +216,9 @@ def test_api_list_for_non_markdown_file_with_alternate_extensions() -> None:
     )
 
     # Assert
-    assert_if_lists_different(list_result.matching_files, [source_path])
+    assert_if_lists_different(
+        list_result.matching_files, [os.path.abspath(source_path)]
+    )
 
 
 def test_api_list_for_markdown_file() -> None:
@@ -229,7 +237,9 @@ def test_api_list_for_markdown_file() -> None:
     list_result = PyMarkdownApi().list_path(source_path)
 
     # Assert
-    assert_if_lists_different(list_result.matching_files, [source_path])
+    assert_if_lists_different(
+        list_result.matching_files, [os.path.abspath(source_path)]
+    )
 
 
 def test_api_list_for_matching_globbed_markdown_file() -> None:
@@ -244,7 +254,7 @@ def test_api_list_for_matching_globbed_markdown_file() -> None:
     # Arrange
     base_path = os.path.join("test", "resources", "rules", "md001")
     source_path = os.path.join(base_path, "*.md")
-    expected_relative_paths = [
+    expected_relative_paths: List[str] = [
         "empty.md",
         "front_matter_with_alternate_title.md",
         "front_matter_with_no_title.md",
@@ -256,10 +266,137 @@ def test_api_list_for_matching_globbed_markdown_file() -> None:
     ]
     expected_paths = []
     for i in expected_relative_paths:
-        expected_paths.append(os.path.join(base_path, i))
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
 
     # Act
     list_result = PyMarkdownApi().list_path(source_path)
+
+    # Assert
+    assert_if_lists_different(list_result.matching_files, expected_paths)
+
+
+def test_api_list_for_matching_globbed_markdown_file_with_exclusions() -> None:
+    """
+    Test to make sure that scanning for files that match a given glob and do
+    not match a given exclusion pattern produces reliable results.
+    """
+
+    # Arrange
+    base_path = os.path.join("test", "resources", "rules", "md001")
+    source_path = os.path.join(base_path, "*.md")
+    expected_relative_paths: List[str] = [
+        "empty.md",
+        "front_matter_with_alternate_title.md",
+        "front_matter_with_no_title.md",
+        "front_matter_with_title.md",
+        "proper_atx_heading_incrementing.md",
+        "proper_setext_heading_incrementing.md",
+    ]
+    expected_paths: List[str] = []
+    for i in expected_relative_paths:
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
+
+    # Act
+    list_result = PyMarkdownApi().list_path(
+        source_path, exclude_patterns=["*improper*"]
+    )
+
+    # Assert
+    assert_if_lists_different(list_result.matching_files, expected_paths)
+
+
+def test_api_list_for_matching_globbed_markdown_file_without_alternate_extensions() -> (
+    None
+):
+    """
+    Test to make sure that scanning for files that match a given glob with a non-standard
+    extension but without specifying the alternate extensions option produces reliable results.
+    """
+
+    # Arrange
+    base_path = os.path.join("test", "resources", "rules", "md001")
+    source_path = os.path.join(base_path, "*.abc")
+    with create_temporary_configuration_file("", "test.abc", base_path):
+
+        # Act
+        caught_exception = None
+        try:
+            _ = PyMarkdownApi().list_path(source_path)
+        except PyMarkdownApiNoFilesFoundException as this_exception:
+            caught_exception = this_exception
+
+    # Assert
+    assert caught_exception is not None
+
+
+def test_api_list_for_matching_globbed_markdown_file_with_alternate_extensions() -> (
+    None
+):
+    """
+    Test to make sure that scanning for files that match a given glob with a non-standard
+    extension but without specifying the alternate extensions option produces reliable results.
+    """
+
+    # Arrange
+    base_path = os.path.join("test", "resources", "rules", "md001")
+    alternate_extensions = ".abc,.md"
+
+    expected_relative_paths: List[str] = [
+        "empty.md",
+        "front_matter_with_alternate_title.md",
+        "front_matter_with_no_title.md",
+        "front_matter_with_title.md",
+        "improper_atx_heading_incrementing.md",
+        "improper_setext_heading_incrementing.md",
+        "proper_atx_heading_incrementing.md",
+        "proper_setext_heading_incrementing.md",
+        "test.abc",
+    ]
+    expected_paths: List[str] = []
+    for i in expected_relative_paths:
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
+    with create_temporary_configuration_file("", "test.abc", base_path):
+
+        # Act
+        list_result = PyMarkdownApi().list_path(
+            base_path, alternate_extensions=alternate_extensions
+        )
+
+    # Assert
+    assert_if_lists_different(list_result.matching_files, expected_paths)
+
+
+def test_api_list_for_matching_globbed_markdown_file_with_alternate_extensions_and_gitignore() -> (
+    None
+):
+    """
+    Test to make sure that scanning for files that match a given glob with a non-standard
+    extension but without specifying the alternate extensions option produces reliable results.
+    """
+
+    # Arrange
+    base_path = os.path.join("test", "resources", "rules", "md001")
+    alternate_extensions = ".abc,.md"
+
+    expected_relative_paths: List[str] = [
+        "empty.md",
+        "front_matter_with_alternate_title.md",
+        "front_matter_with_no_title.md",
+        "front_matter_with_title.md",
+        "improper_atx_heading_incrementing.md",
+        "improper_setext_heading_incrementing.md",
+        "proper_atx_heading_incrementing.md",
+        "proper_setext_heading_incrementing.md",
+    ]
+    expected_paths: List[str] = []
+    for i in expected_relative_paths:
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
+    with create_temporary_configuration_file("", "test.abc", base_path):
+
+        # Act
+        list_result = PyMarkdownApi().list_path(
+            base_path, alternate_extensions=alternate_extensions, respect_gitignore=True
+        )
 
     # Assert
     assert_if_lists_different(list_result.matching_files, expected_paths)
@@ -275,7 +412,7 @@ def test_api_list_for_directory() -> None:
 
     # Arrange
     base_path = os.path.join("docs")
-    expected_relative_paths = [
+    expected_relative_paths: List[str] = [
         "advanced_configuration.md",
         "advanced_plugins.md",
         "advanced_scanning.md",
@@ -291,7 +428,7 @@ def test_api_list_for_directory() -> None:
     ]
     expected_paths = []
     for i in expected_relative_paths:
-        expected_paths.append(os.path.join(base_path, i))
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
 
     # Act
     list_result = PyMarkdownApi().list_path(base_path)
@@ -376,7 +513,7 @@ def test_api_list_recursive_for_directory() -> None:
         "{rules}rule_pml101.md",
         "writing_rule_plugins.md",
     ]
-    expected_paths = []
+    expected_paths: List[str] = []
     for i in expected_relative_paths:
         prefix = "{extensions}"
         if i.startswith(prefix):
@@ -384,7 +521,7 @@ def test_api_list_recursive_for_directory() -> None:
         prefix = "{rules}"
         if i.startswith(prefix):
             i = os.path.join("rules", i[len(prefix) :])
-        expected_paths.append(os.path.join(base_path, i))
+        expected_paths.append(os.path.join(os.path.abspath(base_path), i))
 
     # Act
     list_result = PyMarkdownApi().list_path(base_path, recurse_if_directory=True)

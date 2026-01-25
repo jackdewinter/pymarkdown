@@ -424,7 +424,7 @@ def test_md043_bad_single_heading_atx_with_double_rule() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD043: Required heading structure "
         + "[Missing heading: ## Another heading] (required-headings,required-headers)"
     )
@@ -463,7 +463,7 @@ def test_md043_bad_double_heading_atx_with_single_rule() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Extra heading] (required-headings,required-headers)"
     )
@@ -572,7 +572,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_level() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Bad heading level: Expected: 3, Actual: 2] (required-headings,required-headers)"
     )
@@ -611,7 +611,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_text() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Bad heading text: Expected: A bad level, Actual: Another heading] (required-headings,required-headers)"
     )
@@ -654,7 +654,7 @@ def test_md043_good_double_heading_atx_second_has_emphasis() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Bad heading: Required headings must only be normal text.] (required-headings,required-headers)"
     )
@@ -765,7 +765,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star() -> No
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -804,7 +804,7 @@ def test_md043_bad_double_heading_setext_with_double_rule_unmatching_1_star() ->
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -878,7 +878,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2() -> No
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -917,7 +917,7 @@ def test_md043_bad_double_heading_atx_unmatching_1_2_3_star() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -956,7 +956,7 @@ def test_md043_bad_double_heading_atx_unmatching_star_1_2_3() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -995,7 +995,7 @@ def test_md043_bad_double_heading_atx_matching_1_2_start_2_over() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Wildcard heading match failed.] (required-headings,required-headers)"
     )
@@ -1110,7 +1110,7 @@ def test_md043_bad_good_many_level_two_1_star_3_star_3() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Multiple wildcard matching failed.] (required-headings,required-headers)"
     )
@@ -1188,7 +1188,7 @@ def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Multiple wildcard matching failed.] (required-headings,required-headers)"
     )
@@ -1266,7 +1266,7 @@ def test_md043_bad_good_many_level_two_1_star_3_2_star_3() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD043: Required heading structure "
         + "[Multiple wildcard matching failed.] (required-headings,required-headers)"
     )

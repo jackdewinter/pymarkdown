@@ -57,10 +57,12 @@ def test_markdown_with_dash_dash_log_level_debug(caplog: LogCaptureFixture) -> N
 
     # Info messages
     assert "Number of files found: " in caplog.text
-    assert f"Determining files to scan for path '{source_path}'." in caplog.text
+    assert f"Processing path '{source_path}'." in caplog.text
 
     # Debug messages
-    assert f"Provided path '{source_path}' is a valid file. Adding." in caplog.text
+    assert (
+        f"Provided path '{source_path}' has a valid extension. Adding." in caplog.text
+    )
 
 
 def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> None:
@@ -96,7 +98,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> No
 
     # Info messages
     assert "Number of files found: " in caplog.text
-    assert f"Determining files to scan for path '{source_path}'." in caplog.text
+    assert f"Processing path '{source_path}'." in caplog.text
 
     # Debug messages
     assert f"Provided path '{source_path}' is a valid file. Adding." not in caplog.text
@@ -128,7 +130,8 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) ->
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 main.py: error: argument --log-level: invalid validate_log_level_type value: 'invalid'
 """
@@ -199,7 +202,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
 
         # Info messages
         assert "Number of files found: " in file_data, f">{file_data}<"
-        assert f"Determining files to scan for path '{source_path}'." in file_data
+        assert f"Processing path '{source_path}'." in file_data
 
         # Debug messages
         assert (
@@ -480,13 +483,11 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> Non
 
         # Info messages
         assert "Number of files found: " in caplog.text
-        assert (
-            f"Determining files to scan for path '{temp_source_path}'." in caplog.text
-        )
+        assert f"Processing path '{temp_source_path}'." in caplog.text
 
         # Debug messages
         assert (
-            f"Provided path '{temp_source_path}' is a valid file. Adding."
+            f"Provided path '{temp_source_path}' has a valid extension. Adding."
             in caplog.text
         )
 
@@ -541,9 +542,7 @@ def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None
 
         # Info messages
         assert "Number of files found: " in caplog.text
-        assert (
-            f"Determining files to scan for path '{temp_source_path}'." in caplog.text
-        )
+        assert f"Processing path '{temp_source_path}'." in caplog.text
 
         # Debug messages
         # assert f"Provided path '{temp_source_path}' is a valid file. Adding." in caplog.text

@@ -88,8 +88,8 @@ def test_md034_bad_with_http_url() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:6: MD034: Bare URL used (no-bare-urls)\n"
-        + f"{source_path}:5:1: MD034: Bare URL used (no-bare-urls)"
+        f"{os.path.abspath(source_path)}:3:6: MD034: Bare URL used (no-bare-urls)\n"
+        + f"{os.path.abspath(source_path)}:5:1: MD034: Bare URL used (no-bare-urls)"
     )
     expected_error = ""
 
@@ -121,8 +121,8 @@ def test_md034_bad_with_ftp_url() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:6: MD034: Bare URL used (no-bare-urls)\n"
-        + f"{source_path}:5:1: MD034: Bare URL used (no-bare-urls)"
+        f"{os.path.abspath(source_path)}:3:6: MD034: Bare URL used (no-bare-urls)\n"
+        + f"{os.path.abspath(source_path)}:5:1: MD034: Bare URL used (no-bare-urls)"
     )
     expected_error = ""
 
@@ -153,7 +153,9 @@ def test_md034_bad_with_http_url_in_atx() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:9: MD034: Bare URL used (no-bare-urls)"
+    expected_output = (
+        f"{os.path.abspath(source_path)}:1:9: MD034: Bare URL used (no-bare-urls)"
+    )
     expected_error = ""
 
     # Act
@@ -183,7 +185,9 @@ def test_md034_bad_with_http_url_in_setext() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:7: MD034: Bare URL used (no-bare-urls)"
+    expected_output = (
+        f"{os.path.abspath(source_path)}:1:7: MD034: Bare URL used (no-bare-urls)"
+    )
     expected_error = ""
 
     # Act
@@ -363,7 +367,9 @@ def test_md034_bad_with_local_url() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:11: MD034: Bare URL used (no-bare-urls)"
+    expected_output = (
+        f"{os.path.abspath(source_path)}:1:11: MD034: Bare URL used (no-bare-urls)"
+    )
     expected_error = ""
 
     # Act

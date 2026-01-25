@@ -12,7 +12,7 @@
         },
         {
             "name": "test.api.test_api_examples",
-            "totalTests": 7,
+            "totalTests": 10,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -28,7 +28,7 @@
         },
         {
             "name": "test.api.test_api_list",
-            "totalTests": 13,
+            "totalTests": 17,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1580,7 +1580,7 @@
         },
         {
             "name": "test.test_main_config",
-            "totalTests": 17,
+            "totalTests": 19,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

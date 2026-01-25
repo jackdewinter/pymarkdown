@@ -59,7 +59,7 @@ def test_md024_bad_same_heading_content_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -165,7 +165,7 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:3: "
+        f"{os.path.abspath(source_path)}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -202,7 +202,7 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:3: "
+        f"{os.path.abspath(source_path)}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -239,7 +239,7 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:3: "
+        f"{os.path.abspath(source_path)}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -278,7 +278,7 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:3: "
+        f"{os.path.abspath(source_path)}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -311,9 +311,9 @@ def test_md024_bad_same_heading_in_siblings_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:7:1: "
+        f"{os.path.abspath(source_path)}:7:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
-        + f"{source_path}:11:1: "
+        + f"{os.path.abspath(source_path)}:11:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -346,7 +346,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:9:1: "
+        f"{os.path.abspath(source_path)}:9:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -457,7 +457,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration() -> None:
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:7:1: "
+            f"{os.path.abspath(source_path)}:7:1: "
             + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
@@ -624,7 +624,7 @@ def test_md024_bad_same_heading_content_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:1: "
+        f"{os.path.abspath(source_path)}:4:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -659,7 +659,7 @@ def test_md024_bad_same_heading_content_atx_then_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
+        f"{os.path.abspath(source_path)}:3:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -694,9 +694,9 @@ def test_md024_bad_same_heading_in_siblings_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:7:1: "
+        f"{os.path.abspath(source_path)}:7:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
-        + f"{source_path}:13:1: "
+        + f"{os.path.abspath(source_path)}:13:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -735,7 +735,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:10:1: "
+        f"{os.path.abspath(source_path)}:10:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -848,7 +848,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration() -> None:
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:7:1: "
+            f"{os.path.abspath(source_path)}:7:1: "
             + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""

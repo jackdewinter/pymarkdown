@@ -58,7 +58,7 @@ def test_md011_bad_with_reversed() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:8: "
+        f"{os.path.abspath(source_path)}:2:8: "
         + "MD011: Reversed link syntax "
         + "[(reversed)[link]] (no-reversed-links)"
     )

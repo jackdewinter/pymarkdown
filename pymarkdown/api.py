@@ -8,7 +8,8 @@ import tempfile
 from dataclasses import dataclass
 from typing import Any, List, Optional
 
-from pymarkdown.application_file_scanner import ApplicationFileScanner
+from application_file_scanner import ApplicationFileScanner
+
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.main import PyMarkdownLint
@@ -47,11 +48,14 @@ class PyMarkdownApi:
         self.__disable_json5_configuration = False
         self.__enable_continue_on_error = False
 
+    # pylint: disable=too-many-arguments
     def scan_path(
         self,
         path_to_scan: str,
         recurse_if_directory: bool = False,
         alternate_extensions: Optional[str] = None,
+        exclude_patterns: Optional[List[str]] = None,
+        respect_gitignore: bool = False,
     ) -> "PyMarkdownScanPathResult":
         """
         Scan any eligible Markdown files found on the provided path.  For more information,
@@ -67,6 +71,10 @@ class PyMarkdownApi:
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`
@@ -104,7 +112,12 @@ class PyMarkdownApi:
 
         scan_arguments = self.__build_common_arguments("scan")
         self.__add_common_scan_arguments(
-            scan_arguments, path_to_scan, recurse_if_directory, alternate_extensions
+            scan_arguments,
+            path_to_scan,
+            recurse_if_directory,
+            alternate_extensions,
+            exclude_patterns=exclude_patterns,
+            respect_gitignore=respect_gitignore,
         )
 
         this_presentation = _ApiPresentation()
@@ -121,7 +134,13 @@ class PyMarkdownApi:
             return_code = (
                 int(this_exception.code) if isinstance(this_exception.code, int) else 99
             )
+            if return_code == 1:
+                raise PyMarkdownApiNoFilesFoundException(
+                    "No matching files found."
+                ) from this_exception
         return self.__handle_scan_results(return_code, this_presentation)
+
+    # pylint: enable=too-many-arguments
 
     def scan_string(
         self,
@@ -177,11 +196,14 @@ class PyMarkdownApi:
             )
         return self.__handle_scan_results(return_code, this_presentation)
 
+    # pylint: disable=too-many-arguments
     def fix_path(
         self,
         path_to_scan: str,
         recurse_if_directory: bool = False,
         alternate_extensions: Any = None,
+        exclude_patterns: Optional[List[str]] = None,
+        respect_gitignore: bool = False,
     ) -> "PyMarkdownFixResult":
         """
         Fix any eligible Markdown files found on the provided path that have scan failures that
@@ -196,6 +218,10 @@ class PyMarkdownApi:
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`
@@ -223,7 +249,12 @@ class PyMarkdownApi:
 
         scan_arguments = self.__build_common_arguments("fix")
         self.__add_common_scan_arguments(
-            scan_arguments, path_to_scan, recurse_if_directory, alternate_extensions
+            scan_arguments,
+            path_to_scan,
+            recurse_if_directory,
+            alternate_extensions,
+            exclude_patterns=exclude_patterns,
+            respect_gitignore=respect_gitignore,
         )
 
         this_presentation = _ApiPresentation()
@@ -241,6 +272,8 @@ class PyMarkdownApi:
                 int(this_exception.code) if isinstance(this_exception.code, int) else 99
             )
         return self.__handle_fix_results(return_code, this_presentation)
+
+    # pylint: enable=too-many-arguments
 
     def fix_string(
         self,
@@ -311,11 +344,14 @@ class PyMarkdownApi:
             if temp_file and os.path.isfile(temp_file.name):  # pragma: no cover
                 os.remove(temp_file.name)
 
+    # pylint: disable=too-many-arguments
     def list_path(
         self,
         path_to_scan: str,
         recurse_if_directory: bool = False,
         alternate_extensions: str = "",
+        exclude_patterns: Optional[List[str]] = None,
+        respect_gitignore: bool = False,
     ) -> "PyMarkdownListPathResult":
         """
         List any eligible files found when scanning the specified path for eligible markdown files.
@@ -331,6 +367,10 @@ class PyMarkdownApi:
             alternate_extensions (str, optional): Optionally specify one or more comma-separated file
                 extensions. Files with these file extensions are also considered to be eligible
                 files to scan.
+            exclude_patterns (List[str], optional): Optionally specify one or more glob-style patterns
+                to exclude files or directories from being scanned.
+            respect_gitignore (bool): If ``True``, respect any `.gitignore` files found when scanning
+                according to standard Git rules.
 
         Raises:
             PyMarkdownApiArgumentException: If `path_to_scan` is empty or if `alternate_extensions`
@@ -359,7 +399,12 @@ class PyMarkdownApi:
         scan_arguments = self.__build_common_arguments("scan")
         scan_arguments.append("--list-files")
         self.__add_common_scan_arguments(
-            scan_arguments, path_to_scan, recurse_if_directory, alternate_extensions
+            scan_arguments,
+            path_to_scan,
+            recurse_if_directory,
+            alternate_extensions,
+            exclude_patterns=exclude_patterns,
+            respect_gitignore=respect_gitignore,
         )
 
         this_presentation = _ApiPresentation()
@@ -379,6 +424,8 @@ class PyMarkdownApi:
         if return_code != 0:
             self.__generate_scan_exception(this_presentation)
         return PyMarkdownListPathResult(this_presentation.pso[0].split("\n"))
+
+    # pylint: enable=too-many-arguments
 
     @property
     def application_version(self) -> str:
@@ -944,45 +991,53 @@ class PyMarkdownApi:
         assert (
             not this_presentation.pso
         ), "should not display for scan_path, but for ext ops and plugin ops"
-        if return_code not in [0, 3] and not self.__enable_continue_on_error:
+        if return_code not in [0, 1, 3] and not self.__enable_continue_on_error:
             raise PyMarkdownApiException(this_presentation.pse[-1].strip("\n"))
         return PyMarkdownFixResult(this_presentation.files_fixed, this_presentation.pse)
 
     def __generate_scan_exception(self, this_presentation: "_ApiPresentation") -> None:
         if not this_presentation.pse:
             return
-        last_error_text = this_presentation.pse[-1]
-        second_last_error_text = (
-            this_presentation.pse[-2].strip("\n")
-            if len(this_presentation.pse) > 1
-            else ""
-        )
-        if last_error_text == "\n\nNo matching files found.":
-            raise PyMarkdownApiNoFilesFoundException(second_last_error_text)
+        if this_presentation.pse[-1] == "\n\nNo matching files found.":
+            raise PyMarkdownApiNoFilesFoundException("No matching files found.")
         raise PyMarkdownApiException(this_presentation.pse[-1].strip("\n"))
 
+    # pylint: disable=too-many-arguments
     def __add_common_scan_arguments(
         self,
         scan_arguments: List[str],
         path_to_scan: str,
         recurse_if_directory: bool,
         alternate_extensions: Optional[str],
+        exclude_patterns: Optional[List[str]] = None,
+        respect_gitignore: bool = False,
     ) -> None:
         if recurse_if_directory:
             scan_arguments.append("--recurse")
+
+        if respect_gitignore:
+            scan_arguments.append("--respect-gitignore")
 
         if alternate_extensions:
             self.__verify_string_argument_alternate_extensions(
                 "alternate_extensions", alternate_extensions
             )
             scan_arguments.extend(("-ae", alternate_extensions))
+
+        if exclude_patterns:
+            for next_pattern in exclude_patterns:
+                scan_arguments.extend(("--exclude", next_pattern))
+
         scan_arguments.append(path_to_scan)
 
-    def __build_common_arguments(self, action_to_invoke: str) -> List[str]:
-        common_arguments: List[str] = []
+    # pylint: enable=too-many-arguments
 
-        # Note: `--return-code-scheme` is not included here as the API provides the
-        #       same information as the return code through other means.
+    def __build_common_arguments(self, action_to_invoke: str) -> List[str]:
+
+        # Note: `--return-code-scheme` is not included as a configurable option
+        #       as the api requires explicit information about what happened.
+        common_arguments: List[str] = ["--return-code-scheme", "explicit"]
+
         if self.__disable_json5_configuration:
             common_arguments.append("--no-json5")
         if self.__enable_continue_on_error:

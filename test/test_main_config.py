@@ -5,6 +5,7 @@ Module to provide tests related to the basic parts of the scanner.
 import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
+from typing import Any, Dict
 
 from .utils import create_temporary_configuration_file, temporary_change_to_directory
 
@@ -559,7 +560,7 @@ MD999>>token:[atx(1,1):1:0:]
         expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.
 """.replace(
-            "{source_path}", source_path
+            "{source_path}", os.path.abspath(source_path)
         )
 
         # Act
@@ -617,7 +618,10 @@ def test_markdown_with_good_strict_config_type() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    supplied_configuration: Dict[str, Any] = {
+        "mode": {"strict-config": True},
+        "log": {"file": 0},
+    }
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -655,7 +659,10 @@ def test_markdown_with_default_configuration_file_with_error() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    default_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    default_configuration: Dict[str, Any] = {
+        "mode": {"strict-config": True},
+        "log": {"file": 0},
+    }
 
     # Note that the default configuration file is determined by the current working
     # directory, so this test creates a new directory and executes the parser from
@@ -704,11 +711,11 @@ this is a very long line
     # The `ul-style` item is set by the default configuration and overridden as "asterisk" by the supplied configuration.
     # The `line-length` item is set by the default configuration as `10` and is not overridden.
     # This results in a `ul-style` of `asterisk` and a `line-length` of `10`.
-    default_configuration = {
+    default_configuration: Dict[str, Any] = {
         "mode": {"strict-config": True},
         "plugins": {"ul-style": {"style": "dash"}, "line-length": {"line_length": 10}},
     }
-    supplied_configuration = {
+    supplied_configuration: Dict[str, Any] = {
         "mode": {"strict-config": True},
         "plugins": {"ul-style": {"style": "asterisk"}},
     }
@@ -835,6 +842,106 @@ log.file = 2
             # Act
             with temporary_change_to_directory(tmp_dir_path):
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+            # Assert
+            execute_results.assert_results(
+                expected_output, expected_error, expected_return_code
+            )
+
+
+def test_markdown_with_pyproject_issue_1484_implicitly_load_toml() -> None:
+    """
+    Test to make sure that we can implicitly load a pyproject configuration file
+    and have it apply properly.
+
+    Note: To not conflict with an existing pyproject.toml file in the repository,
+          this test creates a temporary directory and places the pyproject.toml
+          file there and executes the scanner from within that directory.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_atx_heading.md"
+    )
+    assert os.path.exists(source_path)
+    source_path = os.path.abspath(source_path)
+
+    default_configuration = """
+[tool.pymarkdown]
+plugins.MD013.heading_line_length = 79
+"""
+
+    # Note that the default configuration file is determined by the current working
+    # directory, so this test creates a new directory and executes the parser from
+    # within that directory.
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            default_configuration,
+            file_name="pyproject.toml",
+            directory=tmp_dir_path,
+            file_name_suffix=".toml",
+        ):
+            supplied_arguments = [
+                "--strict-config",
+                "scan",
+                source_path,
+            ]
+
+            expected_return_code = 1
+            expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 79, Actual: 88] (line-length)"
+            expected_error = ""
+
+            # Act
+            with temporary_change_to_directory(tmp_dir_path):
+                execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+            # Assert
+            execute_results.assert_results(
+                expected_output, expected_error, expected_return_code
+            )
+
+
+def test_markdown_with_pyproject_issue_1484_explicitly_load_toml() -> None:
+    """
+    Test to make sure that we can explicitly load a pyproject configuration file
+    and have it apply properly.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_atx_heading.md"
+    )
+    assert os.path.exists(source_path)
+    source_path = os.path.abspath(source_path)
+
+    default_configuration = """
+[tool.pymarkdown]
+plugins.MD013.heading_line_length = 81
+"""
+
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            default_configuration,
+            file_name="my_config.toml",
+            directory=tmp_dir_path,
+            file_name_suffix=".toml",
+        ) as config_path:
+            supplied_arguments = [
+                "--strict-config",
+                "--config",
+                config_path,
+                "scan",
+                source_path,
+            ]
+
+            expected_return_code = 1
+            expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 81, Actual: 88] (line-length)"
+            expected_error = ""
+
+            # Act
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
             # Assert
             execute_results.assert_results(

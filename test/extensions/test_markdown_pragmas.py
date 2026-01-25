@@ -28,11 +28,11 @@ def test_pragmas_no_command() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration specified without command.\n"
     )
 
@@ -66,11 +66,11 @@ def test_pragmas_bad_command() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'bad' not understood.\n"
     )
 
@@ -104,11 +104,11 @@ def test_pragmas_disable_next_line_no_id() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
     )
 
@@ -142,11 +142,11 @@ def test_pragmas_disable_next_line_no_id_more_spaces() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
     )
 
@@ -180,11 +180,11 @@ def test_pragmas_disable_next_line_bad_id() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'bad-plugin-id'.\n"
     )
 
@@ -348,7 +348,7 @@ def test_pragmas_disable_next_line_valid_id_and_no_fire() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -388,9 +388,9 @@ def test_pragmas_disable_next_line_no_pragmas() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        + f"{source_path}:2:1: "
+        + f"{os.path.abspath(source_path)}:2:1: "
         + "MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -549,11 +549,11 @@ def test_pragmas_disable_num_line_no_lines() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' was not followed by a count and a list of plugin ids to temporarily disable.\n"
     )
 
@@ -587,11 +587,11 @@ def test_pragmas_disable_num_line_bad_id() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' unable to find a plugin with the id 'bad-plugin-id'.\n"
     )
 
@@ -625,11 +625,11 @@ def test_pragmas_disable_num_line_no_whitespace_before_count() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' was not followed by a count and a list of plugin ids to temporarily disable.\n"
     )
 
@@ -663,11 +663,11 @@ def test_pragmas_disable_num_line_bad_lines() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' specified a count 'abc' that is not a valid positive integer.\n"
     )
 
@@ -701,11 +701,11 @@ def test_pragmas_disable_num_line_no_whitespace_before_countx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' was not followed by a count and a list of plugin ids to temporarily disable.\n"
     )
 
@@ -739,11 +739,11 @@ def test_pragmas_disable_num_line_after_lines() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' and its count were not followed by a list of plugin ids to temporarily disable.\n"
     )
 
@@ -777,11 +777,11 @@ def test_pragmas_disable_num_line_bad_idx() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'bad-plugin-id'.\n"
     )
 
@@ -912,7 +912,7 @@ def test_pragmas_disable_num_line_valid_id_and_no_fire() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -948,11 +948,11 @@ def test_pragmas_disable_num_line_valid_id_and_only_comma() -> None:
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
+        f"{os.path.abspath(source_path)}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' specified a plugin with a blank id.\n"
     )
 
@@ -988,7 +988,7 @@ def test_pragmas_disable_num_line_valid_id_and_bad_id() -> None:
     expected_return_code = 0
     expected_output = ""
     expected_error = (
-        f"{source_path}:1:1: "
+        f"{os.path.abspath(source_path)}:1:1: "
         + "INLINE: Inline configuration command 'disable-num-lines' unable to find a plugin with the id 'bad-id'.\n"
     )
 
@@ -1029,7 +1029,7 @@ def test_pragmas_disable_num_line_multiple_disabled() -> None:
 {source_path}:7:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
 {source_path}:8:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
 {source_path}:9:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)""".replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
     expected_error = ""
 
@@ -1132,7 +1132,7 @@ def test_pragmas_disable_num_line_multiple_enabled_one_pragmad_one_not() -> None
     expected_output = """{source_path}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
 {source_path}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
 {source_path}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)""".replace(
-        "{source_path}", source_path
+        "{source_path}", os.path.abspath(source_path)
     )
     expected_error = ""
 
@@ -1197,9 +1197,9 @@ def test_pragmas_disable_with_enabled() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"""{source_path}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_output = f"""{os.path.abspath(source_path)}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
     expected_error = ""
 
     # Act
@@ -1231,12 +1231,12 @@ def test_pragmas_enable_with_no_disable() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"""{source_path}:5:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:6:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:7:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:9:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:10:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_output = f"""{os.path.abspath(source_path)}:5:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:6:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:7:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:9:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:10:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
     expected_error = ""
 
     # Act
@@ -1268,9 +1268,9 @@ def test_pragmas_double_disable_with_enable() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"""{source_path}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
-{source_path}:14:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_output = f"""{os.path.abspath(source_path)}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{os.path.abspath(source_path)}:14:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
     expected_error = ""
 
     # Act
@@ -1334,8 +1334,8 @@ def test_pragmas_multiple_disable_with_no_rules() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"""{source_path}:1:21: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
-    expected_error = f"""{source_path}:1:1: INLINE: Inline configuration command 'disable' specified a plugin with a blank id."""
+    expected_output = f"""{os.path.abspath(source_path)}:1:21: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
+    expected_error = f"""{os.path.abspath(source_path)}:1:1: INLINE: Inline configuration command 'disable' specified a plugin with a blank id."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -1366,8 +1366,8 @@ def test_pragmas_multiple_enable_with_no_rules() -> None:
     ]
 
     expected_return_code = 1
-    expected_output = f"""{source_path}:1:20: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
-    expected_error = f"""{source_path}:1:1: INLINE: Inline configuration command 'enable' specified a plugin with a blank id."""
+    expected_output = f"""{os.path.abspath(source_path)}:1:20: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
+    expected_error = f"""{os.path.abspath(source_path)}:1:1: INLINE: Inline configuration command 'enable' specified a plugin with a blank id."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
