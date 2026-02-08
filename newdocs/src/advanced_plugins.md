@@ -165,7 +165,7 @@ configuration:
 
 === "JSON"
 
-    <!-- pyml disable-next-line code-block-style-->
+<!-- pyml disable-next-line code-block-style-->
     ```json
     {
         "plugins": {
@@ -178,7 +178,7 @@ configuration:
 
 === "YAML"
 
-    <!-- pyml disable-next-line code-block-style-->
+<!-- pyml disable-next-line code-block-style-->
     ```yaml
     plugins:
       per-file-ignores:
@@ -187,7 +187,7 @@ configuration:
 
 === "TOML"
 
-    <!-- pyml disable-next-line code-block-style-->
+<!-- pyml disable-next-line code-block-style-->
     ```toml
     [tool.pymarkdown]
     plugins.per-file-ignores."changelog.d/*.md" = "md041"
