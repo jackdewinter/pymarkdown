@@ -1008,7 +1008,8 @@ def test_markdown_documentation_advanced_configuration_no_configuration() -> Non
     # Arrange
     scanner = MarkdownScanner()
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         main_document_path = write_temporary_configuration(
@@ -1069,7 +1070,8 @@ def test_markdown_documentation_advanced_configuration_explicit_json_with_json_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config.json"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1126,7 +1128,8 @@ def test_markdown_documentation_advanced_configuration_explicit_json_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1187,7 +1190,8 @@ def test_markdown_documentation_advanced_configuration_implicit_json_with_json_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = ".pymarkdown.json"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
@@ -1244,7 +1248,8 @@ def test_markdown_documentation_advanced_configuration_implicit_json_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = ".pymarkdown"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
@@ -1299,7 +1304,8 @@ def test_markdown_documentation_advanced_configuration_explicit_yaml_with_yml_ex
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config.yml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1356,7 +1362,8 @@ def test_markdown_documentation_advanced_configuration_explicit_yaml_with_yaml_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config.yaml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1413,7 +1420,8 @@ def test_markdown_documentation_advanced_configuration_explicit_yaml_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1470,7 +1478,8 @@ def test_markdown_documentation_advanced_configuration_implicit_yaml_with_yml_ex
     scanner = MarkdownScanner()
     partial_configuration_file_name = ".pymarkdown.yml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
@@ -1525,7 +1534,8 @@ def test_markdown_documentation_advanced_configuration_implicit_yaml_with_yaml_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = ".pymarkdown.yaml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
@@ -1585,7 +1595,8 @@ def test_markdown_documentation_advanced_configuration_implicit_yaml_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = ".pymarkdown"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         configuration_file_path = write_temporary_configuration(
@@ -1640,7 +1651,8 @@ def test_markdown_documentation_advanced_configuration_explicit_toml_with_toml_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config.toml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1697,7 +1709,8 @@ def test_markdown_documentation_advanced_configuration_explicit_toml_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = "my_config"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         config_path = write_temporary_configuration(
@@ -1754,7 +1767,8 @@ def test_markdown_documentation_advanced_configuration_implicit_toml_with_toml_e
     scanner = MarkdownScanner()
     partial_configuration_file_name = "pyproject.toml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
@@ -1809,7 +1823,8 @@ def test_markdown_documentation_advanced_configuration_implicit_toml_with_no_ext
     scanner = MarkdownScanner()
     partial_configuration_file_name = "pyproject.toml"
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         child_directory_path = os.path.join(tmp_dir_path, "temp")
 
         write_temporary_configuration(
