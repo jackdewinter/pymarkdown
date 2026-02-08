@@ -123,14 +123,91 @@ Therefore, after applying all configuration layers, Rule Md011 is disabled by `-
 Rule Md012 is disabled by `--set 'plugins.md012.enabled=$!False'`, and Rule Md013
 is disabled by the `config.json` configfuration item.
 
+## Per-File Disabling Of Rules
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.36**
+
+In [Feature Request 1511](https://github.com/jackdewinter/pymarkdown/issues/1511),
+the requestor clearly described how they wanted this feature to work and how it
+would help their project. Their team uses a common set of Markdown linting rules
+they want to use across the whole project, but they need to turn off a specific
+rule for one directory. In this project, each contributor is expected to add a Markdown
+file to the project's `changelog.d` directory with a short description of their
+change. When it is time to cut a release, those fragment files are combined into
+the main `changelog.md` file.
+
+The files in the `changelog.d` directory create a special case. They are Markdown
+fragments rather than complete Markdown documents, so requiring them to have a top-level
+heading ([Rule Md041](./plugins/rule_md041.md)) does not make sense. Before this
+feature was available, the team had two options and neither was ideal:
+
+- Create two configuration files:
+    - one for the main project that excludes the `changelog.d` directory
+    - another just for the `changelog.d` directory that disables rule Md041.
+- Ask every each contributor to add a disable pragma at the start of their Markdown
+  fragment, stripping that pragma out again during the release process.
+
+To better handle situations like this, we added a way to disable rules based on
+a file path, using paths that are relative to the current directory. Inspired
+by the [Flake8 linter](https://flake8.pycqa.org/en/latest/user/options.html#cmdoption-flake8-per-file-ignores)
+and the [Ruff linter](https://docs.astral.sh/ruff/settings/#lint_per-file-ignores),
+the `plugins.per-file-ignores` property lets you define multiple paths.  For each
+path, you specify a comma-separated list of rule identifiers to disable for files
+that match that path.
+
+The file paths are specified using the same glob-based syntax as `.gitignore` files
+used with the [`--respect-gitignore` command line argument](./user-guide.md#--respect-gitignore)
+and the [`--exclude` command line argument](./user-guide.md#-e---exclude-path_exclusions).
+
+To solve the `changelog.d` scenario described above, we recommend the following
+configuration:
+
+<!-- pyml disable code-block-style-->
+=== "JSON"
+
+    ```json
+    {
+        "plugins": {
+            "per-file-ignores": {
+                "changelog.d/*.md": "md041"
+            }
+        }
+    }
+    ```
+
+=== "YAML"
+
+    ```yaml
+    plugins:
+      per-file-ignores:
+        changelog.d/*.md: md041
+    ```
+
+=== "TOML"
+
+    ```toml
+    [tool.pymarkdown]
+    plugins.per-file-ignores."changelog.d/*.md" = "md041"
+    ```
+
+<!-- pyml enable code-block-style-->
+
+If that team later decided that they also want to disable the `line-length` rule
+([Rule Md013](./plugins/rule_md013.md)), they could change `md041` in the examples
+above to `md013,md041` or `line-length,md041`, because the value is a comma-separated
+list of rule identifiers to disable.
+
 ## Rule Configuration
 
 If you have tackled the examples from the last two sections and understand how
 the layers interact with each other, you should have no trouble understanding rule
-configuration items. That comprehension is made easier because arguments like `--disable-rules`
-and `--enable-rules` do not exist for rule configuration items.  For rule
-configuration items, only the `--set` argument and the configuration file
-layers are considered.
+configuration items. That comprehension is made easier because command-line arguments
+like `--disable-rules` and `--enable-rules` do not exist for rule configuration items.
+Those arguments are simply [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar)
+for enabling and disabling plugin rules in bulk. Therefore, when talking about
+configuration items for specific plugin rules, only the `--set` argument and the
+configuration file layers are considered.
 
 For this example, we are going to set a configuration item that is commonly
 changed: the `line_length` configuration item. Similar to the above example,

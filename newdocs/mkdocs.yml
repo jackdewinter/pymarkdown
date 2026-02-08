@@ -53,6 +53,11 @@ not_in_nav: |
 markdown_extensions:
   - toc:
       permalink: "#"
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 theme:
-  name: readthedocs
+  name: material
+  features:
+    - content.tabs.link
   navigation_depth: 5

@@ -7,7 +7,13 @@ import tempfile
 from test.markdown_scanner import MarkdownScanner
 from typing import Any, Dict
 
-from .utils import create_temporary_configuration_file, temporary_change_to_directory
+from .utils import (
+    create_temporary_configuration_file,
+    temporary_change_to_directory,
+    write_temporary_configuration,
+)
+
+# pylint: disable=too-many-lines
 
 
 def test_markdown_with_dash_e_single_by_id_and_good_config() -> None:
@@ -249,7 +255,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = {"plugins": {"myrule.md999": {"test_value": "fred"}}}
+    supplied_configuration = {"plugins": {"myrule md999": {"test_value": "fred"}}}
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -267,7 +273,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
         expected_error = (
             "Specified configuration file '"
             + configuration_file
-            + "' is not valid: Key strings cannot contain a whitespace character, a '=' character, or a '.' character.\n"
+            + "' is not valid: Key string `myrule md999` cannot contain a whitespace character, a '=' character, or a '.' character.\n"
         )
 
         # Act
@@ -947,3 +953,912 @@ plugins.MD013.heading_line_length = 81
             execute_results.assert_results(
                 expected_output, expected_error, expected_return_code
             )
+
+
+CONFIGURATION_JSON_CONTENT = """
+{
+    "system" : {
+        "exclude_path" : "temp/"
+    },
+    "extensions": {
+        "markdown-tables": {
+            "enabled" : true
+        }
+    },
+    "plugins": {
+        "md013": {
+            "enabled": true,
+            "line_length": 100
+        }
+    }
+}
+"""
+CONFIGURATION_YAML_CONTENT = """
+system:
+  exclude_path: temp/
+extensions:
+  markdown-tables:
+    enabled: true
+plugins:
+  md013:
+    enabled: true
+    line_length: 100
+"""
+CONFIGURATION_TOML_CONTENT = """
+[tool.pymarkdown]
+
+system.exclude_path = "temp/"
+
+extensions.markdown-tables.enabled = true
+
+plugins.md013.enabled = true
+plugins.md013.line_length = 100
+"""
+DOCUMENT_CONTENT = """# This is my title
+
+It may look silly, but this is a long, long, long, long, long, long line that is over 80 characters in length.
+"""
+
+
+def test_markdown_documentation_advanced_configuration_no_configuration() -> None:
+    """
+    Test to make sure that we have a baseline for the tests that follow.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        other_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{other_document_path}:3:1: MD013: Line length [Expected: 80, Actual: 110] (line-length)
+{main_document_path}:3:1: MD013: Line length [Expected: 80, Actual: 110] (line-length)"""
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension() -> (
+    None
+):
+    """
+    Test to make sure that the JSON configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    The configuration specifically is set to:
+    - apply an exclude path via configuration file
+    - enable markdown tables (TBD)
+    - change the line length of the MD013 (`line-length`) rule to 100
+
+    The document itself has a line that is 110 characters long, which will trigger
+    the Md013 rule.
+
+    The document is written to the temporary directory and to the `temp/` subdirectory
+    within that temporary directory.  Because of the `exclude_path` configuration,
+    only one eligible document will be found and only one rule violation will be
+    triggered.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config.json"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_JSON_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_json_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the JSON configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_JSON_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_json_with_json_extension() -> (
+    None
+):
+    """
+    Test to make sure that the JSON configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    NOTE: The `.json` extension is implied for `.pymarkdown`, so the implicit
+          configuration file will not be loaded and will not affect the
+          configuration values.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = ".pymarkdown.json"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_JSON_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        other_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"""{other_document_path}:3:1: MD013: Line length [Expected: 80, Actual: 110] (line-length)
+{main_document_path}:3:1: MD013: Line length [Expected: 80, Actual: 110] (line-length)
+"""
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_json_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the JSON configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = ".pymarkdown"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_JSON_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_yaml_with_yml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config.yml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_yaml_with_yaml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config.yaml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_yaml_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_yaml_with_yml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = ".pymarkdown.yml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_yaml_with_yaml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = ".pymarkdown.yaml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_yaml_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the YAML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    NOTE: The `.yml` or `.yaml` extension is required to distinguish an implicit JSON
+          file (`.pymarkdown`) from a implicit YAML file (`.pymarkdown.yml` or `.pymarkdown.yaml`).
+          As the extension is not present, the implicit configuration file will
+          not be loaded and will not affect the configuration values.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = ".pymarkdown"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        configuration_file_path = write_temporary_configuration(
+            CONFIGURATION_YAML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = f"""Specified configuration file '{configuration_file_path}' is not a valid JSON file: ("Expected b'JSON5Value' near 2, found U+0073", None, 's')."""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_toml_with_toml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the TOML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config.toml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_TOML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_explicit_toml_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the TOML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "my_config"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        config_path = write_temporary_configuration(
+            CONFIGURATION_TOML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "--config",
+            config_path,
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_toml_with_toml_extension() -> (
+    None
+):
+    """
+    Test to make sure that the TOML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "pyproject.toml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_TOML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_documentation_advanced_configuration_implicit_toml_with_no_extension() -> (
+    None
+):
+    """
+    Test to make sure that the TOML configuration file specified in the
+    advanced_configuration.md documentation file works as advertisted.
+
+    See test_markdown_documentation_advanced_configuration_explicit_json_with_json_extension
+    for more details.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    partial_configuration_file_name = "pyproject.toml"
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        child_directory_path = os.path.join(tmp_dir_path, "temp")
+
+        write_temporary_configuration(
+            CONFIGURATION_TOML_CONTENT,
+            directory=tmp_dir_path,
+            file_name=partial_configuration_file_name,
+        )
+        main_document_path = write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        os.makedirs(child_directory_path)
+        write_temporary_configuration(
+            DOCUMENT_CONTENT,
+            directory=child_directory_path,
+            file_name_suffix=".md",
+        )
+
+        supplied_arguments = [
+            "--strict-config",
+            "scan",
+            "**/*.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{main_document_path}:3:1: MD013: Line length [Expected: 100, Actual: 110] (line-length)"
+        expected_error = ""
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )

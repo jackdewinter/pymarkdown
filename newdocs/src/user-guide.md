@@ -695,9 +695,11 @@ The `--config` argument is followed by a path to a configuration file to load
 for the current execution of the PyMarkdown application.  While the basic usage
 of configuration
 files is simple, there are a fair number of interactions to consider
-when supplying configuration.  As such, this is more fully covered in the
-[Advanced Configuration](./advanced_configuration.md)
-document, especially the section on the [configuration files](./advanced_configuration.md#configuration-files).
+when supplying configuration, including the format of the configuration file itself.
+
+This topic is more fully covered in the section on [configuration files](./advanced_configuration.md#configuration-files)
+in the Advanced Configuration document. Note that the section also includes simple
+[examples configuration files](./advanced_configuration.md#examples) in all formats.
 
 ##### --set  (configuration)
 

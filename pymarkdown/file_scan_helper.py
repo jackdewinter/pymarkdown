@@ -13,6 +13,9 @@ import tempfile
 from typing import Callable, Dict, List, Optional, Set, Tuple, Union, cast
 
 from application_file_scanner import ApplicationFileScanner
+from application_properties import ApplicationProperties
+from py_walk import get_parser_from_list
+from py_walk.models import Parser
 
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
@@ -35,7 +38,10 @@ from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkd
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
 
+
+# pylint: disable=too-many-instance-attributes
 class FileScanHelper:
     """
     Class to specifically deal with handling the file scanning
@@ -54,6 +60,7 @@ class FileScanHelper:
         presentation: MainPresentation,
         show_stack_trace: bool,
         handle_error: Callable[[str, Optional[Exception], bool, str], None],
+        properties: ApplicationProperties,
     ):
         self.__tokenizer = tokenizer
         self.__plugins = plugins
@@ -61,6 +68,8 @@ class FileScanHelper:
         self.__show_stack_trace = show_stack_trace
         self.__handle_error = handle_error
         self.__continue_on_error = False
+        self.__properties = properties
+        self.__per_file_ignores_list: List[Tuple[Parser, Set[str]]] = []
 
     # pylint: enable=too-many-arguments
 
@@ -87,8 +96,15 @@ class FileScanHelper:
             self.__scan_from_stdin(args, string_to_scan)
 
         else:
+            self.__process_per_file_ignores()
+
             POGGER.debug("Scanning from: $", files_to_scan)
             for next_file in files_to_scan:
+                per_file_disabled_identifiers = (
+                    self.__check_file_name_against_per_file_disabled_identifiers(
+                        next_file
+                    )
+                )
                 if in_fix_mode:
                     did_fix_file, did_succeed = self.__fix_specific_file(
                         next_file,
@@ -96,15 +112,34 @@ class FileScanHelper:
                         args.x_fix_debug,
                         args.x_fix_file_debug,
                         args.x_fix_no_rescan_log,
+                        per_file_disabled_identifiers,
                     )
                     if did_fix_file:
                         self.__presentation.print_fix_message(next_file)
                         did_fix_any_file = True
                 else:
-                    did_succeed = self.__scan_specific_file(next_file, next_file)
+                    did_succeed = self.__scan_specific_file(
+                        next_file, next_file, per_file_disabled_identifiers
+                    )
                 if not did_succeed:
                     did_fail_any_file = True
         return did_fix_any_file, did_fail_any_file
+
+    def __check_file_name_against_per_file_disabled_identifiers(
+        self, next_file_name: str
+    ) -> Set[str]:
+
+        modified_next_file_name = os.path.abspath(next_file_name)
+        modified_next_file_name = (
+            modified_next_file_name.replace(os.sep, os.altsep)
+            if os.altsep is not None
+            else modified_next_file_name[:]
+        )
+        per_file_disabled_identifiers: Set[str] = set()
+        for parser, disable_set in self.__per_file_ignores_list:
+            if parser.match(modified_next_file_name):
+                per_file_disabled_identifiers.update(disable_set)
+        return per_file_disabled_identifiers
 
     def __scan_from_stdin(
         self, args: argparse.Namespace, string_to_scan: Optional[str]
@@ -125,7 +160,9 @@ class FileScanHelper:
                     for line in sys.stdin:
                         outfile.write(line)
 
-            self.__scan_specific_file(temporary_file, scan_id)
+            # As the temporary file is being used to capture the standard-in, the file needs to be
+            # scanned without any possible per-file disabled identifiers.
+            self.__scan_specific_file(temporary_file, scan_id, None)
 
         except IOError as this_exception:
             scan_exception = this_exception
@@ -141,10 +178,18 @@ class FileScanHelper:
             except IOError as this_exception:
                 self.__handle_scan_error(scan_id, this_exception)
 
-    def __scan_specific_file(self, next_file: str, next_file_name: str) -> bool:
+    def __scan_specific_file(
+        self,
+        next_file: str,
+        next_file_name: str,
+        per_file_disabled_identifiers: Optional[Set[str]],
+    ) -> bool:
+
         try:
             source_provider = FileSourceProvider(next_file)
-            self.__scan_file(source_provider, next_file_name)
+            self.__scan_file(
+                source_provider, next_file_name, per_file_disabled_identifiers
+            )
             return True
         except BadPluginError as this_exception:
             self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)
@@ -155,7 +200,10 @@ class FileScanHelper:
         return False
 
     def __scan_file(
-        self, source_provider: FileSourceProvider, next_file_name: str
+        self,
+        source_provider: FileSourceProvider,
+        next_file_name: str,
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> None:  # sourcery skip: extract-method
         """
         Scan a given file and call the plugin manager for any significant events.
@@ -171,11 +219,17 @@ class FileScanHelper:
             actual_tokens = self.__tokenizer.transform_from_provider(
                 source_provider, do_add_end_of_stream_token=True
             )
-            context = self.__plugins.starting_new_file(next_file_name, actual_tokens)
+            context = self.__plugins.starting_new_file(
+                next_file_name, actual_tokens, per_file_disabled_identifiers
+            )
 
             source_provider.reset_to_start()
             self.__process_file_scan(
-                context, source_provider, next_file_name, actual_tokens
+                context,
+                source_provider,
+                next_file_name,
+                actual_tokens,
+                per_file_disabled_identifiers,
             )
 
             context.report_on_triggered_rules()
@@ -186,13 +240,16 @@ class FileScanHelper:
             POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
 
+    # pylint: disable=too-many-arguments
     def __process_file_scan(
         self,
         context: PluginScanContext,
         source_provider: FileSourceProvider,
         next_file_name: str,
         actual_tokens: List[MarkdownToken],
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> None:
+
         if actual_tokens and actual_tokens[-1].is_pragma:
             pragma_token = cast(PragmaToken, actual_tokens[-1])
             self.__plugins.compile_pragmas(next_file_name, pragma_token.pragma_lines)
@@ -201,12 +258,18 @@ class FileScanHelper:
         POGGER.info("Scanning file '$' tokens.", next_file_name)
         for next_token in actual_tokens:
             POGGER.info("Processing token: $", next_token)
-            self.__plugins.next_token(context, next_token)
+            self.__plugins.next_token(
+                context, next_token, per_file_disabled_identifiers
+            )
 
         POGGER.info("Completed scanning tokens in file '$'.", next_file_name)
 
         POGGER.info("Scanning file '$' line-by-line.", next_file_name)
-        self.__process_lines_in_file(source_provider, context, next_file_name)
+        self.__process_lines_in_file(
+            source_provider, context, next_file_name, per_file_disabled_identifiers
+        )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __fix_specific_file(
@@ -216,6 +279,7 @@ class FileScanHelper:
         fix_debug: bool,
         fix_file_debug: bool,
         fix_nolog_rescan: bool,
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[bool, bool]:
         did_fix_file = False
         did_succeed = False
@@ -229,6 +293,7 @@ class FileScanHelper:
                     fix_debug,
                     fix_file_debug,
                     fix_nolog_rescan,
+                    per_file_disabled_identifiers,
                 )
 
                 POGGER.info("Ending file to fix '$'.", next_file_name)
@@ -321,6 +386,7 @@ class FileScanHelper:
         fix_nolog_rescan: bool,
         fix_list: List[str],
         collect_list: List[str],
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[bool, Set[str], Set[str]]:
         # Scan the provided file for any token fixes.
         (
@@ -329,7 +395,13 @@ class FileScanHelper:
             did_any_tokens_get_fixed,
             collected_token_triggers,
         ) = self.__process_file_fix_tokens(
-            next_file, next_file_name, fix_debug, fix_file_debug, fix_list, collect_list
+            next_file,
+            next_file_name,
+            fix_debug,
+            fix_file_debug,
+            fix_list,
+            collect_list,
+            per_file_disabled_identifiers,
         )
 
         # If tokens are returned, then no changes were made due to tokens and the
@@ -361,6 +433,7 @@ class FileScanHelper:
             fix_file_debug,
             fix_list,
             collect_list,
+            per_file_disabled_identifiers,
         )
 
         # If anything was fixed, copy the temporary file on top of the original file
@@ -394,6 +467,7 @@ class FileScanHelper:
         fix_debug: bool,
         fix_file_debug: bool,
         fix_nolog_rescan: bool,
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[bool, bool, int]:
         keep_processing = False
         collect_list = []
@@ -417,6 +491,7 @@ class FileScanHelper:
             fix_nolog_rescan,
             fix_list,
             collect_list,
+            per_file_disabled_identifiers,
         )
 
         trigger_set = collected_token_triggers | collected_line_triggers
@@ -449,6 +524,7 @@ class FileScanHelper:
         fix_debug: bool,
         fix_file_debug: bool,
         fix_nolog_rescan: bool,
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> bool:
         enabled_plugins_with_fixes = filter(
             lambda x: x.plugin_supports_fix, self.__plugins.enabled_plugins
@@ -492,6 +568,7 @@ class FileScanHelper:
                 fix_debug,
                 fix_file_debug,
                 fix_nolog_rescan,
+                per_file_disabled_identifiers,
             )
             did_anything_get_fixed = (
                 did_anything_get_fixed or did_anything_get_fixed_this_time
@@ -511,6 +588,7 @@ class FileScanHelper:
         fix_file_debug: bool,
         fix_list: List[str],
         collect_list: List[str],
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[List[FixLineRecord], str, Set[str]]:
         source_provider = FileSourceProvider(next_file)
         with tempfile.NamedTemporaryFile() as temp_output:
@@ -520,12 +598,16 @@ class FileScanHelper:
             fix_context = self.__plugins.starting_new_file(
                 next_file_name,
                 actual_tokens,
+                per_file_disabled_identifiers,
                 fix_mode=True,
                 temp_output=source_file,
                 fix_token_map=None,
             )
             report_context = self.__plugins.starting_new_file(
-                next_file_name, actual_tokens, constraint_id_list=collect_list
+                next_file_name,
+                actual_tokens,
+                per_file_disabled_identifiers,
+                constraint_id_list=collect_list,
             )
             context_map: Dict[str, PluginScanContext] = {
                 i: fix_context for i in fix_list
@@ -541,11 +623,17 @@ class FileScanHelper:
             # picture of the tokens.
             for next_token in actual_tokens:
                 POGGER.info("Processing tokens: $", next_token)
-                self.__plugins.next_token(fix_context, next_token, context_map)
+                self.__plugins.next_token(
+                    fix_context, next_token, per_file_disabled_identifiers, context_map
+                )
 
             POGGER.info("Completed token scanning.")
             self.__process_lines_in_file(
-                source_provider, fix_context, next_file_name, context_map
+                source_provider,
+                fix_context,
+                next_file_name,
+                per_file_disabled_identifiers,
+                context_map,
             )
             this_file_fix_line_records = fix_context.fix_line_records
             if this_file_fix_line_records and fix_debug:
@@ -570,6 +658,7 @@ class FileScanHelper:
         fix_file_debug: bool,
         fix_list: List[str],
         collect_list: List[str],
+        per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[str, List[MarkdownToken], bool, Set[str]]:
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, next_file)
 
@@ -584,6 +673,7 @@ class FileScanHelper:
         fix_context = self.__plugins.starting_new_file(
             next_file_name,
             actual_tokens,
+            per_file_disabled_identifiers,
             fix_mode=True,
             temp_output=None,
             fix_token_map=fix_token_map,
@@ -591,7 +681,10 @@ class FileScanHelper:
             replace_tokens_list=replace_tokens_list,
         )
         report_context = self.__plugins.starting_new_file(
-            next_file_name, actual_tokens, constraint_id_list=collect_list
+            next_file_name,
+            actual_tokens,
+            per_file_disabled_identifiers,
+            constraint_id_list=collect_list,
         )
 
         context_map = {i: fix_context for i in fix_list}
@@ -600,10 +693,14 @@ class FileScanHelper:
 
         for next_token in actual_tokens:
             POGGER.info("Processing token: $", next_token)
-            self.__plugins.next_token(fix_context, next_token, context_map)
+            self.__plugins.next_token(
+                fix_context, next_token, per_file_disabled_identifiers, context_map
+            )
 
         POGGER.info("Completed scanning file '$' for fixes.", next_file_name)
-        self.__plugins.completed_file(fix_context, -1, context_map)
+        self.__plugins.completed_file(
+            fix_context, -1, per_file_disabled_identifiers, context_map
+        )
 
         did_any_tokens_get_fixed = False
         if fix_context.get_fix_token_map() or fix_context.get_replace_tokens_list():
@@ -736,11 +833,7 @@ class FileScanHelper:
             )
 
         # did_fix = False
-        if fix_debug:
-            print("TOKENS-----")
-            for i, j in enumerate(actual_tokens):
-                print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
-            print("TOKENS-----")
+        self.__debug_print_tokens(fix_debug, actual_tokens)
         for next_replace_index in replace_tokens_list:
             did_any_tokens_get_fixed = True
             # if fix_debug and not did_fix:
@@ -752,14 +845,19 @@ class FileScanHelper:
             if fix_debug:
                 print(f" {ParserHelper.make_value_visible(next_replace_index)}")
             self.__apply_replacement_fix(context, next_replace_index, actual_tokens)
+        self.__debug_print_tokens(fix_debug, actual_tokens)
+        return did_any_tokens_get_fixed
+
+    # pylint: enable=too-many-arguments
+
+    def __debug_print_tokens(
+        self, fix_debug: bool, actual_tokens: List[MarkdownToken]
+    ) -> None:
         if fix_debug:
             print("TOKENS-----")
             for i, j in enumerate(actual_tokens):
                 print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
             print("TOKENS-----")
-        return did_any_tokens_get_fixed
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __process_file_fix_tokens_apply_fixes(
@@ -813,9 +911,7 @@ class FileScanHelper:
             if fix_debug:
                 print(f"APPLY:{ParserHelper.make_value_visible(requested_fixes)}")
                 print(f"BEFORE:{ParserHelper.make_value_visible(token_instance)}")
-            self.__apply_token_fix(
-                context, token_instance, requested_fixes, actual_tokens
-            )
+            self.__apply_token_fix(context, token_instance, requested_fixes)
             actual_token_index = actual_tokens.index(token_instance)
             fixed_token_indices[actual_token_index] = [
                 i.plugin_id for i in requested_fixes
@@ -836,8 +932,7 @@ class FileScanHelper:
         if fix_debug:
             print("--")
 
-        did_any_tokens_get_fixed = did_any_tokens_get_fixed or bool(fix_token_map)
-        return did_any_tokens_get_fixed
+        return did_any_tokens_get_fixed or bool(fix_token_map)
 
     # pylint: enable=too-many-arguments
 
@@ -860,17 +955,12 @@ class FileScanHelper:
         context: PluginScanContext,
         token_instance: MarkdownToken,
         requested_fixes: List[FixTokenRecord],
-        actual_tokens: List[MarkdownToken],
     ) -> None:
-        # TODO figure out if we have to copy and replace, or if modifying the token in place is enough.
-        _ = actual_tokens
 
         # TODO Simple scan for now, in future, want to check and allow 2 names that set to the same value.
-        fix_map: Dict[str, Tuple[Union[str, int], str]] = {}
+        fix_map: Dict[Tuple[MarkdownToken, str], Tuple[Union[str, int], str]] = {}
         for next_fix_record in requested_fixes:
-            map_key = str(next_fix_record.token_to_fix) + str(
-                next_fix_record.field_name
-            )
+            map_key = (next_fix_record.token_to_fix, next_fix_record.field_name)
             if map_key in fix_map:
                 recorded_value = next_fix_record.field_value
                 fix_value = fix_map[map_key]
@@ -920,11 +1010,13 @@ class FileScanHelper:
                 "Token before <$> and after <$>.", before_instance, token_instance
             )
 
+    # pylint: disable=too-many-arguments
     def __process_lines_in_file(
         self,
         source_provider: FileSourceProvider,
         context: PluginScanContext,
         next_file_name: str,
+        per_file_disabled_identifiers: Optional[Set[str]],
         context_map: Optional[Dict[str, PluginScanContext]] = None,
     ) -> None:
         line_number, next_line = 1, source_provider.get_next_line()
@@ -936,13 +1028,18 @@ class FileScanHelper:
                 next_line,
                 source_provider.is_at_end_of_file,
                 source_provider.did_final_line_end_with_newline,
+                per_file_disabled_identifiers,
                 context_map,
             )
             line_number += 1
             next_line = source_provider.get_next_line()
 
         POGGER.info("Completed scanning lines in file '$'.", next_file_name)
-        self.__plugins.completed_file(context, line_number, context_map)
+        self.__plugins.completed_file(
+            context, line_number, per_file_disabled_identifiers, context_map
+        )
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def is_scan_stdin_specified(args: argparse.Namespace) -> bool:
@@ -976,3 +1073,85 @@ class FileScanHelper:
                 FileScanHelper.__stdin_scan_subcommand,
                 help="scan the standard input as a Markdown file",
             )
+
+    def __validate_entry(
+        self, next_entry: str, full_property_name: str, per_file_ignores_prefix: str
+    ) -> str:
+
+        # Underlying application_properties does not expect unbalanced single quotes.
+        apostrophe_count = next_entry.count("'")
+        if apostrophe_count % 2 == 1:
+            raise ValueError(
+                f"Property name `{full_property_name}` has an odd number of apostrophes, which is not allowed."
+            )
+
+        # If we are starting with an apostrophe, we expect to end with one and not have any inner apostrophes.
+        # This allows for property names that have dots in them, which would otherwise be invalid as they are
+        # used to denote nesting. When done, trim the starting and ending apostrophes to get the actual property name.
+        if next_entry.startswith("'"):
+            if not next_entry.endswith("'") or "'" in next_entry[1:-1]:
+                find_next_apostrophe = next_entry.find("'", 1)
+
+                # Make sure to provide a reasonable index for the error message, even if the apostrophe is not found.
+                find_next_apostrophe = (
+                    find_next_apostrophe if find_next_apostrophe != -1 else 2
+                )
+                raise ValueError(
+                    f"Property name `{per_file_ignores_prefix}{next_entry[:find_next_apostrophe + 1]}` cannot have an inner element with name '{next_entry[find_next_apostrophe + 2:]}'."
+                )
+            next_entry = next_entry[1:-1]
+        elif "." in next_entry:
+            split_next_entry = next_entry.split(".", 1)
+            raise ValueError(
+                f"Property name `{per_file_ignores_prefix}{split_next_entry[0]}` cannot have an inner element with name '{split_next_entry[1]}'."
+            )
+        return next_entry
+
+    def __process_per_file_ignores(self) -> None:
+
+        self.__per_file_ignores_list = []
+        per_file_ignores_prefix = "plugins.per-file-ignores."
+
+        eligible_property_entries = [
+            next_property_name[len(per_file_ignores_prefix) :]
+            for next_property_name in self.__properties.property_names
+            if next_property_name.startswith(per_file_ignores_prefix)
+        ]
+
+        for next_entry in eligible_property_entries:
+            original_next_entry = next_entry
+            full_property_name = per_file_ignores_prefix + original_next_entry
+
+            validated_entry = self.__validate_entry(
+                next_entry, full_property_name, per_file_ignores_prefix
+            )
+
+            property_value = self.__properties.get_string_property(
+                full_property_name, strict_mode=True
+            )
+            property_value = (
+                property_value.strip() if property_value else property_value
+            )
+            if not property_value:
+                raise ValueError(
+                    f"Property value for `{full_property_name}` must be a non-empty, comma-separated list of rule identifiers."
+                )
+
+            rules_to_disable_by_id: Set[str] = set()
+            for next_rule_identifier in property_value.lower().split(","):
+                normalize_identifier = self.__plugins.get_plugin_id_from_identifier(
+                    next_rule_identifier
+                )
+                if normalize_identifier is None:
+                    raise ValueError(
+                        f"Property value for '{full_property_name}' contains a rule identifier '{next_rule_identifier}' that is not a valid rule identifier."
+                    )
+                rules_to_disable_by_id.add(normalize_identifier)
+
+            parser = get_parser_from_list(
+                [validated_entry], base_dir=os.path.abspath(os.getcwd())
+            )
+            self.__per_file_ignores_list.append((parser, rules_to_disable_by_id))
+
+
+# pylint: enable=too-many-instance-attributes

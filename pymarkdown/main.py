@@ -54,7 +54,9 @@ class PyMarkdownLint:
         self.__string_to_scan = string_to_scan
 
         self.__version_number = PyMarkdownLint.__get_semantic_version()
-        self.__properties: ApplicationProperties = ApplicationProperties()
+        self.__properties: ApplicationProperties = ApplicationProperties(
+            allow_separator_in_keys=True
+        )
         self.__logging = (
             None
             if inherit_logging
@@ -387,6 +389,7 @@ class PyMarkdownLint:
             self.__presentation,
             self.__show_stack_trace,
             self.__handle_error,
+            self.__properties,
         )
         did_fix_any_files, did_fail_any_file = fsh.process_files_to_scan(
             args, use_standard_in, files_to_scan, self.__string_to_scan

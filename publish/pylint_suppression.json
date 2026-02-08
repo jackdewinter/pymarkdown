@@ -95,7 +95,8 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 10,
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 12,
             "too-many-locals": 5
         },
         "pymarkdown/general/__init__.py": {},
@@ -271,7 +272,7 @@
         },
         "pymarkdown/plugin_manager/plugin_manager.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 4,
+            "too-many-arguments": 5,
             "too-many-locals": 1
         },
         "pymarkdown/plugin_manager/plugin_modify_context.py": {
@@ -527,9 +528,9 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 28,
+        "too-many-instance-attributes": 29,
         "too-many-public-methods": 5,
-        "too-many-arguments": 270,
+        "too-many-arguments": 273,
         "too-few-public-methods": 39,
         "too-many-locals": 53,
         "chained-comparison": 3,

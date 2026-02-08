@@ -914,6 +914,24 @@ class PluginManager:
             self.__enabled_plugins, reverse=False, key=lambda plugin: plugin.plugin_id
         )
 
+    def get_plugin_id_from_identifier(self, identifier_to_match: str) -> Optional[str]:
+        """
+        Look up the plugin id associated with a given identifier string. This converts any plugin
+        identifier variant to the canonical plugin id.
+
+        Args:
+            identifier_to_match: The identifier string to match against the registered plugin identifiers.
+
+        Returns:
+            The canonical plugin id that corresponds to the supplied identifier, or None if no match is found.
+        """
+        identifier_to_match = identifier_to_match.lower()
+        for plugin_object in self.__registered_plugins:
+            for next_identifier in plugin_object.plugin_identifiers:
+                if next_identifier == identifier_to_match:
+                    return plugin_object.plugin_id
+        return None
+
     @property
     def all_plugin_ids(self) -> List[str]:
         """
@@ -1002,10 +1020,37 @@ class PluginManager:
             self.__apply_configuration(next_plugin, properties)
 
     # pylint: disable=too-many-arguments
+    def __check_for_skip_of_plugin(
+        self,
+        next_plugin: FoundPlugin,
+        context_map: Optional[Dict[str, PluginScanContext]],
+        context: Optional[PluginScanContext],
+        constraint_id_list: Optional[List[str]],
+        per_file_disabled_identifiers: Optional[Set[str]],
+    ) -> Tuple[bool, Optional[PluginScanContext]]:
+
+        if context_map:
+            if next_plugin.plugin_id not in context_map:
+                return True, None
+            context = context_map[next_plugin.plugin_id]
+        if constraint_id_list and next_plugin.plugin_id not in constraint_id_list:
+            return True, None
+        if (
+            per_file_disabled_identifiers
+            and next_plugin.plugin_id in per_file_disabled_identifiers
+        ):
+            return True, None
+
+        return False, context
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
     def starting_new_file(
         self,
         file_being_started: str,
         actual_tokens: List[MarkdownToken],
+        per_file_disabled_identifiers: Optional[Set[str]],
         fix_mode: bool = False,
         temp_output: Optional[TextIOWrapper] = None,
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]] = None,
@@ -1021,7 +1066,14 @@ class PluginManager:
         self.__pragma_line_numbers = []
 
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
-            if constraint_id_list and next_plugin.plugin_id not in constraint_id_list:
+            skip_plugin, _ = self.__check_for_skip_of_plugin(
+                next_plugin,
+                None,
+                None,
+                constraint_id_list,
+                per_file_disabled_identifiers,
+            )
+            if skip_plugin:
                 continue
             try:
                 next_plugin.plugin_instance.starting_new_file()
@@ -1086,6 +1138,7 @@ class PluginManager:
         self,
         context: PluginScanContext,
         line_number: int,
+        per_file_disabled_identifiers: Optional[Set[str]],
         context_map: Optional[Dict[str, PluginScanContext]] = None,
     ) -> None:
         """
@@ -1099,12 +1152,16 @@ class PluginManager:
         # believes that only one of the paths were covered.
         # sourcery skip: remove-assert-true
         for next_plugin in self.__enabled_plugins_for_completed_file:
-            if context_map:
-                if next_plugin.plugin_id not in context_map:
-                    continue
-                context = context_map[next_plugin.plugin_id]
-            # if context.in_fix_mode and not next_plugin.plugin_supports_fix:
-            #     continue
+
+            skip_plugin, temp_context = self.__check_for_skip_of_plugin(
+                next_plugin, context_map, context, None, per_file_disabled_identifiers
+            )
+            if skip_plugin:
+                continue
+            # Was not None on the way in, so should not be None now.
+            assert temp_context is not None
+            context = temp_context
+
             try:
                 if context.in_fix_mode:
                     context.set_current_fix_line(None)
@@ -1202,6 +1259,7 @@ class PluginManager:
         line: str,
         is_last_line_in_file: bool,
         was_newline_added_at_end_of_file: bool,
+        per_file_disabled_identifiers: Optional[Set[str]],
         context_map: Optional[Dict[str, PluginScanContext]] = None,
     ) -> None:
         """
@@ -1209,12 +1267,15 @@ class PluginManager:
         """
         context.line_number = line_number
         for next_plugin in self.__enabled_plugins_for_next_line:
-            if context_map:
-                if next_plugin.plugin_id not in context_map:
-                    continue
-                context = context_map[next_plugin.plugin_id]
-            # if context.in_fix_mode and not next_plugin.plugin_supports_fix:
-            #     continue
+            skip_plugin, temp_context = self.__check_for_skip_of_plugin(
+                next_plugin, context_map, context, None, per_file_disabled_identifiers
+            )
+            if skip_plugin:
+                continue
+            # Was not None on the way in, so should not be None now.
+            assert temp_context is not None
+            context = temp_context
+
             try:
                 if context.in_fix_mode:
                     self.__next_line_fix_mode_before(context, line, next_plugin)
@@ -1245,19 +1306,22 @@ class PluginManager:
         self,
         context: PluginScanContext,
         token: MarkdownToken,
+        per_file_disabled_identifiers: Optional[Set[str]],
         context_map: Optional[Dict[str, PluginScanContext]] = None,
     ) -> None:
         """
         Inform any listeners of a new token that has been processed.
         """
         for next_plugin in self.__enabled_plugins_for_next_token:
-            if context_map:
-                if next_plugin.plugin_id not in context_map:
-                    continue
-                context = context_map[next_plugin.plugin_id]
+            skip_plugin, temp_context = self.__check_for_skip_of_plugin(
+                next_plugin, context_map, context, None, per_file_disabled_identifiers
+            )
+            if skip_plugin:
+                continue
+            # Was not None on the way in, so should not be None now.
+            assert temp_context is not None
+            context = temp_context
 
-            # if context.in_fix_mode and not next_plugin.plugin_supports_fix:
-            #     continue
             try:
                 next_plugin.plugin_instance.next_token(context, token)
             except Exception as this_exception:
