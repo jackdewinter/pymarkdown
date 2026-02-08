@@ -2,6 +2,7 @@
 Module to provide tests related the "plugins.per-file-ignores" configuration item.
 """
 
+import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
@@ -720,7 +721,8 @@ def test_markdown_per_file_ignores_json_format_single_pattern_single_identifier(
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
