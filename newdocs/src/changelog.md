@@ -5,6 +5,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
+    - Added `plugins.per-file-ignores.*` configuration items to allow for rules
+      to be disabled by matching against a glob-path.
 - [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
     - Added documentation under the extensions section to provide
       information on the tables extension.
@@ -18,7 +21,7 @@
 ### Changed
 
 - [Issue 1527](https://github.com/jackdewinter/pymarkdown/issues/1527)
-    - Updated documentation to give more examples, includig examples of
+    - Updated documentation to give more examples, including examples of
       TOML configurations.
 
 ## Version 0.9.35 - 2026-01-24

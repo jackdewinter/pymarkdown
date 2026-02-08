@@ -255,7 +255,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = {"plugins": {"myrule.md999": {"test_value": "fred"}}}
+    supplied_configuration = {"plugins": {"myrule md999": {"test_value": "fred"}}}
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -273,7 +273,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
         expected_error = (
             "Specified configuration file '"
             + configuration_file
-            + "' is not valid: Key strings cannot contain a whitespace character, a '=' character, or a '.' character.\n"
+            + "' is not valid: Key string `myrule md999` cannot contain a whitespace character, a '=' character, or a '.' character.\n"
         )
 
         # Act

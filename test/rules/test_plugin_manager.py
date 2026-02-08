@@ -2257,7 +2257,7 @@ def test_markdown_fixed_issue_with_debug_on() -> None:
     ) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
-            "md009",
+            "md009,md011,md013",
             "-x-fix-debug",
             "fix",
             temp_source_path,
@@ -2311,7 +2311,7 @@ def test_markdown_fixed_issue_line_with_debug_and_file_debug_on() -> None:
     ) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
-            "md009",
+            "md009,md011,md013",
             "-x-fix-file-debug",
             "-x-fix-debug",
             "fix",
