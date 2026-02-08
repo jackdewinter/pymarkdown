@@ -163,9 +163,9 @@ and the [`--exclude` command line argument](./user-guide.md#-e---exclude-path_ex
 To solve the `changelog.d` scenario described above, we recommend the following
 configuration:
 
+<!-- pyml disable code-block-style-->
 === "JSON"
 
-<!-- pyml disable-next-line code-block-style-->
     ```json
     {
         "plugins": {
@@ -178,7 +178,6 @@ configuration:
 
 === "YAML"
 
-<!-- pyml disable-next-line code-block-style-->
     ```yaml
     plugins:
       per-file-ignores:
@@ -187,11 +186,12 @@ configuration:
 
 === "TOML"
 
-<!-- pyml disable-next-line code-block-style-->
     ```toml
     [tool.pymarkdown]
     plugins.per-file-ignores."changelog.d/*.md" = "md041"
     ```
+
+<!-- pyml enable code-block-style-->
 
 If that team later decided that they also want to disable the `line-length` rule
 ([Rule Md013](./plugins/rule_md013.md)), they could change `md041` in the examples

@@ -137,7 +137,7 @@ repos:
       entry: pipenv run python utils/correct_pdoc_issues.py
       pass_filenames: false
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.27
+    rev: v0.9.30
     hooks:
     - id: pymarkdown
       name: "Scan:   PyMarkdown (Old Documentation)"
@@ -150,7 +150,7 @@ repos:
         - README.md
         - ./docs
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.27
+    rev: v0.9.30
     hooks:
     - id: pymarkdown
       name: "Scan:   PyMarkdown (New Documentation)"
