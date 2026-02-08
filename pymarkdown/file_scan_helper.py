@@ -129,10 +129,11 @@ class FileScanHelper:
         self, next_file_name: str
     ) -> Set[str]:
 
+        modified_next_file_name = os.path.abspath(next_file_name)
         modified_next_file_name = (
-            next_file_name.replace(os.sep, os.altsep)
+            modified_next_file_name.replace(os.sep, os.altsep)
             if os.altsep is not None
-            else next_file_name[:]
+            else modified_next_file_name[:]
         )
         per_file_disabled_identifiers: Set[str] = set()
         for parser, disable_set in self.__per_file_ignores_list:
@@ -1147,7 +1148,7 @@ class FileScanHelper:
                     )
                 rules_to_disable_by_id.add(normalize_identifier)
 
-            parser = get_parser_from_list([validated_entry], base_dir=os.getcwd())
+            parser = get_parser_from_list([validated_entry], base_dir=os.path.abspath(os.getcwd()))
             self.__per_file_ignores_list.append((parser, rules_to_disable_by_id))
 
 
