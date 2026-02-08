@@ -53,9 +53,6 @@ not_in_nav: |
 markdown_extensions:
   - toc:
       permalink: "#"
-  - codehilite:
-      linenums: true
-  - pymdownx.tabbed
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
