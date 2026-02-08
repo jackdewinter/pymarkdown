@@ -775,7 +775,8 @@ def test_markdown_per_file_ignores_json_format_double_pattern_single_identifier(
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -828,7 +829,8 @@ def test_markdown_per_file_ignores_json_format_single_pattern_double_identifier(
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -883,7 +885,8 @@ plugins:
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -938,7 +941,8 @@ def test_markdown_per_file_ignores_yaml_format_double_pattern_single_identifier(
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -993,7 +997,8 @@ plugins:
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -1046,7 +1051,8 @@ plugins.per-file-ignores."a*.md" = "md041"
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -1100,7 +1106,8 @@ plugins.per-file-ignores."aa*.md" = "md013"
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
@@ -1153,7 +1160,8 @@ plugins.per-file-ignores."a*.md" = "md013,md041"
 this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
         configuration_file_path = write_temporary_configuration(
             configuration_content,
             directory=tmp_dir_path,
