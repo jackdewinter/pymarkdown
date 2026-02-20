@@ -1037,7 +1037,7 @@ some other text
 """
 ```
 
-### `test_tables_extension_extra_in_list_header_line_only_with_separator_in_seperate_list_item`
+### `test_tables_extension_extra_in_list_header_line_only_with_separator_in_separate_list_item`
 
 ```python
     source_markdown = """- | foo | bar |
