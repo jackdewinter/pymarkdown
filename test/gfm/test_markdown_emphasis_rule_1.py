@@ -74,13 +74,13 @@ def test_emphasis_363() -> None:
     """
 
     # Arrange
-    source_markdown = """*\u00A0a\u00A0*"""
+    source_markdown = """*\u00a0a\u00a0*"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):*\u00A0a\u00A0*:]",
+        "[text(1,1):*\u00a0a\u00a0*:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>*\u00A0a\u00A0*</p>"""
+    expected_gfm = """<p>*\u00a0a\u00a0*</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

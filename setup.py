@@ -118,6 +118,8 @@ setup(
     maintainer=AUTHOR,
     maintainer_email=AUTHOR_EMAIL,
     url=PROJECT_URL,
+    license="MIT",
+    license_files=("LICENSE.txt",),
     description=ONE_LINE_DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,

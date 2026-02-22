@@ -63,6 +63,6 @@ parse_command_line() {
 parse_command_line "$@"
 
 # Main body of the script.
-pipenv run mkdocs serve --config-file "${SCRIPT_DIR}/newdocs/mkdocs.yml" ${VERBOSE_ARGS}
+pipenv run mkdocs serve --livereload--config-file "${SCRIPT_DIR}/newdocs/mkdocs.yml" ${VERBOSE_ARGS}
 
 exit 1

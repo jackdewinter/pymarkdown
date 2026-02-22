@@ -105,9 +105,7 @@ throw_exception
                 
 BadPluginError encountered while scanning '{file_name_2}':
 (Line 3): Plugin id 'MDE008' had a critical failure during the 'next_line' action.
-""".replace(
-                    "{file_name_2}", file_name_2
-                )
+""".replace("{file_name_2}", file_name_2)
                 # Act
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
@@ -231,9 +229,7 @@ test: assert
                 expected_error = """
                 
 Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document.
-""".replace(
-                    "{file_name_2}", file_name_2
-                )
+""".replace("{file_name_2}", file_name_2)
                 # Act
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
@@ -346,18 +342,12 @@ throw_exception
 
                 expected_return_code = 1
                 expected_output = """Fixed: {file_name_1}
-""".replace(
-                    "{file_name_1}", file_name_1
-                ).replace(
-                    "{file_name_3}", file_name_3
-                )
+""".replace("{file_name_1}", file_name_1).replace("{file_name_3}", file_name_3)
                 expected_error = """
                 
 BadPluginError encountered while scanning '{file_name_2}':
 (Line 3): Plugin id 'MDE008' had a critical failure during the 'next_line' action.
-""".replace(
-                    "{file_name_2}", file_name_2
-                )
+""".replace("{file_name_2}", file_name_2)
                 # Act
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
@@ -409,11 +399,7 @@ throw_exception
                 expected_return_code = 1
                 expected_output = """Fixed: {file_name_1}
 Fixed: {file_name_3}
-""".replace(
-                    "{file_name_1}", file_name_1
-                ).replace(
-                    "{file_name_3}", file_name_3
-                )
+""".replace("{file_name_1}", file_name_1).replace("{file_name_3}", file_name_3)
                 expected_error = """{file_name_2}:0:0: (Line 3): Plugin id 'MDE008' had a critical failure during the 'next_line' action.
 """.replace(
                     "{file_name_2}", file_name_2
@@ -464,17 +450,11 @@ test: assert
 
                 expected_return_code = 1
                 expected_output = """Fixed: {file_name_1}
-""".replace(
-                    "{file_name_1}", file_name_1
-                ).replace(
-                    "{file_name_3}", file_name_3
-                )
+""".replace("{file_name_1}", file_name_1).replace("{file_name_3}", file_name_3)
                 expected_error = """
                 
 Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document.
-""".replace(
-                    "{file_name_2}", file_name_2
-                )
+""".replace("{file_name_2}", file_name_2)
                 # Act
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
@@ -523,11 +503,7 @@ test: assert
                 expected_return_code = 1
                 expected_output = """Fixed: {file_name_1}
 Fixed: {file_name_3}
-""".replace(
-                    "{file_name_1}", file_name_1
-                ).replace(
-                    "{file_name_3}", file_name_3
-                )
+""".replace("{file_name_1}", file_name_1).replace("{file_name_3}", file_name_3)
                 expected_error = """{file_name_2}:0:0: An unhandled error occurred processing the document.
 """.replace(
                     "{file_name_2}", file_name_2

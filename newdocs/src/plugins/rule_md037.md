@@ -6,15 +6,6 @@
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-| Aliases |
-| --- |
-| `md037` |
-| `no-space-in-emphasis` |
-
-| Autofix Available |
-| --- |
-| Yes |
-
 ## Summary
 
 Spaces inside emphasis markers.

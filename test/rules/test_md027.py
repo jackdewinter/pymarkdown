@@ -53,9 +53,7 @@ scanTests = [
         "bad_block_quote_empty_too_many_spaces",
         source_file_name=f"{source_path}bad_block_quote_empty_too_many_spaces.md",
         source_file_contents=""">\a\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -65,9 +63,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_empty_one_too_many_spaces",
         source_file_contents=""">\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         disable_rules=__plugin_disable_md009,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
@@ -81,9 +77,7 @@ scanTests = [
 > abc
 >\a
 > def
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         disable_rules=__plugin_disable_md009,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
@@ -102,9 +96,7 @@ scanTests = [
 >\a
 > def
 >\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         disable_rules=__plugin_disable_md009,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
@@ -199,9 +191,7 @@ scanTests = [
         source_file_contents="""> this is text
 >\a\a
 > within a block quote
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -216,9 +206,7 @@ scanTests = [
         source_file_contents=""" > this is text
  >\a\a
  > within a block quote
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -233,9 +221,7 @@ scanTests = [
         source_file_contents=""" > this is text
  >\a\a
 > within a block quote
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -689,9 +675,7 @@ scanTests = [
 >\a
 >  *  Heading 2
 >\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         disable_rules="md007,md009,md012,md030",
         scan_expected_return_code=1,
         # use_debug=True,
@@ -702,9 +686,7 @@ scanTests = [
 >\a
 > *  Heading 2
 >\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_block_quote_with_interwoven_indented_code",
@@ -983,9 +965,7 @@ scanTests = [
         source_file_contents=""">  # Header 1\a
 >
 >  ## Header 2\a\a\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 {temp_source_path}:1:14: MD009: Trailing spaces [Expected: 0 or 2; Actual: 1] (no-trailing-spaces)
@@ -995,9 +975,7 @@ scanTests = [
         fix_expected_file_contents="""> # Header 1
 >
 > ## Header 2
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "mix_md027_md023",

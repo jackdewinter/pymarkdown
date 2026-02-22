@@ -5,11 +5,10 @@ authors:
   - Jack De Winter
 ---
 
-## Reporting Issues
-
 If you find anything wrong when using the project or if you have a feature
 suggestion for the project, please consider using our
-[Issues List](https://github.com/jackdewinter/pymarkdown/issues) to let us know
+[Issues List](https://github.com/jackdewinter/pymarkdown/issues)
+to let us know
 about your scenario. Before submitting a new issue, please follow these steps:
 
 1. **Clearly identify the problem that you plan to report**.  
@@ -17,11 +16,10 @@ about your scenario. Before submitting a new issue, please follow these steps:
    report your problem with as much clarity as possible, with the goal of
    enabling our team to replicate the problem. If possible, try to narrow down
    all aspects of the problem, especially the command line, the configuration,
-   and the Markdown document that causes the application to fail. The ideal
+   and any supporing information that causes the application to fail. The ideal
    problem report has a good description and a single command line, distinct
-   configuration (command line or configuration file), and a Markdown document
-   that is between 1 and 10 lines long that illustrates the
-   problem.  
+   configuration (command line or configuration file), and a minimal example
+   that illustrates the problem.  
    **OR**  
    **Clearly identify the feature that you would like our
    team to consider.**  
@@ -46,7 +44,8 @@ about your scenario. Before submitting a new issue, please follow these steps:
    specific in your definition of the issue if you submit a new issue.
 1. **Check that the issue is not already present in our backlog.**  
    Goto our
-   [Issues List](https://github.com/jackdewinter/pymarkdown/issues), remove
+   [Issues List](https://github.com/jackdewinter/pymarkdown/issues),
+   remove
    the `is:open` text from the filter selection, and press enter. Then try
    various search terms to look for any issues that are related to your issue.
    If you find an issue that is like your issue, try to provide more
@@ -57,15 +56,16 @@ about your scenario. Before submitting a new issue, please follow these steps:
    when submitting your issue.
 1. **Submit your issue.**  
    Finally, file the issue in our
-   [Issues List](https://github.com/jackdewinter/pymarkdown/issues). Note that
+   [Issues List](https://github.com/jackdewinter/pymarkdown/issues).
+   Note that
    we pre-populate our issues with lists to help you follow these steps before
    submitting the issue. Note that saying you did follow the process when you
    did not is usually frowned upon.
 
 ## Our Triage Process
 
-Roughly once a week, we look at all recently submitted issues. As a first pass,
-we go through each issue and figure out if the reporter has followed the process
+Roughly once every two weeks, we look at all recently submitted issues. As a first
+pass, we go through each issue and figure out if the reporter has followed the process
 outlined in the prior section. If not, we simply ask them to do their due
 diligence before we look at it further. Our goal is to make sure that we have a
 solid requirement from the user: either a reproducible issue or a
@@ -94,11 +94,9 @@ like:
   emphasis within a list block that is nested within a block quote block" will
   cause the severity to get downgraded at least three times.
 - With features, the biggest factor in our estimation is the amount of work
-  needed to implement and test the feature. For a new parser extension, simple
-  behavior changes are easy, with inline changes, leaf block changes, and
-  container block changes increasing the effort exponentially. As a contrast,
-  a new plugin rule typically has a narrowly defined scope, allowing the
-  implementation and testing to be estimated as low effort.
+  needed to implement and test the feature.  And while we can shortcut the
+  work sometimes, our estimates are almost always conservative to ensure that
+  we do not take on too much work.
 
 Hopefully, that does not sound too
 [wishy-washy](https://www.merriam-webster.com/dictionary/wishy-washy). A summary

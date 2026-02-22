@@ -92,9 +92,9 @@ def test_whitespaces_thematic_breaks_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C * * *"""
+    source_markdown = """ \u000c * * *"""
     expected_tokens = [
-        "[para(1,2): \u000C ]",
+        "[para(1,2): \u000c ]",
         "[text(1,2):* * *:]",
         "[end-para:::True]",
     ]
@@ -665,17 +665,17 @@ def test_whitespaces_thematic_breaks_with_formfeeds_before_within_list() -> None
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C* * *"""
+ \u000c \u000c* * *"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C* * *::\n]",
+        "[text(1,3):abc\n\u000c \u000c* * *::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C* * *</li>
+\u000c \u000c* * *</li>
 </ul>"""
 
     # Act & Assert
@@ -1216,16 +1216,16 @@ def test_whitespaces_thematic_breaks_with_form_feeds_inside() -> None:
     """
 
     # Arrange
-    source_markdown = """* *\u000C*"""
+    source_markdown = """* *\u000c*"""
     expected_tokens = [
         "[ulist(1,1):*::2:]",
         "[para(1,3):]",
-        "[text(1,3):*\u000C*:]",
+        "[text(1,3):*\u000c*:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li>*\u000C*</li>
+<li>*\u000c*</li>
 </ul>"""
 
     # Act & Assert
@@ -1269,11 +1269,11 @@ def test_whitespaces_thematic_breaks_with_form_feeds_after() -> None:
     """
 
     # Arrange
-    source_markdown = """* * *\u000C"""
+    source_markdown = """* * *\u000c"""
     expected_tokens = [
         "[ulist(1,1):*::2:]",
         "[ulist(1,3):*::4:  ]",
-        "[para(1,5)::\u000C]",
+        "[para(1,5)::\u000c]",
         "[text(1,5):*:]",
         "[end-para:::True]",
         "[end-ulist:::True]",

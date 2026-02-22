@@ -75,7 +75,7 @@ which renders as:
 This extension is one of the more complicated extensions, adding a new type of
 leaf element to the Markdown document.
 
-While described fully in the [Github Markdown Specification]((https://github.github.com/gfm/#tables-extension-)),
+While described fully in the [Github Markdown Specification](https://github.github.com/gfm/#tables-extension-),
 the basic rules for tables are:
 
 1. Columns in the table are separated by the `|` character.

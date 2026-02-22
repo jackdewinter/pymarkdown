@@ -467,7 +467,7 @@
         },
         "pymarkdown/tokens/stack_token.py": {
             "too-many-arguments": 3,
-            "too-many-instance-attributes": 1
+            "too-many-instance-attributes": 2
         },
         "pymarkdown/tokens/table_markdown_tokens.py": {
             "protected-access": 6,
@@ -528,7 +528,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 29,
+        "too-many-instance-attributes": 30,
         "too-many-public-methods": 5,
         "too-many-arguments": 273,
         "too-few-public-methods": 39,

@@ -3,8 +3,8 @@
 |   |   |
 |---|---|
 |Project|[![Version](https://img.shields.io/pypi/v/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)  [![Python Versions](https://img.shields.io/pypi/pyversions/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)  ![platforms](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey)  [![License](https://img.shields.io/github/license/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/blob/main/LICENSE.txt)  [![GitHub top language](https://img.shields.io/github/languages/top/jackdewinter/pymarkdown)](https://github.com/jackdewinter/pymarkdown)|
-|Quality|[![GitHub Workflow Status (event)](https://img.shields.io/github/actions/workflow/status/jackdewinter/pymarkdown/main.yml?branch=main)](https://github.com/jackdewinter/pymarkdown/actions/workflows/main.yml)  [![Issues](https://img.shields.io/github/issues/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/issues)  [![codecov](https://codecov.io/gh/jackdewinter/pymarkdown/branch/main/graph/badge.svg?token=PD5TKS8NQQ)](https://codecov.io/gh/jackdewinter/pymarkdown)  [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)  ![snyk](https://img.shields.io/snyk/vulnerabilities/github/jackdewinter/pymarkdown) |
-|  |![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/black/main)  ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/flake8/main)  ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/pylint/main)  ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/mypy/main)  ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/pyroma/main)  ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/pre-commit/main) ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/dev/sourcery/main) |
+|Quality|[![GitHub Workflow Status (event)](https://img.shields.io/github/actions/workflow/status/jackdewinter/pymarkdown/main.yml)](https://github.com/jackdewinter/pymarkdown/actions/workflows/main.yml)  [![Issues](https://img.shields.io/github/issues/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/issues)  [![codecov](https://codecov.io/gh/jackdewinter/pymarkdown/branch/main/graph/badge.svg?token=PD5TKS8NQQ)](https://codecov.io/gh/jackdewinter/pymarkdown)  [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.mkdocs&label=MkDocs) |
+|  | ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.black&label=Black)  ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.flake8&label=Flake8) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.pylint&label=PyLint) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.mirrors-mypy&label=MyPy) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.pyroma&label=PyRoma) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.pre-commit&label=Pre-Commit) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjackdewinter%2Fpymarkdown%2Fmain%2Fpublish%2Fdependencies.json&query=%24.sourcery&label=Sourcery) |
 |Community|[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/jackdewinter/pymarkdown/graphs/commit-activity) [![Stars](https://img.shields.io/github/stars/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/stargazers)  [![Forks](https://img.shields.io/github/forks/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/network/members)  [![Contributors](https://img.shields.io/github/contributors/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/graphs/contributors)  [![Downloads](https://img.shields.io/pypi/dm/pymarkdownlnt.svg)](https://pypistats.org/packages/pymarkdownlnt)|
 |Maintainers|[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=555)](https://www.linkedin.com/in/jackdewinter/)|
 
@@ -25,10 +25,24 @@ evaluating. Since the rules have precise information on how compliant parsers
 view the structure of a given Markdown document, each rule can make the best
 decision possible on whether it should trigger a failure or not.
 
+## Jumping Off Points
+
+If you are looking for a high-level overview of PyMarkdown &mdash; what it is and
+why you should use it &mdash; this file is a great place to start learning how
+PyMarkdown works, what it can do, and whether it is a good fit for your projects.
+
+If you have decided to use PyMarkdown for your Markdown linting needs and
+want a series of Quick Start guides to help you get started quickly,
+read our [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/)
+to learn the core concepts.
+
+If you have already viewed our Quick Start guides, or simply want more information
+on PyMarkdown and its capabilities, [start reading here](https://pymarkdown.readthedocs.io/en/latest/)
+to explore the full documentation for advanced options, configuration details, and reference material.
+
 ## Why Should I Use PyMarkdown?
 
-We go into this in more detail in our [project documentation](https://pymarkdown.readthedocs.io/en/latest/),
-but here is the short version.
+We go into this in more detail in our project documentation, but here is the short version.
 
 Do you use spell checkers and grammer checkers for your emails, instant messages,
 and documents?
@@ -84,15 +98,20 @@ our users, we feel that we need to make our own decisions on what a rule is.
 ## How Do I Run This Tool?
 
 The PyMarkdown application is primarily a command line tool for linting, so
-many features boil down to expressing them in the form of commands.
+many features boil down to expressing them in the form of commands. As a linter,
+the most commonly used sets of commands are the **scan** mode commands,
+[documented here](https://pymarkdown.readthedocs.io/en/latest/quick-starts/scanning/),
+followed by our **fix** mode commands,
+[documented here](https://pymarkdown.readthedocs.io/en/latest/quick-starts/fixing/).
 
 However, we also expose the following other ways to execute the PyMarkdown application:
 
-- easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/getting-started/#installing-via-pre-commit)
+- easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/quick-starts/installation/#use-pymarkdown-through-precommit)
 - a simple [API layer](https://pymarkdown.readthedocs.io/en/latest/api/)
 
 For more information on the Pymarkdown application and its command lines,
-please [look here](https://pymarkdown.readthedocs.io/en/latest/).
+check our command line documentation [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/general/)
+and our [Command Line Basics](https://pymarkdown.readthedocs.io/en/latest/user-guide/#command-line-basics) guide.
 
 ## What If It Is Missing A Feature That I Am Looking For?
 
@@ -124,5 +143,6 @@ Look out for that in the near future!
 
 ## Where Can I Find More Detailed Information About PyMarkdown?
 
-Our documentation is hosted at [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/)
+As mentioned above in our section [Jumping Off Points](#jumping-off-points), our
+documentation is hosted at [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/)
 and is kept up-to-date.

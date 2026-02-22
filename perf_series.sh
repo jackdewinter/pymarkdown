@@ -12,7 +12,7 @@ TEMP_FILE=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
 SCRIPT_TITLE="Batch profiling of application"
 
 # Perform any cleanup required by the script.
-# shellcheck disable=SC2317  # Unreachable code
+# shellcheck disable=SC2329
 cleanup_function() {
 
 	# If the temp file was used, get rid of it.

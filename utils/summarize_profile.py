@@ -28,13 +28,13 @@ with open(sys.argv[1], "r", encoding="utf-8") as stats_input_file:
 # ncalls    tottime  percall  cumtime  percall filename:lineno(function)
 # 1600       25.554    0.016   54.422    0.034 C:\enlistments\pymarkdown\pymarkdown\container_blocks\container_block_processor.py:318(__look_back_in_document_for_block_quote)
 # 58246318   16.601    0.000   23.959    0.000 C:\enlistments\pymarkdown\pymarkdown\tokens\markdown_token.py:250(is_block_quote_start)
-HAVE_SEEN_HEADER_ROW = False
+have_seen_header_row = False
 eligible_lines = []
 for next_line in stats_input_lines:
     next_line = next_line.strip()
     if next_line.startswith("ncalls "):
-        HAVE_SEEN_HEADER_ROW = True
-    elif HAVE_SEEN_HEADER_ROW:
+        have_seen_header_row = True
+    elif have_seen_header_row:
         if not next_line:
             break
         eligible_lines.append([x for x in next_line.split(" ") if x.strip()])

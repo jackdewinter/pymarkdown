@@ -96,9 +96,9 @@ def test_whitespaces_html_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C <!-- comment"""
+    source_markdown = """ \u000c <!-- comment"""
     expected_tokens = [
-        "[para(1,2): \u000C ]",
+        "[para(1,2): \u000c ]",
         "[text(1,2):\a<\a&lt;\a!-- comment:]",
         "[end-para:::True]",
     ]
@@ -260,9 +260,7 @@ def test_whitespaces_html_with_tabs_before_within_unordered_list_x() -> None:
 <li>abc
 \a<!-- comment
 </li>
-</ul>""".replace(
-        "\a", "\t"
-    )
+</ul>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -293,9 +291,7 @@ def test_whitespaces_html_with_tabs_before_within_unordered_list_and_single_spac
 <li>abc
 \a<!-- comment
 </li>
-</ul>""".replace(
-        "\a", "\t"
-    )
+</ul>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -497,9 +493,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_list_x() -> None:
 <li>abc
 \a<!-- comment
 </li>
-</ol>""".replace(
-        "\a", "\t"
-    )
+</ol>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -559,9 +553,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_list_and_single_space(
 <li>abc
 \a<!-- comment
 </li>
-</ol>""".replace(
-        "\a", "\t"
-    )
+</ol>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -590,9 +582,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_list_and_spaces() -> N
 <li>abc
 \a<!-- comment
 </li>
-</ol>""".replace(
-        "\a", "\t"
-    )
+</ol>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -621,9 +611,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_list_and_spaces2() -> 
 <li>abc
 \a<!-- comment
 </li>
-</ol>""".replace(
-        "\a", "\t"
-    )
+</ol>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1281,9 +1269,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </li>
 </ol>
 \a<!-- comment
-</blockquote>""".replace(
-        "\a", "\t"
-    )
+</blockquote>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1551,9 +1537,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </li>
 </ol>
  \a<!-- comment
-</blockquote>""".replace(
-        "\a", "\t"
-    )
+</blockquote>""".replace("\a", "\t")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1825,17 +1809,17 @@ def test_whitespaces_html_with_formfeeds_before_within_list() -> None:
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C<!-- comment"""
+ \u000c \u000c<!-- comment"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C\a<\a&lt;\a!-- comment::\n]",
+        "[text(1,3):abc\n\u000c \u000c\a<\a&lt;\a!-- comment::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C&lt;!-- comment</li>
+\u000c \u000c&lt;!-- comment</li>
 </ul>"""
 
     # Act & Assert

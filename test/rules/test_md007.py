@@ -679,9 +679,7 @@ scanTests = [
 > >\a
 > >  --------
 > >\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         disable_rules="md004,md027,md023,md009",
         scan_expected_output="",
     ),

@@ -36,9 +36,7 @@ def test_soft_line_breaks_670() -> None:
 
     # Arrange
     source_markdown = """foo\a
- baz""".replace(
-        "\a", " "
-    )
+ baz""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n ]",
         "[text(1,1):foo\nbaz:: \n]",

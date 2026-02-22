@@ -210,9 +210,7 @@ options:
   Text
   more text
 ```
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)",
     ),

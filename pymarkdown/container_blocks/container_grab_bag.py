@@ -713,7 +713,7 @@ class ContainerGrabBag:
         return self.__requeue_line_info
 
     @requeue_line_info.setter
-    def requeue_line_info(self, value: RequeueLineInfo) -> None:
+    def requeue_line_info(self, value: Optional[RequeueLineInfo]) -> None:
         """
         xxx
         """

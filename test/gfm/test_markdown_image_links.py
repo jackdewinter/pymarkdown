@@ -404,9 +404,7 @@ def test_image_link_592a() -> None:
     source_markdown = """![foo][]\a
 
 [foo]: /url "title"
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):: ]",
         "[image(1,1):collapsed:/url:title:foo::::foo:False::::]",
@@ -431,9 +429,7 @@ def test_image_link_592b() -> None:
     source_markdown = """![foo][]\atext
 
 [foo]: /url "title"
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):]",
         "[image(1,1):collapsed:/url:title:foo::::foo:False::::]",
@@ -510,9 +506,7 @@ def test_image_link_595() -> None:
 []
 
 [foo]: /url "title"
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[image(1,1):shortcut:/url:title:foo::::foo:False::::]",

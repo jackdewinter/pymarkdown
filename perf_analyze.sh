@@ -10,7 +10,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 TEMP_FILE=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
 
 # Perform any cleanup required by the script.
-# shellcheck disable=SC2317  # Unreachable code
+# shellcheck disable=SC2329
 cleanup_function() {
 
 	# If the temp file was used, get rid of it.

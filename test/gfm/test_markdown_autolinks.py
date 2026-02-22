@@ -248,7 +248,7 @@ def test_autolinks_611a() -> None:
     """
 
     # Arrange
-    source_markdown = """<http://example.com/\u2122\u20AC>"""
+    source_markdown = """<http://example.com/\u2122\u20ac>"""
     expected_tokens = [
         "[para(1,1):]",
         "[uri-autolink(1,1):http://example.com/™€]",

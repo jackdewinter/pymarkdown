@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-"""Utility to scan PyTest tests for extra code coverage.
-"""
+"""Utility to scan PyTest tests for extra code coverage."""
 
 import argparse
 import io

@@ -58,9 +58,7 @@ def test_paragraph_series_c_sh() -> None:
 
     # Arrange
     source_markdown = """no line break?\a\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1)::   ]",
         "[text(1,1):no line break?:]",

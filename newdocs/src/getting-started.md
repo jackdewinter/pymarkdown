@@ -12,6 +12,13 @@ application. Which one you use depends on your own preferences as well as the
 requirements of the project that you are working on. Our project supports both
 paths equally.
 
+## Quick Start Guide
+
+These notes are in-depth and attempt to cover as many plausible installation
+scenarios as possible.  If you are just looking for a quick "how do I install
+PyMarkdown" and hope that everything goes right, check out our
+[Quick Start - Installation](./quick-starts/installation.md) guide.
+
 ## Keeping Things Simple
 
 To keep the examples on this page simple and easy to follow, we have expressly

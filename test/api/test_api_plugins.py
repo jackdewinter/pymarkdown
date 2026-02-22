@@ -136,9 +136,7 @@ def test_api_plugins_add_with_simple_plugin() -> None:
     assert scan_result
     assert not scan_result.scan_failures
     assert not scan_result.pragma_errors
-    assert (
-        std_output.getvalue()
-        == """MD998>>init_from_config
+    assert std_output.getvalue() == """MD998>>init_from_config
 MD998>>starting_new_file>>
 MD998>>next_line:# This is a test
 MD998>>next_line:
@@ -146,7 +144,6 @@ MD998>>next_line:The line after this line should be blank.
 MD998>>next_line:
 MD998>>completed_file
 """
-    )
 
 
 def test_api_plugins_add_with_simple_plugins_by_directory() -> None:
@@ -176,9 +173,7 @@ def test_api_plugins_add_with_simple_plugins_by_directory() -> None:
     assert scan_result
     assert not scan_result.scan_failures
     assert not scan_result.pragma_errors
-    assert (
-        std_output.getvalue()
-        == """MD998>>init_from_config
+    assert std_output.getvalue() == """MD998>>init_from_config
 MD998>>starting_new_file>>
 MD998>>next_line:# This is a test
 MD998>>next_line:
@@ -186,7 +181,6 @@ MD998>>next_line:The line after this line should be blank.
 MD998>>next_line:
 MD998>>completed_file
 """
-    )
 
 
 def test_api_plugins_add_with_repeated_identifier() -> None:

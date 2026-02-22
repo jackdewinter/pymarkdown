@@ -1004,9 +1004,7 @@ def test_block_quotes_218() -> None:
     # Arrange
     source_markdown = """>
 >\a\a
-> """.replace(
-        "\a", " "
-    )
+> """.replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
@@ -1147,9 +1145,7 @@ def test_block_quotes_222a() -> None:
     # Arrange
     source_markdown = """> foo
 >\a
-> bar""".replace(
-        "\a", " "
-    )
+> bar""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,3):]",
@@ -1180,9 +1176,7 @@ def test_block_quotes_222b() -> None:
     # Arrange
     source_markdown = """> foo
 >\a\a
-> bar""".replace(
-        "\a", " "
-    )
+> bar""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,3):]",

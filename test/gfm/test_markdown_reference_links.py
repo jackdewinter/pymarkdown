@@ -45,9 +45,7 @@ def test_reference_links_535a() -> None:
     source_markdown = """[foo][bar]\a
 
 [bar]: /url "title"
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):: ]",
         "[link(1,1):full:/url:title:::bar:foo:False::::]",
@@ -1075,9 +1073,7 @@ def test_reference_links_564() -> None:
 []
 
 [foo]: /url "title"
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[link(1,1):shortcut:/url:title::::foo:False::::]",
@@ -1578,9 +1574,7 @@ baz
 foo
 bar\a\a
 baz
-`` bar]""".replace(
-        "\a", " "
-    )
+`` bar]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::foo `` foo bar baz `` bar:foo ``\nfoo\nbar  \nbaz\n`` bar: :/uri:::::]",
         "[BLANK(6,1):]",
@@ -2698,9 +2692,7 @@ def test_reference_links_extra_03i() -> None:
 foo]: /uri
 
 [bar\a\a
-foo]""".replace(
-        "\a", " "
-    )
+foo]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
         "[BLANK(3,1):]",
@@ -2730,9 +2722,7 @@ def test_reference_links_extra_03ia() -> None:
 foo]: /uri
 
 [xx[bar\a\a
-foo]yy]""".replace(
-        "\a", " "
-    )
+foo]yy]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
         "[BLANK(3,1):]",
@@ -2764,9 +2754,7 @@ def test_reference_links_extra_03ib() -> None:
 foo]: /uri
 
 ![xx[bar\a\a
-foo]yy]""".replace(
-        "\a", " "
-    )
+foo]yy]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
         "[BLANK(3,1):]",
@@ -2798,9 +2786,7 @@ def test_reference_links_extra_03ic() -> None:
 foo]: /uri
 
 [xx![bar\a\a
-foo]yy]""".replace(
-        "\a", " "
-    )
+foo]yy]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
         "[BLANK(3,1):]",

@@ -29,10 +29,16 @@ nav:
   - "Introduction":
     - 'index.md'
     - 'getting-started.md'
+  - "Quick Start":
+    - 'quick-starts/index.md'
+    - 'quick-starts/installation.md'
+    - 'quick-starts/general.md'
+    - 'quick-starts/scanning.md'
+    - 'quick-starts/fixing.md'
   - "User Guide":
     - 'user-guide.md'
-    - 'advanced_configuration.md'
     - 'advanced_extensions.md'
+    - 'advanced_configuration.md'
     - 'advanced_plugins.md'
     - 'advanced_pre-commit.md'
   - "Extensions & Rules":

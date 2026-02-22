@@ -423,7 +423,7 @@ class TokenizedMarkdown:
         did_start_close: bool,
         did_started_close: bool,
     ) -> Tuple[int, bool, bool, Optional[str], bool, bool]:
-        (line_number, ignore_link_definition_start, ignore_table_start) = (
+        line_number, ignore_link_definition_start, ignore_table_start = (
             self.__handle_parse_increment_line(line_number, requeue_line_info, requeue)
         )
 

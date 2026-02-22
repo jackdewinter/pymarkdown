@@ -237,9 +237,7 @@ Long Heading
         source_file_contents="""> A Very\a
 > Long Heading
 > -----------------
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules=__plugin_disable_md009,
     ),
@@ -550,9 +548,7 @@ Long Heading
   part 2
   part 3
   ---
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
@@ -571,9 +567,7 @@ Long Heading
   part 2
   part 3
   ---
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     # dependent on test_extra_040b
     #     pluginRuleTest(
@@ -626,9 +620,7 @@ Long Heading
 + heading 1
   part 2
   part 3
-  ---""".replace(
-            "\a", " "
-        ),
+  ---""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024,md047",
         scan_expected_return_code=1,
@@ -646,9 +638,7 @@ Long Heading
 + heading 1
   part 2
   part 3
-  ---""".replace(
-            "\a", " "
-        ),
+  ---""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_unordered_list_with_tab_33",
@@ -665,9 +655,7 @@ Long Heading
 \tpart 2
 \tpart 3
 \t----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
@@ -686,9 +674,7 @@ Long Heading
   part 2
   part 3
   ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_unordered_unordered_list_with_tab",
@@ -893,9 +879,7 @@ Long Heading
    part 5\a\a
 \tpart 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
@@ -908,9 +892,7 @@ Long Heading
    part 5\a\a
    part 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_and_emphasis",
@@ -919,9 +901,7 @@ Long Heading
    part *3*\a
 \tpart 4
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
@@ -932,9 +912,7 @@ Long Heading
    part *3*\a
    part 4
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_and_double_emphasis_1",
@@ -944,9 +922,7 @@ Long Heading
    part *4*\a
 \tpart 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
@@ -958,9 +934,7 @@ Long Heading
    part *4*\a
    part 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_and_double_emphasis_2",
@@ -971,9 +945,7 @@ Long Heading
    part *5*\a
 \tpart 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
         scan_expected_return_code=1,
@@ -986,9 +958,7 @@ Long Heading
    part *5*\a
    part 6
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_13",
@@ -1005,9 +975,7 @@ Long Heading
    part 2
    part 3
    ---
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
@@ -1026,9 +994,7 @@ Long Heading
    part 2
    part 3
    ---
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_23",
@@ -1044,9 +1010,7 @@ Long Heading
 1. heading 1
    part 2
    part 3
-   ---""".replace(
-            "\a", " "
-        ),
+   ---""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024,md047",
         scan_expected_return_code=1,
@@ -1064,9 +1028,7 @@ Long Heading
 1. heading 1
    part 2
    part 3
-   ---""".replace(
-            "\a", " "
-        ),
+   ---""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_setext_four_ordered_list_with_tab_33",
@@ -1083,9 +1045,7 @@ Long Heading
 \tpart 2
 \tpart 3
 \t----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
@@ -1104,9 +1064,7 @@ Long Heading
    part 2
    part 3
    ----
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_atx_unordered_unordered_with_tab",
@@ -1249,9 +1207,7 @@ Long Heading
         source_file_contents="""  ## Heading 2\a\a\a
 
 Some more text
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 {temp_source_path}:1:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)

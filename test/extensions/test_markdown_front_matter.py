@@ -355,9 +355,7 @@ def test_front_matter_12() -> None:
     # Arrange
     source_markdown = """---
 \a\a\a\acontinuation
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[tbreak(1,1):-::---]",
         "[icode-block(2,5):    :]",
@@ -419,9 +417,7 @@ def test_front_matter_14x() -> None:
     source_markdown = """---\a\a
 Title: my document
 ---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[front-matter(1,1):---  :---:['Title: my document']:{'Title': 'my document'}]",
         "[BLANK(4,1):]",
@@ -493,9 +489,7 @@ def test_front_matter_15() -> None:
     source_markdown = """---
 Title: my document
 ---\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[front-matter(1,1):---:---  :['Title: my document']:{'Title': 'my document'}]",
         "[BLANK(4,1):]",
@@ -665,9 +659,7 @@ Title: my document
 /a/a/a/a
 ---
 ---
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[tbreak(1,1):-::---]",
         "[para(2,1):]",
@@ -706,9 +698,7 @@ Title: my document
 /a/a/a/a
 ---
 ---
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[front-matter(1,1):---:---:['Title: my document', '    ']:{'Title': 'my document'}]",
         "[tbreak(5,1):-::---]",
@@ -736,9 +726,7 @@ def test_front_matter_19_no_blanks() -> None:
 Title: my document
 ---
 ---
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[tbreak(1,1):-::---]",
         "[BLANK(2,1):    ]",
@@ -775,9 +763,7 @@ def test_front_matter_19_blanks() -> None:
 Title: my document
 ---
 ---
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[front-matter(1,1):---:---:['    ', 'Title: my document']:{'Title': 'my document'}]",
         "[tbreak(5,1):-::---]",

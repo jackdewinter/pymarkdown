@@ -3042,9 +3042,7 @@ def test_nested_three_block_block_unordered_extra_block_drop_block_blanks_with_t
 > >\a
 > >  --------
 > >\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::]",
         "[block-quote(1,3)::> > \n> > \n> > \n> > \n> > \n> > \n> > \n> > \n]",

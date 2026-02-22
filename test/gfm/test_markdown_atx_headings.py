@@ -412,9 +412,7 @@ def test_atx_headings_049() -> None:
     # Arrange
     source_markdown = """##\a
 #
-### ###""".replace(
-        "\a", " "
-    )
+### ###""".replace("\a", " ")
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):: ]",

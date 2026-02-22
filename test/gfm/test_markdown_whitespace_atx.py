@@ -677,17 +677,17 @@ def test_whitespaces_atx_headings_with_formfeeds_before_within_list() -> None:
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C# abc"""
+ \u000c \u000c# abc"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C# abc::\n]",
+        "[text(1,3):abc\n\u000c \u000c# abc::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C# abc</li>
+\u000c \u000c# abc</li>
 </ul>"""
 
     # Act & Assert
@@ -1236,9 +1236,9 @@ def test_whitespaces_atx_headings_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C # abc"""
+    source_markdown = """ \u000c # abc"""
     expected_tokens = [
-        "[para(1,2): \u000C ]",
+        "[para(1,2): \u000c ]",
         "[text(1,2):# abc:]",
         "[end-para:::True]",
     ]
@@ -1285,9 +1285,9 @@ def test_whitespaces_atx_headings_with_form_feeds_inside() -> None:
     """
 
     # Arrange
-    source_markdown = """#\u000Cabc"""
-    expected_tokens = ["[para(1,1):]", "[text(1,1):#\u000Cabc:]", "[end-para:::True]"]
-    expected_gfm = """<p>#\u000Cabc</p>"""
+    source_markdown = """#\u000cabc"""
+    expected_tokens = ["[para(1,1):]", "[text(1,1):#\u000cabc:]", "[end-para:::True]"]
+    expected_gfm = """<p>#\u000cabc</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1330,9 +1330,9 @@ def test_whitespaces_atx_headings_with_form_feeds_after() -> None:
     """
 
     # Arrange
-    source_markdown = """# abc\u000C"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc\u000C: ]", "[end-atx::]"]
-    expected_gfm = """<h1>abc\u000C</h1>"""
+    source_markdown = """# abc\u000c"""
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc\u000c: ]", "[end-atx::]"]
+    expected_gfm = """<h1>abc\u000c</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1390,9 +1390,9 @@ def test_whitespaces_atx_headings_with_form_feeds_after_closed() -> None:
     """
 
     # Arrange
-    source_markdown = """# abc\u000C#"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc\u000C#: ]", "[end-atx::]"]
-    expected_gfm = """<h1>abc\u000C#</h1>"""
+    source_markdown = """# abc\u000c#"""
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc\u000c#: ]", "[end-atx::]"]
+    expected_gfm = """<h1>abc\u000c#</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1435,9 +1435,9 @@ def test_whitespaces_atx_headings_closed_with_form_feeds_after() -> None:
     """
 
     # Arrange
-    source_markdown = """# abc #\u000C"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc #\u000C: ]", "[end-atx::]"]
-    expected_gfm = """<h1>abc #\u000C</h1>"""
+    source_markdown = """# abc #\u000c"""
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):abc #\u000c: ]", "[end-atx::]"]
+    expected_gfm = """<h1>abc #\u000c</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

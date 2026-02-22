@@ -351,7 +351,7 @@ useful.
 This function is like the `scan_path` function, except that it uses the powerful
 PyMarkdown parser to determine if a fix can be applied to a scan failure and, if
 so, fixes the scan failure.  Note that not all scan failures can be automatically
-fixes, as mentioned in the [Fix Mode - Failure Correction](./user-guide.md#failure-correction-or-fix-mode)
+fixes, as mentioned in the [Fix Mode - Failure Correction](./user-guide.md#basic-fixing)
 documentation.
 
 ### scan_string

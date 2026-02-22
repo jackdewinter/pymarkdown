@@ -2,6 +2,7 @@
 """
 https://github.github.com/gfm/#link-reference-definitions
 """
+
 from test.utils import act_and_assert
 
 import pytest
@@ -47,9 +48,7 @@ def test_link_reference_definitions_162() -> None:
       /url\a\a
            'the title'\a\a
 
-[foo]""".replace(
-        "\a", " "
-    )
+[foo]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,4):True:   :foo:: \n      :/url::  \n           :the title:'the title':  ]",
         "[BLANK(4,1):]",

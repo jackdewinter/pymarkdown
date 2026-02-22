@@ -36,15 +36,13 @@ with open(temporary_file_name, "wt", encoding="utf-8") as destination_file:
             extension_summary_text = file_contents[
                 start_of_second_part:end_of_second_part
             ]
-            destination_file.write(
-                f"""\n## {extension_title_text}
+            destination_file.write(f"""\n## {extension_title_text}
 
 [Full Documentation](./extensions/{next_extension_file})
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
-{extension_summary_text}"""
-            )
+{extension_summary_text}""")
 print(temporary_file_name)
 
 output_path = os.path.join(script_path, "src", "extensions.md")

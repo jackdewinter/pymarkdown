@@ -102,15 +102,15 @@ def test_whitespaces_fenced_code_open_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C ```python
- \u000C abc"""
+    source_markdown = """ \u000c ```python
+ \u000c abc"""
     expected_tokens = [
-        "[para(1,2): \u000C \n ]",
-        "[text(1,2):```python\n\u000C abc::\n]",
+        "[para(1,2): \u000c \n ]",
+        "[text(1,2):```python\n\u000c abc::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>```python
-\u000C abc</p>"""
+\u000c abc</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1517,19 +1517,19 @@ def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list() -> Non
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C```python
- \u000C \u000Cabc"""
+ \u000c \u000c```python
+ \u000c \u000cabc"""
     expected_tokens = [
         "[ulist(1,1):-::2::\n]",
         "[para(1,3):\n \n ]",
-        "[text(1,3):abc\n\u000C \u000C```python\n\u000C \u000Cabc::\n\n]",
+        "[text(1,3):abc\n\u000c \u000c```python\n\u000c \u000cabc::\n\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C```python
-\u000C \u000Cabc</li>
+\u000c \u000c```python
+\u000c \u000cabc</li>
 </ul>"""
 
     # Act & Assert
@@ -1546,20 +1546,20 @@ def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list_and_clos
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C```python
- \u000C \u000Cabc
- \u000C \u000C```"""
+ \u000c \u000c```python
+ \u000c \u000cabc
+ \u000c \u000c```"""
     expected_tokens = [
         "[ulist(1,1):-::2::\n\n]",
         "[para(1,3):\n \n \n ]",
-        "[text(1,3):abc\n\u000C \u000C::\n]",
-        "[icode-span(2,5):python\a\n\a \a\u000C \u000Cabc\a\n\a \a\u000C \u000C:```::]",
+        "[text(1,3):abc\n\u000c \u000c::\n]",
+        "[icode-span(2,5):python\a\n\a \a\u000c \u000cabc\a\n\a \a\u000c \u000c:```::]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C<code>python \u000C \u000Cabc \u000C \u000C</code></li>
+\u000c \u000c<code>python \u000c \u000cabc \u000c \u000c</code></li>
 </ul>"""
 
     # Act & Assert
@@ -2918,10 +2918,10 @@ def test_whitespaces_fenced_code_open_with_form_feeds_before_info() -> None:
     """
 
     # Arrange
-    source_markdown = """```\u000Cpython
+    source_markdown = """```\u000cpython
 abc"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:python:::::\u000C]",
+        "[fcode-block(1,1):`:3:python:::::\u000c]",
         "[text(2,1):abc:]",
         "[end-fcode-block::::True]",
     ]
@@ -2981,10 +2981,10 @@ def test_whitespaces_fenced_code_open_with_form_feeds_after_language() -> None:
     """
 
     # Arrange
-    source_markdown = """```python\u000C
+    source_markdown = """```python\u000c
 abc"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:python::\u000C:::]",
+        "[fcode-block(1,1):`:3:python::\u000c:::]",
         "[text(2,1):abc:]",
         "[end-fcode-block::::True]",
     ]
@@ -3002,12 +3002,10 @@ def test_whitespaces_fenced_code_open_with_form_feeds_after_info() -> None:
     """
 
     # Arrange
-    source_markdown = """```python a\u000C\a
-abc""".replace(
-        "\a", " "
-    )
+    source_markdown = """```python a\u000c\a
+abc""".replace("\a", " ")
     expected_tokens = [
-        "[fcode-block(1,1):`:3:python:: a\u000C :::]",
+        "[fcode-block(1,1):`:3:python:: a\u000c :::]",
         "[text(2,1):abc:]",
         "[end-fcode-block::::True]",
     ]
@@ -3122,14 +3120,14 @@ def test_whitespaces_fenced_code_closed_with_form_feeds_before() -> None:
     # Arrange
     source_markdown = """```python
 abc
-\u000C```"""
+\u000c```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::]",
-        "[text(2,1):abc\n\u000C```:]",
+        "[text(2,1):abc\n\u000c```:]",
         "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
-\u000C```
+\u000c```
 </code></pre>"""
 
     # Act & Assert
@@ -3242,14 +3240,14 @@ def test_whitespaces_fenced_code_closed_with_form_feeds_after() -> None:
     # Arrange
     source_markdown = """```python  
 abc
-```\u000C"""
+```\u000c"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
-        "[text(2,1):abc\n```\u000C:]",
+        "[text(2,1):abc\n```\u000c:]",
         "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
-```\u000C
+```\u000c
 </code></pre>"""
 
     # Act & Assert

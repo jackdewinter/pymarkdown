@@ -27,10 +27,10 @@ def test_character_references_321() -> None:
 &ClockwiseContourIntegral; &ngE;"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text(1,1):\a&nbsp;\a\u00A0\a \a&amp;\a\a&\a&amp;\a\a \a&copy;\a©\a \a&AElig;\aÆ\a \a&Dcaron;\aĎ\a\n\a&frac34;\a¾\a \a&HilbertSpace;\aℋ\a \a&DifferentialD;\aⅆ\a\n\a&ClockwiseContourIntegral;\a∲\a \a&ngE;\a≧̸\a::\n\n]",
+        "[text(1,1):\a&nbsp;\a\u00a0\a \a&amp;\a\a&\a&amp;\a\a \a&copy;\a©\a \a&AElig;\aÆ\a \a&Dcaron;\aĎ\a\n\a&frac34;\a¾\a \a&HilbertSpace;\aℋ\a \a&DifferentialD;\aⅆ\a\n\a&ClockwiseContourIntegral;\a∲\a \a&ngE;\a≧̸\a::\n\n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>\u00A0 &amp; © Æ Ď
+    expected_gfm = """<p>\u00a0 &amp; © Æ Ď
 ¾ ℋ ⅆ
 ∲ ≧̸</p>"""
 
@@ -429,9 +429,7 @@ def test_character_references_335a() -> None:
     # Arrange
     source_markdown = """foo&#10;\a
 \aand\a
-&#10;bar""".replace(
-        "\a", " "
-    )
+&#10;bar""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n \n]",
         "[text(1,1):foo\a&#10;\a\n\a\nand\n\a&#10;\a\n\abar:: \n \n]",
@@ -452,9 +450,7 @@ def test_character_references_335b() -> None:
     # Arrange
     source_markdown = """foo\a
 \aand\a
-bar""".replace(
-        "\a", " "
-    )
+bar""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n \n]",
         "[text(1,1):foo\nand\nbar:: \n \n]",
@@ -475,9 +471,7 @@ def test_character_references_335c() -> None:
     # Arrange
     source_markdown = """foo &#10;
  and &#10;
-bar&#10;""".replace(
-        "\a", " "
-    )
+bar&#10;""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n \n]",
         "[text(1,1):foo \a&#10;\a\n\a\nand \a&#10;\a\n\a\nbar\a&#10;\a\n\a::\n\n]",

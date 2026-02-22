@@ -9,7 +9,7 @@ authors:
 In the [User Guide](./user-guide.md#basic-scanning) document, we touched
 briefly on how scanning works, followed by a section devoted specifically
 to the [Rule Plugins](./user-guide.md/#plugin-rules) which implement our rules.
-Then we took a quick look at PyMarkdown's [Fix Mode](./user-guide.md/#fix-mode-failure-correction),
+Then we took a quick look at PyMarkdown's [Fix Mode](./user-guide.md/#basic-fixing),
 a feature that leverages those same rules to automatically fix any failures.
 
 But what are these rules? A rule is simply code that looks at the stream of information
@@ -157,8 +157,8 @@ path, you specify a comma-separated list of rule identifiers to disable for file
 that match that path.
 
 The file paths are specified using the same glob-based syntax as `.gitignore` files
-used with the [`--respect-gitignore` command line argument](./user-guide.md#--respect-gitignore)
-and the [`--exclude` command line argument](./user-guide.md#-e---exclude-path_exclusions).
+used with the [`--respect-gitignore` command line argument](./user-guide.md#-respect-gitignore)
+and the [`--exclude` command line argument](./user-guide.md#-e-exclude-path_exclusions).
 
 To solve the `changelog.d` scenario described above, we recommend the following
 configuration:

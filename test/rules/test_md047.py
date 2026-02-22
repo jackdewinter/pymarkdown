@@ -42,9 +42,7 @@ The line after this line should be blank.
         source_file_contents="""# This is a test
 
 The line after this line is blank, but contains two spaces.
-\a\a""".replace(
-            "\a", " "
-        ),
+\a\a""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:2: MD047: Each file should end with a single newline character. (single-trailing-newline)
 """,
@@ -52,9 +50,7 @@ The line after this line is blank, but contains two spaces.
 
 The line after this line is blank, but contains two spaces.
 \a\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_end_with_no_blank_line_fix_and_debug",
@@ -99,17 +95,13 @@ Fixed: {temp_source_path}""",
         source_file_contents="""# This is a test
 
 The line after this line is blank, but contains two spaces.
-\a\a""".replace(
-            "\a", " "
-        ),
+\a\a""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:4:2: MD047: Each file should end with a single newline character. (single-trailing-newline)",
         fix_expected_file_contents="""# This is a test
 
 The line after this line is blank, but contains two spaces.
-\a\a""".replace(
-            "\a", " "
-        ),
+\a\a""".replace("\a", " "),
         fix_expected_return_code=1,
         fix_expected_output="",
         fix_expected_error="""BadPluginError encountered while scanning '{temp_source_path}':

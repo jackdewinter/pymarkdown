@@ -65,9 +65,7 @@ def test_markdown_return_code_default_success() -> None:
 
     expected_return_code = 0
     expected_output = """{version}
-""".replace(
-        "{version}", semantic_version
-    )
+""".replace("{version}", semantic_version)
     expected_error = ""
 
     # Act
@@ -158,9 +156,7 @@ def test_markdown_return_code_default_fixed_at_least_one_file() -> None:
     source_file_contents = """- list item text
 \a\a
   list item text
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     with create_temporary_configuration_file(
         source_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
@@ -286,9 +282,7 @@ def test_markdown_return_code_minimal_success() -> None:
 
     expected_return_code = 0
     expected_output = """{version}
-""".replace(
-        "{version}", semantic_version
-    )
+""".replace("{version}", semantic_version)
     expected_error = ""
 
     # Act

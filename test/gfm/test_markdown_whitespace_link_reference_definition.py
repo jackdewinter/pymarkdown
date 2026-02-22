@@ -1029,13 +1029,13 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_x() -> None:
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C[fred]: /url
+ \u000c \u000c[fred]: /url
 
 [fred]"""
     expected_tokens = [
         "[ulist(1,1):-::2::\n]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C[fred]: /url::\n]",
+        "[text(1,3):abc\n\u000c \u000c[fred]: /url::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[end-ulist:::True]",
@@ -1045,7 +1045,7 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_x() -> None:
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C[fred]: /url</li>
+\u000c \u000c[fred]: /url</li>
 </ul>
 <p>[fred]</p>"""
 
@@ -1062,7 +1062,7 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_a() -> None:
     # Arrange
     source_markdown = """- abc
 
- \u000C \u000C[fred]: /url
+ \u000c \u000c[fred]: /url
 
 [fred]"""
     expected_tokens = [
@@ -1072,7 +1072,7 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list_a() -> None:
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[end-ulist:::True]",
-        "[para(3,2): \u000C \u000C]",
+        "[para(3,2): \u000c \u000c]",
         "[text(3,2):[fred]: /url:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -3421,9 +3421,7 @@ def test_whitespaces_lrd_with_spaces_after_destination() -> None:
 
     # Arrange
     source_markdown = """[fred]: /url\a\a
-[fred]""".replace(
-        "\a", " "
-    )
+[fred]""".replace("\a", " ")
     expected_tokens = [
         "[link-ref-def(1,1):True::fred:: :/url::  :::]",
         "[para(2,1):]",
@@ -3561,9 +3559,7 @@ def test_whitespaces_lrd_with_spaces_after_title() -> None:
 
     # Arrange
     source_markdown = """[fred]: /url "title"\a\a\a
-[fred]""".replace(
-        "\a", " "
-    )
+[fred]""".replace("\a", " ")
     expected_tokens = [
         '[link-ref-def(1,1):True::fred:: :/url:: :title:"title":   ]',
         "[para(2,1):]",
@@ -4524,9 +4520,7 @@ def test_whitespaces_lrd_with_spaces_trailing_single() -> None:
 /url\a
 "title"\a
 
-[fred]""".replace(
-        "\a", " "
-    )
+[fred]""".replace("\a", " ")
     expected_tokens = [
         '[link-ref-def(1,1):True::fred:: \n:/url:: \n:title:"title": ]',
         "[BLANK(4,1):]",
@@ -4555,9 +4549,7 @@ def test_whitespaces_lrd_with_spaces_trailing_double() -> None:
 /url\a\a
 "title"\a\a
 
-[fred]""".replace(
-        "\a", " "
-    )
+[fred]""".replace("\a", " ")
     expected_tokens = [
         '[link-ref-def(1,1):True::fred::  \n:/url::  \n:title:"title":  ]',
         "[BLANK(4,1):]",
@@ -4586,9 +4578,7 @@ def test_whitespaces_lrd_with_spaces_trailing_triple() -> None:
 /url\a\a\a
 "title"\a\a\a
 
-[fred]""".replace(
-        "\a", " "
-    )
+[fred]""".replace("\a", " ")
     expected_tokens = [
         '[link-ref-def(1,1):True::fred::   \n:/url::   \n:title:"title":   ]',
         "[BLANK(4,1):]",
