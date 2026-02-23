@@ -266,9 +266,7 @@ def test_extra_007cx() -> None:
 >  title"
 >  )
 > a real test
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
         "[para(1,3):\n\n \n \n\n \n \n]",
@@ -288,9 +286,7 @@ title">a\a
 not
 so simple</a>
 a real test</p>
-</blockquote>""".replace(
-        "\a", " "
-    )
+</blockquote>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -311,9 +307,7 @@ def test_extra_007ca() -> None:
 >  title"
 >  )
 > a real test
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
         "[para(1,3):\n\n \n \n\n \n \n]",
@@ -4828,9 +4822,7 @@ def test_extra_038x() -> None:
   part 2
   part 3
   ---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::  \n  \n  \n]",
@@ -4866,9 +4858,7 @@ heading 1\a\a
  part 2
 part 3
 ---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[setext(5,1):-:3::(2,1)]",
@@ -4897,9 +4887,7 @@ def test_extra_038bx() -> None:
 + heading 1\a\a
 \tpart 2
 \tpart 3
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n]",
@@ -4933,9 +4921,7 @@ def test_extra_038ba() -> None:
 \tpart 2
 \tpart 3
 \t---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n\n]",
@@ -4971,9 +4957,7 @@ def test_extra_038bb() -> None:
 \tpart 2
 \tpart 3
 \t---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n\n]",
@@ -5009,9 +4993,7 @@ def test_extra_038bc() -> None:
 \tpart 2
 \tpart 3
 \t---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n\n]",
@@ -5045,9 +5027,7 @@ def test_extra_038bd() -> None:
 \t part 2
 \tpart 3
 \t---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n\n]",
@@ -5083,9 +5063,7 @@ def test_extra_038be() -> None:
 \tpart 2
 \tpart 3
 \t---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::\n\n\n]",
@@ -5118,9 +5096,7 @@ def test_extra_038cx() -> None:
 + heading 1\a\a
   part 2
   part 3
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::  \n  \n]",
@@ -5154,9 +5130,7 @@ def test_extra_038ca() -> None:
   part 2
   part 3
   ---
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):]",
         "[ulist(2,1):+::2::  \n  \n  \n]",
@@ -5194,9 +5168,7 @@ def test_extra_038dx() -> None:
    part *5*\a
 \tpart 6
    ----
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
         "[setext(7,4):-:4::(1,4)]",
@@ -5242,9 +5214,7 @@ def test_extra_038da() -> None:
    part *5*\a
 \tpart 6
    ----
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
         "[setext(7,4):-:4::(1,4)]",
@@ -5292,9 +5262,7 @@ def test_extra_039x() -> None:
 \tpart 3
 \tpart 4
 \t----
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):+::2::\n\n\n\n]",
         "[setext(5,5):-:4::(1,3)]",
@@ -5332,9 +5300,7 @@ def test_extra_039a() -> None:
    part 5\a\a
 \tpart 6
    ----
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
         "[setext(7,4):-:4::(1,4)]",
@@ -17106,9 +17072,7 @@ def test_extra_058ca() -> None:
 
 | abc | def |
 | --- | --- |
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[table(1,3)]",
         "[table-header(1,3):  : :True: |  --- | :---: | ]",
