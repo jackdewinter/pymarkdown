@@ -265,9 +265,7 @@ def test_fenced_code_blocks_096d() -> None:
     source_markdown = """```
 /a
 /a/a
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,2):\n\x03  \n\x03: ]",
@@ -275,9 +273,7 @@ def test_fenced_code_blocks_096d() -> None:
     ]
     expected_gfm = """<pre><code>\a
 \a\a
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -294,9 +290,7 @@ def test_fenced_code_blocks_096e() -> None:
     source_markdown = """```
 abc
 /a/a
-""".replace(
-        "/a", " "
-    )
+""".replace("/a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):abc\n\x03  \n\x03:]",
@@ -503,9 +497,7 @@ def test_fenced_code_blocks_099x() -> None:
     source_markdown = """```
 
 \a\a
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):\n\x03  :]",
@@ -513,9 +505,7 @@ def test_fenced_code_blocks_099x() -> None:
     ]
     expected_gfm = """<pre><code>
 \a\a
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -532,9 +522,7 @@ def test_fenced_code_blocks_099a() -> None:
 
 \a\a
 
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):\n\x03  \n\x03:]",
@@ -543,9 +531,7 @@ def test_fenced_code_blocks_099a() -> None:
     expected_gfm = """<pre><code>
 \a\a
 
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -564,9 +550,7 @@ def test_fenced_code_blocks_099b() -> None:
 \a\a
 \a
 
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):\n\x03 \n\x03  \n\x03 \n\x03:]",
@@ -577,9 +561,7 @@ def test_fenced_code_blocks_099b() -> None:
 \a\a
 \a
 
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -598,9 +580,7 @@ z
 \a\a
 \a
 z
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):z\n\x03 \n\x03  \n\x03 \nz:]",
@@ -611,9 +591,7 @@ z
 \a\a
 \a
 z
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -631,9 +609,7 @@ def test_fenced_code_blocks_099d() -> None:
 z
 \a
 z
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):z\n\x03 \nz:]",
@@ -642,9 +618,7 @@ z
     expected_gfm = """<pre><code>z
 \a
 z
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -661,9 +635,7 @@ def test_fenced_code_blocks_099e() -> None:
 \a
 \a\a
 \a
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,2):\n\x03  \n\x03 : ]",
@@ -672,9 +644,7 @@ def test_fenced_code_blocks_099e() -> None:
     expected_gfm = """<pre><code>\a
 \a\a
 \a
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -694,9 +664,7 @@ def test_fenced_code_blocks_099f() -> None:
 \a\aabc
 \a
 
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):\n\x03 \n  abc\n\x03 \n\x03:]",
@@ -707,9 +675,7 @@ def test_fenced_code_blocks_099f() -> None:
 \a\aabc
 \a
 
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -730,9 +696,7 @@ z
 \a
 
 z
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):z\n\x03\n\x03 \n\x03  \n\x03 \n\x03\nz:]",
@@ -745,9 +709,7 @@ z
 \a
 
 z
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -898,9 +860,7 @@ def test_fenced_code_blocks_099k() -> None:
 
 
 
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):\n\x03\n\x03\n\x03 \n  abc\n\x03 \n\x03\n\x03\n\x03:]",
@@ -915,9 +875,7 @@ def test_fenced_code_blocks_099k() -> None:
 
 
 
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -942,9 +900,7 @@ z
 
 
 z
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):z\n\x03\n\x03\n\x03\n\x03 \n\x03  \n\x03 \n\x03\n\x03\n\x03\nz:]",
@@ -961,9 +917,7 @@ z
 
 
 z
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1940,9 +1894,7 @@ def test_fenced_code_blocks_extra_08c() -> None:
 abc
 
 def
-```""".replace(
-        "\a", " "
-    )
+```""".replace("\a", " ")
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,3):\nabc\n\x03\ndef:  ]",
@@ -1952,9 +1904,7 @@ def
 abc
 
 def
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

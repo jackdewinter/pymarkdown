@@ -103,9 +103,7 @@ def test_setext_headings_052xa() -> None:
     # Arrange
     source_markdown = """  Foo *bar
 baz*\a\a
-====""".replace(
-        "\a", " "
-    )
+====""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):=:4:  :(1,3):  ]",
         "[text(1,3):Foo :]",
@@ -155,9 +153,7 @@ def test_setext_headings_052b() -> None:
     source_markdown = """  a\a
   b\a
   c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb\nc:: \n  \x02 \n  \x02]",
@@ -181,9 +177,7 @@ def test_setext_headings_052c() -> None:
     source_markdown = """  a\a
   b\a\a
   c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb:: \n  \x02]",
@@ -209,9 +203,7 @@ def test_setext_headings_052d() -> None:
     source_markdown = """  a\a
   *b*\a
   c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\n:: \n  \x02]",
@@ -239,9 +231,7 @@ def test_setext_headings_052ex() -> None:
     source_markdown = """  a\a
   *b*\a\a
   c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\n:: \n  \x02]",
@@ -272,9 +262,7 @@ def test_setext_headings_052ea() -> None:
   a\a
   *b*\a\a
   c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(6,1):=:3:  :(1,3)]",
         "[text(1,3):a\n:: \n  \x02]",
@@ -314,9 +302,7 @@ def test_setext_headings_052eb() -> None:
    a\a
    *b*\a\a
 c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(8,1):=:3: :(1,2)]",
         "[text(1,2):a\n:: \n \x02]",
@@ -359,9 +345,7 @@ def test_setext_headings_052f() -> None:
     source_markdown = """  a\a
    *b*\a\a
  c
-===""".replace(
-        "\a", " "
-    )
+===""".replace("\a", " ")
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\n:: \n   \x02]",
@@ -553,9 +537,7 @@ def test_setext_headings_059() -> None:
 
     # Arrange
     source_markdown = """Foo\a\a
------""".replace(
-        "\a", " "
-    )
+-----""".replace("\a", " ")
     expected_tokens = [
         "[setext(2,1):-:5::(1,1):  ]",
         "[text(1,1):Foo:]",

@@ -98,15 +98,15 @@ def test_whitespaces_setext_headings_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C abc
- \u000C ---"""
+    source_markdown = """ \u000c abc
+ \u000c ---"""
     expected_tokens = [
-        "[para(1,2): \u000C \n ]",
-        "[text(1,2):abc\n\u000C ---::\n]",
+        "[para(1,2): \u000c \n ]",
+        "[text(1,2):abc\n\u000c ---::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc
-\u000C ---</p>"""
+\u000c ---</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -640,17 +640,17 @@ def test_whitespaces_setext_headings_with_formfeeds_before_within_list() -> None
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000C---"""
+ \u000c \u000c---"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C---::\n]",
+        "[text(1,3):abc\n\u000c \u000c---::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000C---</li>
+\u000c \u000c---</li>
 </ul>"""
 
     # Act & Assert
@@ -1212,9 +1212,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_
     # Arrange
     source_markdown = """>\tabc\t\a
 >\tdef\t\a
->\t---\t""".replace(
-        "\a", " "
-    )
+>\t---\t""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::>\n>\n>]",
         "[setext(3,5):-:3:\t:(1,5):\t ]",
@@ -1242,9 +1240,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_
     # Arrange
     source_markdown = """>\tabc\t\a\t
 >\tdef\t\a\t
->\t---\t""".replace(
-        "\a", " "
-    )
+>\t---\t""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::>\n>\n>]",
         "[setext(3,5):-:3:\t:(1,5):\t \t]",
@@ -1272,9 +1268,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_
     # Arrange
     source_markdown = """>\tabc\t\a\t\a
 >\tdef\t\a\t
->\t---\t""".replace(
-        "\a", " "
-    )
+>\t---\t""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::>\n>\n>]",
         "[setext(3,5):-:3:\t:(1,5):\t \t]",
@@ -1536,9 +1530,9 @@ def test_whitespaces_setext_headings_with_form_feeds_after() -> None:
 
     # Arrange
     source_markdown = """abc
---- \u000C"""
+--- \u000c"""
     expected_tokens = [
-        "[para(1,1):\n: \u000C]",
+        "[para(1,1):\n: \u000c]",
         "[text(1,1):abc\n---::\n]",
         "[end-para:::True]",
     ]

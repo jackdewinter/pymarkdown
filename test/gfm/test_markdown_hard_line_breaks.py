@@ -16,9 +16,7 @@ def test_hard_line_breaks_654() -> None:
 
     # Arrange
     source_markdown = """foo\a\a
-baz""".replace(
-        "\a", " "
-    )
+baz""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
@@ -85,9 +83,7 @@ def test_hard_line_breaks_656() -> None:
 
     # Arrange
     source_markdown = """foo\a\a\a\a\a\a\a
-baz""".replace(
-        "\a", " "
-    )
+baz""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
@@ -110,9 +106,7 @@ def test_hard_line_breaks_657() -> None:
 
     # Arrange
     source_markdown = """foo\a\a
-     bar""".replace(
-        "\a", " "
-    )
+     bar""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n     ]",
         "[text(1,1):foo:]",
@@ -158,9 +152,7 @@ def test_hard_line_breaks_659() -> None:
 
     # Arrange
     source_markdown = """*foo\a\a
-bar*""".replace(
-        "\a", " "
-    )
+bar*""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[emphasis(1,1):1:*]",
@@ -185,9 +177,7 @@ def test_hard_line_breaks_660() -> None:
 
     # Arrange
     source_markdown = """*foo\\
-bar*""".replace(
-        "\a", " "
-    )
+bar*""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[emphasis(1,1):1:*]",
@@ -212,9 +202,7 @@ def test_hard_line_breaks_661() -> None:
 
     # Arrange
     source_markdown = """`code\a\a
-span`""".replace(
-        "\a", " "
-    )
+span`""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[icode-span(1,1):code  \a\n\a \aspan:`::]",
@@ -254,18 +242,14 @@ def test_hard_line_breaks_663() -> None:
 
     # Arrange
     source_markdown = """<a href="foo\a\a
-bar">""".replace(
-        "\a", " "
-    )
+bar">""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         '[raw-html(1,1):a href="foo  \nbar"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo\a\a
-bar"></p>""".replace(
-        "\a", " "
-    )
+bar"></p>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -375,9 +359,7 @@ def test_hard_line_breaks_extra_01x() -> None:
 
     # Arrange
     source_markdown = """\a\a
-This is new.""".replace(
-        "\a", " "
-    )
+This is new.""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):  ]",
         "[para(2,1):]",
@@ -421,9 +403,7 @@ def test_hard_line_breaks_extra_02x() -> None:
     # Arrange
     source_markdown = """abc
 \a\a
-This is new.""".replace(
-        "\a", " "
-    )
+This is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):abc:]",
@@ -716,9 +696,7 @@ def test_hard_line_breaks_extra_04x() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-This is new.""".replace(
-        "\a", " "
-    )
+This is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -741,9 +719,7 @@ def test_hard_line_breaks_extra_04xa() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-  This is new.""".replace(
-        "\a", " "
-    )
+  This is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n  ]",
         "[text(1,1):abc:]",
@@ -766,9 +742,7 @@ def test_hard_line_breaks_extra_04a() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-\\\\This is new.""".replace(
-        "\a", " "
-    )
+\\\\This is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -791,9 +765,7 @@ def test_hard_line_breaks_extra_04b() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-&copy; This is new.""".replace(
-        "\a", " "
-    )
+&copy; This is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -816,9 +788,7 @@ def test_hard_line_breaks_extra_04c() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-`This` is new.""".replace(
-        "\a", " "
-    )
+`This` is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -842,9 +812,7 @@ def test_hard_line_breaks_extra_04d() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-*This* is new.""".replace(
-        "\a", " "
-    )
+*This* is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -870,9 +838,7 @@ def test_hard_line_breaks_extra_04e() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-[This](foo.com) is new.""".replace(
-        "\a", " "
-    )
+[This](foo.com) is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -898,9 +864,7 @@ def test_hard_line_breaks_extra_04f() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-![This](foo.com) is new.""".replace(
-        "\a", " "
-    )
+![This](foo.com) is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -924,9 +888,7 @@ def test_hard_line_breaks_extra_04g() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-<http://this.com> is new.""".replace(
-        "\a", " "
-    )
+<http://this.com> is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -950,9 +912,7 @@ def test_hard_line_breaks_extra_04h() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-<this> is new.""".replace(
-        "\a", " "
-    )
+<this> is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
@@ -977,9 +937,7 @@ def test_hard_line_breaks_extra_04i() -> None:
     # Arrange
     source_markdown = """abc\a\a
 \a\a
-this is new.""".replace(
-        "\a", " "
-    )
+this is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1)::  ]",
         "[text(1,1):abc:]",
@@ -1004,9 +962,7 @@ def test_hard_line_breaks_extra_05x() -> None:
 
     # Arrange
     source_markdown = """abc\a\a
-   *this* is new.""".replace(
-        "\a", " "
-    )
+   *this* is new.""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):abc:]",

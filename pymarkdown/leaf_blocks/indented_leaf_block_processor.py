@@ -364,7 +364,7 @@ class IndentedLeafBlockProcessor:
         )
         POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
 
-        (last_good_space_index, space_prefix, detabified_ex_space) = (
+        last_good_space_index, space_prefix, detabified_ex_space = (
             TabHelper.search_for_tabbed_prefix(ex_space, lead_space_len, 4)
         )
 
@@ -420,7 +420,7 @@ class IndentedLeafBlockProcessor:
                 xx_left_over,
             )
         elif tabified_extracted_space:
-            (_, adj_ws, _) = IndentedLeafBlockProcessor.__recalculate_whitespace(
+            _, adj_ws, _ = IndentedLeafBlockProcessor.__recalculate_whitespace(
                 extracted_whitespace, 0, tabified_extracted_space
             )
             extracted_whitespace = adj_ws

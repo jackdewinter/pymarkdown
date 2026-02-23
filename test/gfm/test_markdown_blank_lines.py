@@ -21,9 +21,7 @@ aaa
 
 # aaa
 
-  """.replace(
-        "\a", " "
-    )
+  """.replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):  ]",
         "[BLANK(2,1):]",
@@ -55,9 +53,7 @@ def test_blank_lines_197a() -> None:
     source_markdown = """\a\a
 \a
 aaa
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[BLANK(1,1):  ]",
         "[BLANK(2,1): ]",

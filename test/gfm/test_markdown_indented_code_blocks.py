@@ -170,9 +170,7 @@ def test_indented_code_blocks_082() -> None:
     # Arrange
     source_markdown = """    chunk1
 \a\a\a\a\a\a
-      chunk2""".replace(
-        "\a", " "
-    )
+      chunk2""".replace("\a", " ")
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text(1,5):chunk1\n\x03  \n  chunk2:]",
@@ -196,9 +194,7 @@ def test_indented_code_blocks_082a() -> None:
     # Arrange
     source_markdown = """    chunk1
 \a\a\a\a
-      chunk2""".replace(
-        "\a", " "
-    )
+      chunk2""".replace("\a", " ")
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text(1,5):chunk1\n\x03\n  chunk2:]",
@@ -436,9 +432,7 @@ def test_indented_code_blocks_088() -> None:
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo\a\a
-</code></pre>""".replace(
-        "\a", " "
-    )
+</code></pre>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

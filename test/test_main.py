@@ -92,9 +92,7 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
-                        code""".replace(
-            "{ARGPARSE_X}", ARGPARSE_X
-        )
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
@@ -171,9 +169,7 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
-                        code""".replace(
-            "{ARGPARSE_X}", ARGPARSE_X
-        )
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
@@ -250,9 +246,7 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
-                        code""".replace(
-            "{ARGPARSE_X}", ARGPARSE_X
-        )
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
@@ -328,9 +322,7 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal,explicit}
                         scheme to choose for selecting the application return
-                        code""".replace(
-            "{ARGPARSE_X}", ARGPARSE_X
-        )
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
@@ -365,9 +357,7 @@ def test_markdown_with_version() -> None:
 
     expected_return_code = 0
     expected_output = """{version}
-""".replace(
-        "{version}", semantic_version
-    )
+""".replace("{version}", semantic_version)
     expected_error = ""
 
     # Act
@@ -460,9 +450,7 @@ def test_markdown_with_failure_during_file_scan() -> None:
     
 BadTokenizationError encountered while initializing tokenizer:
 Named character entity map file '{source_path}' was not loaded (bob).
-""".replace(
-        "{source_path}", exception_path
-    )
+""".replace("{source_path}", exception_path)
 
     # Act
     with path_builtin_open_with_exception(exception_path, "rt", IOError("bob"), True):

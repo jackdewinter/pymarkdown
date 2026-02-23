@@ -96,8 +96,8 @@ def test_whitespaces_paragraph_with_form_feeds_before() -> None:
     """
 
     # Arrange
-    source_markdown = """ \u000C abc"""
-    expected_tokens = ["[para(1,2): \u000C ]", "[text(1,2):abc:]", "[end-para:::True]"]
+    source_markdown = """ \u000c abc"""
+    expected_tokens = ["[para(1,2): \u000c ]", "[text(1,2):abc:]", "[end-para:::True]"]
     expected_gfm = """<p>abc</p>"""
 
     # Act & Assert
@@ -710,17 +710,17 @@ def test_whitespaces_paragraph_with_formfeeds_before_within_list() -> None:
 
     # Arrange
     source_markdown = """- abc
- \u000C \u000Cdef"""
+ \u000c \u000cdef"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000Cdef::\n]",
+        "[text(1,3):abc\n\u000c \u000cdef::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-\u000C \u000Cdef</li>
+\u000c \u000cdef</li>
 </ul>"""
 
     # Act & Assert

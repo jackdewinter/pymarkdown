@@ -1,5 +1,4 @@
-"""Simple utility to ensure that a given rule has full code coverage.
-"""
+"""Simple utility to ensure that a given rule has full code coverage."""
 
 import sys
 import xml.etree.ElementTree as ET
@@ -24,7 +23,7 @@ if xml_document.tag != "coverage":
     )
     sys.exit(1)
 
-DID_FIND_RULE = False
+did_find_rule = False
 for next_class in xml_document.findall(".//class"):
     class_name = next_class.get("name")
     file_name = next_class.get("filename")
@@ -44,9 +43,9 @@ for next_class in xml_document.findall(".//class"):
                 f"Branch coverage for module '{file_name}' is less than 100.0% ({matching_percentage}%)."
             )
             sys.exit(1)
-        DID_FIND_RULE = True
+        did_find_rule = True
 
-if not DID_FIND_RULE:
+if not did_find_rule:
     print("bad3")
     sys.exit(1)
 

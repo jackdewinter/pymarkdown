@@ -57,9 +57,7 @@ def test_setext_headings_extra_03() -> None:
 
     # Arrange
     source_markdown = """\a\a\a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = ["[BLANK(1,1):   ]", "[tbreak(2,1):-::---]"]
     expected_gfm = """<hr />"""
 
@@ -535,9 +533,7 @@ def test_setext_headings_extra_22c() -> None:
     # Arrange
     source_markdown = """this was\a\a\a
 another line
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was:]",
@@ -560,9 +556,7 @@ def test_setext_headings_extra_22d() -> None:
     # Arrange
     source_markdown = """this was\a\a\a
  another line
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was:]",
@@ -584,9 +578,7 @@ def test_setext_headings_extra_23() -> None:
 
     # Arrange
     source_markdown = """what? no line break?\a\a\a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(2,1):-:3::(1,1):   ]",
         "[text(1,1):what? no line break?:]",
@@ -607,9 +599,7 @@ def test_setext_headings_extra_23a() -> None:
     # Arrange
     source_markdown = """what? no line break?\a\a\a
 woe is me
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):what? no line break?:]",
@@ -844,9 +834,7 @@ def test_setext_headings_extra_34() -> None:
 
     # Arrange
     source_markdown = """\a\a\a\a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = ["[BLANK(1,1):    ]", "[tbreak(2,1):-::---]"]
     expected_gfm = """<hr />"""
 
@@ -1168,9 +1156,7 @@ def test_setext_headings_extra_48a() -> None:
     # Arrange
     source_markdown = """a[Foo](\a\a
 /uri "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1220,9 +1206,7 @@ def test_setext_headings_extra_48c() -> None:
     # Arrange
     source_markdown = """a[Foo](\a\a
    /uri "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1268,9 +1252,7 @@ def test_setext_headings_extra_50x() -> None:
     # Arrange
     source_markdown = """a[Foo](/uri\a
 "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1295,9 +1277,7 @@ def test_setext_headings_extra_50a() -> None:
     # Arrange
     source_markdown = """a[Foo](/uri\a\a
 "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1347,9 +1327,7 @@ def test_setext_headings_extra_50c() -> None:
     # Arrange
     source_markdown = """a[Foo](/uri\a\a
    "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1424,9 +1402,7 @@ def test_setext_headings_extra_52a() -> None:
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
 )a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1476,9 +1452,7 @@ def test_setext_headings_extra_52c() -> None:
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
   )a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1773,9 +1747,7 @@ def test_setext_headings_extra_62a() -> None:
     # Arrange
     source_markdown = """a![Foo](\a\a
 /uri "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1821,9 +1793,7 @@ def test_setext_headings_extra_62c() -> None:
     # Arrange
     source_markdown = """a![Foo](\a\a
    /uri "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1890,9 +1860,7 @@ def test_setext_headings_extra_64a() -> None:
     # Arrange
     source_markdown = """a![Foo](/uri\a\a
 "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -1938,9 +1906,7 @@ def test_setext_headings_extra_64c() -> None:
     # Arrange
     source_markdown = """a![Foo](/uri\a\a
  "testing")a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -2032,9 +1998,7 @@ def test_setext_headings_extra_67a() -> None:
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
 )a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
@@ -2080,9 +2044,7 @@ def test_setext_headings_extra_67c() -> None:
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
    )a
----""".replace(
-        "\a", " "
-    )
+---""".replace("\a", " ")
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",

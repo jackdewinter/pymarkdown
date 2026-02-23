@@ -44,13 +44,11 @@ with open(temporary_file_name, "wt", encoding="utf-8") as destination_file:
             while replacement_text.startswith("\n"):
                 replacement_text = replacement_text[1:]
 
-            destination_file.write(
-                f"""\n## {extension_title_text}
+            destination_file.write(f"""\n## {extension_title_text}
 
 [Full Documentation](./plugins/{next_extension_file})
 
-{replacement_text}"""
-            )
+{replacement_text}""")
 print(temporary_file_name)
 
 output_path = os.path.join(script_path, "src", "rules.md")

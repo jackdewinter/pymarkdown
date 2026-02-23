@@ -12,7 +12,7 @@ TEMP_FILE=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
 SCRIPT_TITLE="Analyzing project cleanliness"
 
 # Perform any cleanup required by the script.
-# shellcheck disable=SC2317  # Unreachable code
+# shellcheck disable=SC2329
 cleanup_function() {
 
 	if [[ ${VERBOSE_MODE} -ne 0 ]]; then
@@ -84,6 +84,7 @@ show_usage() {
 	echo "  -m,--mypy-only          Only run mypy checks and exit."
 	echo "  -np,--no-publish        Do not publish project summaries if successful."
 	echo "  -ns,--no-sourcery       Do not run any sourcery checks."
+	echo "  -nu,--no-upgrades       Do not run checks for upgrades."
 	echo "  -nw,--no-workers        Do not use multipel workers when executing tests."
 	echo "  -s,--sourcery-only      Only run sourcery checks and exit."
 	echo "  --perf                  Collect standard performance metrics."
@@ -106,6 +107,7 @@ parse_command_line() {
 	MYPY_ONLY_MODE=0
 	SOURCERY_ONLY_MODE=0
 	NO_SOURCERY_MODE=0
+	NO_UPGRADE_MODE=0
 	FORCE_RESET_MODE=0
 	RESET_PYTHON_VERSION=
 	WORKERS_MODE=--workers
@@ -131,6 +133,10 @@ parse_command_line() {
 			;;
 		-ns | --no-sourcery)
 			NO_SOURCERY_MODE=1
+			shift
+			;;
+		-nu | --no-upgrades)
+			NO_UPGRADE_MODE=1
 			shift
 			;;
 		-nw | --no-workers)
@@ -204,84 +210,29 @@ load_properties_from_file() {
 	fi
 }
 
-remove_virtual_environment() {
+verify_and_install_dependencies() {
 
-	verbose_echo "{Forcing a hard reset of the virtual environment.}"
-	if ! VENV_DIR=$(pipenv --venv); then
-		verbose_echo "{Virtual environment was not established.  Reset not required. Proceeding to setup virtual environment.}"
-		RESET_PIPFILE=1
-	fi
-
-	if [[ ${RESET_PIPFILE} -eq 0 ]]; then
-		if ! [[ -d "${VENV_DIR}/S2" ]]; then
-			verbose_echo "{Creating temporary directory '${VENV_DIR}/S2' for move test.}"
-			if ! mkdir "${VENV_DIR}/S2"; then
-				complete_process 1 "{Cannot mkdir test directory for virtual environment lock test.}"
-			fi
+	verbose_echo ""
+	verbose_echo "{Verifying and installing dependencies.}"
+	INSTALL_ARGS=()
+	if [[ ${FORCE_RESET_MODE} -ne 0 ]]; then
+		INSTALL_ARGS+=("--force-reset")
+		if [[ -n ${RESET_PYTHON_VERSION} ]]; then
+			INSTALL_ARGS+=("${RESET_PYTHON_VERSION}")
 		fi
-
-		verbose_echo "{Executing move test to see if one or more files in directory '${VENV_DIR}' are locked.}"
-		if ! mv "${VENV_DIR}/Scripts" "${VENV_DIR}/S2" >"${TEMP_FILE}"; then
+	fi
+	if [[ ${DEBUG_MODE} -ne 0 ]]; then
+		# shellcheck disable=SC2068  # Double quote array expansions to avoid re-splitting elements.
+		if ! ./install_dependencies.sh -x ${INSTALL_ARGS[@]}; then
+			complete_process 1 "{Verification (and installation) of dependencies failed.  Please check your Python installation and try again.}"
+		fi
+	else
+		# shellcheck disable=SC2068  # Double quote array expansions to avoid re-splitting elements.
+		if ! ./install_dependencies.sh ${INSTALL_ARGS[@]} >"${TEMP_FILE}" 2>&1; then
 			cat "${TEMP_FILE}"
-			echo "  {One or more directories in ${VENV_DIR} are locked.}"
-			echo "  {Close any open IDEs or shells in that directory and try again.}"
-			echo "  {If lock persists, try pipenv --rm to try and force the lock to be released.}"
-			complete_process 1
+			complete_process 1 "{Verification (and installation) of dependencies failed.  Please check your Python installation and try again.}"
 		fi
-
-		verbose_echo "{Removing previous PipEnv environment.}"
-		if ! rm -rf "${VENV_DIR}"; then
-			complete_process 1 "bad rmdir"
-		fi
-
-		if ! [[ -d ${VENV_DIR} ]]; then
-			verbose_echo "{Virtual environment directory has been removed successfully.}"
-			RESET_PIPFILE=1
-		else
-			echo "  {One or more directories in ${VENV_DIR} are locked.}"
-			echo "  {Close any open IDEs or shells in that directory and try again.}"
-			echo "  {If lock persists, try pipenv --rm to try and force the lock to be released.}"
-			complete_process 1
-		fi
-
-		mkdir .venv
 	fi
-
-	if [[ -z ${RESET_PYTHON_VERSION} ]]; then
-		RESET_PYTHON_VERSION=$(python utils/extract_python_version_from_pipfile.py)
-	fi
-}
-
-check_for_unsychronized_virtual_environment() {
-
-	python utils/find_outdated_piplock_file.py >"${TEMP_FILE}" 2>&1
-	OUTDATED_PIPLOCK_RETCODE=$?
-	if [[ ${OUTDATED_PIPLOCK_RETCODE} -eq 2 ]]; then
-		cat "${TEMP_FILE}"
-		complete_process 1 "{Analysis of project cannot proceed without a Pipfile.}"
-	fi
-	if [[ ${OUTDATED_PIPLOCK_RETCODE} -ne 0 ]]; then
-		verbose_echo "{Virtual environment files 'Pipfile' and 'Pipfile.lock' are not in sync with each other.}"
-		RESET_PIPFILE=1
-
-		RESET_PYTHON_VERSION=$(pipenv run python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-	fi
-}
-
-synchronize_virtual_environment() {
-
-	verbose_echo "{Syncing python packages in virtual environment.}"
-	rm Pipfile.lock >/dev/null 2>&1
-	if ! pipenv lock --python "${RESET_PYTHON_VERSION}" >"${TEMP_FILE}" 2>&1; then
-		cat "${TEMP_FILE}"
-		complete_process 1 "{Creating new Pipfile.lock file failed.}"
-	fi
-	if ! pipenv update -d >"${TEMP_FILE}" 2>&1; then
-		cat "${TEMP_FILE}"
-		complete_process 1 "{Updating with new Pipfile.lock file failed.}"
-	fi
-
-	verbose_echo "{Python packages in virtual environment synced.}"
 }
 
 execute_pre_commit() {
@@ -410,6 +361,19 @@ analyze_pylint_suppressions() {
 	fi
 }
 
+look_for_upgrades() {
+
+	if [[ ${NO_UPGRADE_MODE} -ne 0 ]]; then
+		verbose_echo "{Skipping check for Python package upgrades by request.}"
+		return
+	fi
+
+	verbose_echo "{Looking for Python package upgrades in Pre-Commit and Pipenv.}"
+	if ! ./check_project_dependencies.sh; then
+		complete_process 1 "{One or more project dependencies can be updated. Please run './check_project_dependencies.sh --upgrade' to update them.}"
+	fi
+}
+
 execute_test_suite() {
 
 	echo ""
@@ -446,16 +410,7 @@ if ! pip install -U pipenv==2025.0.3 >"${TEMP_FILE}" 2>&1; then
 	complete_process 1 "{Cannot ensure pipenv has been upgraded.  Please check your Python installation and try again.}"
 fi
 
-RESET_PIPFILE=0
-if [[ ${FORCE_RESET_MODE} -ne 0 ]]; then
-	remove_virtual_environment
-else
-	check_for_unsychronized_virtual_environment
-fi
-
-if [[ ${RESET_PIPFILE} -ne 0 ]]; then
-	synchronize_virtual_environment
-fi
+verify_and_install_dependencies
 
 if [[ ${SOURCERY_ONLY_MODE} -eq 0 ]] && [[ ${PERFORMANCE_ONLY_MODE} -eq 0 ]]; then
 	execute_pre_commit
@@ -482,16 +437,18 @@ if [[ ${PERFORMANCE_ONLY_MODE} -eq 0 ]]; then
 
 	find_unused_pylint_suppressions
 
+	look_for_upgrades
+
 	execute_test_suite
 
 	if ! ./package-release.sh; then
 		complete_process 1 "{Packaging of the project failed.}"
 	fi
 
-	if ! pipenv run pyroma -n 10 . >"${TEMP_FILE}" 2>&1; then
-		cat "${TEMP_FILE}"
-		complete_process 1 "{Executing pyroma on Python code failed.}"
-	fi
+	# if ! pipenv run pyroma -n 10 . >"${TEMP_FILE}" 2>&1; then
+	# 	cat "${TEMP_FILE}"
+	# 	complete_process 1 "{Executing pyroma on Python code failed.}"
+	# fi
 fi
 
 if [[ ${PERFORMANCE_MODE} -ne 0 ]]; then

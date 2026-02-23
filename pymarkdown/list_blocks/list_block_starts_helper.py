@@ -282,7 +282,7 @@ class ListBlockStartsHelper:
         line_to_parse: str,
         start_index: int,
     ) -> bool:
-        (is_in_paragraph, at_end_of_line) = (
+        is_in_paragraph, at_end_of_line = (
             parser_state.token_stack[-1].is_paragraph,
             (after_all_whitespace_index == len(line_to_parse)),
         )

@@ -313,7 +313,7 @@ class BlockQuoteNonFencedHelper:
             len(text_removed_by_container),
             position_marker.text_to_parse,
         )
-        (leaf_tokens, requeue_line_info) = parser_state.handle_blank_line_fn(
+        leaf_tokens, requeue_line_info = parser_state.handle_blank_line_fn(
             parser_state,
             line_to_parse,
             from_main_transform=False,

@@ -231,7 +231,7 @@ class TransformToGfmListLooseness:
                 new_index < len(actual_tokens) and actual_tokens[new_index].is_end_token
             ) and actual_tokens[new_index].is_list_end
             if not keep_checking:
-                (stop_me) = TransformToGfmListLooseness.__handle_block_quote_end_calc(
+                stop_me = TransformToGfmListLooseness.__handle_block_quote_end_calc(
                     actual_tokens, search_index, current_token_index
                 )
                 is_loose = stop_me

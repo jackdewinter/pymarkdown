@@ -500,15 +500,6 @@ Emphasis possibly used instead of a heading element.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-| Aliases |
-| --- |
-| `md037` |
-| `no-space-in-emphasis` |
-
-| Autofix Available |
-| --- |
-| Yes |
-
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 

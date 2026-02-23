@@ -38,9 +38,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    )
+""".replace("{ARGPARSE_X}", ARGPARSE_X)
     expected_error = ""
 
     # Act

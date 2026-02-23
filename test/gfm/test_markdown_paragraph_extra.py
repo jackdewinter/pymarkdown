@@ -252,9 +252,7 @@ def test_paragraph_extra_48a() -> None:
 
     # Arrange
     source_markdown = """a[Foo](\a\a
-/uri "testing")a""".replace(
-        "\a", " "
-    )
+/uri "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -325,9 +323,7 @@ def test_paragraph_extra_48c() -> None:
 
     # Arrange
     source_markdown = """a[Foo](\a\a
-   /uri "testing")a""".replace(
-        "\a", " "
-    )
+   /uri "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -351,9 +347,7 @@ def test_paragraph_extra_48ca() -> None:
 
     # Arrange
     source_markdown = """a[Foo](\a\a
-   /uri "testing")""".replace(
-        "\a", " "
-    )
+   /uri "testing")""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -439,9 +433,7 @@ def test_paragraph_extra_50x() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri\a
-"testing")a""".replace(
-        "\a", " "
-    )
+"testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -465,9 +457,7 @@ def test_paragraph_extra_50a() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri\a\a
-"testing")a""".replace(
-        "\a", " "
-    )
+"testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -538,9 +528,7 @@ def test_paragraph_extra_50c() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri\a\a
-   "testing")a""".replace(
-        "\a", " "
-    )
+   "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -564,9 +552,7 @@ def test_paragraph_extra_50ca() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri\a\a
-   "testing")""".replace(
-        "\a", " "
-    )
+   "testing")""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -589,9 +575,7 @@ def test_paragraph_extra_50d() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri\a
-"testing")""".replace(
-        "\a", " "
-    )
+"testing")""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -779,9 +763,7 @@ def test_paragraph_extra_52a() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
-)a""".replace(
-        "\a", " "
-    )
+)a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -805,9 +787,7 @@ def test_paragraph_extra_52aa() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
-)""".replace(
-        "\a", " "
-    )
+)""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -877,9 +857,7 @@ def test_paragraph_extra_52c() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
-  )a""".replace(
-        "\a", " "
-    )
+  )a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n  ]",
         "[text(1,1):a:]",
@@ -903,9 +881,7 @@ def test_paragraph_extra_52ca() -> None:
 
     # Arrange
     source_markdown = """a[Foo](/uri "testing"\a\a
-  )""".replace(
-        "\a", " "
-    )
+  )""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n  ]",
         "[text(1,1):a:]",
@@ -2306,9 +2282,7 @@ def test_paragraph_extra_62a() -> None:
 
     # Arrange
     source_markdown = """a![Foo](\a\a
-/uri "testing")a""".replace(
-        "\a", " "
-    )
+/uri "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -2373,9 +2347,7 @@ def test_paragraph_extra_62c() -> None:
 
     # Arrange
     source_markdown = """a![Foo](\a\a
-   /uri "testing")a""".replace(
-        "\a", " "
-    )
+   /uri "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -2397,9 +2369,7 @@ def test_paragraph_extra_62ca() -> None:
 
     # Arrange
     source_markdown = """a![Foo](\a\a
-   /uri "testing")""".replace(
-        "\a", " "
-    )
+   /uri "testing")""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -2656,9 +2626,7 @@ def test_paragraph_extra_64a() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri\a\a
-"testing")a""".replace(
-        "\a", " "
-    )
+"testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -2723,9 +2691,7 @@ def test_paragraph_extra_64c() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri\a\a
- "testing")a""".replace(
-        "\a", " "
-    )
+ "testing")a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n ]",
         "[text(1,1):a:]",
@@ -2747,9 +2713,7 @@ def test_paragraph_extra_64ca() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri\a\a
- "testing")""".replace(
-        "\a", " "
-    )
+ "testing")""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n ]",
         "[text(1,1):a:]",
@@ -3124,9 +3088,7 @@ def test_paragraph_extra_67a() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
-)a""".replace(
-        "\a", " "
-    )
+)a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -3148,9 +3110,7 @@ def test_paragraph_extra_67aa() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
-)""".replace(
-        "\a", " "
-    )
+)""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
@@ -3214,9 +3174,7 @@ def test_paragraph_extra_67c() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
-   )a""".replace(
-        "\a", " "
-    )
+   )a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -3238,9 +3196,7 @@ def test_paragraph_extra_67ca() -> None:
 
     # Arrange
     source_markdown = """a![Foo](/uri "testing"\a\a
-   )""".replace(
-        "\a", " "
-    )
+   )""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):a:]",
@@ -7915,9 +7871,7 @@ def test_paragraph_extra_j0b() -> None:
     ]
     expected_gfm = """<p>abc
 <a href="/uri" title="title">link</a>\a
-def</p>""".replace(
-        "\a", " "
-    )
+def</p>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -7940,9 +7894,7 @@ def test_paragraph_extra_j0c() -> None:
     ]
     expected_gfm = """<p>abc
 <img src="/uri" alt="link" title="title" />\a
-def</p>""".replace(
-        "\a", " "
-    )
+def</p>""".replace("\a", " ")
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -7982,9 +7934,7 @@ def test_paragraph_extra_j0e() -> None:
   /uri\a\a
    "title"\a\a\a
  )
- def""".replace(
-        "\a", " "
-    )
+ def""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n\n  \n   \n \n ]",
         "[text(1,1):abc\n::\n]",
@@ -8012,9 +7962,7 @@ def test_paragraph_extra_j0ea() -> None:
 >   /uri\a\a
 >    "title"\a\a\a
 >  )
-> def""".replace(
-        "\a", " "
-    )
+> def""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
         "[para(1,3):\n\n  \n   \n \n]",
@@ -8048,9 +7996,7 @@ def test_paragraph_extra_j0eb() -> None:
     /uri\a\a
      "title"\a\a\a
    )
-   def""".replace(
-        "\a", " "
-    )
+   def""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::  \n  \n  \n  \n  ]",
         "[para(1,3):\n\n  \n   \n \n ]",

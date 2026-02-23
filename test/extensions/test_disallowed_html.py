@@ -595,9 +595,7 @@ def test_disallowed_html_top_with_list_and_tab_disabled() -> None:
     source_markdown = """-\t<script>
 \t<!-- some script stuff -->
 \t</script>
-""".replace(
-        "\\t", "\t"
-    )
+""".replace("\\t", "\t")
     expected_tokens = [
         "[ulist(1,1):-::4::\t\n\t\n::2]",
         "[html-block(1,5)]",
@@ -628,9 +626,7 @@ def test_disallowed_html_top_with_list_and_tab_enabled() -> None:
     source_markdown = """-\t<script>
 \t<!-- some script stuff -->
 \t</script>
-""".replace(
-        "\\t", "\t"
-    )
+""".replace("\\t", "\t")
     expected_tokens = [
         "[ulist(1,1):-::4::\t\n\t\n::2]",
         "[para(1,5):]",
@@ -734,9 +730,7 @@ def test_disallowed_html_top_with_block_and_tab_disabled() -> None:
     source_markdown = """> \t<script>
 > \t<!-- some script stuff -->
 > \t</script>
-""".replace(
-        "\\t", "\t"
-    )
+""".replace("\\t", "\t")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n]",
         "[html-block(1,3)]",
@@ -765,9 +759,7 @@ def test_disallowed_html_top_with_block_and_tab_enabled() -> None:
     source_markdown = """> \t<script>
 > \t<!-- some script stuff -->
 > \t</script>
-""".replace(
-        "\\t", "\t"
-    )
+""".replace("\\t", "\t")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,5):\t]",

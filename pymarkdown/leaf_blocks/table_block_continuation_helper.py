@@ -1,5 +1,4 @@
-"""Module to help with the continuation or stopping of a table block.
-"""
+"""Module to help with the continuation or stopping of a table block."""
 
 import copy
 from typing import List, Optional, Tuple, cast

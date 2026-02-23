@@ -41,9 +41,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    )
+""".replace("{ARGPARSE_X}", ARGPARSE_X)
     expected_error = ""
 
     # Act
@@ -412,9 +410,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file() -> None
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -490,9 +486,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file() -> None:
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -528,9 +522,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line() -> None:
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -566,9 +558,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix() -> None:
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -611,9 +601,7 @@ Actual Line: # This is a test
 Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -673,9 +661,7 @@ Actual Line: # This is a test
 Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -729,9 +715,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token() -> None:
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -777,9 +761,7 @@ Actual Token: [atx(1,1):1:0:]
 Caused by: Exception:
    bad next_token
 Traceback (most recent call last):
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
-    )
+""".replace("{source_path}", os.path.abspath(source_path))
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -2279,9 +2261,7 @@ was_modified=True
 nl-ltw:The line after this line should be blank.:
 cf-ltw:\\n:
 FixLineRecord(source='completed_file', line_number=4, plugin_id='md047')
-Fixed: {path}""".replace(
-            "{path}", temp_source_path
-        )
+Fixed: {path}""".replace("{path}", temp_source_path)
         expected_error = ""
         expected_file_contents = read_contents_of_text_file(temp_source_path) + "\n"
 
@@ -2644,9 +2624,7 @@ def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace() -> None:
 BadPluginFixError encountered while scanning '{path}':
 Plugin id 'MDE003's 'next_token' action requested a token adjustment to field 'hash_count' that failed.
 Traceback (most recent call last):
-""".replace(
-            "{path}", temp_source_path
-        )
+""".replace("{path}", temp_source_path)
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)

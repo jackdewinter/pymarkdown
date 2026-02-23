@@ -89,8 +89,8 @@ MarkdownLint rule.  After our users provided useful examples for us to consider,
 we decided that a focused implementation of the rule would also benefit our users.
 More information on this is listed below.
 
-In our research, we found that there are two distinct sets of scenarios where it is
-useful to have HTML blocks appear before other text is scanned in Markdown documents
+In our research, we found that there are two distinct sets of scenarios where it
+is useful to have HTML blocks appear before other text is scanned in Markdown documents
 for the purposes of this rule.
 
 The first case is when an `h1` HTML block is used to present the
@@ -164,7 +164,7 @@ what text should be in that heading.
 | `plugins.first-line-heading.` |
 | `plugins.first-line-h1.` |
 
-<!-- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 6 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
@@ -187,10 +187,10 @@ It should be noted that this rule assumes that the Markdown document is
 independent of other documents. If the Markdown document being scanned is meant
 to be aggregated into a larger document, two paths are available:
 
-1.  Use the `level` configuration item to specify another level to start with,
-    such as a value of `2`.  This configuration would need to match the needs
-    of the application that is performing the aggregation.
-1.  Disable the rule.
+1. Use the `level` configuration item to specify another level to start with,
+   such as a value of `2`.  This configuration would need to match the needs
+   of the application that is performing the aggregation.
+1. Disable the rule.
 
 ### Differences From MarkdownLint Rule
 

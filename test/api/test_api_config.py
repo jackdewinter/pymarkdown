@@ -127,9 +127,7 @@ def test_api_config_with_config_file_with_good_value() -> None:
     assert scan_result
     assert not scan_result.scan_failures
     assert not scan_result.pragma_errors
-    assert (
-        std_output.getvalue()
-        == """MD999>>init_from_config
+    assert std_output.getvalue() == """MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>2
 MD999>>starting_new_file>>
@@ -148,7 +146,6 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
 """
-    )
 
 
 def test_api_config_with_config_file_with_bad_value() -> None:
@@ -181,9 +178,7 @@ def test_api_config_with_config_file_with_bad_value() -> None:
     assert scan_result
     assert not scan_result.scan_failures
     assert not scan_result.pragma_errors
-    assert (
-        std_output.getvalue()
-        == """MD999>>init_from_config
+    assert std_output.getvalue() == """MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
@@ -202,7 +197,6 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
 """
-    )
 
 
 def test_api_config_with_good_strict_and_bad_config() -> None:
@@ -300,13 +294,10 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
         == """BadPluginError encountered while configuring plugins:
 Plugin id 'MD999' had a critical failure during the '__apply_configuration' action."""
     )
-    assert (
-        std_output.getvalue()
-        == """MD999>>init_from_config
+    assert std_output.getvalue() == """MD999>>init_from_config
 MD999>>test_value>>10
 MD999>>other_test_value>>1
 """
-    )
 
 
 def test_api_config_with_exception_during_scanning() -> None:
@@ -343,17 +334,12 @@ def test_api_config_with_exception_during_scanning() -> None:
             )
 
     # Assert
-    assert (
-        std_output.getvalue()
-        == """MD999>>init_from_config
+    assert std_output.getvalue() == """MD999>>init_from_config
 MD999>>test_value>>20
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>token:[atx(1,1):1:0:]
-""".replace(
-            "{path}", source_path.replace("\\", "\\\\")
-        )
-    )
+""".replace("{path}", source_path.replace("\\", "\\\\"))
 
 
 def test_api_config_with_bad_contents_for_default_config() -> None:

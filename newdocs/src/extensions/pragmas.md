@@ -157,7 +157,7 @@ regular expression:
 
 where the group `(.*)` is the pragma command.
 
-<!--- pyml disable-next-line no-emphasis-as-heading --->
+<!-- pyml disable-next-line no-emphasis-as-heading -->
 **Available: Version 0.9.32**
 
 To avoid any confusion, if the character sequence `<!--` is used to start the pragma,
@@ -370,9 +370,9 @@ relief from the constraints of specific rules.  To keep the system from getting
 complex, the `disable` and `enabled` commands retain that philosophy by only allowing
 for rules to be disabled in blocks but not enabled.
 
-Finally, the `disable` and `enabled` commands do not stack.  If two `disable` commands are
-present in a Markdown document for the same rule, the first command is applied and
-the second command is ignored.  Similarly, if an `enable` command is present and there
-is no "active" `disable` command for that rule, the `enable` command is ignored.
-These commands are not meant to be complex, and this is one way in which their
-simplicity can be maintained.
+Finally, the `disable` and `enabled` commands do not stack.  If two `disable` commands
+are present in a Markdown document for the same rule, the first command is applied
+and the second command is ignored.  Similarly, if an `enable` command is present
+and there is no "active" `disable` command for that rule, the `enable` command is
+ignored. These commands are not meant to be complex, and this is one way in which
+their simplicity can be maintained.

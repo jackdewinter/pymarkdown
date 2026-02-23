@@ -228,9 +228,7 @@ def test_paragraph_blocks_196x() -> None:
 
     # Arrange
     source_markdown = """aaa\a\a\a\a\a
-bbb     """.replace(
-        "\a", " "
-    )
+bbb     """.replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n:     ]",
         "[text(1,1):aaa:]",

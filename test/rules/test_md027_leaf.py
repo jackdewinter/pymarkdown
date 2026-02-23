@@ -138,9 +138,7 @@ scanTests = [
 > that is not properly\a
 > indented
 > ---
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_block_quote_setext_heading_multiples_last",

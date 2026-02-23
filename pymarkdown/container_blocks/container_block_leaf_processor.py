@@ -380,11 +380,9 @@ class ContainerBlockLeafProcessor:
         remaining_line_to_parse = incoming_position_marker.text_to_parse[
             incoming_position_marker.index_number :
         ]
-        (new_index_number, leaf_token_whitespace) = (
-            ParserHelper.extract_spaces_verified(
-                incoming_position_marker.text_to_parse,
-                incoming_position_marker.index_number,
-            )
+        new_index_number, leaf_token_whitespace = ParserHelper.extract_spaces_verified(
+            incoming_position_marker.text_to_parse,
+            incoming_position_marker.index_number,
         )
         POGGER.debug(">>leaf_token_whitespace>>:$:<<", leaf_token_whitespace)
 

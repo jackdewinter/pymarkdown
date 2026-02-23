@@ -460,9 +460,7 @@ def test_markdown_with_dash_l_on_mixed_directories() -> None:
 
     expected_return_code = 0
     expected_output = """{source_path}simple.md
-""".replace(
-        "{source_path}", xsource_path
-    )
+""".replace("{source_path}", xsource_path)
     expected_error = ""
 
     # Act
@@ -524,9 +522,7 @@ def test_markdown_with_dash_l_on_md_file() -> None:
 
     expected_return_code = 0
     expected_output = """{source_path}
-""".replace(
-        "{source_path}", xsource_path
-    )
+""".replace("{source_path}", xsource_path)
     expected_error = ""
 
     # Act
@@ -631,9 +627,7 @@ def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion() -> None:
     expected_return_code = 0
     expected_output = """{source_path}README.md
 {source_path}one.md
-{source_path}two.md""".replace(
-        "{source_path}", xsource_path
-    )
+{source_path}two.md""".replace("{source_path}", xsource_path)
 
     expected_error = """"""
 
@@ -1164,9 +1158,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory() -> None:
 {rules_source_path}rule_md048.md
 {rules_source_path}rule_pml100.md
 {rules_source_path}rule_pml101.md
-{source_path}writing_rule_plugins.md""".replace(
-            "{source_path}", source_path
-        )
+{source_path}writing_rule_plugins.md""".replace("{source_path}", source_path)
         .replace("{extensions_source_path}", extensions_source_path)
         .replace("{rules_source_path}", rules_source_path)
     )

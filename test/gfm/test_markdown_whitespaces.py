@@ -749,9 +749,9 @@ def test_whitespaces_block_quotes_with_formfeeds() -> None:
     """
 
     # Arrange
-    source_markdown = """\u000C> block quote"""
+    source_markdown = """\u000c> block quote"""
     expected_tokens = [
-        "[para(1,1):\u000C]",
+        "[para(1,1):\u000c]",
         "[text(1,1):\a>\a&gt;\a block quote:]",
         "[end-para:::True]",
     ]
@@ -835,17 +835,17 @@ def test_whitespaces_block_quotes_with_form_feeds_x() -> None:
 
     # Arrange
     source_markdown = """ > block quote
- >\u000C> another block quote"""
+ >\u000c> another block quote"""
     expected_tokens = [
         "[block-quote(1,2): : > \n >]",
         "[para(1,4):\n]",
-        "[text(1,4):block quote\n\u000C\a>\a&gt;\a another block quote::\n]",
+        "[text(1,4):block quote\n\u000c\a>\a&gt;\a another block quote::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>block quote
-\u000C&gt; another block quote</p>
+\u000c&gt; another block quote</p>
 </blockquote>"""
 
     # Act & Assert
@@ -1050,17 +1050,17 @@ def test_whitespaces_ordered_lists_with_form_feeds() -> None:
 
     # Arrange
     source_markdown = """1. list item
- \u000C1. inner list item"""
+ \u000c1. inner list item"""
     expected_tokens = [
         "[olist(1,1):.:1:3::]",
         "[para(1,4):\n ]",
-        "[text(1,4):list item\n\u000C1. inner list item::\n]",
+        "[text(1,4):list item\n\u000c1. inner list item::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>list item
-\u000C1. inner list item</li>
+\u000c1. inner list item</li>
 </ol>"""
 
     # Act & Assert
@@ -1265,17 +1265,17 @@ def test_whitespaces_unordered_lists_with_form_feeds() -> None:
 
     # Arrange
     source_markdown = """+ list item
- \u000C + inner list item"""
+ \u000c + inner list item"""
     expected_tokens = [
         "[ulist(1,1):+::2::]",
         "[para(1,3):\n ]",
-        "[text(1,3):list item\n\u000C + inner list item::\n]",
+        "[text(1,3):list item\n\u000c + inner list item::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>list item
-\u000C + inner list item</li>
+\u000c + inner list item</li>
 </ul>"""
 
     # Act & Assert

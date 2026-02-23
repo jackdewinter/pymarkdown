@@ -263,9 +263,7 @@ def test_pragma_parsing_011() -> None:
     # Arrange
     source_markdown = """<!-- pyml -->\a\a\a
 this is a paragraph
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(2,1):]",
         "[text(2,1):this is a paragraph:]",

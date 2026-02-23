@@ -172,7 +172,7 @@ class TableParseHelper:
 
         start_index = new_index
 
-        (start_index, extracted_whitespace) = ParserHelper.extract_spaces_verified(
+        start_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
             line_to_parse,
             new_index,
         )

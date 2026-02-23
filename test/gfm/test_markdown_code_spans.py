@@ -111,13 +111,13 @@ def test_code_spans_343() -> None:
     """
 
     # Arrange
-    source_markdown = """`\u00A0b\u00A0`"""
+    source_markdown = """`\u00a0b\u00a0`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span(1,1):\u00A0b\u00A0:`::]",
+        "[icode-span(1,1):\u00a0b\u00a0:`::]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><code>\u00A0b\u00A0</code></p>"""
+    expected_gfm = """<p><code>\u00a0b\u00a0</code></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -195,9 +195,7 @@ def test_code_spans_345() -> None:
 foo
 bar\a\a
 baz
-``""".replace(
-        "\a", " "
-    )
+``""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n\n\n\n]",
         "[icode-span(1,1):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
@@ -220,9 +218,7 @@ def test_code_spans_345a() -> None:
  foo
   bar\a\a
 baz
-``""".replace(
-        "\a", " "
-    )
+``""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n \n  \n\n]",
         "[icode-span(1,1):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
@@ -284,9 +280,7 @@ def test_code_spans_346ax() -> None:
     # Arrange
     source_markdown = """- ``
 foo\a
-``""".replace(
-        "\a", " "
-    )
+``""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::\n]",
         "[para(1,3):\n\n]",
@@ -311,9 +305,7 @@ def test_code_spans_346aa() -> None:
     # Arrange
     source_markdown = """- ``
   foo\a
-  ``""".replace(
-        "\a", " "
-    )
+  ``""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):\n\n]",
@@ -364,9 +356,7 @@ def test_code_spans_346ba() -> None:
     # Arrange
     source_markdown = """> ``
 > foo\a
-> ``""".replace(
-        "\a", " "
-    )
+> ``""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,3):\n\n]",
@@ -393,9 +383,7 @@ def test_code_spans_346bb() -> None:
     source_markdown = """start
 > ``
 > foo\a
-> ``""".replace(
-        "\a", " "
-    )
+> ``""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):start:]",
@@ -424,9 +412,7 @@ def test_code_spans_346c() -> None:
     # Arrange
     source_markdown = """a[a``
 foo\a
-``a](/uri)a""".replace(
-        "\a", " "
-    )
+``a](/uri)a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text(1,1):a:]",
@@ -453,9 +439,7 @@ def test_code_spans_346ca() -> None:
     # Arrange
     source_markdown = """a[a``
  foo\a
- ``a](/uri)a""".replace(
-        "\a", " "
-    )
+ ``a](/uri)a""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n \n ]",
         "[text(1,1):a:]",
@@ -505,9 +489,7 @@ def test_code_spans_347() -> None:
 
     # Arrange
     source_markdown = """`foo   bar\a
-baz`""".replace(
-        "\a", " "
-    )
+baz`""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n]",
         "[icode-span(1,1):foo   bar \a\n\a \abaz:`::]",

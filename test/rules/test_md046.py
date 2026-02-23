@@ -247,9 +247,7 @@ abc
     pluginRuleTest(
         "bad_indented_code_empty_with_fecned",
         source_file_contents="""\a\a\a\a
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         set_args=["plugins.md046.style=fenced"],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
@@ -277,9 +275,7 @@ abc
 
 def
 ```
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         set_args=["plugins.md046.style=indented"],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD046: Code block style [Expected: indented; Actual: fenced] (code-block-style)
@@ -288,9 +284,7 @@ def
     abc
 \a\a\a\a
     def
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "bad_fenced_code_paragraph_before_and_after_with_indented",
@@ -299,9 +293,7 @@ def
 def
 ```
 ghi
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         set_args=["plugins.md046.style=indented"],
         disable_rules="md031",
         scan_expected_return_code=1,

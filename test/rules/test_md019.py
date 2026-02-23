@@ -159,9 +159,7 @@ options:
   Text
   more text
 ```
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
         fix_expected_file_contents="""#\a
@@ -170,9 +168,7 @@ options:
   Text
   more text
 ```
-""".replace(
-            "\a", " "
-        ),
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "good_empty_heading_with_empty_text",

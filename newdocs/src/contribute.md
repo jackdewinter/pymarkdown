@@ -10,19 +10,18 @@ Thanks for your interest in contributing to this application!
 
 ## How To Go About Helping Us
 
-Let us say that you have a great idea on what you want to see happen with the PyMarkdown
-project.  You submit it to our [issues list](https://github.com/jackdewinter/pymarkdown/issues),
+Let us say that you have a great idea on what you want to see happen with this
+project.  You submit it to our
+[issues list](https://github.com/jackdewinter/pymarkdown/issues),
 and we tell you it is going to be a long time before we get to it.  Or we say
 that it does not fit the direction we have for the project.
 
 What do you do next?
 
-The first thing is to understand our feedback.  We carefully look at
-[each issue](./index.md/#what-to-do-next) and try and be as honest and sincere
-with our feedback as possible. Our goals are primarily focused on being one
-of the best Markdown linters out there.  While something may be a critical
-issue for you, it is possible that it does not carry the same importance for
-us.
+The first thing is to understand our feedback.  We carefully look at each issue
+and try and be as honest and sincere with our feedback as possible. While something
+may be a critical issue for you, it is possible that it does not carry the same
+importance for us.
 
 That is where your contributions to the project can help.  We have a small
 team that works on this project, and we must prioritize based on that
@@ -52,24 +51,22 @@ We worked hard to ensure that our project has 100% code coverage and near 100%
 scenario coverage.  Getting the code covered is usually the easy part.  Getting
 every scenario for every element is painful.  By being very stringent about this
 upfront, we hope we reduce the number of errors reported by our
-users when using our application.
+users when using our application to missed scenarios.
 
 ### Static Project Analysis
 
 We are big proponents of static project analysis.  Static project analysis
 is the parent group that includes static code analysis but extends that analysis
 to the other aspects of the project.  For our team, this means running the
-`clean.cmd` script before creating a Pull Request.
+`clean.cmd` script or `clean.sh` script before creating a Pull Request.
 
 Why are we using a script instead of putting everything in our Pre-Commit
-configuration?  To be honest, a bit of it is time and a bit of it is a control
-issue.  The script allows us to turn various checks on and off more easily,
-allowing us to run the script more frequently during development.  However,
-we are actively trying to move our analysis tasks from our `clean.cmd` script
-into our Pre-Commit scan, but
-that is a work in progress.  Our plans included keeping the `clean.cmd`
-script around to provide the control we need while delegating as much of
-the organization to Pre-Commit as possible.
+configuration?  To be honest, it is mostly so that we can be more agile.
+While we have moved most of our checks into our Pre-Commit configuration,
+there are some things that are just easier to control with a script. A good
+example of this is ensuring that the `Pipfile` configuration file used for
+PipEnv is synced up as the first task in the clean scripts.  This has saved our
+team on more than one occasion, and is something we intend to keep.
 
 ### One Major Change Per Pull Request
 
@@ -137,6 +134,5 @@ effort, just a very thorough effort.
 ## Still Here?
 
 If none of this has scared you off, you may want to consider helping our team
-out with the development of this project.  Even if it is only for a small
-rule change, a small rule, or an extension, we can help you learn what you need
-to contribute.
+out with the development of this project.  Even if it is only for something
+small, we can help you learn what you need to contribute.

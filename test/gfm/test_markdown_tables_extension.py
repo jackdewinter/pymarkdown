@@ -264,9 +264,7 @@ def test_tables_extension_198_enabled_with_trailing_single() -> None:
     # Arrange
     source_markdown = """| foo | bar |\a
 | --- | --- |\a
-| baz | bim |\a""".replace(
-        "\a", " "
-    )
+| baz | bim |\a""".replace("\a", " ")
     expected_tokens = [
         "[table(1,1)]",
         "[table-header(1,1):: :True:| --- | --- | ]",
@@ -318,9 +316,7 @@ def test_tables_extension_198_enabled_with_trailing_double() -> None:
     # Arrange
     source_markdown = """| foo | bar |\a\a
 | --- | --- |\a\a
-| baz | bim |\a\a""".replace(
-        "\a", " "
-    )
+| baz | bim |\a\a""".replace("\a", " ")
     expected_tokens = [
         "[table(1,1)]",
         "[table-header(1,1)::  :True:| --- | --- |  ]",
@@ -372,9 +368,7 @@ def test_tables_extension_198_enabled_with_trailing_triple() -> None:
     # Arrange
     source_markdown = """| foo | bar |\a\a\a
 | --- | --- |\a\a\a
-| baz | bim |\a\a\a""".replace(
-        "\a", " "
-    )
+| baz | bim |\a\a\a""".replace("\a", " ")
     expected_tokens = [
         "[table(1,1)]",
         "[table-header(1,1)::   :True:| --- | --- |   ]",
@@ -980,9 +974,7 @@ def test_tables_extension_200_enabled_trailing_escaped_bar_2() -> None:
     source_markdown = """| f\\|oo  |
 | ------ |
 | b `\\|` az \\|\a\a
-| b **\\|** im |""".replace(
-        "\a", " "
-    )
+| b **\\|** im |""".replace("\a", " ")
     expected_tokens = [
         "[table(1,1)]",
         "[table-header(1,1):::True:| ------ |]",
@@ -6315,9 +6307,7 @@ def test_tables_extension_extra_in_list_chxb() -> None:
 > | foo | bar |
 >
 > [boo](/url)
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n]",
         "[BLANK(1,3):]",
@@ -8074,9 +8064,7 @@ def test_whitespaces_tables_with_increasing_spaces_before() -> None:
     source_markdown = """   | foo | bar |\a
       | --- | --- |\a\a
            | baz | bim |\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = [
         "[para(1,4):   \n      \n           :  ]",
         "[text(1,4):| foo | bar |\n| --- | --- |:: \n]",

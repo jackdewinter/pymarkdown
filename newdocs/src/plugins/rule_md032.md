@@ -63,9 +63,9 @@ Quote element, then this rule behaves normally.
 #### Additional Scenarios - Paragraphs and Indented Code Blocks
 
 Due to the [GitHub Flavored Markdown](https://github.github.com/gfm/) specification's
-there are three scenarios that appear to be violations of this rule, but are not. In
-all of these scenarios, if the text on line four is not meant to be part of the list,
-an inserted blank line will properly convey that intent to most parsers.
+there are three scenarios that appear to be violations of this rule, but are not.
+In all of these scenarios, if the text on line four is not meant to be part of the
+list, an inserted blank line will properly convey that intent to most parsers.
 
 The first scenario is the text:
 
@@ -115,8 +115,8 @@ whether a given multiline element is valid.  While the following example:
 ````
 
 is clearly a list element followed by a link reference definition (due to the newline
-between the two), the following example creates doubt as to the correct parsing of the
-example:
+between the two), the following example creates doubt as to the correct parsing
+of the example:
 
 ````Markdown
 + a list
@@ -130,8 +130,8 @@ and state if the parsing failed.  As the majority of parsers do not perform that
 extra level of care, our parser follows that majority and assumes that lines two
 and three are part of the list started on line one.
 
-It therefore follows that if our parser treats that scenario as a continuation of the
-list item, this rule sees a single list item with nothing after it.  Therefore,
+It therefore follows that if our parser treats that scenario as a continuation of
+the list item, this rule sees a single list item with nothing after it.  Therefore,
 the rule does not trigger in this scenario and reduces to be in the same set as
 the first scenario in the previous section.
 

@@ -589,6 +589,7 @@ class LinkDefinitionStackToken(StackToken):
 # pylint: enable=too-many-instance-attributes
 
 
+# pylint: disable=too-many-instance-attributes
 class TableBlockStackToken(StackToken):
     """
     Class to provide for a stack token for a possible table block.
@@ -597,7 +598,7 @@ class TableBlockStackToken(StackToken):
     def __init__(
         self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
-        (self.__start_position_marker, self.__extracted_whitespace) = (
+        self.__start_position_marker, self.__extracted_whitespace = (
             position_marker,
             extracted_whitespace,
         )
@@ -671,3 +672,6 @@ class TableBlockStackToken(StackToken):
             if self.continuation_lines
             else join_suffix
         )
+
+
+# pylint: enable=too-many-instance-attributes

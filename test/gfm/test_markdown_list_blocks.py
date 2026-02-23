@@ -2,6 +2,7 @@
 """
 https://github.github.com/gfm/#lists
 """
+
 from test.utils import act_and_assert
 
 import pytest
@@ -1579,9 +1580,7 @@ def test_list_blocks_256a() -> None:
   bar
   ```
 -\a
-      baz""".replace(
-        "\a", " "
-    )
+      baz""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::  \n  \n  \n  \n  ]",
         "[BLANK(1,3):]",
@@ -1630,9 +1629,7 @@ def test_list_blocks_256b() -> None:
   bar
   ```
 -\a\a
-      baz""".replace(
-        "\a", " "
-    )
+      baz""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::  \n  \n  \n  \n  ]",
         "[BLANK(1,3): ]",
@@ -1823,9 +1820,7 @@ def test_list_blocks_257xx() -> None:
 
     # Arrange
     source_markdown = """-\a\a\a
-  foo""".replace(
-        "\a", " "
-    )
+  foo""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2::  ]",
         "[BLANK(1,3):  ]",
@@ -2130,9 +2125,7 @@ def test_list_blocks_260() -> None:
     # Arrange
     source_markdown = """- foo
 -\a\a\a
-- bar""".replace(
-        "\a", " "
-    )
+- bar""".replace("\a", " ")
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",

@@ -1773,9 +1773,7 @@ def test_pragmas_issue_1479_Md009_no_pragma_then_para_with_trailing() -> None:
     source_markdown = """this is some text\a
 each line has extra spaces\a\a
 but not all are invalid\a\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     with create_temporary_configuration_file(
         supplied_configuration=source_markdown, file_name_suffix=".md"
     ) as markdown_file_path:
@@ -1814,9 +1812,7 @@ this is some text\a
 each line has extra spaces\a\a
 <!-- pyml disable-next-line no-trailing-spaces -->
 but not all are invalid\a\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     with create_temporary_configuration_file(
         supplied_configuration=source_markdown, file_name_suffix=".md"
     ) as markdown_file_path:
@@ -1853,9 +1849,7 @@ each line has extra spaces\a\a
 <!-- pyml disable-next-line no-trailing-spaces -->
 
 but not all are invalid\a\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     with create_temporary_configuration_file(
         supplied_configuration=source_markdown, file_name_suffix=".md"
     ) as markdown_file_path:

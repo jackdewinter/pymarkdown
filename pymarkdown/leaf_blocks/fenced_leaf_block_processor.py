@@ -649,7 +649,7 @@ class FencedLeafBlockProcessor:
                     ex_space_index + 1 if split_tab else ex_space_index
                 )
 
-                (last_good_space_index, _, detabified_ex_space) = (
+                last_good_space_index, _, detabified_ex_space = (
                     TabHelper.search_for_tabbed_prefix(
                         ex_space, modified_ex_space_index, whitespace_used_count
                     )

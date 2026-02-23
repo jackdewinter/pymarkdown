@@ -58,9 +58,7 @@ def test_paragraph_series_d_sh() -> None:
 
     # Arrange
     source_markdown = """\a\a\a\a
-""".replace(
-        "\a", " "
-    )
+""".replace("\a", " ")
     expected_tokens = ["[BLANK(1,1):    ]", "[BLANK(2,1):]"]
     expected_gfm = """"""
 

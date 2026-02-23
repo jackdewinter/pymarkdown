@@ -40,7 +40,7 @@ load_properties_from_file() {
 }
 
 # Perform any cleanup required by the script.
-# shellcheck disable=SC2317  # Unreachable code
+# shellcheck disable=SC2329
 cleanup_function() {
 
 	# If the temp file was used, get rid of it.
@@ -109,6 +109,7 @@ show_usage() {
 	echo "  -m,--markers [markers]  Execute only the tests matching the specified markers."
 	echo "  -i,--individual			Show a line for each test as it completed, for further processing."
 	echo "  -p,--publish            Publish the project summaries of previously executed tests."
+	echo "  -v,--test-verbose		Display a log debug information about each test execution."
 	echo "  -x,--debug              Display debug information about the script as it executes."
 	echo "  -q,--quiet              Do not display detailed information during execution."
 	echo "  -h,--help               Display this help text."
@@ -127,6 +128,7 @@ parse_command_line() {
 	MULTIPLE_WORKER_ARGS=
 	KEYWORD_ARG=
 	MARKER_ARG=
+	TEST_VERBOSE_MODE=
 	FAILURE_ARGS="--maxfail=5"
 	CAPTURE_DIRECTORY=
 	GENERATE_HTML_MODE=1
@@ -197,6 +199,10 @@ parse_command_line() {
 			VERBOSE_MODE=0
 			shift
 			;;
+		-v | --test-verbose)
+			TEST_VERBOSE_MODE="--log-cli-level=DEBUG"
+			shift
+			;;
 		-x | --debug)
 			DEBUG_MODE=1
 			shift
@@ -243,6 +249,7 @@ set_test_variables() {
 
 	# If we are testing by keyword, coverage and multi-core do not make sense.
 	if [[ -n ${KEYWORD_ARG} ]]; then
+		COVERAGE_MODE=
 		MULTIPLE_WORKER_ARGS=
 		KEYWORD_ARG=(-k "${KEYWORD_ARG}")
 	fi
@@ -277,9 +284,12 @@ execute_tests() {
 	local pytest_args=()
 	TEST_EXECUTION_SUCCEEDED=1
 
+	# Setup the args to reflect the mode in which the tests are to be invoked.
 	pytest_args=(--strict-markers -ra --junitxml="${TEST_RESULTS_XML_PATH}")
 	if [[ ${INDIVIDUAL_MODE} -ne 0 ]]; then
 		pytest_args+=(-v)
+		pytest_args+=(--log-format="%(asctime)s %(levelname)s %(message)s")
+		pytest_args+=(--log-date-format="%Y-%m-%dT%H:%M:%S.%f")
 	fi
 	if [[ ${GENERATE_HTML_MODE} -ne 0 ]]; then
 		pytest_args+=(--html=report/report.html)
@@ -291,7 +301,6 @@ execute_tests() {
 		fi
 	fi
 
-	# Setup the args to reflect the mode in which the tests are to be invoked.
 	if [[ -n ${KEYWORD_ARG[*]} ]] || [[ -n ${MARKER_ARG[*]} ]]; then
 		if [[ ${COVERAGE_MODE} -ne 0 ]]; then
 			echo "{Executing partial test suite with coverage...}"
@@ -316,12 +325,16 @@ execute_tests() {
 	# Run the tests.
 	if [[ ${VERBOSE_MODE} -ne 0 ]]; then
 		# shellcheck disable=SC2086  # Double quote to prevent splitting and globbing.
-		if ! pipenv run pytest ${MULTIPLE_WORKER_ARGS} ${FAILURE_ARGS} "${KEYWORD_ARG[@]}" "${MARKER_ARG[*]}" "${pytest_args[@]}"; then
+		if ! pipenv run pytest \
+			${TEST_VERBOSE_MODE} \
+			${MULTIPLE_WORKER_ARGS} ${FAILURE_ARGS} "${KEYWORD_ARG[@]}" "${MARKER_ARG[*]}" "${pytest_args[@]}"; then
 			TEST_EXECUTION_SUCCEEDED=0
 		fi
 	else
 		# shellcheck disable=SC2086  # Double quote to prevent splitting and globbing.
-		if ! pipenv run pytest ${MULTIPLE_WORKER_ARGS} ${FAILURE_ARGS} "${KEYWORD_ARG[@]}" "${MARKER_ARG[*]}" "${pytest_args[@]}" >"${TEMP_FILE}" 2>&1; then
+		if ! pipenv run pytest \
+			${TEST_VERBOSE_MODE} \
+			${MULTIPLE_WORKER_ARGS} ${FAILURE_ARGS} "${KEYWORD_ARG[@]}" "${MARKER_ARG[*]}" "${pytest_args[@]}" >"${TEMP_FILE}" 2>&1; then
 			TEST_EXECUTION_SUCCEEDED=0
 		fi
 	fi

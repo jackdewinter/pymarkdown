@@ -622,10 +622,10 @@ def test_inline_links_515() -> None:
     """
 
     # Arrange
-    source_markdown = """[link](/url\u00A0"title")"""
+    source_markdown = """[link](/url\u00a0"title")"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link(1,1):inline:/url%C2%A0%22title%22::/url\u00A0"title":::link:False::::]',
+        '[link(1,1):inline:/url%C2%A0%22title%22::/url\u00a0"title":::link:False::::]',
         "[text(1,2):link:]",
         "[end-link::]",
         "[end-para:::True]",
@@ -1319,9 +1319,7 @@ def test_inline_links_extra_02() -> None:
 foo
 bar\a\a
 baz
-`` bar](uri)""".replace(
-        "\a", " "
-    )
+`` bar](uri)""".replace("\a", " ")
     expected_tokens = [
         "[para(1,1):\n\n\n\n]",
         "[link(1,1):inline:uri:::::foo ``\nfoo\nbar  \nbaz\n`` bar:False::::]",
