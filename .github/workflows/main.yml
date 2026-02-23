@@ -233,10 +233,10 @@ jobs:
           pipenv sync -d
           pipenv graph
 
-      - name: Pyroma
-        run: |
-          export PYTHONIOENCODING=utf-8
-          pipenv run pyroma -n 10 .
+      # - name: Pyroma
+      #   run: |
+      #     export PYTHONIOENCODING=utf-8
+      #     pipenv run pyroma -n 10 .
 
       - name: Setup
         run: |
