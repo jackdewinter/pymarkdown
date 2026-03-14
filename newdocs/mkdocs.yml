@@ -40,8 +40,8 @@ nav:
     - 'quick-starts/advanced.md'
   - "User Guide":
     - 'user-guide.md'
-    - 'advanced_configuration.md'
     - 'advanced_extensions.md'
+    - 'advanced_configuration.md'
     - 'advanced_plugins.md'
     - 'advanced_pre-commit.md'
   - "Extensions & Rule Plugins":

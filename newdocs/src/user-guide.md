@@ -478,6 +478,8 @@ down each part of a line like:
 examples\example-1.md:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
 ```
 
+This failure and its format is described in the following section.
+
 #### Rule Failure Format
 
 Our team decided to adopt a failure format similar to that of other linters, checkers,
@@ -1332,7 +1334,15 @@ Use:
   for local, in‑document exceptions where disabling a Rule Plugin globally would
   be too broad.
 
-### Basic Configuration
+##### A Word Of Caution
+
+Use caution when enabling rules that are disabled by default.
+
+By design, the default set of enabled rules does not conflict with itself. When
+you enable additional rules, you can sometimes create competing failures between
+two rules. This means that fixing the failures reported by rule A causes rule B
+to report new failures, and fixing rule B’s failures causes rule A to start reporting
+failures again, creating a back‑and‑forth loop.
 
 This section focuses on configuration options that apply regardless of which command
 you run. Earlier sections described flags specific to individual commands (such
