@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `markdown-extended-autolinks` |
+| Extension ID | `markdown-extended-autolinks` |
 | GFM Extension Status | Official |
 | Configuration Item | `extensions.markdown-extended-autolinks.enabled` |
 | Default Value | `False` |
@@ -20,7 +20,7 @@
 ## Summary
 
 This extension follows the GitHub Flavored Markdown
-[rules](https://github.github.com/gfm/#autolinks-extension-) to extend the
+[specifications](https://github.github.com/gfm/#autolinks-extension-) to extend the
 set of text sequences that the parser considers as a link and an autolink element
 generated for it.  While the normal [autolinks](https://github.github.com/gfm/#autolinks)
 deal with text enclosed within the `<` and `>` characters, this extension

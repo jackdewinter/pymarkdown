@@ -78,7 +78,7 @@ if ERRORLEVEL 2 (
 )
 if ERRORLEVEL 1 (
 	echo {'Pipfile' and 'Pipfile.lock' are not in sync with each other.}
-	echo {Syncing python packages with new PipEnv 'Pipfile'.}
+	echo {Syncing python packages with new Pipenv 'Pipfile'.}
 	erase Pipfile.lock
 	pipenv lock
 	if ERRORLEVEL 1 (
@@ -90,7 +90,7 @@ if ERRORLEVEL 1 (
 	pipenv sync -d
 	if ERRORLEVEL 1 (
 		echo.
-		echo {Syncing python packages with PipEnv failed.}
+		echo {Syncing python packages with Pipenv failed.}
 		goto error_end
 	)
 )

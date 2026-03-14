@@ -88,7 +88,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Install PipEnv
+      - name: Install Pipenv
         run: |
           export PYTHONIOENCODING=utf-8
           pip install pipenv==${{ env.default-pipenv-version }}
@@ -145,7 +145,7 @@ jobs:
         with:
           python-version: ${{ env.default-python-version }}
 
-      - name: Install PipEnv
+      - name: Install Pipenv
         run: |
           export PYTHONIOENCODING=utf-8
           pip install pipenv==${{ env.default-pipenv-version }}
@@ -183,7 +183,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Install PipEnv
+      - name: Install Pipenv
         run: |
           pip install pipenv==2023.12.1
 
@@ -218,7 +218,7 @@ jobs:
         with:
           python-version: ${{ env.default-python-version }}
 
-      - name: Install PipEnv
+      - name: Install Pipenv
         run: |
           export PYTHONIOENCODING=utf-8
           pip install pipenv==${{ env.default-pipenv-version }}

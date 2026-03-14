@@ -89,12 +89,12 @@ release.
 <!-- pyml disable-num-lines 10 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `line_length` | `integer` | `80` | Maximum number of characters on a normal line. |
 | `heading_line_length` | `integer` | `80` | Maximum number of characters on a heading line. |
 | `code_block_line_length` | `integer` | `80` | Maximum number of characters on a code block line. |
-| `headings` | `boolean` | `True` | Whether the plugin rule triggers on lines in a heading. |
-| `code_blocks` | `boolean` | `True` | Whether the plugin rule triggers on lines in a code block. |
+| `headings` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a heading. |
+| `code_blocks` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a code block. |
 | `stern` | `boolean` | `False` | Whether the 'stern' trigger rules are in effect. |
 | `strict` | `boolean` | `False` | Whether the 'strict' trigger rules are in effect. |
 

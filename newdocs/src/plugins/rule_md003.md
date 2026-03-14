@@ -94,7 +94,7 @@ release.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `consistent` | Style of headings expected in the document. |
 | `allow-setext-update` | boolean | `False` | If `style` is `consistent` and the document started off as `setext`, allow an upgrade to `setext_with_atx` if a level 3 Atx Header or higher is observed. |
 

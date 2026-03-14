@@ -6,35 +6,63 @@ authors:
 
 # Basic Concepts
 
-The purpose of this User Guide is to help you find detailed information about how
-to use the PyMarkdown linter application in your day‑to‑day work and how its main
-components fit together. These pages assume you have at least scanned the content
-in the [Introduction](./index.md) document and the [Getting Started](./getting-started.md)
-document, and that you are already comfortable running PyMarkdown on one or more
-files, including invoking it from the command line with different options. That
-is important because this document builds on that foundation to provide you with
-targeted information on a variety of subjects, including how the command‑line interface
-works, how rules are evaluated, how extensions interact with the Markdown parser,
-and how the Rule Engine and parser cooperate during scan and fix operations. For
-the canonical definitions of these modes and their behavior, see
-[Scanning and Scan Mode](#scanning-and-scan-mode) and
-[Failure Correction of Fix Mode](#failure-correction-or-fix-mode).
+This User Guide explains how to use the PyMarkdown linter in day‑to‑day work and
+how its main components fit together.
 
-If you need a bit more experience before digging into this document, we invite you
-to read and try out the examples in our [Quick Start](./quick-starts/index.md) guides.
-Those guides should provide you with the foundation necessary to understand some
-of the more difficult concepts in this document.
+If you already use PyMarkdown regularly and are comfortable with the basics from
+[Introduction](./index.md) and [Getting Started](./getting-started.md), you can:
+
+- skim [Nomenclature](#nomenclature) to confirm terminology, then
+- jump to [Command Line Basics](#command-line-basics) for CLI structure, or
+- go directly to [Basic Fixing](#basic-fixing) and [Extensions](#extensions) for
+  **fix** mode and parser extensions.
+
+These pages assume you have at least scanned the content
+in the [Introduction](./index.md) document (high‑level overview) and the
+[Getting Started](./getting-started.md) document (installation and first runs),
+and that you are already comfortable running PyMarkdown on one or more files,
+including invoking it from the command line with different options.
+This User Guide builds on that foundation instead of repeating it.
+
+This document builds on that foundation to provide targeted information on:
+
+- how the command‑line interface works,
+- how Rule Plugins are evaluated,
+- how extensions interact with the Markdown parser, and
+- how the Rule Engine and parser cooperate during scan and fix operations.
+
+For the canonical definitions of scan and fix behavior, see:
+
+- [Scanning and Scan Mode](#scanning-and-scan-mode) – what a scan run does and does
+  not do.
+- [Correcting Rule Failures With Fix Mode](#correcting-rule-failures-with-fix-mode)
+  – how fixes are produced and applied.
+
+Later sections assume you are familiar with those definitions.
+
+If you would like more hands‑on practice before diving into this guide, work through
+the
+task‑oriented examples in our [Quick Start guides](./quick-starts/index.md). They
+focus on
+short, practical scenarios (scan, fix, configuration) that make the concepts in
+this User Guide easier to follow.
 
 However, we know we are not perfect. If, after reading the documentation and trying
 something out for yourself, you find that there is a problem, a lack of documentation,
 or a feature that you believe is missing, please use the process outlined on our
-[Reporting Issues](./usual.md#reporting-issues) page. We take each submitted issue
-seriously and use that feedback to refine rules, improve configuration behavior,
+[Reporting Issues](./usual.md) page. We take each submitted issue
+seriously and use that feedback to refine Rule Plugins, improve configuration behavior,
 and extend the documentation, hoping to grow our project with your support.
 
 ## Nomenclature
 
 Here are some words and phrases that we use throughout our documentation.
+
+If you are already familiar with PyMarkdown's terminology (Markdown Parser, Rule
+Engine,
+Rule Plugins, Rule Failures vs Errors, Scan Mode vs Fix Mode), you can skim this
+section
+and then jump ahead to [Prerequisites](#prerequisites) and the shared examples.
 
 ### Markdown Document / Markdown File
 
@@ -43,47 +71,67 @@ stored as Markdown files with a `.md` filename extension.
 
 ### Markdown Parser
 
-A main application component that takes a Markdown document and breaks it down into
-its constituent elements (headings, lists, code fences, block quotes, inline emphasis,
-and so on). The Markdown parser emits a stream of Markdown tokens that can then
-be used for specific purposes. In normal operation, parser extensions run first
-and may adjust or augment that token stream, and then the Rule Engine consumes the
-resulting tokens in a well-defined order to analyze the document, report failures,
-or (in fix mode) propose content changes.
+A core application component that takes a Markdown document and breaks it into Markdown
+elements such as headings, lists, code fences, block quotes, and inline emphasis.
+The Markdown parser emits a stream of Markdown tokens that can then
+be used for specific purposes. In normal operation (**scan** mode), parser extensions
+run first
+and may adjust or augment that Markdown token stream. The Rule Engine then consumes
+the resulting
+tokens in a well‑defined order to analyze the document, report Rule Failures, and,
+in
+**fix** mode, propose content changes.
 
 ### Rule Engine
 
-A main application component that takes a stream of Markdown tokens and executes
+A main application component that takes the stream of Markdown tokens and executes
 a series of actions that are based upon those tokens. Each of these actions is implemented
 as a rule (see below), and the component that controls the registration, ordering,
 and execution of those rules is referred to as the Rule Engine.
 
-### Rules / Plugin Rules
+### Rules / Rule Plugins
 
-Python code that extends the Rule Engine (via a plugin mechanism) to look for a
-specific behavior on behalf of the user. Rules typically register handlers for specific
+Rule Plugins are the Python code that extends the Rule Engine (via a plugin mechanism)
+to look for a
+specific behavior on behalf of the user. The Rule Plugins themselves act as mediators
+between the logic that enacts a given rule and the Rule Engine that is using the
+rule.
+Basically, the rule is the logic behind a given check and the Rule Plugin is the
+container
+around that check.
+
+Each Rule Plugin typically register handlers for specific
 token types or parser events, receive those tokens in a deterministic order, and
 may expose configuration options that control their behavior (for example, which
-paths to ignore or what thresholds to enforce).  A rule handler may examine a single
-token in isolation, maintain per-document or per-file state, or correlate information
+paths to ignore or what thresholds to enforce). The rule itself then takes that
+information to look for a specific pattern. Looking for that pattern may include
+examining a single
+token in isolation, maintaining per-document or per-file state, or even correlating
+information
 across multiple tokens (for example, to compute heading levels or track list nesting).
-Examples of this are Rule `MD010` which looks for hard tabs in the document and
-Rule `MD012` which looks for consecutive blank lines in the document. In the built-in
-rule set:
+Examples of this are Rule Plugin `MD010` which looks for hard tabs in the document
+and
+Rule Plugin `MD012` which looks for consecutive blank lines in the document. In
+the built-in
+Rule Plugin set:
 
-- the `MD` prefix is used for rules that align with rules introduced by `markdownlint`
-- the `PML` prefix is used for rules introduced by the PyMarkdown application to
-  address new requests and scenarios
+- the `MD` prefix is used for Rule Plugins that align with rules introduced by `markdownlint`
+- the `PML` prefix is used for Rule Plugins introduced by the PyMarkdown application
+  to address new requests and scenarios
 
-Additional prefixes may be introduced for other rule families over time.
+Additional prefixes may be introduced for other Rule Plugin families over time.
 
-### Rule Ids
+### Rule IDs
 
-Rule ids are unique identifiers that are associated with a given rule. These rule
-ids are case-insensitive. Therefore, the ids `md010`, `MD010`, and `Md010` all refer
-to the same rule. For historical reasons, these identifiers start with a two- or
+Rule IDs are unique identifiers that are associated with a given Rule Plugin. These
+Rule
+IDs are case-insensitive. Therefore, the Rule IDs `md010`, `MD010`, and `Md010`
+all refer
+to the same Rule Plugin. For historical reasons, these identifiers start with a
+two- or
 three-letter prefix, followed by a three-digit suffix, and the combination of prefix
-and suffix is unique across all rules and across all rule families. These ids are
+and suffix is unique across all Rule Plugins and across all Rule Plugin families.
+These ids are
 what you see in command-line output, and they form the canonical identifiers used
 in configuration files, logs, and most tooling integrations.
 
@@ -92,39 +140,47 @@ in configuration files, logs, and most tooling integrations.
 Python code that directly interacts with the Markdown Parser component to provide
 a single enhanced Markdown capability. Extensions can introduce new or optional
 token types, adjust how existing Markdown constructs are parsed, or add support
-for commonly used non-standard syntax (such as task list items, front matter blocks,
-or pragma-style directives that influence parsing or linting behavior). In practice,
+for commonly used non-standard syntax (such as task list items, Front-Matter blocks,
+or Pragma-style directives that influence parsing or linting behavior). In practice,
 a parser extension runs before the Rule Engine sees any tokens, so its changes to
-the token stream are fully visible to every rule, including both built-in and custom
-plugin rules. This means that enabling or disabling an extension can change which
-tokens a rule sees, how those tokens are structured, and even whether a rule triggers
-at all for a given construct, without the rule itself changing.
+the Markdown token stream are fully visible to every rule, including both built-in
+and custom
+Rule Plugins. This means that enabling or disabling an extension can change which
+tokens a rule sees, how those tokens are structured, and even whether a Rule Plugin
+triggers
+at all for a given construct, without the rule's logic changing.
 
 ### Triggered
 
-When a rule finds an instance of the specific behavior that it is looking for, that
-rule then triggers a failure. There is no general behavior about the number of times
+When a rule finds an instance of the specific behavior that it is looking for, the
+containing Rule Plugin then triggers a failure. There is no general behavior about
+the number of times
 a rule can be triggered within a single document; some rules report every occurrence,
 while others may only report the first occurrence or aggregate multiple issues into
 a single failure. The exact triggering behavior for a rule is determined by the
-rule’s implementation and, in some cases, its configuration options, including options
+rule's implementation and, in some cases, its configuration options, including options
 that suppress reporting in certain regions or for certain patterns.
 
-### Failure
+### Rule Failure
 
-When a rule is triggered, the information that the rule produces to provide specifics
-about why it was triggered is called a failure. A failure usually includes at least
-the rule id, a description, and a location (file, line, and column), and may also
-include rule-specific extra data that downstream tools can consume. Failures are
-distinct from errors in that detecting failures is an expected outcome of executing
+When a rule is triggered, the information that the Rule Plugin produces to provide
+specifics
+about why it was triggered is called a Rule Failure. A Rule Failure usually includes
+at least
+the Rule ID, a description, and a location (file, line, and column), and may also
+include rule-specific extra data that downstream tools can consume. Rule Failures
+are
+distinct from errors in that detecting Rule Failures is an expected outcome of executing
 the application and indicates a style or policy violation in your Markdown content,
 not a defect in PyMarkdown itself or in a rule implementation.
 
-It is worth noting that while these are labelled as "failures", that is only a general
-description of that information. The term failure is used to denote that a rule found
-something that does not adhere to the user's specified guidelines expressed through
-the rule itself, typically as configured through configuration files, command-line
-options, or inline pragmas (when supported by the rule).
+Conceptually, a failure simply means "this content did not meet the constraints
+of your configured
+Rule Plugins." The rule's logic, combined with configuration (files, command‑line
+options,
+and any supported Pragmas), defines those guidelines. When a rule reports a failure,
+it is signaling a style or policy violation in your Markdown, not an internal error
+in PyMarkdown.
 
 ### Error
 
@@ -132,7 +188,8 @@ While we try to plan out and test everything, occasionally errors get through. E
 show that either Python or our own guard code has detected an invalid condition
 within our application, one of its extensions, or one of its plugins, such as an
 uncaught exception, an assertion failure, or misuse of the public APIs by a custom
-rule or extension. These conditions are treated as abnormal and typically cause
+Rule Plugin or extension. These conditions are treated as abnormal and typically
+cause
 the current invocation of PyMarkdown to fail fast (with a non-zero exit code) unless
 you have explicitly enabled `--continue-on-error`, in which case the error is reported
 but scanning of the remaining files continues.
@@ -140,22 +197,28 @@ but scanning of the remaining files continues.
 ### Scanning and Scan Mode
 
 A single pass of the PyMarkdown application over one or more files using the `scan`
-command. That pass is performed in Scan Mode, with the goal of finding any failures
-within each Markdown document that was scanned. In Scan Mode, rules are allowed
-to emit failures but are not allowed to modify the document; any proposed fixes
-from rules that support autofix are ignored, and the original file contents on disk
+command. That pass is performed in **scan** mode, with the goal of finding any Rule
+Failures
+within each Markdown document that was scanned. In **scan** mode, Rule Plugins are
+allowed
+to emit Rule Failures but are not allowed to modify the document; the original file
+contents
 remain unchanged. This behavior is intentional so that scan can be safely used in
 CI pipelines and read-only environments without any risk of modifying source files.
 
-### Failure Correction or Fix Mode
+### Correcting Rule Failures With Fix Mode
 
-Like scan mode above but using the `fix` command. The Rule Engine asks any rules
-that support **autofix** to automatically fix the failures they reported and to
+Like **scan** mode above but using the `fix` command. The Rule Engine asks any Rule
+Plugins
+that have the **autofix** capability to automatically fix the Rule Failure they
+reported and to
 return updated content for the affected regions of the document. The Rule Engine
 then merges all accepted fixes into a new version of the file content and writes
-that content back to disk. Note that not all rules support this feature, for reasons
-discussed in the section on [Fix Mode](#basic-fixing), which describes how the `fix`
-command executes in **fix mode**, how conflicting or overlapping fixes are resolved,
+that content back to disk. Note that not all Rule Plugins support this feature,
+for reasons
+discussed in the section on [Basic Fixing](#basic-fixing), which describes how the
+`fix`
+command executes in **fix** mode, how conflicting or overlapping fixes are resolved,
 and how that differs from a normal scan.
 
 ## Prerequisites
@@ -169,18 +232,19 @@ and how to use them. As the rest of the documentation assumes that you have know
 of Markdown, it is strongly recommended that you at least review the cheat sheet
 from the Markdown Guide before continuing.
 
-Note that parser extensions are exempt from that rule. Because extensions can change
-how documents are parsed, their effect on specific rules is not always obvious.
-To address this, each extension includes documentation and examples that show how
-it affects the token stream and, when relevant, rule behavior. We have tried to
-address this by having each extension provide solid documentation on that extension,
-coupled with examples or links to examples that show how the extension affects the
-token stream that rules consume and, in some cases, the rule behavior itself. More
-information about the available extensions, the additional tokens they introduce,
-and how they interact with rules can be found in the [Advanced Extensions](./advanced_extensions.md)
+Note that parser extensions are exempt from that assumption. Because extensions
+can change how documents are parsed, their effect on specific Rule Plugins is not
+always
+obvious. To address this, each extension includes documentation and examples that
+show how it affects the Markdown token stream and, when relevant, Rule Plugin behavior.
+More information
+about the available extensions, the additional tokens they introduce,
+and how they interact with Rule Plugins can be found in the [Advanced Extensions](./advanced_extensions.md)
 document. That guide serves as a reference for each extension, covering its purpose,
-how it changes the parser’s token stream, and any configuration options or interactions
-with specific rules.
+how it changes the parser's Markdown token stream, and any configuration options
+or interactions
+with specific Rule Plugins. For a high‑level overview before diving into that reference,
+see the [Extensions](#extensions) section later in this User Guide.
 
 To avoid repeating similar Markdown snippets throughout this guide, we standardized
 on a small set of example files.
@@ -198,7 +262,8 @@ base directory
 The `README.md` file is present for reference and can be any kind of Markdown file
 you would use for your projects. For the sake of these examples, we assume that
 the `README.md` file always scans cleanly under the default configuration so that
-any reported failures come only from the example files.. Within the `examples` directory
+any reported Rule Failures come only from the example files. Within the `examples`
+directory
 are two files: `example-1.md` and `example-2.md`. The file `example-1.md` has the
 content:
 
@@ -227,7 +292,7 @@ These two files are intentionally constructed to demonstrate [Rule MD041](./plug
 - `example-1.md` starts with a level 2 ATX heading and, under the default configuration,
   triggers MD041 on line 1 because the first heading in the file is not level 1.
 - `example-2.md` starts with a level 1 ATX heading and does not trigger MD041, because
-  its first heading satisfies the rule's requirement.
+  its first heading satisfies the Rule Plugin's requirement.
 
 You will see these two files reused in later sections whenever we need simple, stable
 examples of heading-related behavior.
@@ -236,10 +301,13 @@ examples of heading-related behavior.
 
 **NOTE**: If you are looking for some quick help on how to get started with the
 PyMarkdown command line, read our [Quick Start - General Command-Line Usage](./quick-starts/general.md)
-guide.
+guide. If you already understand the basics from that document, you can treat this
+section as the reference for how the command-line interface is structured: which
+subcommands exist, how to access per-command help, and where command-specific
+options are described. For detailed information on how **fix** mode behaves internally
+and which Rule Plugins have the **autofix** capability, see [Basic Fixing](#basic-fixing).
 
-If you are stuck on what to do when using the command line, it is always beneficial
-to enter the following command line:
+If you are unsure what to do on the command line, run:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -264,39 +332,41 @@ Linters complicate that simple model because calling scripts often want to disti
 between "success" (`0`), "something bad happened but the tool itself is fine" (`1`),
 and "something is configured wrong or the tool failed" (`2`).
 
-By default, PyMarkdown adopts that three-level return code scheme. For power users,
-you can override this behavior and choose a different scheme that controls whether
-certain categories of results (such as "files were fixed" or "only style failures
-occurred") cause a non-zero exit code. The available schemes are described in
-[Return Code Scheme](#-return-code-scheme-observability).
+The available schemes, and how to configure them, are described in the
+[Return Code Scheme](#-return-code-scheme-observability) section under Basic
+Configuration.
 
 ### Available Groups of Commands
 
-When you run the base command with `--help`, the output lists all arguments that
-apply to every command, followed by the available commands. At present, there are
-six commands, displayed in alphabetical order:
+When you run the base command with `--help`, the output first lists global arguments
+that apply to every command, followed by the available subcommands. At present,
+there are six subcommands, displayed in alphabetical order:
 
 - `extensions` - Request information on current extensions.
 - `fix` - Fix any Markdown files (where possible) in the specified paths.
-- `plugins` - Request information on current plugin rules.
+- `plugins` - Request information on current Rule Plugins.
 - `scan` - Scan any Markdown files in the specified paths.
 - `scan-stdin` - Scan the application's standard input as a Markdown file.
 - `version` - Return the version of the application.
 
-Three of these commands (`extensions`, `plugins`, and `version`) are inspection
-commands, used to request more information about [installed extensions](#extension-command),
-[installed rules](#plugin-command), and to inquire about the [version](#version-command)
-of the application.
+Conceptually, three of these (extensions, plugins, and version) are inspection commands
+used to query the current setup (installed extensions, installed Rule Plugins, and
+the application
+version).
 
-The remaining commands are action commands. The `scan` command instructs PyMarkdown
-to scan any specified files for failures and return a non-zero exit code if any
-failures are found. The `scan-stdin` command is a variant of the `scan` command
+The other three (scan, scan-stdin, and fix) are action commands that analyze or
+modify Markdown files.
+The `scan` command instructs PyMarkdown
+to scan any specified files for Rule Failures and return a non-zero exit code if
+any
+Rule Failures are found. The `scan-stdin` command is a variant of the `scan` command
 that reads the application's standard input and scans that input as if it were in
 a file. The `fix` command is like the `scan` command, but it instructs PyMarkdown's
-Rule Engine to try to fix any failures and write the updated content back to disk,
+Rule Engine to try to fix any Rule Failures and write the updated content back to
+disk,
 potentially changing multiple files in a single invocation.
 
-To figure out the correct arguments to pass to a command, run:
+To see options specific to a single command (instead of the global help), run:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -313,20 +383,36 @@ To figure out the correct arguments to pass to a command, run:
 
 <!-- pyml enable code-block-style-->
 
-Replace `{command}` with the command you want details about.
-
-This help output focuses on options specific to that command, making it useful both
-when exploring the CLI and when you need to fine-tune a particular invocation.
+Replace `{command}` with the command you want details about. This per‑command help
+shows only the arguments for that command, which is useful both when exploring the
+CLI and when fine‑tuning a particular invocation.
 
 In addition to the commands and their arguments, there are arguments that precede
-the commands and apply to all the commands. These arguments are covered in the section
+the commands and apply to all the commands. For example:
+
+<!-- pyml disable code-block-style-->
+=== "Global Python Install"
+
+    ```sh
+    pymarkdown --config my-config.json scan examples
+    ```
+
+=== "Pipenv Package Manager"
+
+    ```sh
+    pipenv run pymarkdown --config my-config.json scan examples
+    ```
+
+<!-- pyml enable code-block-style-->
+
+These arguments are covered in the section
 below on [Basic Configuration](#basic-configuration).
 
 ### Basic Scanning
 
 **NOTE**: If you are looking for some quick help on how to get started with using
 PyMarkdown to scan Markdown files from the command line, read our
-[Quick Start - Scanning Markdown Files](./quick-starts/scanning.md) guide.
+[Quick Start: Scanning Markdown Files](./quick-starts/scanning.md) guide.
 
 The PyMarkdown linter is executed by calling the project from the command line,
 specifying one or more files and directories to scan for Markdown `.md` files.
@@ -335,9 +421,9 @@ with the `scan` keyword to denote that scanning is needed.
 
 #### Sample Command Lines
 
-The command line for scanning files is very straightforward. Assuming that you are
-in the root directory of the directory structure specified in the [Prerequisites](#prerequisites)
-section, two simple command lines are:
+The command line for scanning files is very straightforward. Assuming you are in
+the `base directory` from [Prerequisites](#prerequisites), two simple command lines
+are:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -372,63 +458,70 @@ and:
 <!-- pyml enable code-block-style-->
 
 The first example will scan every Markdown `.md` file in the `examples` directory,
-while the second invocation will only scan the two specified files. To ensure that
-the output is always consistent, if different path arguments specify the same filename,
-that filename will only be added once to the list of files to scan. In addition,
-to ensure that the scanning is done in a predictable order, that list of files to
-scan is also sorted into alphabetical order before any rules are executed, so that
-rule behavior and output ordering do not depend on the exact combination or ordering
-of path arguments on the command line.
+while the second invocation will only scan the two specified files.
 
-After executing either of those command lines from the root directory, the output
-to expect from PyMarkdown is:
+To make behavior predictable, PyMarkdown also:
+
+- removes duplicate files if different path arguments resolve to the same filename,
+  and
+- sorts the final list of files to scan into alphabetical order before any Rule Plugins
+  are executed.
+
+This ensures that Rule Plugin behavior and output ordering do not depend on the exact
+combination or ordering of path arguments on the command line.
+
+To understand this output, see [Rule Failure Format](#rule-failure-format). That
+section breaks
+down each part of a line like:
 
 ```text
 examples\example-1.md:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
 ```
 
-This failure and its format is described in the following section.
-
 #### Rule Failure Format
 
-Our team decided to adopt a failure format like that of other linters, checkers,
-and compilers. At their root, all those tools use the first four fields to show
-the file scanned, the location within the file where the failure occurred (line
-number and column number), and a unique code for the reported failure. From there,
-the tools all diverge into their own formats, each format providing the detailed
-information relevant to its own tool.
+Our team decided to adopt a failure format similar to that of other linters, checkers,
+and compilers. In all of those tools, the first fields identify the file, the location
+within the file (line and column), and a unique code for the reported failure.
+After that, each tool diverges into its own format to provide additional details
+that are specific to that tool.
 
 Keeping to that format, the output format for any PyMarkdown failure is as follows:
 
-`file-name:line:column: rule-id: description (aliases)`
+`file-name:line:column: rule-id: description {extra-information} (aliases)`
+
+For the formal definition and behavior of a Rule Failure, see [Rule Failure](#rule-failure).
 
 Breaking it down into its constituent parts:
 
-- `file-name` - Path to the file that triggered the rule.
-    - This will be the path as resolved by PyMarkdown after all globbing, recursion,
+- `file-name` - Path to the file that triggered the Rule Plugin.
+    - This is the path as resolved by PyMarkdown after all globbing, recursion,
       and filtering (for example, `--exclude` and `--respect-gitignore`) have been
       applied.
-- `line`/`column` - Position in the file where the rule was triggered.
-    - Uses a 1-based line index and a 1-based column index that match what PyMarkdown
-      reports consistently across rules and align with what you see if you open
-      the file in a typical text editor.
-- `rule-id` - Unique identifier assigned to the rule, such as MD013.
-    - This id is stable across versions unless a rule is explicitly deprecated and
-      replaced, in which case the deprecation is called out in the rule documentation.
-- `description` - Human readable description of the rule.
-    - Intended to be a short summary of the failure that can be consumed directly
-      from logs or CI output without needing to cross-reference the rule documentation.
-- `aliases` - One or more aliases used to reference the rule in configuration, pragmas,
-  and command line options.
-    - These are the same strings you can pass to `--enable-rules` / `--disable-rules`
-      and to pragma directives, remaining stable for a rule across releases unless
-      otherwise documented.
+- `line`/`column` - Position in the file where the Rule Plugin was triggered.
+    - Uses a 1-based line index and a 1-based column index that align with what
+      you see in a typical text editor.
+- `rule-id` - Unique identifier assigned to the Rule Plugin, such as `MD013`.
+    - These identifiers follow the pattern described under [Rule Ids](#rule-ids)
+      and are stable across versions unless a Rule Plugin is explicitly deprecated
+      and replaced. Any such deprecations are called out in the Rule Plugin documentation.
+- `description` - Human readable summary of the failure.
+    - Intended to be short enough to consume directly from logs or CI output without
+      always needing to open the Rule Plugin documentation.
+- `extra-information` - Optional information the provides more context regarding
+  the Rule Feialure being reported.
+- `aliases` - One or more aliases used to reference the Rule Plugin in configuration,
+  Pragmas, and command line options.
+    - These aliases are the same strings you can pass to `--enable-rules` / `--disable-rules`
+      (see [Basic Configuration](#basic-configuration)) and to Pragma directives
+      (see [Pragma Extension](#pragma-extension)).
 
 Using the output from the command line from the last section, that scan output reports
 one failure that occurred in the file `examples\example-1.md` on line 1 at
-column 1. The id of the rule that triggered is `MD041`, otherwise known by the human
-readable aliases of `first-line-heading` and `first-line-h1`. To present even more
-readable text to the reader, the text associated with this rule's failures is:
+column 1. The Rule Id of the Rule Plugin that triggered it is `MD041`, also known
+by the human
+readable aliases `first-line-heading` and `first-line-h1`. The text associated with
+this Rule Plugin's Rule Failure is:
 
 > First line in file should be a top level heading
 
@@ -440,7 +533,8 @@ is:
 ```
 
 which shows an ATX Heading with a level of 2. A simple reading of the failure text
-indicates that rule `MD041` is okay with the first line being a heading, but it
+indicates that Rule Plugin `MD041` is okay with the first line being a heading,
+but it
 wants that heading to be a level 1 or top-level heading. Looking at the text from
 `example-2.md`, the first line is:
 
@@ -449,27 +543,36 @@ wants that heading to be a level 1 or top-level heading. Looking at the text fro
 ```
 
 As the `example-2.md` file is not mentioned in the output, it makes sense that PyMarkdown's
-rule MD041 did not have any issue with a level 1 ATX Heading, largely confirming
-the above assumption that the application of rule `MD041` matches its stated intent.
-If desired, we can take the extra step to verify this by looking at the documentation
-page for [Rule MD041](./plugins/rule_md041.md#reasoning) which states:
+Rule Plugin `MD041` did not have any issue with a level 1 ATX Heading, largely confirming
+the above assumption that the application of Rule Plugin `MD041` matches its stated
+intent.
 
-> In most cases, the top-level heading of a document is used as the title of that
-> document. Therefore, the first heading in the document should be a level 1 header
-> to reflect that reality.
+To confirm how MD041 behaves:
+
+- For the Rule Plugin's design and examples, read [Rule Plugin MD041](./plugins/rule_md041.md#reasoning).
+- To see how MD041 is configured in your installation (and whether it supports **fix**
+  mode), run `pymarkdown plugins info MD041`; the [Plugin Command](#plugin-command)
+  section shows sample output.
 
 ### Advanced Scanning
 
-Advanced scanning builds directly on basic scanning behavior in PyMarkdown. Before
-using these options, you should understand the basic concepts (paths, globbing,
-recursion, and rule failure output). With that foundation, the advanced options
-are much easier to reason about and are less likely to behave in ways that seem
-"mysterious".
+Advanced scanning builds directly on the basic scanning behavior described in the
+[Basic Scanning](#basic-scanning) section and the command structure introduced under
+[Command Line Basics](#command-line-basics). Before enabling these advanced options,
+you should be comfortable with core concepts such as paths, globbing, recursion,
+and Rule Failure output. With that background, the advanced options are easier to
+predict and configure correctly.
+
+Conceptually, advanced scanning options control two things:
+
+- how PyMarkdown discovers candidate files, and
+- how it filters that list down to the files it will actually scan.
 
 #### Command Line Arguments
 
 As far as the command line interface for scanning goes, we have tried to make the
-advanced options easy to understand.
+advanced options easy to understand. The rest of this section shows the pymarkdown
+scan usage synopsis and then describes each advanced flag in turn.
 
 ```txt
 usage: pymarkdown scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
@@ -496,13 +599,22 @@ optional arguments:
 The `-l` or `--list-files` argument instructs PyMarkdown to only list the files
 it would scan if this argument was not present, and then exit the application without
 scanning those files. This is useful when using more complicated `path` arguments,
-ensuring that the list of filenames believed to be specified by the argument and
-the expected list of filenames to scan match each other. It is especially helpful
-when debugging path or exclude patterns in scripts and continuous integration (CI)
-pipelines, where you may not see or log the exact list of resolved files, but still
-want to verify how PyMarkdown's path resolution and filtering logic behaves. Our
-team treats `--list-files` as the "dry run" mode of the scanner: it shows you what
-would be processed without actually running any rules.
+because it lets you confirm that the filenames you expect match the ones PyMarkdown
+will scan.
+
+It is especially helpful when debugging path or exclude patterns in scripts and
+continuous integration (CI) pipelines, where you may not see or log the exact list
+of resolved files but still want to verify how PyMarkdown's path resolution and
+filtering logic behaves. Our team treats `--list-files` as the "dry run" mode of
+the scanner: it shows you what would be processed without actually running any Rule
+Plugins.
+Combined with the [`--return-code-scheme`](#-return-code-scheme-observability) options
+from
+[Basic Configuration](#basic-configuration), you can decide whether a `--list-files`
+"dry run"
+should fail CI. For example, using the `minimal` scheme lets you run
+`pymarkdown scan --list-files`
+in pipelines without treating "no files to scan" as an error.
 
 ##### --recurse or -r
 
@@ -511,7 +623,7 @@ the starting paths. In this mode, every subdirectory is visited before any filte
 is applied.
 
 After traversal, PyMarkdown applies extension filtering and any `--exclude` or `--respect-gitignore`
-rules to decide which files to scan. This design keeps the discovery logic simple
+arguments to decide which files to scan. This design keeps the discovery logic simple
 but means the runtime cost grows with the total number of directories. To keep scans
 fast in large repositories, combine `--recurse` with `--exclude` to skip build outputs,
 third-party code, or other non-source directories.
@@ -561,9 +673,13 @@ package:
 
 - It first expands the path arguments (including any globs and recursion) into a
   list of candidate paths.
-- It then passes that list to py-walk’s matcher.
+- It then passes that list to py-walk's matcher.
 - Any path that matches an exclude pattern is removed from the final list of files
   to scan.
+
+If you are unsure why a file is being skipped or included, combine `--exclude`
+with `--list-files` (described above) to see which paths survive filtering, and
+compare that list against your configuration from [Basic Configuration](#basic-configuration).
 
 ##### --respect-gitignore
 
@@ -576,32 +692,45 @@ flag enabled, any file that Git marks as ignored is excluded from scanning.
 
 When you use `--respect-gitignore`, PyMarkdown must be able to run the Git executable.
 If Git is not available or returns an error, PyMarkdown treats that as a failure
-and does not silently ignore the flag. This guarantees that your scan results always
+instead of silently ignoring the flag. This ensures that your scan results always
 reflect the same ignore rules that Git applies to the repository.
 
-Because PyMarkdown shells out to Git and parses its output, `--respect-gitignore`
-adds some startup overhead while it computes the list of files to scan. If that
-extra cost is unacceptable, or Git is not available in your environment (for example,
-in some minimal CI containers), use multiple `--exclude` arguments instead to approximate
-the relevant `.gitignore` patterns.
+In CI environments where Git is not available or the extra startup cost is unacceptable,
+prefer
+multiple `--exclude` patterns instead of `--respect-gitignore`. To control how these
+situations
+affect pipeline status, adjust [`--return-code-scheme`](#-return-code-scheme-observability)
+in
+[Basic Configuration](#basic-configuration); for example, the `minimal` scheme avoids
+failing
+builds solely because no files were scanned.
 
 ##### path
 
 The scan command accepts one or more path arguments. Paths that contain a `?` or
-`*` character are passed to Python’s [glob module](https://docs.python.org/3/library/glob.html)
+`*` character are passed to Python's [glob module](https://docs.python.org/3/library/glob.html)
 and treated as glob patterns; paths without wildcards are treated as literal files
 or directories. Recursive traversal is controlled exclusively by `--recurse`, so
 PyMarkdown does not use `glob.glob(..., recursive=True)`.
 
+This behavior is consistent with the basic examples in [Basic Scanning](#basic-scanning),
+where `pymarkdown scan examples` and `pymarkdown scan examples/example-1.md` both
+rely on the same glob rules and extension filtering, just with different initial
+paths.
+
 By default, PyMarkdown only processes files whose names end with `.md`. This means
 you can scan a directory by passing `.` or `examples` instead of writing `./*.md`.
 
-Conceptually, PyMarkdown uses two stages:
+Conceptually, PyMarkdown uses two stages to decide which files to scan:
 
-- **Discovery:** globs and path arguments determine which filesystem entries are
-  considered at all.
+- **Discovery:** globs and path arguments (along with `--recurse`) determine which
+  filesystem entries are considered at all.
 - **Filtering:** the extension filter (the default `.md` set, or your `--alternate-extensions`)
-  decides which of those entries are treated as Markdown candidates.
+  and any exclude mechanisms (`--exclude` and `--respect-gitignore`) decide which
+  of those entries are treated as Markdown candidates.
+
+The advanced flags in this section simply modify one of these two steps: they either
+change how entries are discovered or how the discovered entries are filtered.
 
 In practice, this separation makes it easier to combine broad globs with narrow
 filtering. For example, you can use `**/*` to discover all files and then rely on
@@ -617,7 +746,7 @@ Markdown document.
 
 `scan-stdin` differs from `scan` in one key respect: it has no positional (path)
 arguments because all content comes from standard input. Everything else is the
-same. All general command-line options (such as configuration and rule enable/disable
+same. All general command-line options (such as configuration and Rule Plugin enable/disable
 arguments) still apply and are interpreted exactly as they are for the `scan` command,
 including configuration file loading, any `--enable-rules` or `--disable-rules`
 arguments, and the return code scheme.
@@ -652,138 +781,136 @@ and [kludgy](https://en.wikipedia.org/wiki/Kludge), so this feature was added.
 
 **NOTE**: If you are looking for some quick help on how to get started with using
 PyMarkdown to scan Markdown files from the command line, read our
-[Quick Start - Fixing Markdown Files](./quick-starts/fixing.md) guide.
+[Quick Start: Fixing Markdown Files](./quick-starts/fixing.md) guide. If you already
+understand the basics from that document, you can treat this section as the
+reference for how **fix** mode behaves internally and which Rule Plugins have the
+**autofix**
+capability.
 
-The documentation for fixing Markdown files using PyMarkdown is very similar to
-the documentation for scanning Markdown files. The two main differences are:
+If you are already comfortable with how `scan` works from
+[Basic Scanning](#basic-scanning) and [Advanced Scanning](#advanced-scanning),
+you can treat this section as "what changes when you use `fix` instead of `scan`".
 
-- not every rule supports the **autofix** ability used to fix issues, because many
-  rules cannot propose a deterministic fix without inferring the author’s intent
+The two main differences are:
+
+- Not every Rule Plugin supports the **autofix** capability called to fix issues.
+  The criteria for allowing a Rule Plugin to modify files are listed in
+  [Strict Rules for a Rule Plugin to Have the Autofix Ability](#strict-rules-for-a-rule-plugin-to-have-the-autofix-ability).
 - PyMarkdown will only emit a small amount of information when it applies fixes,
   informing you only that content within a given file was fixed, not specifically
   what content was fixed.
 
-Because of these differences, you should treat autofix as a mechanical assistant
+Because of these differences, you should treat **fix** mode as a mechanical assistant
 for well-defined formatting changes rather than a general-purpose "auto-correct"
 for arbitrary Markdown problems.
 
-#### Strict Rules for A Rule To Have The Autofix Ability
+#### Strict Rules for A Rule Plugin To Have The Autofix Ability
 
-Before coding the **autofix** ability for any rule, the rule author must be able
-to answer these questions in the positive:
+Before coding the **autofix** capability for any Rule Plugin, the Rule Plugin author
+must be able to answer these questions in the positive:
 
-- is the proposed fix a purely mechanical fix that is easily documented and predictable?
-- according to the [Github Flavored Markdown](https://github.github.com/gfm) specification
-  or other specifications, does the fix only change format, abstaining from changing
-  the content in any way?
-- is the proposed fix absent of any ambiguity in its application, even when applied
-  repeatedly across an entire document (that is, is the fix idempotent and free of
-  hidden side effects)?
+- Is the proposed fix a purely mechanical change that is easily documented and predictable?
+- According to the [GitHub Flavored Markdown](https://github.github.com/gfm)
+  specification, does the fix only change formatting, without changing the content?
+- Is the proposed fix unambiguous even when applied repeatedly across the document
+  (that is, deterministic and idempotent, with no hidden side effects)?
 
-If any of these answers is not "yes", that rule is not allowed to support **autofix**.
+If any of these answers is not "yes", that Rule Plugin is not allowed to support
+the **autofix** capability. In particular:
 
-This restriction is a deliberate policy choice for rule authors. The Rule Engine
-itself is technically capable of more complex changes, but we do not permit rules
-to use that flexibility when it would make fixes unpredictable.
+- Rule Plugins must not silently rewrite content in a way that could change the
+  document's meaning.
+- Running `pymarkdown fix` multiple times on the same file must yield the same result;
+  once all fixes are applied, subsequent runs must not introduce further changes.
 
-In practice, rules must not silently rewrite content in a way that could change
-the document's meaning.
-
-They must also behave the same way if `pymarkdown fix` is run multiple times on
-the same file. In other words, a well‑designed **autofix** implementation is deterministic
-and idempotent: the same inputs always produce the same outputs, and running the
-fix again does not introduce further changes.
-
-These constraints exist so that **autofix** implementations remain simple, transparent,
-and easy to review.
-
-When a fix depends on guessing the author's intent, it usually:
-
-- Introduces intricate conditional logic and rule‑specific exceptions.
-- Makes it difficult to determine whether the fix is safe in all cases.
-
-To avoid those problems, we explicitly disallow that kind of complex, intent‑dependent
-**autofix** behavior.
-
-Because Markdown has many element types and edge cases, it is hard to remove ambiguity
-completely. Any **autofix** that tries to infer the author’s intent would be risky
-and unpredictable.
-
-For that reason, we deliberately disallow **autofix** behaviors that depend on guessing
-intent.
+Any fix that depends on guessing the author's intent typically introduces complex,
+brittle logic and is hard to prove safe. Because Markdown has many edge cases, we
+treat those intent‑dependent fixes as too risky and do not allow them to possess
+**autofix** capabilities.
 
 ##### Examples
 
-###### Positive - Rule MD019 - no-multiple-space-atx
+###### Positive - Rule Plugin MD019 - no-multiple-space-atx
 
-[Rule MD019](./plugins/rule_md019.md), or `no-multiple-space-atx`, looks for extra
-spaces between the `#` characters and the heading text in an ATX heading. From the
-[Github Flavored Markdown](https://github.github.com/gfm/#atx-headings) specification:
+[Rule Plugin MD019](./plugins/rule_md019.md), or `no-multiple-space-atx`, looks
+for extra
+spaces between the `#` characters and the heading text in an ATX heading.
+
+This behavior follows the [GitHub Flavored Markdown ATX heading specification](https://github.github.com/gfm/#atx-headings):
 
 > The opening sequence of # characters must be followed by a space or by the end
 > of line.
 
-Rule `MD019` treats cases where "followed by a space" becomes "followed by many
-spaces" as violations.
+Rule Plugin `MD019` treats cases where "followed by a space" becomes "followed by
+many
+spaces" as Rule Failures.
 
-For **autofix**, all three requirements are satisfied. The fix collapses any run
+For a Rule Plugin to possess the **autofix** capability, all three requirements
+are satisfied. The fix collapses any run
 of multiple spaces between the opening `#` sequence and the heading text to a single
 space. This change only affects formatting and does not alter the content. Its behavior
 is fully deterministic and idempotent: once the excess spaces are removed, running
-autofix again does not change the heading.
+**fix** mode again does not change the heading.
 
-###### Negative - Rule MD025
+###### Negative - Rule Plugin MD025
 
-In contrast to Rule `MD019`, [Rule MD025](./plugins/rule_md025.md) (`single-title`)
+In contrast to Rule Plugin `MD019`, [Rule Plugin MD025](./plugins/rule_md025.md)
+(`single-title`)
 enforces that each Markdown document has a single title. In practice, this means:
 
 - The document has exactly one level‑1 heading, or
-- The document has a title field in its [front-matter](./extensions/front-matter.md#summary),
-  which PyMarkdown also treats as the document title.
+- The document has a title field in its [Front-Matter](./extensions/front-matter.md#summary),
+  which PyMarkdown also treats as the document title when the Front-Matter Extension
+  is enabled.
 
-When we considered adding autofix for `MD025`, we quickly ran into a problem. Deciding
+When we considered adding the **autofix** capability for `MD025`, we quickly ran
+into a problem. Deciding
 which heading represents the "real" title requires guessing the author's intent.
-For example, if a document has multiple level‑1 headings, the rule cannot reliably
+For example, if a document has multiple level‑1 headings, the Rule Plugin cannot
+reliably
 determine which one to keep or how to adjust the others.
 
-Because any automatic change would involve that kind of intent‑dependent choice,
-`MD025` does not meet all three **autofix** requirements. The rule still provides
-useful detection, but fixes are expected to be applied manually or by higher‑level
-refactoring tools rather than via PyMarkdown’s **autofix** mechanism.
+Because any automatic change would involve choosing which title the author "really"
+intended, `MD025` fails the third requirement: the fix would not be unambiguous
+or safe to apply everywhere. As a result, `MD025` is intentionally detection‑only.
+It reports Rule Failures, but any fixes should be made manually or by higher‑level
+refactoring tools rather than via PyMarkdown's **fix** mode.
 
-#### Rules With Autofix
+#### Rule Plugins With Autofix
 
-**NOTE:** You don’t need to memorize this list — use it as a reference. It is also
-colocated in our [Quick Start](./quick-starts/fixing.md#rules-with-autofix) guides
-for easy reference.
+**NOTE:** You don't need to memorize this list &mdash; use it as a reference. It
+is also colocated in our
+[Quick Start: Fixing Markdown Files](./quick-starts/fixing.md#rule-plugins-with-autofix)
+guides.
 
-For quick reference, these are the built-in rules that currently support **autofix**
-in the latest released version of PyMarkdown:
+For quick reference, these are the built-in Rule Plugins that currently support
+the **autofix**
+capability in the latest released version of PyMarkdown:
 
-- The first column presents the rule's identifier and a link to that rule's
+- The first column presents the Rule Plugins's Rule ID and a link to that Rule Plugin's
   `Fix Description` heading in the documentation.
 - The second column presents the human-readable identifiers that are also used to
-  identify the rule.
-- The third column contains a short description of the rule itself.
+  identify the Rule Plugin.
+- The third column contains a short description of the Rule Plugin itself.
 
-This list can change between releases as rules are added or as existing rules gain
-or lose **autofix** support. That means the set of rules that can modify files is
-version‑dependent.
+Because this list can change between releases, treat it as a version dependency.
+Before relying on
+**fix** mode in CI or other automation:
 
-When you rely on **autofix** in automated workflows:
+- Pin the PyMarkdown version (check with [`pymarkdown version`](#version-command)).
+- Verify fix support for the Rule Plugins you care about using
+  [`pymarkdown plugins list`](#list-subcommand)
+  or [`pymarkdown plugins info <rule>`](#info-subcommand).
+- After upgrading, review this table or the per‑rule documentation to confirm which
+  Rule Plugins still
+  support the **autofix** capability.
 
-- Treat the **autofix** capabilities of each rule as part of PyMarkdown’s public
-  API.
-- Pin the PyMarkdown version in your tooling.
-- On each upgrade, review this table (or the per‑rule documentation) to confirm
-  which rules can still modify files.
-
-Following these steps helps you avoid unexpected changes in fix behavior when you
-move between PyMarkdown versions.
+These steps help you avoid unexpected changes in fix behavior when you move between
+PyMarkdown versions.
 
 <!-- pyml disable line-length-->
 
-| Rule Id & Link | Human-Readable Identifier | Short Description |
+| Rule ID & Link | Human-Readable Identifier | Short Description |
 | -- | -- | -- |
 | [MD001](./plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
 | [MD004](./plugins/rule_md004.md#fix-description) | `ul-style` | Inconsistent Unordered List Start style. |
@@ -811,14 +938,28 @@ move between PyMarkdown versions.
 
 #### Fix Examples
 
-The [Fix Mode Example](./quick-starts/fixing.md#fix-mode-example) in our Quick Starts
-guide outlines most of the practical details you need to know about applying **fix**
-mode to a single file, including how fixes are reported and how failures are re-scanned
-after changes. Internally, fix mode uses the same Rule Engine as scan mode, but
-rules that support autofix are allowed to emit modifications to the document instead
-of only reporting failures. You can then call PyMarkdown again in **scan** mode
-over the fixed files, but that scan should only report failures for rules that
-do not support autofix or for issues that cannot be fixed automatically.
+The [Fix a Single File](./quick-starts/fixing.md#fix-a-single-file) section in our
+Quick Start guide covers the practical steps for applying **fix** mode to a
+single file, including how fixes are reported and how to re-scan for Rule Failures
+after applying **fix** mode.
+This section focuses on how that behavior fits into the broader Rule Engine model.
+Internally, **fix** mode uses the same Rule Engine as **scan** mode (see [Basic Scanning](#basic-scanning)):
+every enabled Rule Plugin runs, but only Rule Plugins listed in
+[Rule Plugins With Autofix](#rule-plugins-with-autofix)
+are allowed
+to modify content. After a fix run, a follow‑up scan should report only:
+
+- Rule Failures from Rule Plugins that do not support the **autofix** capability,
+  or
+- issues that cannot be fixed automatically.
+
+For a concrete walkthrough of this pattern, see [Fix a Single File](./quick-starts/fixing.md#fix-a-single-file).
+
+Remember that only the Rule Plugins listed in [Rule Plugins With Autofix](#rule-plugins-with-autofix)
+can modify files; all other enabled Rule Plugins still behave as scan-only checks.
+In practice, this means you can safely run pymarkdown fix over a directory tree
+and expect only well‑defined, mechanical formatting changes from those **autofix**
+capable Rule Plugins.
 
 Other command lines that are more complex are:
 
@@ -841,7 +982,7 @@ Other command lines that are more complex are:
 
 - find all Markdown files that do not have the `draft` prefix in any `docs` directory,
   focusing only on files that will be commited to the Git repository and fix them
-  if possible, so that only “publishable” documentation in tracked paths is subject
+  if possible, so that only "publishable" documentation in tracked paths is subject
   to enforcement:
 
 <!-- pyml disable code-block-style-->
@@ -861,25 +1002,35 @@ Other command lines that are more complex are:
 ### Extensions
 
 Extensions are features that go beyond the base [GitHub Flavored Markdown](https://github.github.com/gfm/)
-specification. Some are defined by that specification as optional extensions; others
-are additional features implemented by PyMarkdown.
+(GFM) specification. Some are defined there as optional extensions; others are additional
+features implemented by PyMarkdown.
 
 These features change how the Markdown parser breaks a document into its constituent
-elements. In practice, enabling an extension can introduce new element types (for
-example, table cells) or reinterpret existing structures (for example, treating
-a YAML block as front matter instead of a paragraph), which in turn affects which
-tokens the Rule Engine receives and which rules may trigger.
+elements. Enabling an extension can introduce new element types (for example, table
+cells) or reinterpret existing structures (for example, treating a YAML block as
+Front-Matter instead of a paragraph). In turn, this affects which tokens the Rule
+Engine receives and which Rule Plugins may trigger.
 
 Because of these effects, advanced configurations should be tested with representative
-documents. This ensures that rule behavior, reported positions, and any apparent
-"missing" or "extra" failures still align with your expectations.
+documents. This ensures that Rule Plugin behavior, reported positions, and any apparent
+"missing" or "extra" Rule Failures still align with your expectations.
 
-These extensions are fully documented in the
-[Advanced Extensions](./advanced_extensions.md) document. That guide describes how
-each extension behaves, how it is implemented, and how to configure it.
+In this section, we provide only high-level information about each extension to
+give you solid footing before diving into the detailed reference.
 
-In this section, we provide only high-level information about each extension so that
-you can proceed with solid footing before diving into the detailed reference.
+For more detailed information on configuring extensions (for example, enabling them
+via configuration
+files rather than the command line), see [Advanced Configuration – Extensions](./advanced_configuration.md#extensions).
+For a complete behavioral reference for each extension &mdash; including tokens
+added and interactions with
+Rule Plugins &mdash; see [Advanced Extensions](./advanced_extensions.md).
+
+#### Enabling Extensions
+
+On the command line, use `--enable-extensions` followed by a comma-separated list
+of extension identifiers to enable those extensions. As all extensions other than
+the [Pragma extension](#pragma-extension) are disabled by default, there is no command
+line ability to disable extensions, only enable them.
 
 #### Specification Extensions
 
@@ -887,24 +1038,28 @@ Some parts of the GitHub Flavored Markdown specification are defined as optional
 extensions that a GFM-compliant parser may support.
 
 If you enable one of these extensions, PyMarkdown will recognize the corresponding
-syntax in your Markdown and apply the rules defined by that extension when parsing
+syntax in your Markdown and apply the changes defined by that extension when parsing
 the document. These are most useful when:
 
 - Your documentation already uses GFM-style tables, task lists, or strikethrough.
-- You want PyMarkdown to lint raw HTML usage more strictly according to GFM’s
+- You want PyMarkdown to lint raw HTML usage more strictly according to GFM's
   disallowed HTML rules.
-- You need link detection that matches GFM’s extended autolink behavior.
+- You need link detection that matches GFM's extended autolink behavior.
 
 The five specification extensions are:
 
 <!-- pyml disable-num-lines 7 line-length-->
 | Extension | GFM Link | Description |
 | --- | --- | --- |
-| [Tables](./extensions/markdown-tables.md) | [GFM](https://github.github.com/gfm/#tables-extension-) | Tables using the \| character. |
-| [Task List Items](./extensions//task-list-items.md) | [GFM](https://github.github.com/gfm/#task-list-items-extension-) | Task list items using the `[` and `]` characters in list markers. |
-| [Strikethrough](./extensions/strikethrough.md) | [GFM](https://github.github.com/gfm/#strikethrough-extension-) | Strikethrough using the `~` character. |
-| [Extended Autolink](./extensions/extended-autolinks.md) | [GFM](https://github.github.com/gfm/#autolinks-extension-) | Extended autolink rules. |
-| [Disallowed HTML](./extensions/disallowed-raw-html.md) | [GFM](https://github.github.com/gfm/#disallowed-raw-html-extension-) | HTML elements that are purposefully disallowed as being dangerous. |
+| [Tables](./advanced_extensions.md#markdown-tables) | [GFM](https://github.github.com/gfm/#tables-extension-) | Tables using the \| character. |
+| [Task List Items](./advanced_extensions.md#task-list-items) | [GFM](https://github.github.com/gfm/#task-list-items-extension-) | Task list items using the `[` and `]` characters in list markers. |
+| [Strikethrough](./advanced_extensions.md#strikethrough) | [GFM](https://github.github.com/gfm/#strikethrough-extension-) | Strikethrough using the `~` character. |
+| [Extended Autolink](./advanced_extensions.md#autolinks-extended) | [GFM](https://github.github.com/gfm/#autolinks-extension-) | Extended autolink rules. |
+| [Disallowed HTML](./advanced_extensions.md#disallowed-raw-html) | [GFM](https://github.github.com/gfm/#disallowed-raw-html-extension-) | HTML elements that are purposefully disallowed as being dangerous. |
+
+**NOTE:** The links in the first column all point into the [Advanced Extensions](./advanced_extensions.md)
+reference, where you can find detailed behavior, examples, and any extension‑specific
+configuration.
 
 Note that these are extensions to the specification itself. Parsers may not support
 these extensions, or only support them with specific configuration enabled. This
@@ -918,31 +1073,32 @@ that came up in real-world use.
 
 In broad terms:
 
-- The front-matter extension treats a leading YAML block as metadata and removes
-  it from the token stream, aligning PyMarkdown’s view of the document with tools
+- The Front-Matter Extension treats a leading YAML block as metadata and removes
+  it from the Markdown token stream, aligning PyMarkdown's view of the document
+  with tools
   like MkDocs.
-- The pragma extension allows inline instructions in comments to enable or disable
-  specific rules over selected line ranges, without changing how the Markdown itself
-  is parsed.
+- The Pragma Extension allows inline instructions in comments to enable or disable
+  specific Rule Plugins over selected line ranges, without changing how the Markdown
+  itself is parsed.
 
 <!-- pyml disable-num-lines 4 line-length-->
 | Extension | Enabled By Default | Description |
 | --- | --- | --- |
-| [Front-Matter](./extensions/front-matter.md) | No | YAML Front Matter for files. |
-| [Pragmas](./extensions/pragmas.md) | Yes | Pragmas to control triggering of rules within files. |
+| [Front-Matter](./extensions/front-matter.md) | No | YAML Front-Matter for files. |
+| [Pragmas](./extensions/pragmas.md) | Yes | Pragmas to control triggering of Rule Plugins within files. |
 
 ##### Front-Matter Extension
 
-The [Document Front-Matter](./extensions/front-matter.md) extension (id of `front-matter`
-and disabled by default) allows for an optional YAML front-matter block to be inserted
+The [Front-Matter](./extensions/front-matter.md) extension (id of `front-matter`
+and disabled by default) allows for an optional YAML Front-Matter block to be inserted
 at the first line of the document. For applications that aggregate Markdown pages
-into a condensed form (such as a web site), having such a front-matter block is
+into a condensed form (such as a web site), having such a Front-Matter block is
 useful in conveying information from the Markdown document to that application.
 This is indeed the case with the [MkDocs application](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data)
 used to aggregate our Markdown documents into this documentation web site.
 
 For example, depending on the documentation you are trying to write, you could use
-the MkDocs application along with a Markdown document with the following front-matter:
+the MkDocs application along with a Markdown document with the following Front-Matter:
 
 ```Markdown
 ---
@@ -957,23 +1113,23 @@ This is the first paragraph of the document.
 Without this extension enabled, PyMarkdown interprets the first and sixth lines as
 thematic breaks and treats lines 2 through 5 as a paragraph. When MkDocs aggregates
 this document, it instead displays content starting at `This is the first...` and
-uses the front-matter YAML purely as metadata. In particular, MkDocs uses the title
+uses the Front-Matter YAML purely as metadata. In particular, MkDocs uses the title
 field as the document title and ignores the other fields unless they are referenced
 by a theme.
 
-To align with that behavior, enabling this extension causes PyMarkdown to treat
-the front-matter block as metadata and remove it from the stream of Markdown elements
-that rules evaluate.
+This matches the behavior of the [MkDocs application](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data),
+which uses the Front-Matter block as metadata and starts rendering at the first
+Markdown paragraph.
+To align with that, when this extension is enabled PyMarkdown treats the Front-Matter
+block as metadata
+and removes it from the Markdown token stream that rules evaluate.
 
 When this extension is enabled:
 
-- Rules effectively "start" at the first line after the front matter.
-- Line and column positions in failures are still computed relative to the original
-file, not to a version with front matter stripped.
-
-In practice, this keeps diagnostics aligned
-with the on-disk file while also matching what an aggregating tool such as MkDocs
-renders.
+- Rules effectively "start" at the first line after the Front-Matter.
+- Line and column positions in Rule Failures are still computed relative to the original
+  file, not to a version with Front-Matter stripped, so diagnostics stay aligned
+  with the on‑disk file while matching what an aggregating tool such as MkDocs renders.
 
 ##### Pragma Extension
 
@@ -984,20 +1140,20 @@ for parts of the document rather than the entire document. This feature is analo
 to the `suppress` or `ignore` features of other linters and checkers.
 
 **Important Note:** Pragmas are implemented as an extension because they modify the
-Markdown document **before** it reaches the parser and then remove themselves.
+Markdown document **before** it reaches the parser and then remove themselves. As
+a result, Pragmas are not visible to the Markdown parser at all.
 
-As a result, pragmas are not visible to the Markdown parser at all.
+Instead, Pragmas only affect the behavior of the Rule Engine. They dynamically
+enable or disable Rule Plugin triggering over specific line ranges. They do not change
+the underlying Markdown content or how it is parsed.
 
-Instead, pragmas only affect the behavior of the Rules Engine. They dynamically
-enable or disable rule triggering over specific line ranges. They do not change
-the underlying Markdown content.
+This design guarantees that Pragmas never alter the Markdown structure (for example,
+heading levels or list nesting). Pragmas only control which parser outputs the Rule
+Engine processes and therefore which Rule Failures are emitted or suppressed for
+a given
+region of the document.
 
-This design guarantees that pragmas never alter how Markdown is parsed. For example,
-they do not affect heading structure or list nesting. Pragmas only control which
-parser outputs the Rules Engine processes, and that control determines which failures
-are emitted or suppressed for a given region of the document.
-
-For example, consider the following Markdown snippet:
+To see how this works in practice, consider the following Markdown snippet:
 
 ```Markdown
 #  My Bad Atx Heading
@@ -1005,8 +1161,8 @@ For example, consider the following Markdown snippet:
 
 When scanned, this file will trigger a `MD019` (or `no-multiple-space-atx`) failure
 due to the two spaces between the `#` character and the following `M` character.
-While this is obviously a contrived example, if we wanted to suppress the triggering
-of the rule on this line, we have two main options.
+The Pragmas in the examples below only change whether that failure is reported;
+they do not change the content of the heading or how it is parsed.
 
 The first is the simplest: disable it only for the [next line](./extensions/pragmas.md/#disable-next-line-command):
 
@@ -1015,17 +1171,16 @@ The first is the simplest: disable it only for the [next line](./extensions/prag
 #  My Bad Atx Heading
 ```
 
-The second is a slight alteration to the simple case, disabling the rule for a specific
-[number of lines](./extensions/pragmas.md/#disable-num-lines-command):
+The second disables the Rule Plugin for a specific [number of lines](./extensions/pragmas.md/#disable-num-lines-command):
 
 ```Markdown
 <!-- pyml disable-num-lines 1 blanks-around-fences-->
 #  My Bad Atx Heading
 ```
 
-The final example is more of a "heavy hammer": disable it for an
-[entire region](./extensions/pragmas.md#disable-command-and-enable-command), enabling
-it at the end of that region.
+The final example disables the Rule Plugin for an [entire region](./extensions/pragmas.md#disable-command-and-enable-command),
+then re‑enables it. The linked sections provide the full syntax and edge‑case behavior
+for each Pragma type.
 
 ```Markdown
 <!-- pyml disable no-multiple-space-atx-->
@@ -1033,35 +1188,36 @@ it at the end of that region.
 <!-- pyml enable no-multiple-space-atx-->
 ```
 
-Care must be taken when using these pragmas to disable triggering of failures by
-the Rule Engine. There are three things to keep in mind:
+Care must be taken when using these Pragmas to disable triggering of Rule Failures
+by the Rule Engine. There are three things to keep in mind:
 
-- Pragmas can only *disable* and *enable* the triggering of failures for rules that
-  are already enabled. In other words, in the above example, Rule `MD019` must already
-  be enabled for the pragma to have any effect.
-- More specific pragmas (`disable-next-line` and `disable-num-lines`) are applied
-  first, and then the region pragmas (`disable` and `enable`). Because of this precedence,
-  we do not suggest using both forms of pragmas in the same document, as it can
-  be difficult to reason about which pragma is currently in effect.
-- Region pragmas (`disable` and `enable`) do not stack. You can have two disable
-  region pragmas that disable rule `MD019`, and a single matching enable region
-  pragma reactivates that rule, rather than requiring one enable per disable.
+- Pragmas can only *disable* and *enable* the triggering of Rule Failures for Rule
+  Plugins that are already enabled. In other words, in the above example, Rule Plugin
+  `MD019` must already be enabled for the Pragma to have any effect.
+- More specific Pragmas (`disable-next-line` and `disable-num-lines`) are applied
+  first, and then the region Pragmas (`disable` and `enable`). Because of this precedence,
+  we do not suggest using both forms of Pragmas in the same document, as it can
+  be difficult to reason about which Pragma is currently in effect.
+- Region Pragmas (`disable` and `enable`) do not stack. You can have two disable
+  region Pragmas that disable Rule Plugin `MD019`, and a single matching enable region
+  Pragma reactivates that Rule Plugin, rather than requiring one enable per disable.
 
-These keep pragma evaluation simple and predictable: PyMarkdown effectively tracks
-a single on/off state per rule based on the most recent applicable region pragma
-and then applies any more specific one-line pragmas on top of that for the affected
-lines, without maintaining a nested stack of disable/enable scopes.
+These keep Pragma evaluation simple and predictable: PyMarkdown effectively tracks
+a single on/off state per Rule Plugin based on the most recent applicable region
+Pragma and then applies any more specific one-line Pragmas on top of that for the
+affected lines, without maintaining a nested stack of disable/enable scopes.
 
 #### Extension Examples
 
-The two most frequently enabled extensions are for Markdown Tables and for Front
-Matter. Most Markdown implementations support tables, and many systems that consume
-Markdown and aggregate it into other formats use YAML Front Matter to carry extra
+The two most frequently enabled extensions are for Markdown Tables and for
+Front-Matter. Most Markdown implementations support tables, and many systems that
+consume
+Markdown and aggregate it into other formats use YAML Front-Matter to carry extra
 information about the documents being aggregated.
 
 Modifying our simple example of scanning all Markdown files in every `docs` directory,
 we get the following command line, which explicitly enables only the extensions
-needed for front matter and tables while leaving other extensions at their existing
+needed for Front-Matter and tables while leaving other extensions at their existing
 enabled/disabled defaults:
 
 <!-- pyml disable code-block-style-->
@@ -1078,89 +1234,122 @@ enabled/disabled defaults:
     ```
 <!-- pyml enable code-block-style-->
 
-For more advanced information about extensions and how they impact the Markdown
-parser, check out the [Advanced Extensions](./advanced_extensions.md) document.
+For more advanced information &mdash; such as the exact tokens each extension introduces
+and how those tokens
+interact with specific rules &mdash; see [Advanced Extensions](./advanced_extensions.md).
 
-### Plugin Rules
+### Rule Plugins
 
-Plugin rules (usually just referred to as rules) are the code that enables the Rule
+Rule Plugins are the code containers for the rules that power PyMarkdown's scanning
+ability.
+Those Rule Plugins allow the Rule
 Engine to look for Markdown patterns or structures that it considers sub-optimal.
-Their scope ranges from detecting long lines in the document
-([Rule MD013](./plugins/rule_md013.md)),
-through identifying superfluous blank lines
-([Rule MD012](./plugins/rule_md012.md)),
-to detecting what looks like a missed Markdown ATX Heading annotation
-([Rule MD018](./plugins/rule_md018.md)).
 
-#### Enabling And Disabling Rules
+#### What Rule Plugins Do
 
-Instead of looking at a [long list of rules](./rules.md) that describe every rule
-provided by PyMarkdown, most users scan a set of files in their repository and decide
-that they do not want a rule to be enabled. Reasons will vary from "not right now,
-I'll fix it later" to "I really do not agree with that", but the request remains
-the same: how do I disable that behavior?
+Unlike extensions, which modify or enrich the parser's Markdown token stream, rules
+only consume those tokens
+and report Rule Failures (or propose fixes in **fix** mode). Their scope ranges
+from detecting long lines in
+the document ([Rule Plugin MD013](./plugins/rule_md013.md)), through identifying
+superfluous blank lines
+([Rule Plugin MD012](./plugins/rule_md012.md)), to detecting what looks like a missed
+Markdown ATX Heading
+annotation ([Rule Plugin MD018](./plugins/rule_md018.md)).
+
+For configuration details &mdash; such as enabling/disabling specific Rule Plugins
+or changing their options &mdash; see
+[Advanced Configuration – Rule Plugins](./advanced_configuration.md#rule-plugins).
+
+For a deeper look at each Rule Plugin's behavior, rationale, and examples, use
+[Advanced Rule Plugins](./advanced_plugins.md).
+
+#### Enabling And Disabling Rule Plugins
+
+Instead of starting from the complete [Rule Plugins list](./rules.md), most users
+begin by scanning their repository and then selectively turning Rule Plugins on
+or off based on what they see. This subsection focuses on how to enable or disable
+Rule Plugins from the command line; later sections and references cover configuration
+files and per‑line suppression with Pragmas.
 
 On the command line, use `-d` or `--disable-rules` with a comma-separated list of
-rule ids or aliases to disable rules, and `-e` or `--enable-rules` to enable them.
-Rules may be disabled by default for two main reasons:
+Rule IDs or aliases to disable Rule Plugins, and `-e` or `--enable-rules` to enable
+them. Rules may be disabled by default for two main reasons:
 
 - They introduce new behavior or apply only in niche scenarios.
-- They have been replaced by a newer rule, and we avoid enabling two competing implementations
-  of the same check at the same time.
+- They have been replaced by a newer Rule Plugin, and we avoid enabling two competing
+  implementations of the same check at the same time.
 
 ##### Example
 
-For example, if you disagree with PyMarkdown that long lines and extra blank lines
-in a Markdown document are bad, you can disable the corresponding rules by id or
-by alias:
+For example, if you prefer not to enforce long lines and extra blank lines in a
+Markdown document, you can disable the corresponding Rule Plugins by id or by alias:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
 
     ```sh
+    # disable by Rule Plugin id
     pymarkdown -d MD012,MD013 scan examples
-    # or, using rule aliases:
-    pymarkdown -d no-multiple-blanks,line-length scan examples    ```
+    
+    # or, disable by Rule Plugin aliases:
+    pymarkdown -d no-multiple-blanks,line-length scan examples
     ```
 
 === "Pipenv Package Manager"
 
     ```sh
+    # disable by Rule Plugin id
     pipenv run pymarkdown -d MD012,MD013 scan examples
-    # or, using rule aliases:
+
+    # or, disable by Rule Plugin aliases:
     pipenv run pymarkdown -d no-multiple-blanks,line-length scan examples
     ```
 <!-- pyml enable code-block-style-->
 
 ##### A Word Of Caution
 
-Use caution when enabling rules that are disabled by default.
+Use caution when enabling Rule Plugins that are disabled by default.
 
-By design, the default set of enabled rules does not conflict with itself. When
-you enable additional rules, you can sometimes create competing failures between
-two rules. This means that fixing the failures reported by rule A causes rule B
-to report new failures, and fixing rule B’s failures causes rule A to start reporting
-failures again, creating a back‑and‑forth loop.
+By design, the default set of enabled Rule Plugins does not conflict with itself.
+When you enable additional Rule Plugins, you can sometimes create competing Rule
+Failures between two Rule Plugins. This means that fixing the Rule Failures reported
+by Rule Plugin A causes Rule Plugin B to report new Rule Failures, and fixing Rule
+Plugin B's Rule Failures causes Rule Plugin A to start reporting
+Rule Failures again, creating a back‑and‑forth loop.
 
 If you encounter this loop, the practical solution is to disable one of the two
-rules so they no longer conflict.
+Rule Plugins so they no longer conflict.
 
-In addition to enabling and disabling rules, many rules have extra configuration
-that lets you adjust their default values to match your needs.
+In addition to enabling and disabling Rule Plugins, many Rule Plugins have configuration
+options that let you adjust their default values to match your needs.
 
-For more detail:
+Use:
 
-- See [Advanced Configuration](./advanced_configuration.md#rule-plugins) for how
-  to set configuration on a per‑rule basis.
-- See the [Advanced Rules Guide](./advanced_plugins.md) for a complete list of built‑in
-  rules and detailed information about what each rule checks.
+- [Enabling/Disabling Rule Plugins](./advanced_configuration.md#enablingdisabling-rule-plugins)
+  to control rule behavior project‑wide via configuration files.
+- [Suppressing Rule Failures (Pragmas)](./advanced_plugins.md#suppressing-rule-failures-pragmas)
+  for local, in‑document exceptions where disabling a Rule Plugin globally would
+  be too broad.
 
 ### Basic Configuration
 
 This section focuses on configuration options that apply regardless of which command
-you run. Earlier sections already covered scanning, fixing, extensions, and plugin
-rules; here we’ll look at general command-line arguments that shape how PyMarkdown
-behaves.
+you run. Earlier sections described flags specific to individual commands (such
+as `scan`, `scan-stdin`, and `fix`), along with extensions and Rule Plugins. Here
+we step back and look at general command‑line arguments that shape how PyMarkdown
+behaves for every command.
+
+Note that most of these command-line arguments are part of configuration items that
+allow them to be used from a configuration file.  To examine the full list of configuration
+options for PyMarkdown, see [Available Configuration Items](./advanced_configuration.md#available-configuration-items)
+in the Advanced Configuration document. This section focuses on the most commonly
+used command‑line flags; the Advanced Configuration reference is the complete catalog.
+
+We thought it was a bit too heavy to start there, as most users start their
+configuration journey with command-line arguments.  Instead, we decided to focus
+this part of the user guide on the command-line arguments that configure PyMarkdown
+directly.
 
 #### General Command Line Arguments
 
@@ -1193,13 +1382,42 @@ options:
                         scheme to choose for selecting the application return code
 ```
 
-##### --enable-rules/--disable-rules (rules)
+#### At a Glance: Common Configuration Flags
 
-The `--enable-rules` and `--disable-rules` arguments instruct the PyMarkdown application
-to enable or disable specific rules for the current execution of the application.
+<!-- pyml disable no-emphasis-as-heading-->
+- **Rule Plugin and Extension Selection**
+    - `--enable-rules`, `--disable-rules` – turn individual Rule Plugins on or off.
+    - `--enable-extensions` – enable specific parser extensions.
+
+- **Configuration Files and Overrides**
+    - `--config` – load a configuration file.
+    - `--set` – override a single configuration property.
+    - `--strict-config` – treat invalid configuration as an error.
+    - `--no-json5` – use the standard JSON parser instead of JSON5.
+
+- **Error Handling and Debugging**
+    - `--stack-trace` – print stack traces on application errors.
+    - `--continue-on-error` – log errors but continue scanning other files.
+
+- **Logging**
+    - `--log-level`, `--log-file` – control log verbosity and destination.
+
+- **Exit Codes**
+    - `--return-code-scheme` – choose how outcomes map to process exit codes.
+<!-- pyml enable no-emphasis-as-heading-->
+
+#### Rule Plugin and Extension Selection
+
+##### --enable-rules/--disable-rules (Rule Plugins)
+
+The `--enable-rules` and `--disable-rules` arguments control which Rule Plugins
+the Rule Engine runs for the current execution. For a conceptual overview of
+Rule Plugins themselves, see the [Rule Plugins](#rule-plugins) section.
+In the context of Basic Configuration, they are general flags that work with any
+command (for example, `scan`, `fix`, or `scan-stdin`).
 Both arguments require an extra argument that specifies a comma-separated list of
-rules to which the corresponding option applies. An example that disables rules
-`MD012` and `MD013` is:
+identifiers to which the corresponding option applies. An example that disables
+Rule Plugins `MD012` and `MD013` is:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -1236,11 +1454,14 @@ frequently enabled extensions, `front-matter` and `markdown-tables`, is:
     ```
 <!-- pyml enable code-block-style-->
 
-##### --add-plugin (rules)
+##### --add-plugin (Rule Plugins)
 
 The `--add-plugin` argument is followed by a path to a specially crafted Python
-file that implements a new plugin rule. This is an advanced topic covered under
-the [Developer Guide](./development.md) section of this documentation.
+file that implements a new Rule Plugin. This is an advanced topic covered under
+the [Developer Guide](./development.md) documentation, which explains how to write,
+package, and test custom Rule Plugins.
+
+#### Configuration Files and Overrides
 
 ##### --config (configuration)
 
@@ -1268,29 +1489,37 @@ files in specific locations. It currently supports configuration files in the JS
 YAML, and TOML formats. While the basic usage of configuration files is simple,
 there are important details about supported formats, search locations, how multiple
 files are merged, and how command-line overrides interact with them. These topics
-are covered in detail in [Advanced Configuration](./advanced_configuration.md).
+are covered in detail in [Advanced Configuration](./advanced_configuration.md),
+which also documents the precedence between built‑in defaults, config files, and
+`--set` overrides.
 
 ##### --set (configuration)
 
-The `--set` argument is followed by a single configuration name and a single configuration
-value to explicitly set for the current execution of the PyMarkdown application.
-The structure of configuration names and the full configuration model are described
-in [Advanced Configuration](./advanced_configuration.md). For example, setting the
-property `plugins.md029.style` to `zero` can be executed as:
+The `--set` argument is followed by a single configuration item name and a single
+configuration item value to explicitly set for the current execution of the PyMarkdown
+application. The structure of configuration names and the full configuration model
+are described in [Advanced Configuration](./advanced_configuration.md). For example,
+setting the property `plugins.MD029.style` to `zero` can be executed as:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
 
     ```sh
-    pymarkdown --set plugins.md029.style=zero scan examples
+    pymarkdown --set 'plugins.MD029.style=zero' scan examples
     ```
 
 === "Pipenv Package Manager"
 
     ```sh
-    pipenv run pymarkdown --set plugins.md029.style=zero scan examples
+    pipenv run pymarkdown --set 'plugins.MD029.style=zero' scan examples
     ```
 <!-- pyml enable code-block-style-->
+
+While not always required, care should be taken to properly escape the sequence of
+`<configuration item name>=<configuration item value>`.  For example, if you are
+trying to set `system.exclude_path` to `draft-*.md`, you need to escape it properly
+to prevent the shell you are working with from trying to expand the value `draft-*.md`
+instead of passing it to PyMarkdown.
 
 ##### --strict-config (configuration)
 
@@ -1305,7 +1534,7 @@ instead of running with unintended defaults.
 This stricter behavior makes it easier to see why a setting is not taking effect,
 because any problems are surfaced immediately instead of being silently ignored.
 
-#### --no-json5 (configuration)
+##### --no-json5 (configuration)
 
 <!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.32**
@@ -1321,6 +1550,8 @@ If you believe your JSON configuration file is not being parsed correctly by JSO
 switch. This reverts parsing back to the standard JSON parser from the Python
 standard library.
 
+#### Error Handling and Debugging
+
 ##### --stack-trace (error reporting)
 
 The `--stack-trace` argument adjusts error reporting to make debugging easier. It
@@ -1330,7 +1561,9 @@ has two effects:
 - Prints a stack trace if an application error is reported.
 
 This additional information is especially useful for initialization or configuration
-problems that occur before normal logging is fully configured.
+problems that occur before normal logging is fully configured.  When reporting issues,
+attaching output from a run with `--stack-trace` and `--log-level DEBUG` (written
+to a log file) can significantly reduce the time needed to diagnose the problem.
 
 These behaviors do not change how Markdown documents are processed; they only affect
 logging and error reporting.
@@ -1344,10 +1577,12 @@ the first application error stops the entire run. At the end, the application st
 returns a non-zero code to indicate that at least one application error occurred.
 
 This flag is designed to improve robustness when scanning large sets of files. For
-example, near the end of a testing cycle, a new rule triggered an unexpected
+example, near the end of a testing cycle, a new Rule Plugin triggered an unexpected
 `AssertionError` on two documentation files. Using `--continue-on-error`, we were
 able to complete scanning all other files, confirm the scope of the problem, and
 still get a non-zero return code while planning a fix for those specific documents.
+
+#### Logging
 
 ##### --log-level with --log-file (logging)
 
@@ -1381,6 +1616,8 @@ cluttering standard output or error, as in the example below.
     ```
 <!-- pyml enable code-block-style-->
 
+#### Exit Codes
+
 ##### --return-code-scheme (observability)
 
 Use the `--return-code-scheme` argument to control when PyMarkdown returns a non-zero
@@ -1388,7 +1625,7 @@ exit code:
 
 - Use `default` if you want CI or scripts to fail when:
     - no files were scanned,
-    - failures were reported, or
+    - Rule Failures were reported, or
     - files were fixed.
 
 - Use `minimal` if you only want CI to fail for:
@@ -1419,15 +1656,25 @@ Then, the chosen scheme maps those categories to exit codes:
 
 - With `minimal`:
     - Only `COMMAND_LINE_ERROR` and `SYSTEM_ERROR` return non-zero.
-    - All other outcomes (including “no files to scan” and “failures reported”)
-    return `0`.
+    - All other outcomes (including "no files to scan" and "no Rule Failures reported")
+      return `0`.
+
+In practice, use `default` when you want CI and scripts to treat Rule Failures
+and fixes as hard failures, and use `minimal` when you only want CI to fail on misconfiguration
+or internal errors. In larger CI setups, this is often combined with
+`--log-level INFO` and `--log-file` so that you can inspect detailed logs even when
+the pipeline treats Rule Failures as non‑blocking.
 
 ### Information Commands
 
+Earlier we grouped `plugins`, `extensions`, and `version` as inspection commands
+that help you understand how PyMarkdown is configured. This section shows how to
+use those commands in more detail.
+
 #### Plugin Command
 
-The `plugin` command allows a user to query the presence and current state of any
-rule plugin installed within the PyMarkdown application.
+The `plugins` command allows a user to query the presence and current state of any
+Rule Plugin installed within the PyMarkdown application.
 
 ```txt
 usage: pymarkdown plugins [-h] {list,info} ...
@@ -1444,7 +1691,7 @@ optional arguments:
 ##### List Subcommand
 
 The `list` subcommand produces a columnized list of the properties associated with
-each rule plugin.
+each Rule Plugin.
 
 ```text
 usage: pymarkdown plugins list [-h] [--all] [list_filter]
@@ -1459,12 +1706,17 @@ optional arguments:
 
 The information returned includes columns for:
 
-- `ID` - identifier of the rule
-- `NAMES` - names or aliases associated with the rule
-- `ENABLED (DEFAULT)` - whether the rule is enabled by default
-- `ENABLED (CURRENT)` - whether the current configuration has enabled the rule
-- `VERSION` - revision associated with the rule
-- `FIX` - whether fix mode is supported for this rule
+- `ID` - identifier of the Rule Plugin
+- `NAMES` - names or aliases associated with the Rule Plugin
+- `ENABLED (DEFAULT)` - whether the Rule Plugin is enabled by default
+- `ENABLED (CURRENT)` - whether the current configuration has enabled the Rule Plugin
+- `VERSION` - revision associated with the Rule Plugin
+- `FIX` - whether **fix** mode is supported for this Rule Plugin
+
+You can think of `plugins list` as a live view of how your Rule Plugin configuration
+as described in the [Rule Plugins](#rule-plugins) section has been applied. If
+`ENABLED (CURRENT)` does not match your expectations, re‑check your `--enable-rules`,
+`--disable-rules`, and configuration file settings.
 
 An optional `list_filter` argument may be added with a simple [glob](https://docs.python.org/3/library/glob.html)
 format. This filter is applied to the `ID` field and the `NAMES` field to
@@ -1484,7 +1736,7 @@ provides the following output:
 
 The `info` subcommand produces an itemized list of names and values associated with
 the plugin specified by the required `info_filter` argument. That argument can either
-be the rule's id or one of its aliases.
+be the Rule ID or one of its aliases.
 
 ```text
 usage: main.py plugins info [-h] info_filter
@@ -1496,8 +1748,8 @@ optional arguments:
   -h, --help   show this help message and exit
 ```
 
-The output of the subcommand presents focused information on the rule in question.
-For example, using an argument of `md005` produces the following results:
+The output of the subcommand presents focused information on the Rule Plugin in question.
+For example, using an argument of `MD005` produces the following results:
 
 ```txt
   ITEM                 DESCRIPTION
@@ -1508,9 +1760,9 @@ For example, using an argument of `md005` produces the following results:
   Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md005.md
 ```
 
-In addition to this, any rules that adhere to interface version 3 of the plugin
+In addition to this, any Rule Plugins that adhere to interface version 3 of the plugin
 specification will also display information on any current configuration for that
-rule. For example, using an argument of `md001` produces the following results:
+Rule Plugin. For example, using an argument of `MD001` produces the following results:
 
 ```txt
   ITEM                 DESCRIPTION
@@ -1528,12 +1780,12 @@ rule. For example, using an argument of `md001` produces the following results:
 
 In addition to the normal text in the first section, a second section is used to
 convey information about the current settings for any configuration items for the
-current rule. This additional section helps when diagnosing configuration issues
-for specific rules.
+current Rule Plugin. This additional section helps when diagnosing configuration
+issues for specific Rule Plugins.
 
-#### Extension Command
+#### Extensions Command
 
-With only a single difference, the `extension` command follows the same pattern
+With only a single difference, the `extensions` command follows the same pattern
 as the `plugin` command described above. As extensions have names instead of aliases,
 the `info` subcommand for extensions can only take the ID of the extension, and
 not an alias. Otherwise, the use of the command and the data returned closely mirror
@@ -1553,6 +1805,11 @@ The information returned includes columns for:
 - `ENABLED (CURRENT)` - whether the current configuration has enabled the extension
 - `VERSION` - revision associated with the extension
 
+Use `extensions list` to verify how your extension configuration from the [Extensions](#extensions)
+section is being applied in practice. If an extension you expected to be enabled
+still shows `False` under `ENABLED (CURRENT)`, check for typos in its identifier
+or in your `--enable-extensions` argument.
+
 ```txt
  ID                           NAME                         ENABLED    ENABLED    VERSION
                                                             (DEFAULT)  (CURRENT)
@@ -1571,24 +1828,31 @@ The information returned includes columns for:
 
 The `info` subcommand produces an itemized list of names and values associated with
 the extension specified by the required `info_filter` argument. That argument must
-be the id of the extension to retrieve information about. For example, using an
-argument of `front-matter` as the extension id produces the following result:
+be the ID of the extension to retrieve information about. For example, using an
+argument of `front-matter` as the extension ID produces the following result:
 
 ```txt
   ITEM               DESCRIPTION
 
-  Id                 front-matter
-  Name               Front Matter Metadata
-  Short Description  Allows metadata to be parsed from document front matter.
+  ID                 front-matter
+  Name               Front-Matter Metadata
+  Short Description  Allows metadata to be parsed from document Front-Matter.
   Description Url    https://pymarkdown.readthedocs.io/en/latest/extensions/front-matter/
 ```
 
 #### Version Command
 
-As noted in the [Getting Started document](./getting-started.md#installation), the
-`version` command simply returns the version of PyMarkdown that is installed using
-the form:
+As the simplest of the information commands, the `version` command reports which
+PyMarkdown build you are running. As noted in the [Getting Started document](./getting-started.md#installing-pymarkdown),
+it simply returns the installed version in the form:
 
-```text
+As noted in the [Missing link], it simply returns the installed version in the form:
+
+```txt
 {major}.{minor}.{fix}
 ```
+
+A common troubleshooting pattern is to run `pymarkdown version`, then use
+`pymarkdown plugins list --all` and `pymarkdown extensions list` to capture both
+the version and your current Rule Plugin/extension configuration before filing an
+issue or comparing results with another developer.

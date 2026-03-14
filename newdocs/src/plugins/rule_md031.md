@@ -101,8 +101,8 @@ release.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `list_items` | `boolean` | `True` | Whether this plugin rule triggers directly within a list item. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
+| `list_items` | `boolean` | `True` | Whether this Rule Plugin triggers directly within a list item. |
 
 ## Origination of Rule
 

@@ -1,19 +1,59 @@
-# Fixing Markdown Files
+# Quick Start: Fixing Markdown Files
 
-**Important:** Any **autofix** performed by PyMarkdown is purely mechanical and is
-designed not to alter the meaning of the content. For a rule to provide a “fix”,
-the change must be mechanical, changing the format and not changing the content,
-and be completely unambiguous.
+Now that you are familiar with [Quick Start: Scanning Markdown Files](./scanning.md),
+the previous page in our Quick Start guide series that showed how to *find* Rule
+Failures, let's move on to fixing some of those reported Rule Failures.
+
+If you have not read the scanning Quick Start guide yet, we recommend visiting
+it first
+so the examples in this page make sense.
+
+On the previous page, you learned how to use PyMarkdown to *scan* files and report
+Rule Failures. On this page, you will use PyMarkdown to *fix* some of those Rule
+Failures automatically, using Rule Plugins that support the **autofix** capability.
+
+**Important:** Any fixing performed by PyMarkdown in **fix** mode is purely mechanical.
+It is designed not to change the meaning of your content.
+
+A Rule Plugin can only offer the **autofix** capability if the change:
+
+- adjusts formatting, not the wording or meaning, and
+- is completely unambiguous.
+
+For example, removing extra spaces after a `#` in a heading is safe, but rewriting
+a heading from "Overview" to "Introduction" is not.
+
+Once you know how to scan for Rule Failures, letting PyMarkdown fix the ones that
+support the **autofix** capability is the obvious next step. It helps you reduce
+or eliminate Rule
+Failures more quickly, and the process is easy to automate in scripts.
+
+## What You Will Learn
+
+> **Quick Start Guide Single Line Summary**
+> This page leverages your knowledge on scanning with PyMarkdown to explain
+> how PyMarkdown's **fix** mode works to automatically correct Rule Failures.
+
+On this page, you will:
+
+- run your first `fix` command with PyMarkdown
+- identify which Rule Plugins currently support the **autofix** capability
+- work through a complete `fix` example on a single file:
+    - scan the file
+    - fix the file
+    - interpret what was fixed, what was not fixed, and why
+- apply the `fix` command to multiple files or directories
 
 ## Prerequisites
 
 The following sections assume that you have already [installed PyMarkdown](./installation.md)
-and are reasonably comfortable with basic [command line usage](./general.md).
-The **fix** mode commands also build on the **scan** mode commands described
-in the scanning mode [Quick Start document](./scanning.md).
+and can run basic commands from a terminal (for example, changing directories and
+running `pymarkdown`). The **fix** mode commands also build on what you learned about
+the **scan** mode commands described on the [Quick Start: Scanning Markdown Files](./scanning.md)
+page.
 
-If you are not comfortable with the content of those documents, use the links above
-to get started and review them before continuing with this document.
+If any of that feels unfamiliar, use the links above to walk through those pages
+first, then return here when you are ready to try fixing files.
 
 ## Get Help for the `fix` Command
 
@@ -36,18 +76,17 @@ option prints help text for the command-line options and arguments available in
 
 <!-- pyml enable code-block-style-->
 
-## Remaining Fix Mode Commands
+## Fix Mode Commands
 
-As noted above, the **fix** mode commands instruct PyMarkdown to automatically fix
-violations for rules that support **autofix**. These commands use the same format
-and infrastructure as the **scan** mode commands described in the scanning mode
-[Quick-Start document](./scanning.md). In practice, you can take any **scan** command
-and replace the argument `scan` with the argument `fix` without changing anything
-else. This was explicitly done to keep the **scan** mode interface and the **fix**
-mode interface aligned with each other.
+The **fix** mode commands automatically fix any Rule Failures for Rule Plugins
+that support
+the **autofix** capability. They:
 
-For example, the following command scans the file `sample.md` and applies any fixes
-supplied by rules that support **autofix**:
+- use the same options and arguments as **scan** mode commands
+- differ only in the subcommand name: `scan` vs `fix`
+
+In practice, you can take any scan command and replace `scan` with `fix`. For example,
+the following command applies available fixes to the file `sample.md`:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -83,22 +122,29 @@ Aside from the fact that commands starting with `scan` run in **scan** mode and
 commands starting with `fix` run in **fix** mode, the **scan** mode and **fix**
 mode commands are otherwise identical.
 
-## Rules With Autofix
+## Rule Plugins With Autofix
 
-**NOTE:** You don’t need to memorize this list — use it as a reference. It is
-also colocated in our [User Guide](../user-guide.md#rules-with-autofix)
+When you run `pymarkdown scan`, you'll see Rule IDs like `MD019` or `MD025` in the
+output. Some of those Rule Plugins support the **autofix** capability and can be
+fixed automatically;
+others cannot.
+
+For quick reference, these are the built-in Rule Plugins that currently support
+the **autofix** capability
+in the latest release. It is presented
+here so those users following along with these examples in their own directories
+can understand what Rule Failures they should expect to get fixed.
+
+**NOTE:** Don't memorize this list &mdash; use it as a reference. For this Quick
+Start guide, you only need to know that some Rule Plugins in your scan output can
+be fixed
+automatically.
+The full list is also available in our [User Guide](../user-guide.md#rule-plugins-with-autofix)
 for easy reference.
-
-For quick reference, these are the built-in rules that currently support **autofix**
-in the latest release. The first column presents the rule's identifier and a link
-to that rule's `Fix Description` heading in the documentation. The second column
-presents the human-readable identifiers that are also used to identify the rule.
-The third column contains a short description of the rule itself. This list may
-evolve as new rules are added or existing rules gain or lose **autofix** support.
 
 <!-- pyml disable line-length-->
 
-| Rule Id & Link | Human-Readable Identifier | Short Description |
+| Rule ID & Link | Human-Readable Identifier | Short Description |
 | -- | -- | -- |
 | [MD001](../plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
 | [MD004](../plugins/rule_md004.md#fix-description) | `ul-style` | Inconsistent Unordered List Start style. |
@@ -124,7 +170,18 @@ evolve as new rules are added or existing rules gain or lose **autofix** support
 
 <!-- pyml enable line-length-->
 
-## Fix Mode Example
+This list may evolve as new Rule Plugins are added or existing Rule Plugins gain
+or lose **autofix**
+support. For each Rule Plugin, the first column links to the Rule Plugin's
+`Fix Description` in
+the documentation, the second column lists human-readable identifiers, and the third
+column gives a short description.
+
+## Fix a Single File
+
+Now that you have seen how to run `pymarkdown fix` and which Rule Plugins support
+the **autofix** capability,
+let's walk through a complete example on a single file.
 
 ### Create a File to Scan
 
@@ -141,15 +198,14 @@ in that directory and create a file named `sample.md` whose contents are two hea
 ```
 <!-- pyml enable code-block-style-->
 
-**NOTE:** For this example, it is important that the file ends with a line that
-is blank. If this is not the case, the example scan output will not match,
-and rule MD047 (which checks for a single trailing newline at the end of the file)
-will be reported. Please ensure that the file ends with a blank line.
+**NOTE:** Make sure `sample.md` ends with a blank line so your scan results match
+the example in this Quick Start guide.
 
-**NOTE:** In Markdown, a line that starts with 1 to 6 `#` characters, followed by
-optional spaces and then text, is called an ATX Heading. In this example, we will
-use the term "heading" specifically to refer to this type of heading. For more information
-on ATX Headings, refer to the Markdown Guide's [headings](https://www.markdownguide.org/basic-syntax/#headings)
+**NOTE:** In Markdown, a line that starts with 1 to 6 `#` characters, followed
+by one or more spaces and then text, is called an ATX Heading. Both headings in
+`sample.md` are ATX headings of this form. In this example, we will use the term
+"heading" specifically to refer to this type of heading. For more background, you
+can later refer to the Markdown Guide's [headings](https://www.markdownguide.org/basic-syntax/#headings)
 documentation.
 
 ### Scan the File
@@ -171,8 +227,13 @@ command to scan the file:
     ```
 <!-- pyml enable code-block-style-->
 
-If you have followed the instructions properly, you should see scan results that
-are similar to:
+When you run the above scan command, the output should show two specific Rule Failures
+(`MD019` and `MD025`). If your file does not end with a blank line, you may also
+see
+Rule Plugin `MD047`, which checks for a single trailing newline at the end of the
+file.
+If `MD047` appears, add a blank line at the end of `sample.md`, save, and run the
+scan again.
 
 <!-- pyml disable code-block-style-->
 ```sh
@@ -181,11 +242,11 @@ are similar to:
 ```
 <!-- pyml enable code-block-style-->
 
-This matches what we expect because line 3 has a heading that is defined with
-multiple spaces after the `#` character, triggering rule MD019 (which checks for
-multiple spaces after the `#` character in an ATX heading). That same
-heading is also a level 1 heading in a document that already has a level 1 heading
-defined on line 1, which triggers rule MD025.
+This matches what we expect. Line 3 has a heading with multiple spaces after the
+`#` character, which triggers Rule Plugin `MD019` (extra spaces after `#` in an
+ATX heading).
+The same heading is also a level‑1 heading in a document that already has a level‑1
+heading on line 1, which triggers Rule Plugin `MD025`.
 
 ### Fixing the File
 
@@ -206,8 +267,7 @@ back to your console and type the following command to fix the same file:
     ```
 <!-- pyml enable code-block-style-->
 
-If you have followed the instructions properly, you should see output that
-is similar to the following example:
+After running that command, you should see output similar to:
 
 <!-- pyml disable code-block-style-->
 ```bash
@@ -226,40 +286,124 @@ heading on line 3:
 ```
 <!-- pyml enable code-block-style-->
 
+To see which Rule Failures remain, run the scan command from the [Scan the File](#scan-the-file)
+section again. The returned output should validate that the Rule Failure for `MD019`
+was fixed.
+
+<!-- pyml disable code-block-style-->
+```sh
+/home/myself/sample.md:3:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)
+```
+<!-- pyml enable code-block-style-->
+
 ### What Was Fixed?
 
-Because [Rule MD019](../plugins/rule_md019.md) supports **autofix**, it is able
-to reduce the number of spaces between the `#` character and the `A` character
-on line 3 to a single space. This fix can be performed because this type of heading
-in Markdown allows one or more spaces between the `#` character and the next non-whitespace
-character. Therefore, PyMarkdown can safely reduce multiple whitespace characters
-to a single whitespace character without changing the content in a way that could
-be interpreted differently.
+Because [Rule Plugin MD019](../plugins/rule_md019.md) supports the **autofix** capability,
+it can reduce
+the spaces between the `#` character and the next character on line 3 to a single
+space. In Markdown, this type of heading allows one or more spaces after the `#`,
+so PyMarkdown can safely collapse multiple spaces into one without changing the
+meaning of the heading.
 
 ### What Was Not Fixed?
 
-The triggering of [Rule MD025](../plugins/rule_md025.md) is different. As summarized
-in that rule's [Fix Description](../plugins/rule_md025.md#fix-description), changing
-the heading level of the heading on line 3 is too ambiguous for PyMarkdown to fix
-automatically, because PyMarkdown cannot know which heading level you intended for
-that heading.
+The situation for [Rule Plugin MD025](../plugins/rule_md025.md) is different. As
+described
+in that Rule Plugin's [Fix Description](../plugins/rule_md025.md#fix-description),
+changing
+the level of the heading on line 3 is too ambiguous for PyMarkdown to fix automatically,
+because it cannot tell which level you intended.
 
 Consider the following questions:
 
 - Did the author intend the heading on line 1 or the heading on line 3 to be the
-  “real” level 1 heading?
+  "real" level 1 heading?
 - If line 1 is the intended level 1 heading, should line 3 be changed to a
   level 2 heading instead?
 - What if this file were longer and had more headings after line 3? Should all of
   those headings be promoted by one level, or should they be left alone?
 
 Because there are so many possible interpretations, PyMarkdown cannot safely choose
-a single “correct” fix. As a result, resolving the violation of Rule MD025 on
+a single "correct" fix. As a result, resolving the violation of Rule `MD025` on
 line 3 is something you must do manually in your editor by choosing the appropriate
-heading level.
+heading level. A simple approach is:
+
+- pick a single `#` heading as the main document title
+- change any additional `#` headings to `##` (or deeper) to reflect the structure
+  you want
+
+You can take this above approach with any of the unfixed Rule Failures to whittle
+away at the list of manual fixes you need to apply.
+
+## Fix Multiple Files or Directories
+
+The example above used a single file, `sample.md`. In real projects, you'll usually
+want to fix many files at once. Since `fix` and `scan` share the same options, you
+can reuse the same command patterns from the scanning Quick Start guide.
+
+Earlier, in the [Scan Glob Paths](./scanning.md#scan-glob-paths) section, you saw
+that `**/docs` means "all docs directories under the current directory".
+
+To apply any available fixes with the same pattern, first scan:
+
+<!-- pyml disable code-block-style-->
+=== "Global Python Install"
+
+    ```sh
+    pymarkdown scan **/docs
+    ```
+
+=== "Pipenv Package Manager"
+
+    ```sh
+    pipenv run pymarkdown scan **/docs
+    ```
+
+<!-- pyml enable code-block-style-->
+
+Review the reported Rule Failures, then run:
+
+<!-- pyml disable code-block-style-->
+=== "Global Python Install"
+
+    ```sh
+    pymarkdown fix **/docs
+    ```
+
+=== "Pipenv Package Manager"
+
+    ```sh
+    pipenv run pymarkdown fix **/docs
+    ```
+
+<!-- pyml enable code-block-style-->
+
+to apply fixes for any Rule Plugins that support the **autofix** capability to
+all matching files.
 
 ## Where to Go From Here
 
-- [Quick Start - Home](./index.md) - Main starting point for all Quick Start documents
-- [Quick Start - Scanning Markdown Files](./scanning.md) - Scanning Markdown files
-  with PyMarkdown
+If you followed along with the examples on your own files, you have:
+
+- run `pymarkdown scan` and then `pymarkdown fix` on an individual file
+- learned that calling patterns learned for the `scan` command work with the `fix`
+  command
+
+Depending on what you want to do next, choose one of:
+
+**Next**, in the Quick Start guide series:
+
+- Use [Quick Start: Managing Rule Plugins](./rules.md) to learn how to turn specific
+  Rule Plugins on or off
+
+**If** you want to skip ahead, you can go to the following page:
+
+- Use [Quick Start: Enabling PyMarkdown Extensions](./extensions.md) to learn how
+  to add extra features via extensions
+
+**If** you need some review:
+
+- Select [Quick Start: Introduction](./index.md) for an overview of all Quick Start
+  documents
+- Select [Quick Start: Scanning Markdown Files](./scanning.md) for a refresher on
+  how to scan files for Rule Failures

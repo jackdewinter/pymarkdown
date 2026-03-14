@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `front-matter` |
+| Extension ID | `front-matter` |
 | GFM Extension Status | Unofficial |
 | Configuration Item | `extensions.front-matter.enabled` |
 | Default Value | `False` |
@@ -17,17 +17,17 @@
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
-| `allow_blank_lines` | `string` | `False` | Whether blank lines are allowed within the front-matter block. |
+| `allow_blank_lines` | `string` | `False` | Whether blank lines are allowed within the Front-Matter block. |
 
 ## Summary
 
-This extension allows for the parsing of Markdown "front-matter" at
-the start of a Markdown document.  Markdown front-matter is used by
+This extension allows for the parsing of Markdown "Front-Matter" at
+the start of a Markdown document.  Markdown Front-Matter is used by
 various Markdown parsers to communicate extra metadata to the document
 processor, metadata that alters the presentation of that document.
 
-The most common use case for front-matter is in Markdown aggregators,
-such as static website generators.  The front-matter is used to supply metadata
+The most common use case for Front-Matter is in Markdown aggregators,
+such as static website generators.  The Front-Matter is used to supply metadata
 about each Markdown document, metadata used to classify, annotate, and
 augment the Markdown document.
 
@@ -86,7 +86,7 @@ on the first line of the document with no whitespace before that
 character sequence.  As some editors may not display trailing whitespace
 properly, trailing whitespace is allowed after the above character sequence.
 
-The Front-Matter Block end character sequence `---` concludes the front-matter
+The Front-Matter Block end character sequence `---` concludes the Front-Matter
 section. It also must be by itself on a subsequent line of
 the document with no whitespace before that character sequence. As with
 the start sequence, trailing whitespace after the end character sequence
@@ -100,14 +100,14 @@ with the line after the end character sequence.
 #### YAML format
 
 Based on experience, our team decided that it was best to let the Python YAML
-package deal with any issues regarding the validity of the YAML front-matter.
+package deal with any issues regarding the validity of the YAML Front-Matter.
 To that extent, anything within a start boundary of `---` and an end boundary
 of `---` are passed to the Python YAML package for validation.  If the `allow_blank_lines`
 configuration item has a value of `True`, a blank line will also terminate the
-front-matter.  If that configuration item's value is its default of `False`,
+Front-Matter.  If that configuration item's value is its default of `False`,
 any blank lines are preserved and are passed on to the YAML processor.
 
-Once the lines in the front-matter block have been determined, they are passed to
+Once the lines in the Front-Matter block have been determined, they are passed to
 the [PyYAML](https://pypi.org/project/PyYAML/) processor in safe mode.  It is
 left up to that package to determine whether the YAML is valid.
 If the YAML is valid, it is returned to PyMarkdown as a dictionary for possible
@@ -119,12 +119,12 @@ are then interpreted as normal lines.
 
 Note that the use of these fields varies wildly between different Markdown parsers
 and aggregators.  Before making any assumptions on how a given application interprets
-YAML front-matter, please consult that application's documentation.
+YAML Front-Matter, please consult that application's documentation.
 
 #### Subject or Title
 
 Many document processors prefer to have the subject or title (depending
-on the document processor) specified in the front-matter using either
+on the document processor) specified in the Front-Matter using either
 the `Subject` or `Title` field name.  This allows the processor to
 easily use that metadata field value, not only for the top-level header
 of the document, but for things such as the name of the generated HTML

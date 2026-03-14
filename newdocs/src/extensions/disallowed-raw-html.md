@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `markdown-disallow-raw-html` |
+| Extension ID | `markdown-disallow-raw-html` |
 | GFM Extension Status | Official |
 | Configuration Item | `extensions.markdown-disallow-raw-html.enabled` |
 | Default Value | `False` |
@@ -22,7 +22,8 @@
 ## Summary
 
 This extension follows the GitHub Flavored Markdown
-[rules](https://github.github.com/gfm/#disallowed-raw-html-extension-) for the
+[specifications](https://github.github.com/gfm/#disallowed-raw-html-extension-)
+for the
 marking of certain HTML tag names as disallowed.  Once marked as disallowed, the
 HTML tag will have the leading character `<` changed to `&lt;` to prevent it from
 being rendered as a HTML tag by browsers.

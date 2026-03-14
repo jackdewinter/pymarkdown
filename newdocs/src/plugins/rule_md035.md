@@ -76,7 +76,7 @@ document sets the thematic break text used throughout the document.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | `string` | `consistent` | `consistent` for consistent, or a specific marker** |
 
 ** If a specific marker is configured, it must be valid multiples (three or more)

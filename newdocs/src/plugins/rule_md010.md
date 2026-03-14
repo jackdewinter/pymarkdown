@@ -63,7 +63,7 @@ specification at the above link.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `code_blocks` | `boolean` | `True` | Whether hard tabs are searched for within code blocks. |
 
 ## Origination of Rule

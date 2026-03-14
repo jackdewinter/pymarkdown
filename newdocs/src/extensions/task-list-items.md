@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `markdown-task-list-items` |
+| Extension ID | `markdown-task-list-items` |
 | GFM Extension Status | Official |
 | Configuration Item | `extensions.markdown-task-list-items.enabled` |
 | Default Value | `False` |
@@ -20,7 +20,7 @@
 ## Summary
 
 This extension follows the GitHub Flavored Markdown
-[rules](https://github.github.com/gfm/#task-list-items-extension-)
+[specification](https://github.github.com/gfm/#task-list-items-extension-)
 to interpret certain list items as task list items.  If the specified sequence is
 present at the start of the text for a list item, it is interpreted as a task
 list item.  That sequence is a `[` character followed by one of `{space}`, `x`

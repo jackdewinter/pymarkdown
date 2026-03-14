@@ -82,7 +82,7 @@ The reason for not being able to auto-fix this rule is its deprecation in favor 
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `False` | Whether the Rule Plugin is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
 
 ## Origination of Rule

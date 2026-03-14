@@ -92,7 +92,7 @@ whitespace characters at the end of that line.
 <!-- pyml disable-num-lines 6 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `br_spaces` | `integer` | `2` | Specifies the exact number of spaces allowed at the end of the line. |
 | `strict` | `boolean` | `False` | Whether strict mode is enabled for the plugin. |
 | `list_item_empty_lines` | `boolean` | `False` | Whether empty list item lines are exempt from this rule. |

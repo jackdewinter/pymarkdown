@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `markdown-tables` |
+| Extension ID | `markdown-tables` |
 | GFM Extension Status | Official |
 | Configuration Item | `extensions.markdown-tables.enabled` |
 | Default Value | `False` |
@@ -20,7 +20,7 @@
 ## Summary
 
 This extension follows the GitHub Flavored Markdown
-[rules](https://github.github.com/gfm/#tables-extension-)
+[specification](https://github.github.com/gfm/#tables-extension-)
 to provide for simple tables in Markdown documents.
 
 ## Examples

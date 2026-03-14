@@ -81,7 +81,7 @@ a SetExt Heading element are removed.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule
 
@@ -107,6 +107,6 @@ In addition, because multiple line SetExt Headings were not
 considered properly in the original rule, any failure scenarios
 only reported a problem with the first line of the SetExt Heading
 text.  To make this more general and to avoid having multiple
-failures being reported for a single SetExt Heading element,
+Rule Failures being reported for a single SetExt Heading element,
 the reported position was moved to the start of the boundary
 line of the SetExt Heading element.

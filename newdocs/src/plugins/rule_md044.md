@@ -96,7 +96,7 @@ configuration item.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `names`   | `string` | None | Comma-separated list of proper nouns to preserve capitalization on.** |
 | `code_blocks` | `boolean` | `True` | Search in Fenced Code Block elements and Indented Code Block elements. |
 | `code_spans` | `boolean` | `True` | Search in Inline Code Span elements. |

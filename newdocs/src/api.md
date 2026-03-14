@@ -1,5 +1,8 @@
 # API Support
 
+**NOTE:** The API Support page is still being worked on as part of our
+documentation overhaul.
+
 While most users interact with the PyMarkdown application via the command line,
 we understand that some of our users want to use a application programming interface
 (API).  For these users, our team provides a Python API with an auto-generated
@@ -172,7 +175,7 @@ This is a document
 
 We realize that this is a trivial example, but it is a good place to start. When
 creating the file, please ensure that the file ends with a single newline. This
-is because [Rule Md047](./plugins/rule_md047.md) exists to ensure that
+is because [Rule MD047](./plugins/rule_md047.md) exists to ensure that
 every Markdown file ends with a single newline character.  Therefore, if the `example.md`
 file does not terminate with a single newline, this will not generate a positive
 result.
@@ -227,7 +230,7 @@ one failure is reported.
 
 Using the first suggestion as an example, go to the `example.md` file and add multiple
 newlines at the end of the document.  As described in the [Positive Results](#positive-results)
-section of this document, doing so causes [Rule Md047](./plugins/rule_md047.md)
+section of this document, doing so causes [Rule MD047](./plugins/rule_md047.md)
 to trigger, generating a failure.  Therefore, when you execute the code example
 from the last section with the modified `example.md` file, you will see the following
 output (newlines added for readability):
@@ -256,12 +259,12 @@ we can infer the following:
 #### The Extra Error Information Field
 
 The object `PyMarkdownScanFailure` contains the field `extra_error_information`
-which is empty in the previous example.  With Rule Md047, either the file ends
+which is empty in the previous example.  With Rule MD047, either the file ends
 with a single newline character or it does not.  There is no benefit to providing
 the user with any extra information regarding that failure.
 
 For other failures, having that extra field to relay information about the failure
-is especially important. Consider the following example and [Rule Md007](./plugins/rule_md007.md).
+is especially important. Consider the following example and [Rule MD007](./plugins/rule_md007.md).
 
 ```Markdown
 # This is a test
@@ -270,7 +273,7 @@ is especially important. Consider the following example and [Rule Md007](./plugi
 
 ```
 
-Rule Md007 triggers if there is unneeded space before a list start.  Examining this
+Rule MD007 triggers if there is unneeded space before a list start.  Examining this
 example manually, it is clear that the space before the list start character `*`
 is not needed. When we place the above Markdown document in a file called `extra.md`
 and scan it using our code snippet, the following text is output:
@@ -283,7 +286,7 @@ extra_error_information=' [Expected: 0, Actual=1]')]
 []
 ```
 
-When Rule Md007 triggers a failure, the reason behind the failure may not be clearly
+When Rule MD007 triggers a failure, the reason behind the failure may not be clearly
 understood.  The extra information `[Expected: 0, Actual=1]` lets the user know
 that 0 space characters were expected, but 1 space character was found. While it
 may not be needed with this simplistic example, consider an example with multiple
@@ -307,9 +310,10 @@ to the following:
 ```
 
 However, any properly written tool deals with its own error cases.  That is where
-the handling of pragma failures comes in.  Once the `<-- pyml` text or `<--- pyml`
-text is detected, the pragma is extracted from the token stream for later processing.
-When the document is finished, the pragmas are then parsed to see if they are validly
+the handling of Pragma failures comes in.  Once the `<-- pyml` text or `<--- pyml`
+text is detected, the Pragma is extracted from the Markdown token stream for later
+processing.
+When the document is finished, the Pragmas are then parsed to see if they are validly
 formed.  PyMarkdown considers any invalidly formed failures to be failures in the
 same class as scan failures.  That is to say that the failures are reported, but
 do not stop the parsing and linting of the Markdown files.
@@ -335,9 +339,9 @@ extra_error_information=' [Expected: 0, Actual=1]')]
 pragma_error="Inline configuration command 'disable-next-line' unable to find a plugin with the id 'invalid'.")]
 ```
 
-Because the pragma did not specify a valid rule to suppress, it correctly reports
+Because the Pragma did not specify a valid rule to suppress, it correctly reports
 that it was not able to find a plugin with the id `invalid`. The same type of
-failure is generated with any case where the pragma format is not specifically
+failure is generated with any case where the Pragma format is not specifically
 followed, or an invalid value is used.
 
 ## Other APIs

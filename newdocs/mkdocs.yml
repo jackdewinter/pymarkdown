@@ -35,13 +35,16 @@ nav:
     - 'quick-starts/general.md'
     - 'quick-starts/scanning.md'
     - 'quick-starts/fixing.md'
+    - 'quick-starts/rules.md'
+    - 'quick-starts/extensions.md'
+    - 'quick-starts/advanced.md'
   - "User Guide":
     - 'user-guide.md'
-    - 'advanced_extensions.md'
     - 'advanced_configuration.md'
+    - 'advanced_extensions.md'
     - 'advanced_plugins.md'
     - 'advanced_pre-commit.md'
-  - "Extensions & Rules":
+  - "Extensions & Rule Plugins":
     - extensions.md
     - rules.md
   - "Devloper Guide":

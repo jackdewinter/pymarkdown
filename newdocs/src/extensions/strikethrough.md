@@ -2,7 +2,7 @@
 
 | Item | Description |
 | --- | --- |
-| Extension Id | `markdown-strikethrough` |
+| Extension ID | `markdown-strikethrough` |
 | GFM Extension Status | Official |
 | Configuration Item | `extensions.markdown-strikethrough.enabled` |
 | Default Value | `False` |
@@ -20,7 +20,7 @@
 ## Summary
 
 This extension follows the GitHub Flavored Markdown
-[rules](https://github.github.com/gfm/#strikethrough-extension-)
+[specification](https://github.github.com/gfm/#strikethrough-extension-)
 to add a new type of emphasis, strikethrough emphasis.  Like how the `*`
 and `_` emphasis characters provide `<em>`/`</em>` and `<strong>`/`</strong>`
 emphasis blocks in text, the `~` character provides  for `<del>`/`</del>`

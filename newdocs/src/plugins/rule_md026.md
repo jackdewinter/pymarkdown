@@ -72,7 +72,7 @@ properly handles the punctuation is not possible.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `punctuation` | `string` | `.,;:!。，；：！` | Punctuation characters that are considered sentence ending characters. |
 
 ## Origination of Rule

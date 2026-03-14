@@ -1,13 +1,43 @@
-# Scanning Markdown Files
+# Quick Start: Scanning Markdown Files
 
-The commands in this section use PyMarkdown’s **scan** mode to check the content
-of one or more Markdown files. Any rule violations are reported to the console in
-a standard linter-style format.  The output includes the file name, line number,
-column number, rule ID, and message, similar to what many code linters use.
+The commands in this section use PyMarkdown's scan mode to check the content of
+one or more Markdown files. Any problems it finds are reported to the console in
+a standard linter-style format.
 
-For a detailed explanation of that output format (including what each field means
-and how to read it), see the [Rule Failure Format](../user-guide.md#rule-failure-format)
-section in the User Guide.
+In PyMarkdown, a rule is a specific style or formatting check (for example, "headings
+must increase by one level at a time" or "lists must be consistently formatted").
+Those rules are contained within Rule Plugins, which manage the interface between
+the individual rules themselves and PyMarkdown's Rule Engine.  In most cases, you
+can think of them as one and the same.
+
+A Rule Failure is any place in a Markdown file that does not comply with a Rule Plugin.
+PyMarkdown reports each failure with the file name, line number, column number,
+Rule ID, and a short message, similar to many code linters.
+
+This concept was first introduced in the [Quick Start: Introduction](./index.md)
+page, under the section [How PyMarkdown Reports Failures](./index.md#how-pymarkdown-reports-rule-failures).
+If you are not yet confident reading Rule Failures, review that section now or keep
+it open as a reference while you work through this page.
+
+## What You Will Learn
+
+> **Quick Start Guide Single Line Summary**
+> This page teaches the various ways in which you can use PyMarkdown from the
+> command line to scan for Rule Failures in your Markdown documents, increasing
+> your confidence in using PyMarkdown as a scanning tool.
+
+On this page, you will learn how to:
+
+- scan a single Markdown file
+- scan multiple Markdown files
+- scan any Markdown files in a directory
+- scan any Markdown files under a directory (recursively)
+- scan "glob" paths
+- scan paths and exclude certain paths and `.gitignore`-ignored files
+- debugging scan path issues
+
+After finishing this page, you should be comfortable running `pymarkdown scan` on
+your own projects.
 
 ## Prerequisites
 
@@ -15,36 +45,21 @@ The following sections assume that you have already [installed PyMarkdown](./ins
 and are reasonably comfortable with [command line usage](./general.md). If you are
 not, please refer to the links above to help you get started.
 
-## Get Help for the Scan Command
+As noted in the introductory paragraph, make sure you can read PyMarkdown Rule Failures
+before you continue. When you run these example commands on your own project, you
+may see several Rule Failures. If the output still feels confusing, revisit the
+[How PyMarkdown Reports Rule Failures](./index.md#how-pymarkdown-reports-rule-failures)
+section,
+then return here.
 
-This example command prints help text that describes all the command-line arguments
-available in **scan** mode.
-
-For more detailed explanations of how to use **scan** mode, see:
-
-- the [Basic Scanning](../user-guide.md#basic-scanning) section for an overview
-  of how PyMarkdown scanning  works in general
-- the [Advanced Scanning](../user-guide.md#advanced-scanning) section for specific
-  information on **scan** mode options and arguments
-
-<!-- pyml disable code-block-style-->
-=== "Global Python Install"
-
-    ```sh
-    pymarkdown scan --help
-    ```
-
-=== "Pipenv Package Manager"
-
-    ```sh
-    pipenv run pymarkdown scan --help
-    ```
-
-<!-- pyml enable code-block-style-->
+If the output feels overwhelming: That's normal the first time you scan an existing
+project. For now, don't worry about fixing everything. Focus on finishing this page
+and getting comfortable with scans. The next Quick Start guide covers how to clean
+things up safely.
 
 ## Scan a Single File
 
-This command scans the file `sample.md` and reports any rule violations that it
+This command scans the file `sample.md` and reports any Rule Failures that it
 finds in that file.
 
 <!-- pyml disable code-block-style-->
@@ -64,8 +79,17 @@ finds in that file.
 
 ## Scan Multiple Files
 
+After scanning a single file, the next step is scanning a small set of files.
+
 This command scans the files `sample.md` and `another-sample.md` and reports any
-rule violations.
+problems it finds. Use this when you want to check a small set of specific files.
+
+If you want to ensure **all** Markdown files under a directory are clean, even
+ones you didn't just edit, prefer the directory scan shown in [Scan a Directory](#scan-a-directory)
+instead.
+
+> **Tip:** Listing individual files is great for quick checks, but directory
+> scans are usually the better long‑term habit for real projects.
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -85,7 +109,7 @@ rule violations.
 ## Scan a Directory
 
 This command scans all Markdown files in the current directory (`.`) and reports
-any rule violations.
+any problems it finds.
 
 - You can replace `.` with another directory name (for example, `sample`) without
   changing how the command works.
@@ -121,7 +145,7 @@ any rule violations.
 ## Scan a Directory Recursively
 
 This command scans all Markdown files in the directory `sample/` and in **all of
-its subdirectories**, reporting any rule violations that it finds.
+its subdirectories**, reporting any problems that it finds.
 
 - You can use either the long option `--recurse` or the short option `-r` to enable
   recursive scanning.
@@ -144,16 +168,20 @@ its subdirectories**, reporting any rule violations that it finds.
 ## Scan Glob Paths
 
 Use this command when you want to scan files in directories that match a pattern
-instead of listing each path manually. It scans all Markdown files in directories
-that match the [glob pattern](https://commandbox.ortusbooks.com/usage/parameters/globbing-patterns)
-`**/docs`. In this pattern, `**/` means "match any directory depth under the current
-directory". `docs` is the directory name that must appear at the end of the path.
-For example, it matches `./docs`, `./project/docs`, and `./project/sub/docs`.
+instead of listing each path manually. It first finds directories that match the
+glob pattern `**/docs`, then scans all Markdown files inside those directories.
 
-- After the glob pattern is resolved into a list of paths, PyMarkdown filters that
-  list. It keeps only files whose names end with `.md`.
-- To change which file extensions are scanned, see
-  [Alternate Extensions](../user-guide.md#-alternate-extensions-or-ae).
+In this pattern, `**/` means "match any directory depth under the current
+directory". `docs` is the directory name that must appear at the end of the path.
+
+If you want a deeper overview of globbing, you can skim a short guide such as
+[this globbing guide](https://commandbox.ortusbooks.com/usage/parameters/globbing-patterns),
+but you don't need it to follow this Quick Start guide.
+
+After the glob pattern is resolved into a list of paths, PyMarkdown filters that
+list. It keeps only files whose names end with `.md`. Changing which file extensions
+are scanned is an advanced option. For details, see
+[Alternate Extensions](../user-guide.md#-alternate-extensions-or-ae).
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -174,20 +202,20 @@ For example, it matches `./docs`, `./project/docs`, and `./project/sub/docs`.
 
 This command scans Markdown files under the glob path `**/docs`, but excludes:
 
-- files ignored by the project’s `.gitignore` file
+- files ignored by the project's `.gitignore` file
 - files whose names start with `draft_` or `draft-`
 
-These options are useful when you want to enforce rules across most of the project,
-but intentionally skip some files. Common examples include draft content, build
-artifacts, or temporary files that are listed in .gitignore and are not normally
-committed to the repository.
+These options are useful when you want to enforce Rule Plugins across most of the
+project,
+but intentionally skip some files. Typical use cases include:
 
-- In **scan** mode, all path arguments must appear at the end of the command line.
-  Any options that modify scan behavior must appear between the `scan` keyword and
-  the path arguments. In this example, the only path argument is `**/docs`.
-- For more information about excluding paths and using `.gitignore`, see:
-    - [Excluding Paths](../user-guide.md#-e-exclude-path_exclusions)
-    - [Respect .gitignore](../user-guide.md#-respect-gitignore)
+- scanning all documentation but excluding draft articles whose filenames start
+  with `draft_` or `draft-`
+- scanning a repo without touching generated files (for example, build output or
+  temporary files covered by `.gitignore`)
+
+Think of `--respect-gitignore` and `--exclude` as ways to tell PyMarkdown, "treat
+these files as if they don't exist for this scan."
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -203,17 +231,51 @@ committed to the repository.
     ```
 <!-- pyml enable code-block-style-->
 
+For more information about excluding paths and using `.gitignore`, see:
+
+- [Excluding Paths](../user-guide.md#-e-exclude-path_exclusions)
+- [Respect .gitignore](../user-guide.md#-respect-gitignore)
+
+### How to Read PyMarkdown Commands
+
+A good pattern to remember is:
+
+<!-- pyml disable code-block-style-->
+```text
+pymarkdown scan [options that change behavior] [path1] [path2] ...
+```
+<!-- pyml enable code-block-style-->
+
+Put all options right after scan, then list one or more paths at the end. In the
+example below, `**/docs` is the only path; everything before it changes how the
+scan behaves.
+
 ## Debugging Scan Path Issues
 
-This command shows **which files would be scanned**, without actually running any
-rules on those files.
+Sometimes pymarkdown scan reports Rule Failures in files you didn't expect. Other
+times,
+it seems to ignore your `--exclude` options.
 
-It uses the glob path `**/docs` and excludes files whose names start with `draft_`
-or `draft-`. It then prints the list of matching file paths to the console.
+In both cases, the `--list-files` option helps you see exactly which files are included
+in the scan.
 
-- The `--list-files` option is intended specifically for debugging which paths and
-  filters are applied before you run the full scan. It helps you experiment with
-  **scan** options until they match the files you expect.
+The `--list-files` option shows you which files would be scanned, but does not execute
+any Rule Plugins. This makes it safe and fast to experiment with your glob patterns
+and
+exclude settings.
+
+It's common to be surprised by which files a glob pattern matches. Think of
+`--list-files` as a preview mode: you see exactly which files would be scanned,
+without any analysis or changes to the files themselves.
+
+For example:
+
+- If `pymarkdown scan **/docs` reports Rule Failures in a directory you did not expect,
+rerun the command as `pymarkdown scan --list-files **/docs` to see the exact
+paths being matched. This helps you debug the pattern without guessing.
+- If `--exclude draft_*` seems to have no effect, run
+`pymarkdown scan --list-files --exclude draft_* **/docs` to confirm which draft
+files are still being picked up.
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
@@ -231,15 +293,43 @@ or `draft-`. It then prints the list of matching file paths to the console.
 
 ## Other Commands
 
-The following commands are available, but were omitted from this quick-start document
-because they are too advanced:
+The following commands are available, but they are aimed at more advanced use cases,
+so they are not covered in this Quick Start guide. If you're just getting started,
+you can safely skip this section now and come back later when you need more flexible
+workflows.
 
 - [Scanning From Standard Input](../user-guide.md/#scanning-from-standard-input)
-  \- using the **scan-stdin** command to scan Markdown content from the console's
-  standard input instead of from a file on disk
+    - useful when you want to pipe Markdown content directly from another tool
+      (for example, `cat file.md | pymarkdown scan-stdin`)
 
 ## Where to Go From Here?
 
-- [Quick Start - Home](./index.md) - Main starting point for all Quick Start documents
-- [Quick Start - Fixing Markdown Files](./fixing.md) - Fixing Markdown files with
-  PyMarkdown
+If you followed along with the examples on your own files, you have:
+
+- run `pymarkdown scan` on individual files, directories, and glob patterns
+- experimented with excludes and `.gitignore` handling
+- learned how to debug which files are being scanned
+
+**Next**, in the Quick Start guide series:
+
+- Use [Quick Start: Fixing Markdown Files](./fixing.md) to learn how to safely apply
+  fixes.
+
+**If** you do not intend to use PyMarkdown's **fix** mode to automatically fix some
+of the Rule Failures, you can decide to skip ahead to one of the following pages:
+
+- Use [Quick Start: Managing Rule Plugins](./rules.md) to learn how to enable and
+  disable PyMarkdown's Rule Plugins
+- Use [Quick Start: Enabling PyMarkdown Extensions](./extensions.md) to learn how
+  to enable PyMarkdown's extensions
+
+**If** you need some review:
+
+- Select [Quick Start: Introduction](./index.md) for an overview of all Quick Start
+  guides
+- Select [Quick Start: Installation](./installation.md) for the steps required to
+  install PyMarkdown
+- Select [Quick Start: General Command Line Usage](./general.md) for information
+  on the general use of PyMarkdown and the command line
+- Select [Quick Start: Scanning Markdown Files](./scanning.md) to learn how to scan
+  Markdown files with PyMarkdown

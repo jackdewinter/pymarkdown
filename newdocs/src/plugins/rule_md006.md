@@ -90,7 +90,7 @@ created to more clearly handle this issue.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `False` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule
 

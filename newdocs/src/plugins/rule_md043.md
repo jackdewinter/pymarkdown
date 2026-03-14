@@ -105,7 +105,7 @@ headings, determining the "proper" algorithm quickly becomes problematic.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have.** |
 
 ** The comma-separated list of items is a string with a format of `{item},...,{item}`.

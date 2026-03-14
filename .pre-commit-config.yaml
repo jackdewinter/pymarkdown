@@ -118,8 +118,20 @@ repos:
         -   clean.json
         -   scan
         -   changelog.md
-        -   README.md
         -   ./docs
+-   repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.35
+    hooks:
+    -   id: pymarkdown
+        name: "Scan:   PyMarkdown (README.md)"
+        pass_filenames: false
+        args:
+        -   --config
+        -   clean.json
+        -   --enable-rules
+        -   line-length,no-duplicate-heading,no-space-in-emphasis,no-space-in-code
+        -   scan
+        -   README.md
 -   repo: https://github.com/jackdewinter/pymarkdown
     rev: v0.9.35
     hooks:
