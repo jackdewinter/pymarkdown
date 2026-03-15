@@ -163,7 +163,7 @@ def __abc():
                 "rt",
                 encoding="utf-8",
             ) as output_file:
-                sorted_map  = json.load(output_file)
+                sorted_map = json.load(output_file)
         except BaseException as this_exception:  # noqa: B036
             error_messages.append(
                 f"Failed to read combined dependencies file: {str(this_exception)}"
