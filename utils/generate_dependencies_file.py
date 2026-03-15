@@ -155,13 +155,15 @@ def __abc():
                 "Errors detected during merge.  Unable to continue with output."
             )
     if not error_messages:
+
+        sorted_map = {i: pipefile_map[i] for i in sorted(pipefile_map.keys())}
         try:
             with open(
                 os.path.join(".", "publish", "dependencies.json"),
                 "wt",
                 encoding="utf-8",
             ) as output_file:
-                json.dump(pipefile_map, output_file, indent=4)
+                json.dump(sorted_map, output_file, indent=4)
         except BaseException as this_exception:  # noqa: B036
             error_messages.append(
                 f"Failed to write combined dependencies file: {str(this_exception)}"
