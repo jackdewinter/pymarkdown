@@ -49,6 +49,7 @@ def __load_precommit_packages_and_versions(error_messages: List[str]) -> Dict[st
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            encoding="utf-8",
         ) as p:
             status_code = p.wait()
             if status_code in [0, 1]:

@@ -23,6 +23,8 @@
 - [Issue 1527](https://github.com/jackdewinter/pymarkdown/issues/1527)
     - Updated documentation to give more examples, including examples of
       TOML configurations.
+- [Issue 1539](https://github.com/jackdewinter/pymarkdown/issues/1539)
+    - Did full sweep through existing documentation, to clean up.
 
 ## Version 0.9.35 - 2026-01-24
 
