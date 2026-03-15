@@ -95,6 +95,10 @@ def __load_precommit_packages_and_versions_translate_ouptut(
         next_line = next_line.strip()
         if not next_line:
             continue
+
+        if "No changes detected" in next_line:
+            continue
+
         split_line = list(next_line.split(" "))
         matched_icon = __match_icons(split_line[0])
         assert (
@@ -151,13 +155,31 @@ def __abc():
                 "Errors detected during merge.  Unable to continue with output."
             )
     if not error_messages:
+
+        sorted_map = None
+        try:
+            with open(
+                os.path.join(".", "publish", "dependencies.json"),
+                "rt",
+                encoding="utf-8",
+            ) as output_file:
+                sorted_map = json.load(output_file)
+        except BaseException as this_exception:  # noqa: B036
+            error_messages.append(
+                f"Failed to read combined dependencies file: {str(this_exception)}"
+            )
+
+        print(f"old:{sorted_map}")
+        sorted_map = {i: pipefile_map[i] for i in sorted(pipefile_map.keys())}
+        print(f"new:{sorted_map}")
+
         try:
             with open(
                 os.path.join(".", "publish", "dependencies.json"),
                 "wt",
                 encoding="utf-8",
             ) as output_file:
-                json.dump(pipefile_map, output_file, indent=4)
+                json.dump(sorted_map, output_file, indent=4)
         except BaseException as this_exception:  # noqa: B036
             error_messages.append(
                 f"Failed to write combined dependencies file: {str(this_exception)}"
