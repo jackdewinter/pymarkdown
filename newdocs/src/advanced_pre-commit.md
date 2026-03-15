@@ -4,92 +4,105 @@ authors:
   - Jack De Winter
 ---
 
-# Pre-Commit
+# Advanced Pre-Commit
 
-As projects and teams race to deliver projects with built-in quality delivered
-at a
-respectable price, the [Pre-Commit](https://pre-commit.com/) framework and its
-extended family of linters has become one of the de facto standards of teams
-everywhere.  In their home page's introduction, their team talks about
-how they struggled to add different tools to allow their code reviewers:
+As teams push to ship high‑quality software quickly, the [Pre-Commit](https://pre-commit.com/)
+framework and its linters have become a de facto standard. On the project's home
+page, the authors describe struggling to add tooling so reviewers can:
 
 > "to focus on the architecture of a change while not wasting time with trivial
 > style nitpicks"
 
-Their belief is that you should be able to use the best-in-class linters and formatters,
-even if that linter is written in another language.  And if that linter requires
-something extra to be installed, such as installing Node for a linter written
-in Javascript, Pre-Commit vows to manage that for you as well.
+The goal is to let you use best‑in‑class linters and formatters regardless of the
+language they are written in. When a tool has extra dependencies &mdash; such as
+Node.js for a JavaScript linter &mdash; Pre‑Commit installs and manages those dependencies
+for you.
 
-When dealing with Pre-Commit, it helps to think of the linters in two categories:
-checkers and formatters.  The [PyLint linter](https://github.com/PyCQA/pylint) provided
-by
-the PyCQA team is a checker.  As a checker, it will scan through the repository
-as instructed,
-reporting any issues, returning a failure code to indicate that there were issues.
-In comparison, the [Black](https://github.com/psf/black) linter
-provided by the Black team is a Python formatter.  Just like a checker, it follows
-the same
-scan-report process.  However, before it reports any issues, it tries to address
-those
-issues on behalf of the caller before it returns the failure code.  In Black's case,
-it is uncompromising and will always format Python
-files with respect to standard Python coding guidelines.  If it had to fix even
-one character of the Python file, it will do so and make sure you know that it fixed
-something.
+Pre‑Commit hooks generally fall into two categories:
 
-With an [exhaustive collection](https://pre-commit.com/hooks.html) of checkers and
-formatters, Pre-Commit is the tool to use for any kind of linting need.
-It can also be a bit intimidating at first, with tons of choices to choose from.
-And we are glad to say that we are one of those choices!
+- **Checkers:** report problems but do not modify files.
+- **Formatters:** rewrite files to follow specific rules.
+
+For example, [PyLint linter](https://github.com/PyCQA/pylint) acts as a checker
+and returns a failure code when it finds issues. [Black](https://github.com/psf/black)
+is a formatter: it reformats Python files and then reports what it changed.
+
+The PyLint linter is to Python what PyMarkdown is to Markdown. With over a hundred
+rules, PyLint checks every line and fails if your code violates its rules.
+
+Black is uncompromising: it always reformats Python files to its standard style.
+If it changes even a single character, it reports that change.
+
+Pre‑Commit provides an [exhaustive catalog](https://pre-commit.com/hooks.html) of
+checkers and formatters that cover most linting tasks. Because there are so many
+options, choosing the right hooks can be daunting at first. PyMarkdown is one of
+the available hooks.
 
 ## Basic Integration
 
-We believe that our [Getting Started](./getting-started.md#installing-via-pre-commit)
-documentation does a wonderful
-job in describing how to set PyMarkdown up as part of Pre-Commit.  Instead of repeating
-ourselves, we direct you to look there and see what a basic configuration
-of Pre-Commit looks like for PyMarkdown.
+The [Installing Via Pre-Commit](./getting-started.md#installing-via-pre-commit)
+section of the Getting Started guide shows how to configure PyMarkdown as a
+Pre‑Commit hook. Rather than repeat that material here, use that section for the
+basic setup.
 
-When you are done, come back here so that we can go over the basics in more detail.
+### How Examples Relate to Pre-Commit Environments
+
+Throughout this document, we use command lines prefixed with `pipenv run` in our
+examples. That prefix is just a stand-in for the work that Pre-Commit does behind
+the scenes:
+
+- Pre-Commit creates a dedicated virtual environment for each hook.
+- It installs and runs PyMarkdown inside that environment.
+
+So, when you see:
+
+```bash
+pipenv run pymarkdown scan -r .
+```
+
+you can mentally read it as "Pre-Commit runs pymarkdown scan -r . in its own virtual
+environment."
 
 ### What Are Hooks?
 
-In Pre-Commit parlance, a `hook` is an external repository with instructions on
-how to execute a specific linter through Pre-Commit.  Hooks can be created in any
-one of [21 languages](https://pre-commit.com/#supported-languages), not including
+In Pre-Commit parlance, a `hook` is usually an external repository with instructions
+on how to execute a specific linter through Pre-Commit. Hooks can be created in
+any one of [21 languages](https://pre-commit.com/#supported-languages), not including
 the `local` hook for running scripts
-local to your own system.  Depending on the repository, it is not unheard of
-to have multiple hooks in a single external repository.  This is true of Pre-Commits'
-own
-[hook repository](https://github.com/pre-commit/pre-commit-hooks) which hosts over
-20 hooks in a single repository.
+local to your own system. A single external repository can define multiple hooks,
+and many hook repositories use this pattern. This is true of Pre-Commit's
+own [hook repository](https://github.com/pre-commit/pre-commit-hooks) which hosts
+over 20 hooks in a single repository.
 
 ### Creating a Pre-Commit Configuration File
 
-After [installing Pre-Commit](./getting-started.md#installing-via-pre-commit) to
-your project, the next step is to provide
-Pre-Commit with its `.pre-commit-config.yaml` configuration file.  Note that this
-file must exist in the root of the repository, otherwise Pre-Commit will not be
-able to
-locate it.
+After [installing Pre-Commit](./getting-started.md#installing-via-pre-commit), the
+next step is to create a `.pre-commit-config.yaml` file in the repository root.
+Pre-Commit always runs hooks from the root and only looks for the configuration
+file there; if you place it elsewhere, Pre-Commit will not find it.
 
-At the start of the configuration file, there are 6 top-level options that you may
-choose,
-followed by the `repos` section.  Those [top-level options](https://pre-commit.com/#pre-commit-configyaml---top-level)
-can be used if you need them, but our team has only found a handful of times where
-it was necessary.  For the most part, this code snippet:
+A `.pre-commit-config.yaml` file begins with six optional [top-level settings](https://pre-commit.com/#pre-commit-configyaml---top-level),
+followed by the `repos` section. For most PyMarkdown setups, you can ignore those
+top-level settings and focus on `repos`.
+
+Specifically looking at the `repos` value at the top, a minimal, working configuration
+looks like:
 
 ```yaml
 repos:
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.18
+    hooks:
+      - id: pymarkdown
 ```
 
-is all that you need.
+You can add top-level settings later if you need global controls such as default
+stages or default language versions.
 
-### Pointing To PyMarkdown
+### Adding the PyMarkdown Hook to `.pre-commit-config.yaml`
 
-To add support for PyMarkdown to the Pre-Commit configuration file, append the following
-configuration to
+To add support for PyMarkdown to the Pre-Commit configuration file, append the
+following configuration to
 the end of the `.pre-commit-config.yaml` file:
 
 ```yaml
@@ -99,127 +112,79 @@ the end of the `.pre-commit-config.yaml` file:
       - id: pymarkdown
 ```
 
-The text at the same level as the `repo` item is the
-[hook repository information](https://pre-commit.com/#pre-commit-configyaml---repos).
-Essentially, the main parts of this text specify a public Git URL where the external
-repository is located, followed by the `rev` or revision of the repository to use
-for
-the hook.  Valid values are the name of a branch (such as `main`), the name of a
-tag
-(such as `v1.2.3`), or a Git commit hash. Following the hook repository information
-is the `hooks` section.  This section is
-where the name of the hook within that repository is specified.  And since our
-hook name is `pymarkdown`, we specify that as the id of the hook to execute.
+The hook repository information includes the Git URL and the `rev` to use (branch,
+tag, or commit hash). The following `hooks` section names the hooks from that repository.
+For this project, we use the hook with `id: pymarkdown`.
 
-#### One Step Further
+#### One Step Further - Pinning the PyMarkdown Version
 
 Even though the above example specifies the `main` branch, our team would like you
-to consider changing
-`main` to a specific tag pointing to the latest build of PyMarkdown.  This is a
-slightly more
-advanced process, but it will help your project team keep track of the project's
-dependencies.
-This will incur extra work each time a new release of PyMarkdown is published, but
-it gives your project team
-explicit control of when to upgrade their dependencies.  We do try our hardest to
-make everything backwards compatible,
-but we are human, and we do sometime make mistakes. By pinning the version down,
-your team will be able to upgrade
-to the latest version and evaluate it at their own pace, without it becoming an
-emergency.
+to consider changing `main` to a specific tag pointing to the latest build of
+PyMarkdown. That practice is called "pinning a version."
 
-The upgrade process is mostly simple.  The first thing to do is to locate the tag
-of the
-latest release of PyMarkdown. That information is located on
-the [Releases Page](https://github.com/jackdewinter/pymarkdown/releases) to the
-left
-of the version with a green `latest` tag beside the title, usually located at the
-top of
-the page.  To the left of the release information, there is a sidebar with the date,
-who created the release, the tag of that release, and the short hash for the commit
-that the tag is associated with.  The tag will begin with a `v` character followed
-by
-three integers separated by the `.` character.  With the text from the tag, modify
-the text `rev: main` in the configuration will with that tag text.  For example,
-if the tag is `v0.9.18`, then that text should now read `rev: v0.9.18`.
+Pinning is a slightly more advanced step, but it gives your team explicit control
+over when PyMarkdown changes. You must update the tag manually when a new release
+comes out, yet in return you decide exactly when to adopt each version.
 
-If you are not sure that you are on the latest version of PyMarkdown or want
-an easier way to update your hooks, you are in luck.
-The following command line:
+We work hard to keep changes backwards compatible, but occasional mistakes are unavoidable.
+By pinning the version, your team can move to new releases when your team is ready,
+instead of treating every update as an urgent change.
+
+To find the tag for the latest release:
+
+1. Open the [Releases page](https://github.com/jackdewinter/pymarkdown/releases).
+2. Look for the release with the green `latest` tag.
+3. In the sidebar next to that release, copy the tag name (for example, `v0.9.18`).
+4. Use that value in your `.pre-commit-config.yaml`:
+
+   ```yaml
+      rev: v0.9.18
+   ```
+
+#### Checking for Updates
+
+To check for newer PyMarkdown versions and update your hooks automatically, run:
 
 ```text
 pipenv run pre-commit autoupdate
 ```
 
-will scan your `.pre-commit-config.yaml` file and update and the `rev` field to
-the
-tag for the latest release for every hook in your configuration file.  You have
-a choice of either
-checking each hook's repository manually or running that command every so often.
-You can even create a new job for your CI/CD pipeline that installs
-Python, PipEnv, and Pre-Commit before executing that command line.  If it returns
-a non-zero value, you can decide how to handle the output.
+This scans your `.pre-commit-config.yaml` file and updates each hook's `rev` field
+to the tag for its latest release. You can either check each hook's repository manually
+or run this command periodically.
 
-For example, about once a month we run this command to see if anything needs updating.
-If so, we test with the new values to see if there are any issues with our own machines
-before committing those changes to the repository.  There the changes are further
-tested
-on all three operating systems before we merge it with the `main` branch.  That
-is our
-process.
+Our practice is to run this command roughly once a month, test any updated hooks
+locally, validate them on all three operating systems, and only then merge into
+our `main` branch.
 
-#### Another Option
+### Telling Pre-Commit Which PyMarkdown Configuration File to Use
 
-An even more advanced option is to use the commit hash (short form or long form)
-of the
-Git commit that you want to use.  We do not recommend this outside of its use in
-helping to debug an issue.  You may be
-asked by our team to specify a hash instead of the text `main` or a specific tag
-value. Setting the
-`rev` value to a specific hash value allows your configuration to target a specific
-commit between releases. Since a tag just points Git to a specific commit, there
-is no difference between using the tag `v0.9.18` for
-[release 0.9.18](https://github.com/jackdewinter/pymarkdown/releases/tag/v0.9.18)
-or its hash of `1f7755e` or `1f7755e3752fa8ae0b6f5cdea794bdce6dfa0d47`.  However,
-from a
-usability viewpoint, we feel that reading `v0.9.18` is more descriptive than `1f7755e`.
+This subsection shows how to tell Pre-Commit which PyMarkdown configuration file
+to use, whether the file is in the repository root or in a subdirectory.
 
-The reason that this method should be used for debugging only should be obvious.
-While we do intermediate testing between releases, we typically do extra testing
-before
-publishing a new release of PyMarkdown.  By using a commit hash that is not a release,
-you are using a version of PyMarkdown that may be in an intermediate state. As a
-non-release
-of PyMarkdown, if you report any problems with a hashed revision, we are going
-to direct
-you to specify the latest release before we triage any issues that you found.
+The details rely on concepts from [Advanced Configuration](./advanced_configuration.md#configuration-file-types).
+If you have not read that document yet, it may be useful to review it before continuing.
 
-To repeat, we strongly recommend only using a `rev` value that is a hash when
-collaborating with our team to diagnose and debug an issue.
+Although PyMarkdown supports several configuration formats, the examples in this
+section use a JSON file named `pymarkdown.json`.
 
-### Specifying A Configuration File
-
-This section relates to configuration files, as they are described in the
-document on [Advanced Configuration](./advanced_configuration.md#configuration-files).
-If you have not read that document to understand how PyMarkdown handles
-configuration files, please read that document before proceeding.  Note that
-while we can specify configuration files with [different internal formats](https://application-properties.readthedocs.io/en/latest/file-types/#configuration-file-types),
-the following configuration examples are going to specify a JSON configuration file
-named `pymarkdown.json`.
+#### Using a Default Configuration File at the Repository Root
 
 The easiest way to use PyMarkdown configuration files is to specify one of the
 [default configuration files](https://application-properties.readthedocs.io/en/latest/file-types/#default-configuration-files).
-The PyMarkdown application looks for these configuration files with predetermined
-names
-in the directory that PyMarkdown is executed from.  As Pre-Commit has no concept
-of
-changing the working directory before or during execution, this only works if the
-PyMarkdown configuration file is in the root directory of the repository.
+PyMarkdown looks for default configuration files in the current working directory.
+Because Pre‑Commit runs hooks from the repository root and does not change directories,
+automatic discovery only works when the PyMarkdown configuration file is in the
+repository root. In that case, the configuration shown in the previous section is
+sufficient.
 
-If that is not the case, you must specify the configuration file as an argument to
-the `pymarkdown` hook.  While we will explain this in more depth in the following
-sections, the code snippet for specifying a configuration file of `pymarkdown.json`
-is:
+#### Using a Configuration File in a Subdirectory
+
+If your configuration file is not in the repository root, you must pass it explicitly
+as an argument to the PyMarkdown hook.
+
+For example, to use a file named `pymarkdown.json` in the current directory, configure
+the hook as:
 
 ```yaml
     - id: pymarkdown
@@ -228,12 +193,15 @@ is:
         - scan
 ```
 
-From the Advanced Configuration documentation, keep in mind that the `--config`
-argument
-specifies a path to the configuration file from the current directory.  As Pre-Commit
-always executes from the root directory of the repository, if your configuration
-file is not in the root directory, you must specify a relative path from the root
-directory:
+From the [Advanced Configuration](./advanced_configuration.md#configuration-sources-and-layering)
+documentation, keep in mind:
+
+- The `--config` argument takes a path relative to the current working directory.
+- When Pre-Commit runs, the current working directory is the repository root.
+- You should never use absolute paths in `.pre-commit-config.yaml`.
+
+Putting this together, if your `pymarkdown.json` file lives under `docs/src/`, configure
+the hook as:
 
 ```yaml
     - id: pymarkdown
@@ -242,154 +210,114 @@ directory:
         - scan
 ```
 
-Note that for portability reasons, you should never specify a full path to the
-configuration file.
+For portability, do not specify absolute paths to the configuration file in `.pre-commit-config.yaml`.
+
+At this point, you can run PyMarkdown from Pre-Commit with a basic configuration.
+Next, we'll look at how to mirror your existing CLI workflows in hooks, refine file
+selection, and choose between hook arguments and configuration files.
 
 ## Advanced Integration
 
-The Pre-Commit tool has been well vetted by many users.  While it may not seem like
-it has all the bells and whistles needed, the Pre-Commit configuration operations
-on a per-hook basis are extensive. To support all those hooks, the Pre-Commit team
-has had to be innovative in providing a solid set of ways to specify configuration
-for the many supported hooks.  The outcome of this is that
-the [Configuration Hook Arguments](https://pre-commit.com/#pre-commit-configyaml---hooks)
-section of their document can be a bit daunting to understand.  To help mitigate
-that
-feeling, we present our simplistic take on how to use Pre-Commit hooks, specifically
-geared towards PyMarkdown.
+Once you have a basic PyMarkdown/Pre-Commit integration in place, the next step
+is to refine how Pre-Commit calls PyMarkdown.
 
-### Hook Argument Breakdown
+In this Advanced Integration section, you will:
 
-Hook arguments are the method by which you pass command line arguments into the various
-hooks from the Pre-Commit configuration file. As a user, they allow you to change
-the behavior of the hook to suit your needs.  But to understand how to add new arguments,
-we believe you need to understand how to change a PyMarkdown command line into hook
-arguments for PyMarkdown.
+- Map your existing `pymarkdown` command lines into hook configurations.
+- Control which files Pre-Commit passes to PyMarkdown.
+- Decide where to put PyMarkdown's configuration (hook args vs config file).
+
+Pre-Commit supports many hooks and configuration patterns, and the
+[Configuration Hook Arguments](https://pre-commit.com/#pre-commit-configyaml---hooks)
+section covers more options that you typically need. This section focuses only
+on the subset that matters for PyMarkdown.
+
+### Pre-Commit 101
 
 Each command line to translate can be broken down into three parts:
-what to invoke, what arguments to use, and what files to send to the hook. To
-provide concrete examples for translation, we will use the following command line
-from the Getting Started document's [Verifying The Installation](./getting-started.md#verifying-the-installation)
-as the foundation for our example:
+
+1. What to invoke
+2. Which files to send to the hook
+3. What arguments to use
+
+Given a command like:
 
 ```bash
-pipenv run pymarkdown scan sample.md
+pipenv run pymarkdown --config docs/src/pymarkdown.json scan -r .
 ```
 
-However, since that command line only scans one file and Pre-Commit is typically
-used to scan
-entire projects, we have changed the example slightly to mimic that behavior
-by scanning all files recursively:
+The translation recipe is:
+
+1. Drop the `pipenv run pymarkdown` part; Pre-Commit handles that.
+2. Drop the file-selection part (`-r .`); Pre-Commit handles file selection.
+3. Put everything in between into the hook's `args` list.
+
+Minimal equivalent hook:
+
+```yaml
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: main
+    hooks:
+      - id: pymarkdown
+        args:
+          - --config
+          - docs/src/pymarkdown.json
+          - scan
+```
+
+The following subsections walk through each of these in turn.
+When in doubt, remember:
+
+- If it controls **what** runs → it's part of the hook definition or `id`.
+- If it controls **which** files → it belongs in Pre-Commit's filters, not in `args`.
+- If it controls **how** PyMarkdown behaves → it belongs in `args` or your config
+  file.
+
+#### What To Invoke
+
+The "what to invoke" part of the command line is handled by the hook configuration
+in `.pre-commit-config.yaml`. From our example:
 
 ```bash
 pipenv run pymarkdown scan -r .
 ```
 
-What to invoke is the most important part of that command line, and that is covered
-by the hook's own
-configuration with Pre-Commit.  Using either of the above examples as a guideline,
-Pre-Commit
-follows its own processes to replicate the effect of the text `pipenv run pymarkdown`.
-That part
-simply makes sure that the PyMarkdown application is properly invoked by Pre-Commit.
-
-The next two parts of that command line specify what arguments to use when PyMarkdown
-is invoked
-and what files to send to the hook.  From a Pre-Commit perspective, there are arguments
-that you want to pass to the hook that alter the hook's behavior
-and there are arguments to specify what files to scan by the hook.  This
-is an important distinction as Pre-Commit specifically manages what files to pass
-into
-a given hook.  In our example above, anything after the word `scan` is used to specify
-the files to scan.
-
-That leaves us with the remainder of the command line, which dictates how the user
-wants to configure the PyMarkdown application.  While this text in our example
-only includes the word `scan`, the text could have just as easily specified a
-configuration file:
-
-```bash
-pipenv run pymarkdown --config=docs/src/pymarkdown.json scan -r .
-```
-
-In that case, the configuration part of that command line is
-`--config=docs/src/pymarkdown.json scan` and the file specification part of the
-command line
-is `-r .`. As the PyMarkdown hook specification takes care of the first part, we
-will
-now focus on those other two parts: the hook arguments and hook file specification.
-
-### Hook Arguments
-
-As mentioned above, hook arguments are used to specify the configuration
-to pass to PyMarkdown. For example, the command line from above:
-
-```bash
-pipenv run pymarkdown --config=docs/src/pymarkdown.json scan -r .
-```
-
-translates into the Pre-Commit configuration for the PyMarkdown hook:
-
-```yaml
-    - id: pymarkdown
-      args: [--config=docs/src/pymarkdown.json, scan]
-```
-
-OR
-
-```yaml
-    - id: pymarkdown
-      args: [--config, docs/src/pymarkdown.json, scan]
-```
-
-OR
+the part that matters for the hook is `pipenv run pymarkdown scan`. In a hook, that
+becomes:
 
 ```yaml
     - id: pymarkdown
       args:
-        - --config
-        - docs/src/pymarkdown.json
         - scan
 ```
 
-Each of these examples are valid YAML, the language used by Pre-Commit for their
-configuration file. In each case, the command line is translated into an acceptable
-form of the Pre-Commit hook `args` configuration item. The first example is a literal
-translation of the command
-line, including the "merged" `--config` argument and that argument's path parameter.
-The second and third examples are equivalent to each other, and are programmatically
-the same as the first example, just with the `--config` argument and its path
-parameter pulled apart.
+Pre-Commit takes care of environment setup and calling pymarkdown; the hook only
+needs to specify the arguments.
 
-One crucial factor is that each of those argument lists end with the `scan` command.
-If one of the [six commands](./user-guide.md#command-line-basics) is not present
-at the end
-of the hook arguments list, PyMarkdown will interpret the first filename
-as the command to execute... and will cause an error. Unless you are working
-on something esoteric, the only two commands that should appear at the end of
-the `args` value are the `scan` command and the `fix` command.
+#### Which Files To Send
 
-Note that the PyMarkdown hook is configured with a default argument list of `[scan]`.
-That
-default ensures that at the very least, if no arguments are present, PyMarkdown
-is invoked in scan mode with no
-configuration changes.
+Because of our team's Pre-Commit setup for PyMarkdown, the default behavior of the
+**published** `pymarkdown` hook is to pass every Markdown file in the repository
+to PyMarkdown. This default is defined in the hook itself as:
 
-### Hook File Specification
+```yaml
+    - id: pymarkdown
+      types: [markdown]
+```
 
-By default, the configuration for the PyMarkdown Pre-Commit hook
-specifies a value of `types: [markdown]`.  This instructs Pre-Commit's
-[filter mechanism](https://pre-commit.com/#pre-commit-configyaml---hooks) to only
-send
-filenames to this hook that are of type `markdown`, according to the Python
-library [identify](https://github.com/pre-commit/identify). This is talked about
-more in Pre-Commits documentation on [file filtering](https://pre-commit.com/#filtering-files-with-types).
-For Markdown, it simply looks for any files with a `.md` extension.
+In other words, you get `types: [markdown]` automatically when you use the pymarkdown
+hook; you do not need to add it to your own `.pre-commit-config.yaml`.
 
-While sticking with this default will satisfy most scenarios, there are a handful
-of scenarios that require slightly different file specifications. In those cases,
-knowledge of
-the following Pre-Commit hook arguments will be useful:
+The `types: [markdown]` setting tells Pre-Commit's filter mechanism to send only
+files that the identify library classifies as Markdown. In practice, that means
+any file with a `.md` extension is passed to PyMarkdown, which matches the effect
+of running `pymarkdown scan -r .` on the command line.
+
+For many projects, the default behavior is enough. When you need to focus on specific
+directories, exclude generated files, or add non‑`.md` Markdown sources, you will
+need more precise control over the file list.
+
+For those cases, these Pre-Commit hook arguments are useful:
 
 - `pass_filenames` - whether to pass a list of filenames to the hook
 - `types` (treat as `types_and`) - ANDed list of required types for files to include
@@ -402,53 +330,65 @@ the following Pre-Commit hook arguments will be useful:
 - `exclude` - a singular regular expression matching the files to remove from the
   filename list
 
-#### `pass_filenames`
+##### `pass_filenames`
 
 This option, which defaults to `true`, tells Pre-Commit whether to construct a list
-of filenames and to pass it to the hook application.  This is essentially a big
+of filenames and to pass it to the hook application. This is essentially a big
 switch that controls whether the other options in the above list are actioned on.
-A good example of why you may want to do this is in the section below on
-[Using the Command Line Effectively](#using-the-command-line-effectively).
 
-#### `types`, `types_or`, and `files`
+With the default of `true` for `pass_filenames` and no additional filters in your
+`.pre-commit-config.yaml`, Pre-Commit passes to PyMarkdown whatever the hook's own
+`types` setting allows. For the published `pymarkdown` hook, that is:
 
-The `types` and `types_or` options specify different operations to do with file
-types, as identified
-by the Python `identify` package. The `files` option specifies a singular regular
-expression used as a filter for the filenames.  All three of these options are
-ANDed together to create the final list.  That is to say that unless the option
-is set
-to an empty value (which indicates acceptance of any file), each non-empty value
-will reduce the count of items in the list.
+```yaml
+    types: [markdown]
+```
 
-For example, the only value of these three that is set as a default by the PyMarkdown
-hook is the `types` field, set to `[markdown]`.  By following the above rule, we
-can
-surmise that any file with an `.md` extension in the repository will be scanned.
-Therefore,
-to restrict that scan to only Markdown files in the `/newdocs` directory, we simply
-need to
-add:
+Note that if you plan on using PyMarkdown's comment-line arguments to control which
+files are scanned, as opposed to working with Pre-Commit's arguments, you need to
+set `pass_filenames` to `false`, as in:
+
+```yaml
+    - id: pymarkdown
+      pass_filenames: false
+      args:
+        - --config
+        - clean.json
+        - scan
+        - .
+        - ./docs
+```
+
+##### `types`, `types_or`, and `files`
+
+The `types` and `types_or` options filter files based on the types reported by the
+Python `identify` package. The `files` option filters filenames using a single regular
+expression. Pre‑Commit applies these three filters together: a file must match all
+non‑empty filters to be included. If one of these options is left empty, it does
+not filter the list.
+
+For example, the PyMarkdown hook sets `types: [markdown]` by default. To restrict
+that to only Markdown files in the `/newdocs` directory, add:
 
 ```yaml
     - id: pymarkdown
       files: ^newdocs/
 ```
 
-which will filter the filenames to only allow files that start (`^` character)
-with the text sequence `newdocs/`.
+With both types: [markdown] and `files: ^newdocs/` in effect, Pre-Commit passes
+only Markdown files in the `newdocs/` directory to PyMarkdown. In other words, a
+file must be both Markdown and located under `newdocs/` to be included.
 
-Note that our team often has difficulties remembering all the options available
-for regular expressions.  We find pages such as the [Regular Expressions 101](https://regex101.com/)
-page useful as a reference when building our regular expressions.
+If you do not work with regular expressions regularly, tools like
+[Regular Expressions 101](https://regex101.com/) are helpful when designing the
+pattern used in the files argument.
 
-#### `exclude` and `exclude_types`
+##### `exclude` and `exclude_types`
 
-These options are like their `files` and `types` counterparts but are
-used to restrict the files passed to the Pre-Commit hook.  To extend our above example,
-say that we want to scan all the Markdown files in the `/newdocs` directory except
-for
-the `todo.md` file in that directory, which we already know is a problem.  Using
+These options mirror `files` and `types`, but they remove files from the list passed
+to the hook. For example, suppose we want to scan all Markdown files under `/newdocs`
+except `todo.md`, which we intentionally allow to remain broken.
+Using
 the `exclude` option, we can
 restrict the filename list as follows:
 
@@ -458,37 +398,95 @@ restrict the filename list as follows:
       exclude: ^newdocs/todo\.md$
 ```
 
-## Configuration Files
+#### What Arguments To Use
 
-Since we have had conversations with people regarding command line arguments
-versus configuration files, we thought we would share our thoughts with you
-on these subjects.
+The remaining command-line arguments determine how PyMarkdown behaves under Pre-Commit.
+In the earlier example in [What To Invoke](#what-to-invoke), the only argument was
+`scan`. You can extended this list with options such as `--config`, just as you
+would on the command line.
 
-### Command Line Arguments Vs Configuration File
+In this example:
 
-As part of our documentation on [Advanced Configuration](./advanced_configuration.md#command-line-vs-configuration-file),
-we delve into this topic, providing our views on why to choose configuration files
-over command line arguments.  There is no cut-and-dried answer that we can provide
-for everyone.  Your own team's context is important.
+```bash
+pipenv run pymarkdown --config docs/src/pymarkdown.json scan -r .
+```
 
-From our team's perspective, we prefer to have the configuration settings for an
-application
-in a configuration file specific to that application.  While we understand that
-it
-means there are more files to deal with, it gives us confidence to know that each
-configuration file has a distinct responsibility to the owning application.  That
-is our context.  You and your team need to
-determine what is important to you, make sure you have good reasons for doing so,
-and make sure your projects follow that decision.
+- Pre-Commit replaces `pipenv run pymarkdown` (see [What To Invoke](#what-to-invoke)).
+- Pre-Commit also takes care of `-r .` (see [What Files To Send](#which-files-to-send)).
 
-### Using the Command Line Effectively
+In `args`, include:
 
-While many things can be dealt with using a configuration file, there are times
-that you
-cannot get away from using it.
-A good example of this
-is the project's own [configuration](https://github.com/jackdewinter/pymarkdown/blob/main/.pre-commit-config.yaml)
-that contains the following PyMarkdown configuration:
+- Flags and options you would normally pass to `pymarkdown` (for example, `--config`,
+`--alternate-extension`, `scan` or `fix`).
+
+Do **not** include:
+
+- The `pymarkdown` executable itself or any environment runner (`pipenv run`).
+- File or directory arguments when you are relying on Pre-Commit's file selection.
+
+##### Using Configuration Files vs Args
+
+Conceptually, the hook's `args` section should mirror your usual PyMarkdown command
+line, excluding the file selection portion. In practice, you can choose between
+putting options in `args` or in a configuration file.
+
+A simple rule of thumb:
+
+- Use **configuration files** for project‑wide, long‑lived behavior:
+    - Rule Plugin choices and Rule Plugin tuning
+    - ignore lists
+    - documentation‑tool‑specific settings (for example, MkDocs vs Quarto)
+- Use **hook args** for environment‑ or hook‑specific behavior:
+    - choosing `scan` vs `fix`
+    - pointing to a particular configuration file (for example, `--config=docs/src/pymarkdown.json`)
+    - temporary experiments or one‑off options
+
+Keeping most behavior in a configuration file makes it easier to see and review:
+a clearly named `pymarkdown.json` or `pymarkdown.yaml` usually sits alongside your
+documentation source files, instead of being buried in `.pre-commit-config.yaml`.
+
+##### YAML Forms for Args
+
+Regardless of which options you choose, you must express the hook arguments as a
+YAML list inside `.pre-commit-config.yaml`.
+
+YAML supports two equivalent ways to write the same list of arguments:
+
+**Inline list:**
+
+```yaml
+    - id: pymarkdown
+      args: [--config, docs/src/pymarkdown.json, scan]
+```
+
+**Block list:**
+
+```yaml
+    - id: pymarkdown
+      args:
+        - --config
+        - docs/src/pymarkdown.json
+        - scan
+```
+
+Both forms represent the same arguments you would type on the command line. Each
+space-separated token (`--config`, `docs/src/pymarkdown.json`, `scan`) becomes a
+separate list element. The only requirement is that the `scan` argument appears
+at the end.
+
+##### Common Pitfall: Forgetting the `Scan` Command
+
+PyMarkdown requires a command argument (`scan` or `fix`). Without it, the first
+filename is misread as a command and the run fails. The default hook uses scan
+alone; when you customize `args`, always end the list with a valid command.
+
+## How We Use Pre-Commit in our Pipelines
+
+This section applies the earlier concepts to our own pipelines. It walks through
+our PyMarkdown Pre-Commit configuration so you can see how we combine hook arguments,
+file selection, and configuration files in a real project.
+The relevant portion of our project's own [configuration](https://github.com/jackdewinter/pymarkdown/blob/main/.pre-commit-config.yaml)
+is:
 
 ```yaml
     - id: pymarkdown
@@ -508,62 +506,58 @@ that contains the following PyMarkdown configuration:
         - ./newdocs/src
 ```
 
-In the first case, there are two directories with Markdown to publish that need
-scanning
-and a whole lot of other directories that should not be scanned as they contain
-examples of bad Markdown.  Because of this, the configuration explicitly follows
-the `scan` argument with `.` to specify the base project directory and `./docs`
-to specify the
-documents directory.  Note that while configuration can be placed in a configuration
-file, the paths to scan cannot.  As such, we use a configuration file to keep
-the command line clean, allowing us to focus on the files we need to scan.
+In the first example, we scan our root directory (specified with `.`)
+and our previous `docs` directory (specified with `./docs`) using a simple
+configuration in `clean.json`. That `clean.json` configuration file contains
+the basic Rule Plugins that apply to most of our repository.
 
-The effect of the above configuration is that PyMarkdown should only scan the `.`
-and `./docs` directory.  However, Pre-Commit normally appends any eligible file
-names to the end of the list of arguments.  Without the `pass_filenames: false`
-specifier,
-the arguments Pre-Commit would pass to PyMarkdown would be the `.` directory, the
-`./docs` directory, and any eligible Markdown file in the repository.  It essentially
-informs Pre-Commit: "It's okay, we can do it ourselves." This works well in this
-case as
-our arguments specify exactly what we want to scan.
+Because the PyMarkdown repository intentionally contains "bad" Markdown for test
+cases, we limit scanning to those directories. We set `pass_filenames: false` to
+tell Pre-Commit that PyMarkdown will decide which directories to scan, and then
+list those directories explicitly after the `scan` argument.
 
-The second case is just a repeat of the first case, with a different configuration
-file and a different directory to scan.  For this case, we are moving from standard
-Markdown files for documentation (`/docs` directory) to processing our documentation
-through [MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data)
-and hosting it on [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
-As MkDocs has extra requirements, it makes sense that we have a separate
-configuration file and scan specifically for that directory.
+The second example is similar to the first, but uses a different configuration
+file and a different directory to scan. Here, we are moving from standard Markdown
+documentation in `/docs` to documentation processed by
+[MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) and
+hosted on [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
+
+Because MkDocs has different requirements, we keep its settings in a separate
+configuration file and scan only the `./newdocs/src` directory with that configuration.
 
 ## Things To Watch Out For
 
-In responding to user issues, we believe that how Pre-Commit
-interacts with the PyMarkdown linter may not be intuitive.  Here are the behaviors
-that initially caused us to be confused, and our process for how we worked through
-these issues.
+Some parts of the Pre-Commit integration with PyMarkdown are not obvious at first.
+In this section, we highlight the behaviors that tend to cause confusion and explain
+how to handle them.
 
 ### Scanning Markdown Files with Alternate Extensions From Pre-Commit
 
-This issue was brought to us by a user wanting to apply our PyMarkdown linter to
-`.qmd` files using Pre-Commit.  With helpful pointers from our user, our research
-verified
-that [Quarto](https://quarto.org/docs/get-started/hello/vscode.html) uses Markdown
-files with the `.qmd` extension.  Quarto then interprets these files to produce
-the requested output in a variety of formats.  Given that Quarto files appear to
-be plain Markdown files, following our documentation to instruct the PyMarkdown
-linter to scan Quarto files should be easy.
+#### The Problem: `.qmd` Files Are Not Being Scanned
 
-We started out with basic tests first by placing the user's example `test.qmd`
-file and `README.md` file into a test directory, scanning the directory using the
-PyMarkdown command line to establish a known baseline.  After we verified that the
-`test.qmd` file was being scanned and not the `README.md` file, we introduced simple
-issues that we knew PyMarkdown can detect to both files.  As we predicted, PyMarkdown
-detected the issues in the `test.qmd` files but not the `README.md` file.
+A user reported that `.qmd` files were not being scanned by our Pre-Commit hook.
+[Quarto](https://quarto.org/docs/get-started/hello/vscode.html) uses `.qmd` files
+as Markdown sources, so they should be compatible with PyMarkdown. At first glance,
+following our documentation should have been enough to scan these files.
+
+#### Verifying Baseline Behavior with the CLI
+
+We first verified the baseline behavior from the command line:
+
+- Place the user's `test.qmd` and a `README.md` file into a test directory.
+- Run PyMarkdown on that directory from the CLI to confirm that `test.qmd` is
+  scanned and `README.md` is ignored.
+- Introduce simple issues that PyMarkdown can detect into both files and verify
+  that it reports only the issues in `test.qmd`.
+
+As we predicted, PyMarkdown detected the issues in the `test.qmd` files but not
+the `README.md` file.
+
+#### Translating the Baseline to Pre-Commit
 
 With that simple test completed and passing, we took an independent approach to verify
-our user's findings.  We started with the example provided in the section
-[Pointing To PyMarkdown](#pointing-to-pymarkdown):
+our user's findings. We started with the example provided in the section
+[Adding the PyMarkdown Hook to `.pre-commit-config.yaml`](#adding-the-pymarkdown-hook-to-pre-commit-configyaml):
 
 ```yaml
   - repo: https://github.com/jackdewinter/pymarkdown
@@ -572,10 +566,9 @@ our user's findings.  We started with the example provided in the section
       - id: pymarkdown
 ```
 
-Using that example as a base, we applied the logic from the
-[Hook Argument Breakdown](#hook-argument-breakdown)
-section, specifically the [--alternate-extensions or -ae](./user-guide.md#-alternate-extensions-or-ae)
-flag of the `scan` action, and added the `args` element to produce:
+Using that example as a base, we applied the logic from the [What Arguments To Use](#what-arguments-to-use)
+section. In particular, we added the [--alternate-extensions or -ae](./user-guide.md#-alternate-extensions-or-ae)
+flag for the scan action via the hook's args element:
 
 ```yaml
   - repo: https://github.com/jackdewinter/pymarkdown
@@ -588,54 +581,49 @@ flag of the `scan` action, and added the `args` element to produce:
 ```
 
 Placing that content into a `.pre-commit-config.yaml` file located in the same directory
-as the other two files, we then executed Pre-Commit in that directory.  Using our
+as the other two files, we then executed Pre-Commit in that directory. Using our
 independent approach, we ended up at the same location as our user, with this response:
 
 ```text
 Provided file path 'README.md' is not a valid file. Skipping.
 ```
 
-After scratching our heads for a while, we remembered that in the
-[Creating New Hooks](https://pre-commit.com/#creating-new-hooks)
-section of the Pre-Commit homepage, we needed to setup the `.pre-commit-hooks.yaml`
-file as follows:
+#### Understanding Why It Fails
 
-```yaml
-- id: pymarkdown
-  name: PyMarkdown
-  description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
-  language: python
-  language_version: python3
-  entry: pymarkdown
-  args: [scan]
-  types: [markdown]
-```
+The failure occurs because the published PyMarkdown hook configures Pre‑Commit to
+pass only Markdown files (`types: [markdown]`). Unless you change that setting,
+Pre-Commit sends only `.md` files to PyMarkdown, even if PyMarkdown itself is
+capable of handling `.qmd` files.
 
-This configuration specifically tells Pre-Commit to only pass files that it identifies
-as `markdown` to the PyMarkdown scanner. Pre-Commit does this by using the [identify](https://github.com/pre-commit/identify)
-package which defines `markdown` files by their `md` extension.  This means that
-unless we provide something to override that configuration, Pre-Commit will only
-pass files in the repository that have a `md` extension to PyMarkdown.
+The root cause is the built‑in `types: [markdown]` setting in the published pymarkdown
+hook. Even if you do not specify types in your local `.pre-commit-config.yaml`,
+that default still applies.
 
-Therefore, to address this problem, our solution included two connected changes
-to tell Pre-Commit to pass files with the `.qmd` extension to PyMarkdown.
-The first change was adding this element at the same level as the `args` element:
+#### Final Configuration for `.qmd` Files
+
+To ensure that `.qmd` files are passed to PyMarkdown, we made two related changes
+to the hook configuration. The first change was adding this element at the same
+level as the `args` element:
 
 ```yaml
       files: .*\.qmd$
 ```
 
-This specifically tells Pre-Commit that it should send any files that match that
-regular expression to PyMarkdown.  For those not fluent in "regex": `.*` = any character
-any number of times; `\.` = a `.` character (escaped), `qmd` = the characters themselves,
-and `$` anchors the expression to the end of the string.  In short, look for any
-filenames that explicitly end with the characters `.qmd`.
+This tells Pre-Commit to send any file whose name ends with .qmd:
 
-But that was only half of the solution.  Through research, we found that Pre-Commit
-processes the `type` filter on eligible files before applying any `files` or `exclude`
-filters.  Following that discovery, we determined that we needed to override the
-`types` element we setup in our PyMarkdown hook.  This forces Pre-Commit to collect
-all ligible paths, filter that list down to paths that represent files, and then
+- `.*` – any characters, any number of times
+- `\.qmd` – the literal `.qmd` suffix
+- `$` – end of the string
+
+**Tip:** if you do not work with regular expressions regularly, online regex tools
+are very helpful when designing the pattern for the files argument.
+
+But that was only half of the solution. Through research, we found that Pre-Commit
+processes the `types` filter on eligible files before applying any `files` or `exclude`
+filters. Because the published `pymarkdown` hook ships with `types: [markdown]`,
+we needed to override that default and replace it with `types: [file]` so our
+`files: .*\.qmd$` pattern would be applied. This forces Pre-Commit to collect
+all eligible paths, filter that list down to paths that represent files, and then
 apply our existing `qmd` file filter to end up with our desired list of Quarto files.
 Therefore, we needed to add this element at the same level as the `files` element:
 
@@ -643,5 +631,18 @@ Therefore, we needed to add this element at the same level as the `files` elemen
       types: [file]
 ```
 
-We crossed our fingers, and everything worked!  We proceeded to run more thorough
-tests on this configuration to be sure, but everything worked out.
+We validated this configuration with additional tests and confirmed that it behaves
+as described. The configuration
+that worked for our user was:
+
+```yaml
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: main
+    hooks:
+      - id: pymarkdown
+        files: .*\.qmd$
+        types: [file]
+        args:
+          - scan
+          - --alternate-extension=.qmd
+```

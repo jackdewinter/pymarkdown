@@ -6,136 +6,100 @@ authors:
 
 # Getting Started
 
-There are two main paths to executing the PyMarkdown linter: either installing
-it on your system or installing it via the [Pre-Commit](https://pre-commit.com/)
-application. Which one you use depends on your own preferences as well as the
-requirements of the project that you are working on. Our project supports both
-paths equally.
+PyMarkdown can be used either directly or through Pre-Commit. Both options rely
+on the same underlying Python environment and package management.
+
+The next sections describe how to set up:
+
+- Python (3.10+)
+- Pipenv for project-local dependency management
+
+After that, we show how to install PyMarkdown directly and via Pre-Commit.
 
 ## Quick Start Guide
 
-These notes are in-depth and attempt to cover as many plausible installation
-scenarios as possible.  If you are just looking for a quick "how do I install
-PyMarkdown" and hope that everything goes right, check out our
-[Quick Start - Installation](./quick-starts/installation.md) guide.
+If you only need the fastest path to "PyMarkdown is installed and running", use our
+[Quick Start: Installation](./quick-starts/installation.md) guide.
+
+This page is for readers who want a more complete setup: why we recommend Pipenv,
+how to wire PyMarkdown into Pre‑Commit, and how to verify everything locally before
+CI. If you already know some of this, skim or jump to the sections you care about.
 
 ## Keeping Things Simple
 
-To keep the examples on this page simple and easy to follow, we have expressly
-chosen to use Markdown documents and command lines that are simple. For this
-same reason, we do not show any of our more advanced features, instead focusing
-on keeping our examples clear and concise.
+The examples on this page use simple Markdown files and command lines.
+We avoid advanced features here so the instructions stay focused and easy to follow.
 
 For more information on the available command line arguments and more advanced
-features of PyMarkdown, check out our [user guide](./user-guide.md).
+features of PyMarkdown, check out our [User Guide](./user-guide.md).
 
 ## Prerequisites
 
-Both execution paths require the use of Python packages. As such, please ensure
-that the following prerequisites are installed on your system before going
-ahead.
+You can use PyMarkdown in two ways:
 
-If you are familiar with Python and the PipEnv package manager, and have already
-installed them on your system, feel free to skip ahead to the section on
-[installing PyMarkdown](#installation).
+- as a direct command-line tool, or
+- through Pre-Commit.
+
+Both approaches rely on Python packages, so install the prerequisites below first.
+
+If you already have Python and Pipenv installed, feel free to skip ahead to
+[Installing PyMarkdown](#installing-pymarkdown).
 
 ### Installing Python
 
-Regardless of which execution path you take to use the PyMarkdown application,
-Python must be installed on your system. The quickest way to check if Python is
-installed and the version installed is to execute the following command:
+PyMarkdown requires Python 3.10 or later. Verify your version:
 
-```bash
+```text
 python --version
 ```
 
-If Python is not installed or is not available, an error will be returned saying
-that it could not find the `python` application. If Python is installed, output
-will be returned in the form of:
+If this does not report at least Python 3.10.x, install or upgrade Python from the
+[official downloads page](https://www.python.org/downloads/) before continuing.
 
-```text
-Python {major}.{minor}.{fix}
-```
+### Installing Pipenv
 
-The PyMarkdown application requires Python 3.10 or later to function. This means
-that the output from above must show a major version of `3` and a minor version
-of `8` or higher.
+We use [Pipenv](https://pipenv.pypa.io/en/latest/) to manage dependencies and recommend
+it for PyMarkdown. In most setups, Pipenv is installed globally, and each project
+keeps its own `Pipfile` / `Pipfile.lock` and uses `pipenv run` inside a project-local
+virtual environment. This pattern also works well in CI/CD.
 
-If Python is not installed, the
-[Python home page](https://www.python.org/downloads/) provides release
-information for all three major platforms and instructions on how you can
-install Python on your system using the application tools native to the desired
-operating system and shell. If all else fails, a quick Internet search should
-reveal tutorials on how to install Python for every operating system.
-
-### Installing PipEnv
-
-Whether you are executing Python applications or developing Python applications,
-we heavily suggest using a package manager such as
-[PipEnv](https://pipenv.pypa.io/en/latest/) for managing your Python packages.
-Unless you have a compelling argument for installing the package globally, we
-believe that having all information about the packages needed for a project
-within that project is always the best course of action. As an added benefit, if
-the project involves a CI/CD pipeline, there are well-known patterns to use the
-PipEnv files in CI/CD pipelines, reducing the amount of extra coding needed for
-the pipeline.
-
-Our project uses the PipEnv package manager, which is the package manager that
-we suggest to our users because of its
-[ease of use](https://www.linkedin.com/pulse/choosing-right-python-dependency-management-tool-pipenv-sanne/).
-As PipEnv is used across projects, it is typically installed globally. The
-compelling argument here is that each project needs a package manager to be
-available to bootstrap itself. If it is not installed globally, projects would
-find themselves in a
-[chicken-and-egg](https://en.wikipedia.org/wiki/Chicken_or_the_egg) situation.
-
-Assuming you choose PipEnv as your package manager, the following command will
-figure out if PipEnv is installed and which version of PipEnv is installed:
+Verify that Pipenv is installed and check its version with:
 
 ```bash
 pipenv --version
 ```
 
-Like the check to see if Python itself was installed, if PipEnv is not installed
-or is not available, an error will be returned saying that it could not find the
-`pipenv` application. If PipEnv is installed, output will be returned in the
-form of:
+If Pipenv is not installed or not on your PATH, this command fails with an error.
+If it is installed, you'll see output like:
 
 ```text
 pipenv, version 2023.12.1
 ```
 
-where the noted version is the year-month-date of the latest release. If PipEnv
+where the noted version is the year-month-date of the latest release. If Pipenv
 is not installed, it can be installed by executing the following command:
 
 ```bash
 pip install --user pipenv
 ```
 
-If PipEnv is installed but not at the latest version, executing the above
-`pip install` command will show if a new release of PipEnv is available. If a
-new release is available, the output will detail how to install the newer
-release. As security fixes are made to PipEnv a couple of times a year, we
-strongly encourage users to always upgrade to the latest version of PipEnv.
+If Pipenv is installed but not at the latest version, the `pip install` command
+will indicate that a newer release is available. Because Pipenv receives regular
+security fixes, we recommend upgrading to the latest version whenever possible.
 
-## Installation
+## Installing PyMarkdown
 
-As noted in the above section on [Installing PipEnv](#installing-pipenv), our
-team sincerely believes that using a package manager for managing packages is
-the best approach. Therefore, to keep all our examples clean and uncluttered, we
-have chosen to use PipEnv in all our examples of command lines that install or
-execute Python packages.
+The examples below use Pipenv-based commands. If you prefer a global installation,
+adapt them as follows:
 
-If instead you decide to install these packages globally on your system, replace
-the text `pipenv install -d` in the command line examples with the text
-`pip install`. In addition, for command lines that show how to execute
-PyMarkdown, replace the text `pipenv run pymarkdown` in the command line
-examples with the text `pymarkdown`.
+- Replace `pipenv install -d` with `pip install`.
+- Replace `pipenv run pymarkdown` with `pymarkdown`.
 
-### Installing Via PipEnv
+The rest of the instructions remain the same.
 
-Installing the PyMarkdown linter is as easy as going to your project directory
-and entering the following command line:
+### Installing PyMarkdown With Pipenv
+
+In your project directory, run:
 
 ```bash
 pipenv install -d pymarkdownlnt
@@ -159,38 +123,32 @@ instead of `pymarkdown`, please [read here](./index.md#why-is-this-application-r
 
 #### What Is The `-d` For?
 
-Per the PipEnv help text (`pipenv install --help`), the `-d` is used to install
-both development packages and default packages. That was a bit confusing to us
-at first, but thankfully articles like
-[this article](https://realpython.com/pipenv-guide/#example-usage) clarified our
-usage of `-d`.
+Per the Pipenv help text (`pipenv install --help`), the `-d` flag installs both
+default and development packages. We use it because PyMarkdown is typically a
+development-time tool.
 
-A summary of that article is that there are differences between
-the packages needed while using the application in production and the packages
-needed while developing the application.
-As PyMarkdown typically falls into the development category, the `-d` on the
-command line installs the `pymarkdownlnt` package as a development package. If
-you plan to use the PyMarkdown linter in a non-development setting, you may
-remove the `-d` from the command line without any negative side effects. For
-more information, please read the above article, as it presents a clear picture
-of how to use PipEnv in various scenarios.
+Common patterns:
+
+- `pipenv install -d pymarkdownlnt` – install PyMarkdown as a development dependency
+- `pipenv install pymarkdownlnt` – install PyMarkdown as a regular dependency
+
+If you plan to use PyMarkdown outside development, you can safely omit `-d`.
 
 ### Installing Via Pre-Commit
 
-Outlined on their home page, [Pre-Commit](https://pre-commit.com/) was created
-to solve the problem of being able to customize a set of tools to execute prior
-to committing any changes to a Git repository. Because of that requirement, the
-Pre-Commit tool only works in Git repositories. However, this is usually not an
-issue for our users. We believe that most of our users are serious about using
-code analysis tools for scanning their projects and those projects are already
-contained with a Git repository.  For any project worth scanning, it
-makes good sense to have the project within a source repository, and Git is one of
-the most popular ones.  As such, this requirement does not seem like a bad
-one from our point of view.
+[Pre-Commit](https://pre-commit.com/) runs configurable checks before Git commits
+and pushes. It operates only in Git repositories.
 
-While the install instructions are covered more completely on the Pre-Commit
-home page, the base installation process mirrors that of installing PyMarkdown
-itself. Enter the following command line:
+PyMarkdown integrates directly with Pre-Commit via a hook defined in the file `.pre-commit-config.yaml`,
+as shown below. This configuration file will invoke the PyMarkdown linter through
+Pre-Commit using PyMarkdown's default configuration. By default, the hook runs on
+staged Markdown files for the configured stages (`commit` and `push` in this example).
+If you want to always scan the entire repository or only specific paths, you can
+adjust the hook's `args` and `files` entries. Later sections show how to verify
+and customize that configuration.
+
+Pre-Commit's own documentation covers installation in depth.
+For this project, you can install it with:
 
 ```bash
 pipenv install -d pre-commit
@@ -209,10 +167,9 @@ To which output should be returned in the form of:
 pre-commit {major}.{minor}.{fix}
 ```
 
-The above steps will evaluate that you installed Pre-Commit successfully, but not
-that you installed PyMarkdown successfully through Pre-Commit. To do that,
-create a file named `.pre-commit-config.yaml` in the root of the project
-directory and add this text to that file:
+The steps above verify that Pre-Commit is installed, but not that PyMarkdown
+runs correctly through Pre-Commit. To test that, create a file named
+`.pre-commit-config.yaml` in the project root and add:
 
 ```yml
 default_stages: [commit, push]
@@ -224,12 +181,14 @@ repos:
           - id: pymarkdown
 ```
 
-This file provides the configuration for the Pre-Commit application to use
-PyMarkdown. This configuration tells Pre-Commit where to get the Pre-Commit hook
-to execute from (the GitHub repository for PyMarkdown), the revision of that Git
-repository, and the id associated with the hook. This configuration file will
-invoke the PyMarkdown linter through Pre-Commit with its default configuration,
-described in the next section.
+This configuration file will invoke the PyMarkdown linter through Pre-Commit using
+PyMarkdown's default configuration. Common customizations include:
+
+- passing `scan --recurse docs` as hook arguments to restrict scanning to documentation
+- using a project-specific configuration file via `--config`.
+
+For more complex scenarios, consult the [Pre-Commit](https://pre-commit.com/) documentation
+site.
 
 #### Advanced Pre-Commit
 
@@ -239,19 +198,21 @@ consult our [Advanced Pre-Commit](./advanced_pre-commit.md) page.
 
 ### Verifying The Installation
 
-The easiest way to verify that your choice of execution path is working
-correctly is to create a sample file in the root directory of your project
-called `sample.md`. In that file, place the following contents:
+To verify that your chosen execution path works, follow these steps:
+
+In the root of your project, create a file named `sample.md`.
+
+Add the following contents:
 
 ```text
 # First Heading
 # Another First Heading
 ```
 
-This document is purposefully constructed to trigger two failures:
+This sample intentionally violates two Rule Plugins:
 
-1. MD022: Headings should be surrounded by blank lines.
-1. MD025: Multiple top-level headings in the same document
+1. **MD022:** Headings should be surrounded by blank lines.
+1. **MD025:** Multiple top-level headings in the same document
 
 If using PyMarkdown directly, enter the following command line:
 
@@ -266,8 +227,7 @@ Git repository and then enter the following command line:
 pipenv run pre-commit run -a
 ```
 
-In either case, as noted above, the output content should have the following
-lines:
+In either case, the output should include the following lines:
 
 ```text
 sample.md:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
@@ -275,45 +235,63 @@ sample.md:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1
 sample.md:2:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)
 ```
 
-For the PyMarkdown direct scenario, the above text is the only output that the
-application should produce. That is because PyMarkdown was specifically told to
-only scan the file `sample.md` in the current directory. If you replace the
-command line arguments `scan sample.md` with the arguments `scan --recurse .`,
-then PyMarkdown will recursively search for any Markdown file (any file with a
-`.md` extension) starting with the current directory. PyMarkdown will then sort
-the filenames in alphabetical order, scan each file, and report any failures
-that were triggered. The above text is guaranteed to be in the resultant output
-as the file `sample.md` is in the base directory. However, as it may not be the
-only Markdown file with failures that is scanned, the above output may be
-preceded or followed by failures from other Markdown files.
+Each line has the form `file:line:column: rule-id: message (aliases)`. For example,
+`MD022` reports missing blank lines around headings and shows the expected and
+actual counts. This is the same format PyMarkdown uses in CI logs and Pre-Commit
+output, so you can copy these lines directly into issue trackers or tooling.
 
-For the Pre-Commit scenario, the default behavior is to act as if the supplied
-arguments were the `scan --recurse .` arguments used in the above adjusted
-scenario. As the Pre-Commit tool is largely used to scan entire repositories
-before a Git commit, defaulting its behavior to scanning any Markdown file in
-the repository made the most sense. And while that is the default behavior, it
-can be overridden by explicitly supplying the proper configuration in the
-Pre-Commit configuration file, `.pre-commit-config.yaml`. However, those
-configuration options are more advanced and will be covered later in the
-documentation.
+When you run:
+
+```sh
+pipenv run pymarkdown scan sample.md
+```
+
+PyMarkdown scans only `sample.md`.
+
+If you instead run:
+
+```sh
+pipenv run pymarkdown scan --recurse .
+```
+
+PyMarkdown recursively scans all `.md` files under the current directory and reports
+all Rule Failures, including the ones from `sample.md`.
+
+By default, the PyMarkdown Pre-Commit hook runs as if you invoked
+`scan --recurse .`, scanning all Markdown files in the repository. To narrow
+that scope, adjust the hook's `args` and `files` entries in
+`.pre-commit-config.yaml`. For advanced configuration examples, see
+[Advanced Pre-Commit](./advanced_pre-commit.md).
 
 ## CI/CD Pipelines
 
-When using PipEnv as a package manager, it creates a `Pipfile` and a
-`Pipfile.lock` to track the packages that are installed along with their current
-versions. Pipeline environments are typically not setup in advance, so the
-following sections illustrate how to set up the environment in the CI/CD
-pipeline to match what is in the repository.
+Once you have PyMarkdown working locally with Pipenv, you can reuse the same setup
+in your CI/CD system. In CI, you mirror the local environment and run PyMarkdown
+as part of your checks.
+
+When you use Pipenv as a package manager, it creates a `Pipfile` and a `Pipfile.lock`
+to track installed packages and their versions. Pipeline environments are typically
+not set up in advance. The following sections show how to recreate the same environment
+in CI/CD so it matches what is in the repository.
+
+The example below uses GitHub Actions. The same basic steps &mdash; checking out
+the repository, setting up Python, installing Pipenv, syncing dependencies, and
+running PyMarkdown &mdash; apply to most CI systems.
 
 ### GitHub Actions
 
-Taken from our own
+This section walks through a complete GitHub Actions job that runs PyMarkdown using
+Pipenv. If you use another CI platform, skim this example for the overall flow,
+then see [Other CI Systems](#other-ci-systems) for a shorter, platform‑agnostic
+pattern.
+
+The YAML below is taken from our own
 [GitHub main.yml](https://github.com/jackdewinter/pymarkdown/blob/main/.github/workflows/main.yml)
-file, this is the start of the `lint` job that we use to validate our code
-changes. For the sake of a clean example, the only change we made to the code
-snippet below was to replace the `${{ env.default-python-version }}` reference
-to an environment variable with that variable's value `3.10`, specified earlier in
-the `main.yml` file.
+file. It shows the start of the `lint` job we use to validate code changes.
+
+For this example, we made one change: we replaced the
+`${{ env.default-python-version }}` expression (defined earlier in `main.yml`) with
+the explicit value `3.10`.
 
 ```yaml
   lint:
@@ -331,7 +309,7 @@ the `main.yml` file.
         with:
           python-version: 3.10
 
-      - name: Install PipEnv
+      - name: Install Pipenv
         run: |
           pip install pipenv==2023.12.1
 
@@ -339,65 +317,66 @@ the `main.yml` file.
         run: |
           pipenv update -d
           pipenv graph
+
+      - name: Execute PyMarkdown on Current Docs
+        run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
 ```
 
-The first step in the job, `Checkout Repository`, is to checkout the repository.
-This will pull the files from the Git repository for whichever branch the
-GitHub Actions task is being executed on.
-This is essential as most jobs act on changes to their repositories and that
-context must be set up before any other steps are defined. The next step,
-`Setup Python 3.10`, installs the specified version of Python for the pipeline's
-use, mirroring the steps taken in the [Installing Python](#installing-python)
-section above. The third step, `Install PipEnv`, continues that process by
-mirroring the [Installing PipEnv](#installing-pipenv) process outlined above.
+#### Workflow Setup
 
-At that point in the job, the project repository is cloned with the correct
-versions of Python and PipEnv installed. This allows the pipeline to execute the
-`Sync With Repository` step to install any Python packages that are indicated by
-the project's `Pipfile` and `Pipfile.lock` files. The command `pipenv update -d`
-tells PipEnv to create a virtual environment for Python and to install any
-packages outlined in the `Pipfile` and `Pipfile.lock` files to that virtual
-environment. To aid in any potential issues that may arise, we include the
-command `pipenv graph` to output a listing of all packages installed into that
-virtual environment. While that output is not often needed, it is extremely
-beneficial to have it already in place when it is needed for debugging issues.
+The first three steps do the standard setup:
 
-With this setup completed, the next step can invoke python commands with the
-confidence that the environment was properly created. In our `lint` job, we
-execute eight other steps before getting to our own step that executes
-PyMarkdown in the pipeline:
+- check out the repository,
+- install Python 3.10, and
+- install Pipenv.
 
-```yaml
-  - name: Execute PyMarkdown on Current Docs
-    run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
-```
+This mirrors the local setup from [Installing Python](#installing-python) and
+[Installing Pipenv](#installing-pipenv). As a result, CI runs PyMarkdown under the
+same environment as your development machine. For long‑lived projects, we recommend
+pinning the versions of Python and Pipenv you use in CI so that dependency changes
+are deliberate, not accidental.
 
-That probably looks a bit complicated, but in our case that is needed. As our
-project is THE PyMarkdown project, we need to use the latest version of
-PyMarkdown and not the version of the latest release. Therefore, we want to
-directly invoke the application using the `main.py` file found in the root
-directory. Along with that, we need to use the
-`--config ${{github.workspace}}/clean.json` arguments to specify a configuration
-file to alter the behavior of PyMarkdown.
+At this point in the job, the repository is cloned and Python and Pipenv are installed.
 
-We presented the above example in the interest of transparency, to show you how
-we use PyMarkdown ourselves. Our own invocation step for PyMarkdown is not a
-typical example due to those specific needs. For most cases, the best starting
-place for a PyMarkdown step is the following:
+#### Sync With Repository
+
+The `Sync With Repository` step sets up the project environment:
+
+- `pipenv update -d` creates a virtual environment and installs the packages listed
+  in `Pipfile` and `Pipfile.lock`.
+- `pipenv graph` prints a list of all installed packages in that environment.
+
+Use `pipenv sync -d` instead of `pipenv update -d` if you want CI to install exactly
+the versions recorded in `Pipfile.lock`. This treats the lockfile as the single
+source of truth and avoids changing it in CI.
+
+You can usually ignore the `pipenv graph` output. It becomes useful when you are
+debugging dependency conflicts in CI.
+
+#### Executing PyMarkdown
+
+After this step completes, subsequent steps can safely invoke Python commands, including
+PyMarkdown, inside the configured environment.
+
+For most projects, a simple PyMarkdown step is enough:
 
 ```yaml
   - name: Execute PyMarkdown on Current Docs
     run: pipenv run pymarkdown scan --recurse .
 ```
 
-This will cover most scenarios for using PyMarkdown in a GitHub Actions
-pipeline. While the pipelines tend to get a bit more complicated, it is rarely
-more than specifying a configuration file or specific directories to
-scan.  We find that as people use the project locally, they start to experiment
-with it more, finding the setting that works right for them and their project.
-Once those configuration settings are committed to the repository, it is a
-simple task to update the above `run` command line to match how you run
-PyMarkdown locally.
+The example earlier in this section is more complex because this repository runs
+PyMarkdown from its own source code. Our CI must test the latest source, not the
+last published release, so we:
+
+- invoke PyMarkdown via `main.py` in the repository root, and
+- pass `--config ${{github.workspace}}/clean.json` to use a specific configuration
+  file.
+
+You only need this style of invocation if you are developing PyMarkdown itself or
+a similar tool.
+
+#### Pre-Commit
 
 Of course, if you use PyMarkdown through Pre-Commit, the GitHub Actions step
 that you need is even simpler.
@@ -405,5 +384,57 @@ that you need is even simpler.
 ```yaml
   - name: Execute Pre-Commit
     run: |
-      pipenv run pre-commit run --all
+      pipenv run pre-commit run --all-files
+```
+
+Using `--all-files` ensures that Pre-Commit runs on every tracked file in the repository,
+which is the most common pattern for CI checks.
+
+#### Further Options
+
+This command covers most common GitHub Actions scenarios. If you need more control,
+you can:
+
+- point PyMarkdown at a specific configuration file, and/or
+- restrict scanning to particular directories.
+
+For example:
+
+```yaml
+  - name: Execute PyMarkdown on Docs with Custom Config
+    run: pipenv run pymarkdown --config custom_config.json scan --recurse docs
+```
+
+We recommend this sequence:
+
+- Iterate on these options locally.
+- Commit your configuration to the repository.
+- Update the run command to match your local invocation.
+
+For more information on configuration files and available options, refer to the
+[User Guide](./user-guide.md).
+
+### Other CI Systems
+
+Most CI platforms can follow the same sequence you saw in the GitHub Actions example:
+
+1. Check out your repository.
+2. Install Python 3.10+.
+3. Install Pipenv.
+4. Run `pipenv update -d` (or `pipenv sync -d`) to install dependencies.
+5. Run PyMarkdown:
+
+   ```bash
+   pipenv run pymarkdown scan --recurse .
+   ```
+
+For example, in GitLab CI:
+
+```yaml
+pymarkdown:
+  image: python:3.10
+  script:
+    - pip install pipenv==2023.12.1
+    - pipenv update -d
+    - pipenv run pymarkdown scan --recurse .
 ```

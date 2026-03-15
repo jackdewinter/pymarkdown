@@ -88,7 +88,7 @@ compelling argument to provide a fix for this rule.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable.** |
 | `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |
 
@@ -134,7 +134,7 @@ triggers if that HTML Block element starts and ends with a `h1` tag, with only a
 
 ### Special Sequences - Processing Instructions and the DOCTYPE Directive
 
-In earlier versions of the rule plugin, support for identifying a generic Processing
+In earlier versions of the Rule Plugin, support for identifying a generic Processing
 Instruction starting with the `?` character was supported.  After doing some needed
 research, it was determined that Processing Instructions are supported in XML documents,
 [but not in HTML documents](https://www.tutorialspoint.com/xml/xml_processing.htm).

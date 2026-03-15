@@ -4,94 +4,122 @@ authors:
   - Jack De Winter
 ---
 
-# Advanced Rules
+# Advanced Rule Plugins
 
-In the [User Guide](./user-guide.md#basic-scanning) document, we touched
-briefly on how scanning works, followed by a section devoted specifically
-to the [Rule Plugins](./user-guide.md/#plugin-rules) which implement our rules.
-Then we took a quick look at PyMarkdown's [Fix Mode](./user-guide.md/#basic-fixing),
-a feature that leverages those same rules to automatically fix any failures.
+You may already have seen Rule Plugins in the [User Guide](./user-guide.md#rule-plugins),
+in [Basic Fixing](./user-guide.md#basic-fixing), and in [Advanced Configuration](./advanced_configuration.md#rule-plugins).
+Those pages focus on **using** Rule Plugins in day‑to‑day workflows:
 
-But what are these rules? A rule is simply code that looks at the stream of information
-provided by the [PyMarkdown parser](./user-guide.md/#markdown-parser) and decides
-if it will trigger a failure based on behavior it observes in the data stream that
-the parser generates.  At a high level, that is what a rule is: an analyzer written
-in code that is looking for something that it does not like from the PyMarkdown
-parser's output. It is just that simple.
+- where Rule Plugins are applied,
+- how to enable or disable them, and
+- how to run fixes.
 
-Other than that, one useful piece of information to know is that each rule has
-an id associated with it.  To keep things simple, each id is a 2-3 letter prefix
-followed by a 3-digit suffix.  Each rule can also have one or more names.  Each
-name can contain alphabetic characters and the `-` character.  Combined, this set
-of information is known as the rule's identifiers.  These identifiers are guaranteed
-to be unique within an instance of PyMarkdown and can be used interchangeably in
-most cases.
+This page focuses on how Rule Plugins work as a **system**:
 
-## History
+- what a Rule Plugin is,
+- how Rule Plugins expose rules to PyMarkdown,
+- how configuration layers interact, and
+- how to suppress or tune specific Rule Plugins for your project.
 
-A fair number of our rules have close parallels with David Anson's
-[MarkdownLint](https://github.com/DavidAnson/markdownlint) project. As that project
-is used worldwide in editors such as VSCode, we would be silly not to.  However,
-as detailed
-in our [README.md](https://github.com/jackdewinter/pymarkdown#what-linting-checks-does-pymarkdown-release-with)
-document, our team wanted to provide rules that were clear with a singular focus.
-Instead of writing one rule with side-effects, we decided that we wanted to be able
-to write two rules, each with their own distinct focus.  If a rule is supposed to
-work outside of any containers, it should also work just as well within any group
-of containers.  We realize that this means more work on our part, but that we accepted
-that responsibility from the moment we made our decision.
+Use the pages above when you want to run PyMarkdown effectively; use this page when
+you need to understand how the Rule Engine and configuration model fit together.
 
-## Listing
+A rule is an analyzer: code that reads the stream of information from the
+[PyMarkdown parser](./user-guide.md#markdown-parser) and triggers a failure when
+it detects behavior that violates the rule.
 
-At the root of our support for rule plugins is the [Plugin Command](./user-guide.md#plugin-command)
-available at the command line.  The command is well documented in our user guide,
-and we believe it does not require any embellishments in this document.  Between
-the `list` subcommand and the `info` subcommand, we have designed the command to
-relay useful information intended to help users to locate any rule-based information
-that they are looking for.
+A Rule Plugin is the Python module that exposes a rule to PyMarkdown. By following
+a defined structure, the plugin lets PyMarkdown locate the rule, load it, and treat
+it as a built‑in extension.
 
-## Enabling and Disabling Rules
+## Skipping Ahead
 
-Keeping in mind the [configuration layering](https://application-properties.readthedocs.io/en/latest/getting-started/#configuration-ordering-layering)
-that occurs, the most direct way of enabling and disabling plugins is through
-the `--enable-rules` and `--disable-rules` command line options.  As these
-are [specific command line settings](https://application-properties.readthedocs.io/en/latest/command-line/#specific-command-line-settings),
-these settings override every other enable/disable configuration for the rules
-specified by the command line arguments.
+To help you quickly find what you need, here is a roadmap of what this page covers:
 
-After that comes the `--set` argument which is detailed in the Advanced Configuration
-document under [General Command Line Settings](https://application-properties.readthedocs.io/en/latest/command-line/#general-command-line-settings).
-Using the format `--set=plugins.{id}.enabled=$!True` (with the escaping of
-[certain characters](https://application-properties.readthedocs.io/en/latest/command-line/#special-characters-and-shells)
-being required), a single plugin may be enabled.  Disabling a plugin is as simple
-as replacing the `True` with a `False`.
+- [Why Our Rule Plugins Look the Way They Do](#why-our-rule-plugins-look-the-way-they-do)
+- [Working With Rule Plugins](#working-with-rule-plugins)
+    - [Rule Plugin Ids](#rule-plugin-ids)
+    - [Rule Plugin Configuration](#rule-plugin-configuration)
+        - [Rule Plugin Configuration With Multiple Layers](#rule-plugin-configuration-with-multiple-layers)
+        - [Specific Rule Plugin Configuration](#specific-rule-plugin-configuration)
+- [List Rule Plugins from the Command Line](#list-rule-plugins-from-the-command-line)
+- [Suppressing Rule Failures (Pragmas)](#suppressing-rule-failures-pragmas)
+- [Compiled List of Rule Plugins](#compiled-list-of-rule-plugins)
+- [Rule Plugin Configuration for Specific Parsers](#rule-plugin-configuration-for-specific-parsers)
+    - [Python-Markdown](#python-markdown)
 
-Finally, there are the [configuration files](./advanced_configuration.md/#configuration-files).
-The configuration files provide a more compact and easier way to set configuration
-item values. The configuration files are available in JSON, YAML, and TOML formats,
-with configuration files specified on the command line as well as implicit configuration
-files that are searched for in the current directory when the application starts.
-These tend to be used for more static configuration settings and can easily be shared
-between projects.
+## Why Our Rule Plugins Look the Way They Do
 
-## Configuration In Practice
+Many of our Rule Plugins closely parallel David Anson's
+[MarkdownLint](https://github.com/DavidAnson/markdownlint) project, which is
+widely used in editors such as VSCode. We intentionally align with those rules
+where it makes sense, but we refine their structure.
 
-Note that this is contrived example for demonstration purposes with all three
-active layers of configuration.  In the common uses of PyMarkdown's configuration
-manager that we have observed, our users rarely use more than 2 configuration layers.
-However, how would configuration look like if we utilized all three configuration
-layers? Let us start with a configuration file called `config.json` with contents:
+As described in our
+[README.md](https://github.com/jackdewinter/pymarkdown#what-linting-checks-does-pymarkdown-release-with),
+PyMarkdown emphasises Rule Plugins, each with a single, clear responsibility. Rather
+than
+one Rule Plugin with multiple behaviors, we prefer multiple Rule Plugins, each handling
+one
+concern. This approach increases the number of Rule Plugins we maintain, but keeps
+each Rule Plugin focused
+and predictable.
+
+## Working With Rule Plugins
+
+### Rule Plugin Ids
+
+Each Rule Plugin has a primary identifier associated with it. Primary identifiers
+follow a fixed pattern: a 2–3 letter prefix and a 3‑digit suffix. Each Rule Plugin
+can also have one or more names.
+Each name can contain alphabetic characters and the `-` character. This combination
+of primary identifier and names is referred to as the Rule Plugin's identifiers.
+These identifiers are guaranteed to be unique within an instance of PyMarkdown.
+In most cases, you can use them interchangeably.
+
+### Rule Plugin Configuration
+
+The core details of this topic are covered in the
+[Advanced Configuration](./advanced_configuration.md)
+documentation. That document is your **reference** for all configuration keys and
+formats.
+
+This page complements the reference with a focus on the **behavior** of Rule Plugin
+configuration:
+
+- how more complex configuration setups behave across layers, and
+- how configuration items for Rule Plugins interact in practice.
+
+At a high level, PyMarkdown merges configuration from three sources: built‑in defaults,
+configuration files, and command‑line overrides.
+Later sources override earlier ones. When multiple values are present for the same
+setting, the "closest" source (usually the command line) wins.
+
+See also: [Rule Plugins in Advanced Configuration](./advanced_configuration.md#rule-plugins)
+for the full list of available configuration options.
+
+#### Rule Plugin Configuration With Multiple Layers
+
+To make that precedence concrete, this section walks through a **multi-layer example**
+that shows how enable/disable decisions are made when configuration files and command‑line
+options conflict.
+
+**Note:** This example uses all three configuration layers to illustrate their interaction.
+
+Most real‑world PyMarkdown configurations use two layers or fewer.
+
+Let us start with a configuration file called `config.json` with contents:
 
 ```json
 {
     "plugins": {
-        "md011": {
+        "MD011": {
             "enabled": true,
         },
-        "md012": {
+        "MD012": {
             "enabled": true,
         },
-        "md013": {
+        "MD013": {
             "enabled": false
         }
     }
@@ -100,178 +128,183 @@ layers? Let us start with a configuration file called `config.json` with content
 
 and a command line of (newlines inserted for readability):
 
-```text
-pipenv run pymarkdown --disable-rules Md011
-                      --set 'plugins.md011.enabled=$!True'
-                      --set 'plugins.md012.enabled=$!False'
-                      --config config.json
+```bash
+pipenv run pymarkdown --disable-rules MD011 \
+                      --set 'plugins.MD011.enabled=$!True' \
+                      --set 'plugins.MD012.enabled=$!False' \
+                      --config config.json \
                       scan -r .
 ```
 
-The `--disable-rules` argument takes precedence over any other setting as it is
-at the topmost configuration layer.  This forces Rule Md011 to be disabled, even
-though it is set to `true` in two other locations. The next layer we look at includes
-the `--set` arguments, with one setting Rule Md011 to `True` and the other setting
-Rule Md012 to `False`.  Because of the `--disable-rules` argument, the first setting
-does not take effect, but the second setting does as there was no `--enable-rules`
-or `--disable-rules` argument that specifies Rule Md012.  In a similar fashion,
-the Rule Md011 and Rule Md012 configuration item values in the configuration file
-are overridden, leaving only the `"md013": { "enabled": false }` setting intact
-to disable Rule Md013.
+Therefore, after applying all configuration layers:
 
-Therefore, after applying all configuration layers, Rule Md011 is disabled by `--disable-rules`,
-Rule Md012 is disabled by `--set 'plugins.md012.enabled=$!False'`, and Rule Md013
-is disabled by the `config.json` configfuration item.
+- `MD011`
+    - `config.json`: enabled
+    - `--set`: explicitly enabled
+    - `--disable-rules MD011`: disabled
+    - **Final:** disabled by `--disable-rules`
 
-## Per-File Disabling Of Rules
+- `MD012`
+    - `config.json`: enabled
+    - `--set 'plugins.MD012.enabled=$!False'`: disabled
+    - **Final:** disabled by `--set`
 
-<!-- pyml disable-next-line no-emphasis-as-heading-->
-**Available: Version 0.9.36**
+- `MD013`
+    - `config.json`: disabled
+    - No overrides
+    - **Final:** disabled by `config.json`
 
-In [Feature Request 1511](https://github.com/jackdewinter/pymarkdown/issues/1511),
-the requestor clearly described how they wanted this feature to work and how it
-would help their project. Their team uses a common set of Markdown linting rules
-they want to use across the whole project, but they need to turn off a specific
-rule for one directory. In this project, each contributor is expected to add a Markdown
-file to the project's `changelog.d` directory with a short description of their
-change. When it is time to cut a release, those fragment files are combined into
-the main `changelog.md` file.
+This matches the precedence rules in [Configuration Sources and Layering](./advanced_configuration.md#configuration-sources-and-layering).
 
-The files in the `changelog.d` directory create a special case. They are Markdown
-fragments rather than complete Markdown documents, so requiring them to have a top-level
-heading ([Rule Md041](./plugins/rule_md041.md)) does not make sense. Before this
-feature was available, the team had two options and neither was ideal:
+#### Specific Rule Plugin Configuration
 
-- Create two configuration files:
-    - one for the main project that excludes the `changelog.d` directory
-    - another just for the `changelog.d` directory that disables rule Md041.
-- Ask every each contributor to add a disable pragma at the start of their Markdown
-  fragment, stripping that pragma out again during the release process.
+The previous example focused on **whether** a Rule Plugin is enabled or disabled
+across
+multiple configuration layers. In many projects, you also need to control **how**
+individual Rule Plugins behave via their own settings.
+The [Advanced Configuration](./advanced_configuration.md#specific-plugin-settings)
+documentation explains that each Rule Plugin exposes its own configuration items
+under the `plugins.<identifier>.*` namespace, and this section provides concrete
+examples of using those settings.
 
-To better handle situations like this, we added a way to disable rules based on
-a file path, using paths that are relative to the current directory. Inspired
-by the [Flake8 linter](https://flake8.pycqa.org/en/latest/user/options.html#cmdoption-flake8-per-file-ignores)
-and the [Ruff linter](https://docs.astral.sh/ruff/settings/#lint_per-file-ignores),
-the `plugins.per-file-ignores` property lets you define multiple paths.  For each
-path, you specify a comma-separated list of rule identifiers to disable for files
-that match that path.
+While Rule Plugin enablement can use the `--enable-rules` and `--disable-rules`
+[syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) options,
+Rule Plugin configuration items must always be set explicitly, either via `--set`
+on the command line or in a configuration file.
 
-The file paths are specified using the same glob-based syntax as `.gitignore` files
-used with the [`--respect-gitignore` command line argument](./user-guide.md#-respect-gitignore)
-and the [`--exclude` command line argument](./user-guide.md#-e-exclude-path_exclusions).
+For this example, we will configure a commonly changed setting: `line_length`. First,
+we'll show where the `line-length` plugin's options live in each format, then we'll
+add the `line_length` value there.
 
-To solve the `changelog.d` scenario described above, we recommend the following
-configuration:
+We start with the following configuration, which only controls whether the Rule Plugin
+is enabled:
 
 <!-- pyml disable code-block-style-->
+=== "Command Line"
+    Not Applicable
+=== "--set Argument"
+    ```sh
+    --set 'plugins.line-length.enabled=$!True'
+    ```
 === "JSON"
-
     ```json
     {
-        "plugins": {
-            "per-file-ignores": {
-                "changelog.d/*.md": "md041"
-            }
+      "plugins": {
+        "line-length": {
+          "enabled": true
         }
+      }
     }
     ```
-
 === "YAML"
-
     ```yaml
     plugins:
-      per-file-ignores:
-        changelog.d/*.md: md041
+      line-length:
+        enabled: true
     ```
-
 === "TOML"
-
     ```toml
     [tool.pymarkdown]
-    plugins.per-file-ignores."changelog.d/*.md" = "md041"
+    plugins.line-length.enabled = true
     ```
-
 <!-- pyml enable code-block-style-->
 
-If that team later decided that they also want to disable the `line-length` rule
-([Rule Md013](./plugins/rule_md013.md)), they could change `md041` in the examples
-above to `md013,md041` or `line-length,md041`, because the value is a comma-separated
-list of rule identifiers to disable.
+Here, we leverage the [Rule Plugin Ids](#rule-plugin-ids) section to use one of
+the other identifiers for the Rule Plugin. Both `MD013` and `line-length` are valid
+identifiers, but the human‑readable form is often easier to scan in configuration
+files.
 
-## Rule Configuration
+A pragmatic rule of thumb is:
 
-If you have tackled the examples from the last two sections and understand how
-the layers interact with each other, you should have no trouble understanding rule
-configuration items. That comprehension is made easier because command-line arguments
-like `--disable-rules` and `--enable-rules` do not exist for rule configuration items.
-Those arguments are simply [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar)
-for enabling and disabling plugin rules in bulk. Therefore, when talking about
-configuration items for specific plugin rules, only the `--set` argument and the
-configuration file layers are considered.
+- use the **short id** (`MD013`) when you are scripting, debugging, or comparing
+  against other tools, and
+- use the **name** (`line-length`) when you want configuration files to be self‑documenting.
 
-For this example, we are going to set a configuration item that is commonly
-changed: the `line_length` configuration item. Similar to the above example,
-we may start with a YAML configuration file `config.yaml` with contents:
+You can use either the primary identifier `MD013` or one of the other identifiers,
+but be consistent within a given file. The [Configuration](./plugins/rule_md013.md#configuration)
+section for Rule Plugin `MD013` explains that `line_length` is the main setting
+that controls the maximum accepted line length.
+We can now
+extend
+the previous configuration with a `line_length` value of `100`:
 
-```YAML
-plugins:
-  line-length:
-    enabled: false
-```
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    Not Applicable
+=== "--set Argument"
+    ```sh
+    --set 'plugins.line-length.enabled=$!True' \
+    --set 'plugins.line-length.line_length=$#100'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "line-length": {
+          "enabled": true,
+          "line_length": 100
+        }
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      line-length:
+        enabled: true
+        line_length: 100
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.line-length.enabled = true
+    plugins.line-length.line_length = 100
+    ```
+<!-- pyml enable code-block-style-->
 
-To add the setting of the new configuration item, we just add the `line_length`
-configuration item at the right level of hierarchy, and set its value to `100` to
-denote 100 characters:
+With these patterns, you can apply the same `plugins.<identifier>.*` structure to
+any Rule Plugin's configuration items.
 
-```YAML
-plugins:
-  line-length:
-    enabled: false
-    line_length: 100
-```
+## List Rule Plugins from the Command Line
 
-As another option, instead we could add this argument to the command line:
+Once you know how to configure individual Rule Plugins, the next step is to
+**discover which Rule Plugins exist and what their identifiers are**. Rule Plugins
+are
+managed from the command line via the [Plugin Command](./user-guide.md#plugin-command).
+For full details, refer to the user guide; this document assumes familiarity with
+that command. Use the `list` subcommand to discover Rule Plugins, and `info` to
+retrieve
+detailed information about them.
 
-```text
---set 'plugins.line-length.line_length=$#100'
-```
+## Suppressing Rule Failures (Pragmas)
 
-Both are equally correct and would result in the `line_length` value for the
-`line-length` rule, otherwise known as Rule Md013, being set to the integer value
-of `100`.
+[Rule Failures](./user-guide.md#rule-failure) are generated in response to a Rule
+Plugin
+triggering because of its coded rule. Earlier in this document, we described rules
+as analyzers that look for specific patterns in the Markdown document.
+Therefore, any reported failure is the direct result of a rule detecting content
+it considers incorrect in the Markdown document.
 
-### Which Format is Better?
+Most Rule Failures are accurate and should be fixed by the author. However, Rule
+Failures
+can also occur when the author intentionally wrote the Markdown that way, and that
+is where [Pragmas](./extensions/pragmas.md) are useful.
 
-Why would you prefer one form over the other?  That largely depends on your team's
-preference.  How does our team use these two formats?  If we need to share something
-between projects or need to put a configuration item into "long term storage", then
-we use configuration files.  If we need to set a configuration item temporarily,
-then we use the command line arguments.  For any other cases, we try and figure
-out what makes the most sense to us.
+This section shows **practical patterns** for using Pragmas with Rule Plugins. For
+the full syntax, all Pragma commands, and edge cases, see the dedicated
+[Pragmas extension documentation](./extensions/pragmas.md).
 
-There is no right answer for everyone.  The best answer is always to determine
-guidelines that make sense to you and your team.
+### What Are Pragmas?
 
-## Suppressing Rule Failures
+[Pragmas](https://en.wikipedia.org/wiki/Directive_(programming)) are constructs
+that tell a language implementation how to interpret the code or data it is processing.
+In PyMarkdown, we borrow this idea to mark sections of the Markdown document that
+should be treated differently before the parser sees them.
 
-[Failures](./user-guide.md#failure) are generated in response to a rule
-triggering. As we mentioned at the start of [this document](./advanced_plugins.md),
-rules are written to look for a given pattern in the Markdown document.
-Therefore any failure that is reported is the direct response of a rule finding
-something that it does not think is correct in the Markdown document being
-scanned.
-
-In the majority of cases, that generated failure is accurate and needs to be
-responded to by the author or the Markdown document.  However, there are occurrences
-where a failure is generated in a situation where the author meant the Markdown
-document to be written exactly as they wrote it.  That is where
-[pragmas](./extensions/pragmas.md) come in.
-
-This example for pragmas clearly indicates how you suppress a single failure.  In
-the example below, the Atx Heading characters are followed by two space characters,
-where only one is required.  This normally causes the `no-multiple-space-atx` rule,
-otherwise known as Rule Md019 to trigger. However, in this case, the pragma line
-above it suppressed this failure.
+In the following example, without the Pragma line (starting with `<!--`),
+PyMarkdown reports a failure of the `no-multiple-space-atx` (or `MD019`) Rule Plugin.
+That line specifically informs PyMarkdown to ignore Rule Failures for the Rule Plugin
+`no-multiple-space-atx` on the line that follows it.
 
 ```Markdown
 some paragraph
@@ -282,13 +315,31 @@ some paragraph
 some other paragraph
 ```
 
-While that example was contrived, here is a realistic suppression issue that
-we run into on our PyMarkdown project: our [changelog](./changelog.md).
-We started off the file with a simple format that allows us to add in
-what we have been working on for each release.  Anything new that we
-work on goes in the "Unversioned" section at the top.  When we build
+### A More Realistic Example
+
+As a more realistic case, consider how we handle suppressions in our [changelog](./changelog.md).
+We structured the file with a simple format that records changes for each release.
+Any new entries go in the "Unversioned" section at the top.
+
+```Markdown
+## Unversioned - In Main, Not Released
+
+### Added
+
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+```
+
+When we build
 a release, we change the "Unversioned" name and date and add this template to
-the top of the file.
+the top of the file. The resulting changelog looks like:
 
 ```Markdown
 ## Unversioned - In Main, Not Released
@@ -304,19 +355,33 @@ the top of the file.
 ### Changed
 
 - None
+
+## Version vX.Y.Z - Release Date: 2023-12-25
+
+### Added
+
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
 ```
 
-Before we switched our changelog from its old location
-[changelog](https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md)
-to its [new location](./changelog.md), we just disabled the
-`no-duplicate-heading` rule for the entire project.  A better option would have
-been to have a scan that excluded the `changelog.md` file with that rule
-enabled and another configuration file specifically for the `changelog.md` file
-with that rule disabled. We did not do the right thing and just disabled the rule
-completely for the entire project. That never sat right with our team.
+With no additional configuration, `changelog.md` produces `no-duplicate-heading`
+Rule Failures for each repeated `Added`, `Fixed`, and `Changed` heading.
 
-When we moved the changelog over to the new documentation format, we decided to
-make a small change to the format:
+Before we moved the changelog from its [old location](https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md)
+to its [new location](https://github.com/jackdewinter/pymarkdown/blob/main/newdocs/src/changelog.md),
+we had to address these Rule Failures. We did so by disabling the `no-duplicate-heading`
+Rule Plugin for the entire project. Disabling the Rule Plugin globally was not an
+ideal solution.
+
+After relocating the changelog, we re‑enabled `no-duplicate-heading`. We also updated
+the top `Unversioned` section to use Pragmas for targeted suppression.
 
 ```Markdown
 ## Unversioned - In Main, Not Released
@@ -337,85 +402,178 @@ make a small change to the format:
 - None
 ```
 
-By adding these pragmas to the headings, we can now run PyMarkdown against the
-new changelog file.  Since we are aware that it is a duplicate heading and
-accept that, we can add the pragma to the file without impacting the scan of any
-other Markdown document.
+#### Enter the Enable and Disable Pragma Commands
 
-## List of Rule Plugins
+With version `0.9.30` came the addition of the `enable` and `disable` commands
+[for Pragmas](./extensions/pragmas.md#disable-command-and-enable-command). After
+the coding and testing was completed for that feature, we made an edit to our
+`changelog.md` file that looked like this:
 
-The [rules document](./rules.md) provides for a single place to look for
-information on any of the rules that are released with the PyMarkdown application.
-To make things easier for our users, we have tried to follow this pattern in creating
-the documentation for each rule.  Our hope is that this standardized format will
-help our users locate information about specific rules more efficiently.
+```Markdown
+## Unversioned - In Main, Not Released
+
+<!-- pyml disable no-duplicate-heading-->
+### Added
+<!-- pyml enable no-duplicate-heading-->
+
+- None
+
+<!-- pyml disable no-duplicate-heading-->
+### Fixed
+<!-- pyml enable no-duplicate-heading-->
+
+- None
+
+<!-- pyml disable no-duplicate-heading-->
+### Changed
+<!-- pyml enable no-duplicate-heading-->
+
+- None
+```
+
+We found that approach added too much visual clutter because of the repeated
+`disable`/`enable` lines. A single `disable` at the top of the file also proved
+unsuitable. It disabled the Rule Plugin for the entire changelog instead of only
+the repeated
+headings.
+
+Because `disable-next-line` keeps the intent local with little visual noise, we
+retained that pattern. Treat it as an example of one effective approach. Then choose
+the Pragma pattern that best matches your team's conventions and desired scope.
+
+## Compiled List of Rule Plugins
+
+The [Rules Documentation](./rules.md) is the **index of all Rule Plugins** that
+are released
+with PyMarkdown.
+The list is regenerated for every release, so it always reflects the current set
+of rules and their Rule Plugins.
+
+Use that list when you need to:
+
+- **Discover identifiers** (`MD013`, `line-length`, etc.) for a Rule Plugin you
+  want to configure
+- **Jump to full Rule Plugin documentation** to see reasoning, examples, and configuration
+- **Scan multiple Rule Plugins at once** for summary, **autofix** capability, and
+  default enabled state
+
+In practice:
+
+- Start from this page when you want to understand *how* rule plugins behave and
+  how they interact with configuration.
+- Jump to the [Rule Plugin Documentation](./rules.md) when you already know *which*
+  Rule Plugin you care about. Use it when you need the Rule Plugin's **full specification**.
+
+Combined with the examples on this page, the [Rule Plugins Documentation](./rules.md)
+gives
+you the identifiers, links, and Rule Plugins details you need to configure your project
+effectively.
+
+### Rule Plugin Documentation Structure
+
+We apply the following pattern to every Rule Plugins's documentation to keep the
+structure
+consistent and make key information easy to locate.
 
 - Introduction (implicit)
-    - Details aliases, whether autofix is available, and whether the rule is enabled
-      by default.
+    - Details aliases, whether the **autofix** capability is available, and whether
+      the Rule Plugin is enabled by default.
 - Deprecation (optional)
-    - Present if the rule was removed.  If removed because another rule was implemented
-      that was better, a link to that new rule is provided.
+    - Indicates that the Rule Plugin was removed and, when applicable, points to
+      a replacement Rule Plugin.
 - Summary
-    - Text line presented by the rule when a failure occurs.
+    - Text line presented by the Rule Plugin when a failure occurs.
 - Reasoning
-    - A defined basis for implementing this rule: Consistency, Readability, Simplicity,
-      Correctness, or Portability
+    - A defined basis for implementing this Rule Plugin: Consistency, Readability,
+      Simplicity, Correctness, or Portability
 - Examples
-    - Examples that demonstrate when a failure occurs and when failures do not occur.
+    - Examples that demonstrate when Rule Failures occurs and when Rule Failures
+      do not occur.
 - Fix Description
-    - If a fix is available, a description of how the rule will fix the failure.
-      If not, why a fix was not implemented.
+    - Explains what change results from the automatic fix; otherwise, explains why
+      no fix is implemented.
 - Configuration
-    - The collection of settings that are present for this rule.
-- Origination of Rule
+    - The collection of settings that are present for this Rule Plugin.
+- Origination of rule and Rule Plugin
     - Details of what prompted this rule to initially be created.
 - Differences From MarkdownLint Rule (optional)
-    - If this rule is based on a MarkdownLint rule, how PyMarkdown's implementation
-      differs, and why that decision was made.
+    - When derived from a MarkdownLint rule, documents the differences and the rationale
+      for them.
 
-## Specific Parser Configuration
+## Rule Plugin Configuration for Specific Parsers
 
-While most parsers follow the GFM specification and do not require any configuration
+The configuration techniques above apply regardless of which Markdown parser you
+use. However, some parsers differ enough from GitHub Flavored Markdown that you'll
+want to swap or tune specific Rule Plugins to align with their behavior.
+
+While most parsers follow the [GitHub Flavored Markdown](https://github.github.com/gfm/)
+specification and do not require any configuration
 items to be specially set for them, there are exceptions.
 
 ### Python-Markdown
 
-As the PyMarkdown project is Python based, one of the first Markdown-to-HTML generators
-that we looked at was [Python-Markdown](https://python-markdown.github.io/).  That
-generator is used as part of [MkDocs](https://www.mkdocs.org/) which is used to
-generate the documentation you are reading right now.
-But while Python-Markdown is compliant in many other areas, there are a handful
-of differences noted on their [home page](https://python-markdown.github.io/#differences).
-The biggest difference is that the Python-Markdown team passionately believes that
+Because PyMarkdown is written in Python, we started by evaluating
+[Python-Markdown](https://python-markdown.github.io/), which also powers [MkDocs](https://www.mkdocs.org/),
+the tool used for this documentation. If you are not using Python-Markdown or MkDocs,
+you can skim or skip this section.
+
+Python-Markdown is largely compliant, but it documents several differences on its
+[home page](https://python-markdown.github.io/#differences). The biggest difference
+is that the Python-Markdown team passionately believes that
 all Unordered List Indents should be 4 characters.
 
-This forced us as a team to decide how we will treat any "slightly" non-compliant
-Markdown parsers and their differences.  In this case, as the differences are small,
-we decided to write [Rule Pml101](./plugins/rule_pml101.md) or the `list-anchored-indent`
-rule to handle these scenarios.  As detailed in its documentation, the `list-anchored-indent`
-rule is an adjusted [`ul-indent` rule](./plugins/rule_md007.md) that tunes the list
-indentation to the specific needs of Python-Markdown.
+These differences mean PyMarkdown must accommodate Markdown parsers that are
+slightly non-compliant with the GitHub Flavored Markdown specification. For
+Python-Markdown, we address this by providing
+[Rule Plugin Pml101](./plugins/rule_pml101.md), `list-anchored-indent`, which is
+a
+configuration-compatible variant of the [`ul-indent` Rule Plugin](./plugins/rule_md007.md).
+The `list-anchored-indent` Rule Plugin adjusts list indentation specifically to match
+Python-Markdown's expectations.
+
+If you need to understand exactly how list indentation is interpreted, read the
+[`list-anchored-indent` Rule Plugin documentation](./plugins/rule_pml101.md) and
+compare
+it with
+the [`ul-indent` Rule Plugin](./plugins/rule_md007.md). If you only need the recommended
+settings, the configuration below is sufficient.
 
 Therefore, to accommodate Python-Markdown, the following configuration is suggested:
 
-```json
-"plugins" : {
-    "ul-indent" : {
-        "enabled": false
-    },
-    "list-anchored-indent" : {
-        "enabled": true
+<!-- pyml disable code-block-style-->
+
+=== "Command Line"
+    Not Applicable
+=== "--set Argument"
+    ```sh
+    --set 'plugins.ul-indent.enabled=$!False' \
+    --set 'plugins.list-anchored-indent.enabled=$!True'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "ul-indent" : {
+          "enabled": false
+        },
+        "list-anchored-indent" : {
+          "enabled": true
+        }
+      }
     }
-}
-```
-
-or :
-
-```yaml
-plugins:
-  ul-indent:
-    enabled: false
-  list-anchored-indent:
-    enabled: true
-```
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      ul-indent:
+        enabled: false
+      list-anchored-indent:
+        enabled: true
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.ul-indent.enabled = false
+    plugins.list-anchored-indent.enabled = true
+    ```
+<!-- pyml enable code-block-style-->

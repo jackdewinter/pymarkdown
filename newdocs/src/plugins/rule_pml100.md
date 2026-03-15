@@ -84,7 +84,7 @@ The fix for this rule is currently in review.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `change_tag_names` | `string` | [See above list](#compatibility). | Comma-separated list of proper nouns to preserve capitalization on.** |
 
 ** The comma-separated list of items is a string with a format of `{item},...,{item}`.

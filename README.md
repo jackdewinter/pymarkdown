@@ -1,5 +1,6 @@
 # PyMarkdown
 
+<!-- pyml disable-num-lines 8 line-length-->
 |   |   |
 |---|---|
 |Project|[![Version](https://img.shields.io/pypi/v/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)  [![Python Versions](https://img.shields.io/pypi/pyversions/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)  ![platforms](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey)  [![License](https://img.shields.io/github/license/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/blob/main/LICENSE.txt)  [![GitHub top language](https://img.shields.io/github/languages/top/jackdewinter/pymarkdown)](https://github.com/jackdewinter/pymarkdown)|
@@ -8,141 +9,212 @@
 |Community|[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/jackdewinter/pymarkdown/graphs/commit-activity) [![Stars](https://img.shields.io/github/stars/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/stargazers)  [![Forks](https://img.shields.io/github/forks/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/network/members)  [![Contributors](https://img.shields.io/github/contributors/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/graphs/contributors)  [![Downloads](https://img.shields.io/pypi/dm/pymarkdownlnt.svg)](https://pypistats.org/packages/pymarkdownlnt)|
 |Maintainers|[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=555)](https://www.linkedin.com/in/jackdewinter/)|
 
-## What Is PyMarkdown?
-
-PyMarkdown is primarily a Markdown linter. To ensure that the Markdown
-[linting](https://en.wikipedia.org/wiki/Lint_%28software%29) is conducted with
-the highest attention to detail, our linting rules analyze the tokens produced
-by the project's own Markdown parser. The project's Markdown parser aims to be
-highly compliant to both the
-[GitHub Flavored Markdown](https://github.github.com/gfm/) specification and the
-[CommonMark](https://spec.commonmark.org/) specification. This is important as
-we estimate that over 90% of the existing parsers are mostly compliant to one of
-those two specifications. By our parser adhering to those specifications, we
-have a high degree of confidence that the rules we have written are based on
-solid information about the structure of the Markdown documents that they are
-evaluating. Since the rules have precise information on how compliant parsers
-view the structure of a given Markdown document, each rule can make the best
-decision possible on whether it should trigger a failure or not.
-
 ## Jumping Off Points
 
-If you are looking for a high-level overview of PyMarkdown &mdash; what it is and
-why you should use it &mdash; this file is a great place to start learning how
-PyMarkdown works, what it can do, and whether it is a good fit for your projects.
+- **I want a high-level overview.**\
+  Stay on this page to learn what PyMarkdown is, why you might use it, what it
+  can do, and whether it fits your projects.
+- **I've decided to use PyMarkdown and want to start quickly.**\
+  Follow our [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/)
+  to learn the core concepts and start linting your Markdown.
+- **I'm comfortable with Python and the command line.**\
+  Use the [Fast Path for Experienced Python Users](https://pymarkdown.readthedocs.io/en/latest/quick-starts/advanced)
+  to set up PyMarkdown quickly. If you get stuck, that page links back to the regular
+  Quick Start guides, so you can slow down when needed.
+- **I've finished the Quick Starts or want deeper details.**\
+  Read the [full documentation](https://pymarkdown.readthedocs.io/en/latest/) for
+  advanced options, configuration, and reference material.
 
-If you have decided to use PyMarkdown for your Markdown linting needs and
-want a series of Quick Start guides to help you get started quickly,
-read our [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/)
-to learn the core concepts.
+## What Is PyMarkdown?
 
-If you have already viewed our Quick Start guides, or simply want more information
-on PyMarkdown and its capabilities, [start reading here](https://pymarkdown.readthedocs.io/en/latest/)
-to explore the full documentation for advanced options, configuration details, and reference material.
+PyMarkdown is primarily a Markdown linter.
+
+**Structure‑aware linting**\
+Instead of scanning raw text, the rules analyze tokens that represent your document's
+structure: headings, list items, links, and more. With this structure‑aware view,
+rules decide based on document layout rather than raw characters.
+
+**Spec‑compliant parsing**\
+These tokens come from PyMarkdown's parser, which follows the [GitHub Flavored Markdown](https://github.github.com/gfm/)
+and [CommonMark](https://spec.commonmark.org/) specifications. As a result, PyMarkdown
+interprets your document like other tools and bases its rules on parsed structure
+instead of simple line‑based pattern matching.
+
+Together, these ideas shape how PyMarkdown analyzes your documents.
+
+### Core Concepts
+
+Internally, PyMarkdown is built around three related pieces that implement this
+behavior:
+
+- **Rule Engine** – the system that loads rules, decides which ones are enabled,
+  and runs them on your documents.
+- **Rule Plugins** – small, focused checks (for example, "heading levels" or "list
+  indentation") that the Rule Engine runs.
+- **Extensions** – optional changes to how Markdown is parsed (such as extra block
+  types or link syntaxes) that the Rule Engine takes into account.
 
 ## Why Should I Use PyMarkdown?
 
-We go into this in more detail in our project documentation, but here is the short version.
+Use PyMarkdown if:
 
-Do you use spell checkers and grammer checkers for your emails, instant messages,
-and documents?
+- you already use spell or grammar checkers,
+- you run static analysis before committing code, or
+- you want project‑specific Markdown guidelines without much setup.
 
-Do you use static code analysis tools to verify that you are committing your best
-source code to your projects?
+In those scenarios, PyMarkdown applies consistent, automated checks to your Markdown
+documents.
 
-Do you want to be able to customize your guidelines on a per-project basis with
-little effort?
-
-If the answer to any of those questions is "Yes", then we encourage you to
-consider using our PyMarkdown linter to check you Markdown documents against
-a configurable set of rules that you specify.  We start you off with a common
-set of rules and configuration settings, but you are able to enable, disable,
-and configure rules to correspond to what you want the Markdown guidelines
-to be for your project.
+Start with the built‑in rules and default configuration to lint your documents immediately.
+To customize PyMarkdown later, use the [User Guide](https://pymarkdown.readthedocs.io/en/latest/user-guide/)
+and related pages.
 
 ## What Advantages Does PyMarkdown Have Over Other Markdown Linters?
 
 The PyMarkdown project has the following advantages:
 
-- [Consistency](https://pymarkdown.readthedocs.io/en/latest/#consistency)
-- [Portable](https://pymarkdown.readthedocs.io/en/latest/#portable)
-- [Standardized](https://pymarkdown.readthedocs.io/en/latest/#standardized)
-- [Flexible](https://pymarkdown.readthedocs.io/en/latest/#flexible)
+- [Consistency](https://pymarkdown.readthedocs.io/en/latest/#consistency) – behaves
+  the same across platforms and environments.
+- [Portable](https://pymarkdown.readthedocs.io/en/latest/#portable) – runs on Windows,
+  macOS, and Linux with the same configuration.
+- [Standardized](https://pymarkdown.readthedocs.io/en/latest/#standardized) – follows
+  GFM and CommonMark specifications.
+- [Flexible](https://pymarkdown.readthedocs.io/en/latest/#flexible) – lets you configure
+  rules and behavior.
 - [Thoroughly tested](https://pymarkdown.readthedocs.io/en/latest/#thoroughly-tested)
-- [Extensible](https://pymarkdown.readthedocs.io/en/latest/#extensible)
+  \– includes extensive test coverage and quality checks.
+- [Extensible](https://pymarkdown.readthedocs.io/en/latest/#extensible) – support
+  for custom rules and extensions.
 
-## What Are The Minimum Requirements?
+Before you install PyMarkdown, make sure your environment meets the basic requirements.
 
-This project required Python 3.10 or later to function.
+## Getting Started With PyMarkdown
+
+### What Are The Minimum Requirements?
+
+This project requires Python 3.10 or later.
+
+### How Do I Install PyMarkdown?
+
+For a quick start, run these two commands to install PyMarkdown globally and scan
+the current directory (`.`):
+
+```sh
+pip install pymarkdownlnt
+pymarkdown scan .
+```
+
+PyMarkdown also fits into different workflows, such as:
+
+- dependency management with Pipenv and a virtual environment
+- installation as a development‑only dependency
+- integration as a Pre‑Commit hook
+
+For configuration examples for each of these workflows, see the Quick Start guides
+linked from [Jumping Off Points](#jumping-off-points).
 
 ## What Linting Checks Does PyMarkdown Release With?
 
-The PyMarkdown project is released with 46 out-of-the-box rules to check your
-Markdown with.  Roughly 44 of those rules are our version of the rules provided
-by the [Markdown Lint](https://github.com/DavidAnson/markdownlint) project.
-We purposefully made the decision to implement those rules as they are somewhat
-of a standard due to Markdown Lint being a plugin for VSCode.
+PyMarkdown includes dozens of built‑in linting rules (see the full
+[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/rules/)).
+They cover common concerns such as:
 
-The reason that we state "our version of the rules" is because we believe that
-some of the rules are either overly complicated or were not catching all use
-cases properly.  Our philosophy is that each Plugin Rule should perform one
-check and one check only... no side-effect checks.  We also believe that some
-of the Markdown Lint rules do not understand the context of the document properly,
-leading to misses for their rules.  Our architecture was created to ensure that
-we always have access to the context of any Markdown element that was scanned.
+- heading structure
+- list formatting
+- link validity
+- spacing
+- line length
 
-Basically, we want to support the worldwide users of Markdown by enabling
-PyMarkdown to have the best rules possible.  And to do this on the behalf of
-our users, we feel that we need to make our own decisions on what a rule is.
+Many of these rules will be familiar if you have used other Markdown linters.
+
+### Relationship to Markdown Lint
+
+#### Familiar Rules, Clearer Behavior
+
+Roughly 44 of the 46 built‑in rules are based on rules from the [Markdown Lint](https://github.com/DavidAnson/markdownlint)
+project, a de‑facto standard through its VS Code plugin. We keep the original intent
+of those rules but adjust their behavior to follow the Markdown specifications more
+closely and to handle real‑world documents more reliably.
+
+The goal is to stay familiar to existing Markdown Lint users while providing
+clearer, more predictable results.
+
+#### How PyMarkdown's Rule Engine Differs
+
+As described in [Core Concepts](#core-concepts), PyMarkdown separates checks into
+small, focused **Rule Plugins** that run inside a centralized **Rule Engine**. Each
+plugin implements a single, clearly defined check (for example, "heading levels"
+or "list indentation"), and the engine provides full document context.
+
+Some Markdown Lint rules combine several checks into a single rule or ignore the
+full document context. This can lead to missed issues and confusing error messages.
+
+#### A Concrete Example
+
+For example, a rule that enforces maximum line length does not also verify whether
+the line contains extra internal whitespace. In PyMarkdown, each of these related
+checks is handled by its own Rule Plugin:
+
+- one plugin enforces maximum line length, and
+- another plugin checks internal whitespace.
+
+Both rules use the same document context, yet each error message focuses on a single
+issue. That focus makes it easier to understand and fix reported problems.
+
+#### Summary
+
+PyMarkdown builds on familiar Markdown Lint rules but aligns them with the Markdown
+specifications and with typical real‑world documents, so results are more predictable
+and useful.
+
+For an overview of everything that is available, see the
+[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/rules/)
+and the [Extensions Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/extensions/).
 
 ## How Do I Run This Tool?
 
-The PyMarkdown application is primarily a command line tool for linting, so
-many features boil down to expressing them in the form of commands. As a linter,
-the most commonly used sets of commands are the **scan** mode commands,
-[documented here](https://pymarkdown.readthedocs.io/en/latest/quick-starts/scanning/),
-followed by our **fix** mode commands,
-[documented here](https://pymarkdown.readthedocs.io/en/latest/quick-starts/fixing/).
+Most users rely on:
 
-However, we also expose the following other ways to execute the PyMarkdown application:
+- **scan** mode, described in the [Scanning Quick Start](https://pymarkdown.readthedocs.io/en/latest/quick-starts/scanning/),
+  and
+- **fix** mode, described in the [Fixing Quick Start](https://pymarkdown.readthedocs.io/en/latest/quick-starts/fixing/).
+
+In addition to the command‑line modes, PyMarkdown can also be run in these ways:
 
 - easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/quick-starts/installation/#use-pymarkdown-through-precommit)
 - a simple [API layer](https://pymarkdown.readthedocs.io/en/latest/api/)
 
-For more information on the Pymarkdown application and its command lines,
-check our command line documentation [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/general/)
-and our [Command Line Basics](https://pymarkdown.readthedocs.io/en/latest/user-guide/#command-line-basics) guide.
+For detailed command‑line usage, see:
+
+- the [Quick Start guides](https://pymarkdown.readthedocs.io/en/latest/quick-starts/general/),
+  and
+- the [Command Line Basics](https://pymarkdown.readthedocs.io/en/latest/user-guide/#command-line-basics)
+  section of the User Guide.
 
 ## What If It Is Missing A Feature That I Am Looking For?
 
-Our project team is very open to discussing any features that you would like to
-see in this project.  The two most frequent requests we get are to extend our Markdown
-parser to include a new extension or to extend our our Rule Engine to support
-a new rule or a variation of an existing rule.
+If PyMarkdown is missing something you need, we are happy to discuss new features.
+In practice, most requests fall into two categories:
 
-Extending our Markdown parser to accomodate widely supported Markdown elements
-is one of the goals of our project.  However, implementing an extension takes time,
-especially when it comes to testing the extension.  When we start working on an
-extension, we usually forecast a 1-3 month window for the extension, with subreleases
-along the way for people to try out.
+- extending the Markdown parser to support a new Markdown extension
+- extending the Rule Engine to add a new rule or refine an existing one
 
-Extending our Rule Engine to support new rules is built in to the foundation of
-the Rule Engine itself with our Rule Plugins.  Most of the time, we are able to
-work on those in parallel
-with other work and other testing, so that helps out as well.  But they still take
-time.  With the addition of our new [Fix Mode](https://pymarkdown.readthedocs.io/en/latest/user-guide/#fix-mode-failure-correction),
-adding the ability to automatically fix any issues takes even longer to complete
-properly.
+Building on the [Core Concepts](#core-concepts):
 
-Neither of the last two paragraphs should be considered negative in the least.
-We are just trying to explain that new features take time and why they take
-time.  The good news is that we are in the process of documenting the Rule Plugin
-creation
-process to the point where other people can work on them and submit them for consideration.
-Look out for that in the near future!
+- you add **Rule Plugins** when you want new or refined checks, and
+- you add **extensions** when you want PyMarkdown to understand new Markdown constructs.
+
+The Rule Engine is designed around plugins and extensions, so adding new rules or
+extensions fits naturally into the existing architecture.
+
+The [Extending PyMarkdown](https://pymarkdown.readthedocs.io/en/latest/) section
+in our "Development Documentation" explains how we add extensions and Rule Plugins
+to PyMarkdown. This process acts as a quality safeguard. Features may take longer
+to release, but the additional design, implementation, and testing make their behavior
+more predictable.
 
 ## Where Can I Find More Detailed Information About PyMarkdown?
 
-As mentioned above in our section [Jumping Off Points](#jumping-off-points), our
-documentation is hosted at [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/)
-and is kept up-to-date.
+All detailed documentation is hosted on
+[ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/) and is
+updated with each release.

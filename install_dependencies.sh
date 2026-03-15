@@ -160,7 +160,7 @@ remove_virtual_environment() {
 			complete_process 1
 		fi
 
-		verbose_echo "{Removing previous PipEnv environment.}"
+		verbose_echo "{Removing previous Pipenv environment.}"
 		if ! rm -rf "${VENV_DIR}"; then
 			complete_process 1 "bad rmdir"
 		fi

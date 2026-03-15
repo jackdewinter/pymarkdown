@@ -116,7 +116,7 @@ The fix for this rule is currently in review.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `indent` | `integer` | `4` | Number of spaces needed between sublists starts. |
 
 ## Origination of Rule

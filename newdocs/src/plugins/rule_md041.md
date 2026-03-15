@@ -167,9 +167,9 @@ what text should be in that heading.
 <!-- pyml disable-num-lines 6 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
-| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document.** |
+| `front_matter_title` | `string` | `title` | Name of the Front-Matter field that has the title associated with the document.** |
 | `invisible_tags` | `string` | `link` | Comma separated string of HTML tag names to be considered as invisible. |
 
 ** Any leading or trailing space characters are removed from the `front_matter_title`

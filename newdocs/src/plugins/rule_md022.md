@@ -71,7 +71,7 @@ release.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `lines_above` | `integer` | `1` | Number of lines that are expected before any heading element. |
 | `lines_below` | `integer` | `1` | Number of lines that are expected after any heading element. |
 

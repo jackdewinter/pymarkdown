@@ -34,10 +34,10 @@ as:
 ### Heading 3
 ```
 
-This changes for the very first heading if front-matter is present at the start
+This changes for the very first heading if Front-Matter is present at the start
 of the Markdown document and the [Front-Matter Extension](../extensions/front-matter.md)
 is enabled.  In that case, the value of the `front_matter_title` configuration item
-(defaulting to `title`) specifies the case-insensitive name of the front-matter
+(defaulting to `title`) specifies the case-insensitive name of the Front-Matter
 metadata item to consider as the title of the document.  If that field is present
 in the metadata, it is understood that it will be used as the document's level 1
 heading. In this case, anything except a level 2 heading will cause a failure.
@@ -72,7 +72,7 @@ items or any decrease of the heading levels:
 ### Another Heading 3
 ```
 
-If a front-matter field is present with the configured name, it takes the place of
+If a Front-Matter field is present with the configured name, it takes the place of
 a level 1 heading.  Therefore, a correct document must start with a level 2 heading:
 
 ```Markdown
@@ -86,18 +86,19 @@ title: my title
 ### Edge Case - The Very First Heading
 
 Whether the first heading is an explicit heading (such as an Atx or SetExt heading)
-or an implicit one (derived from a front-matter title), the very first heading in
+or an implicit one (derived from a Front-Matter title), the very first heading in
 a document is treated as a special case by this rule. Since other rules govern the
 behavior of the first heading, this rule intentionally does not add any additional
 requirements for it.
 
-The rule interprets the word "increment" in its summary—
+The rule interprets the word "increment" in its summary &mdash;
 
 > Heading levels should only increment by one level at a time.
 
-—quite literally: either an explicit or implicit heading must appear first before
-this rule is enforced. As a result, the first heading in the document is always
-ignored by this rule. The rule only takes effect starting with the second heading,
+&mdash; quite literally: either an explicit or implicit heading must appear first
+before this rule is enforced. As a result, the first heading in the document is
+always ignored by this rule. The rule only takes effect starting with the second
+heading,
 using the first heading as a reference point to determine whether subsequent heading
 levels increment correctly.
 
@@ -116,8 +117,8 @@ The heading count (number of `#` characters) is adjusted to match what is expect
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `front_matter_title` | `string` | `title` | Name of the front-matter field that contains the title associated with the document. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
+| `front_matter_title` | `string` | `title` | Name of the Front-Matter field that contains the title associated with the document. |
 
 ## Origination of Rule
 
@@ -130,8 +131,8 @@ and the
 
 The difference between this rule and the original rule is that the
 original rule specified a regular expression used to look for the
-specific element within a raw front-matter element.  By default, this
+specific element within a raw Front-Matter element.  By default, this
 was `"^\s*"?title"?\s*[:=]"`.  To support simplicity, this rule
-simply looks for the value of the front-matter key `title` by default,
-as the PyMarkdown parser loads the YAML front-matter and retains its
+simply looks for the value of the Front-Matter key `title` by default,
+as the PyMarkdown parser loads the YAML Front-Matter and retains its
 values.

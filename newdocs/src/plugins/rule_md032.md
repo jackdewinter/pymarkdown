@@ -63,7 +63,7 @@ Quote element, then this rule behaves normally.
 #### Additional Scenarios - Paragraphs and Indented Code Blocks
 
 Due to the [GitHub Flavored Markdown](https://github.github.com/gfm/) specification's
-there are three scenarios that appear to be violations of this rule, but are not.
+there are three scenarios that appear to be failures of this rule, but are not.
 In all of these scenarios, if the text on line four is not meant to be part of the
 list, an inserted blank line will properly convey that intent to most parsers.
 
@@ -149,7 +149,7 @@ release.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule
 

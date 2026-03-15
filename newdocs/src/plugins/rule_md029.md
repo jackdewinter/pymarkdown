@@ -142,7 +142,7 @@ changing that second item's list start to `2`.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
 | `allow_extended_start_values` | `boolean` | `False` | Using the `ordered` style, allows for any integer to start the list. |
 

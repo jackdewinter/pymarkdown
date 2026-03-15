@@ -64,7 +64,7 @@ release.
 <!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `maximum` | `integer` | `1` | Number of blank lines to exceed before this rule triggers |
 
 ## Origination of Rule

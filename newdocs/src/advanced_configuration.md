@@ -6,130 +6,162 @@ authors:
 
 # Advanced Configuration
 
-Configuration is a fundamental aspect that every application must address. Whether
-it's handling simple command-line options, enabling features, or setting values
-for those features, applications require a robust configuration management system
-to manage these variables effectively.
-
-Early in the development of the PyMarkdown application, we recognized the importance
-of having a reliable and flexible configuration system of our own.
+Configuration is how applications handle command-line options, enable features,
+and set their values. Early in PyMarkdown's development, we decided to build our
+own configuration system that is both reliable and flexible.
 
 ## A Note To Begin With
 
-The base documentation for the [`application_properties`](https://application-properties.readthedocs.io/en/latest/getting-started/)
-project was originally adapted from this document to serve as the main documentation
-for that project. To avoid unnecessary repetition, we now provide links to the relevant
-sections of that documentation rather than duplicating content here. We believe
-that moving the documentation to its new home gave us an opportunity to further
-refine and improve it for the `application_properties` project. We hope that this
-effort also enhances the experience for users of the `pymarkdown` project.
+The base documentation for [`application_properties`](https://application-properties.readthedocs.io/en/latest/getting-started/)
+was originally adapted from this document. That library now hosts the generic configuration
+concepts, while this page explains how they are used in PyMarkdown. Moving the generic
+material there let us refine it for broader use while keeping this page focused
+on PyMarkdown users.
+
+## Why this Matters
+
+Some users rely mostly on defaults or a few command‑line tweaks. Others experiment
+with extensions, Rule Plugins, and settings on the command line, then capture what
+works
+in configuration files. The rest of this page shows how to combine those approaches
+and use PyMarkdown's configuration effectively.
 
 ## Skipping Ahead
 
-As this is the Advanced Configuration document, we focus on explaining the configuration
-manager and how it resolves configuration items. We strongly recommend taking the
-time to understand the configuration manager before making changes to configuration
-values, but ultimately, the choice is yours.
+From this point on, we use the same basic terminology as the `application_properties`
+module: configuration item keys (like `log.level`), configuration item values (such
+as `INFO`), and configuration sources (command line and configuration files). If
+you'd like a more formal definition of these terms, see the module's
+[nomenclature section](https://application-properties.readthedocs.io/en/latest/getting-started/#nomenclature),
+but it isn't required to follow this document.
 
-If you prefer to jump directly to specific topics, here are some sections you may
-find useful:
+To help you either explore configuration concepts or look up specific topics, here
+is a roadmap of what this page covers:
 
-- [Configuration Files](#configuration-files)
-    - Learn about the types of configuration files we support and how to access
-      them.
-- [Command Line Configuration](#command-line)
-    - How to specify configuration items from the command line.
-    - If you are working with boolean or integer values, see the
-      [Configuration Item Types](https://application-properties.readthedocs.io/en/latest/command-line/#configuration-item-types)
-      section.
-- [Enabling or Disabling Rules](#how-to-enable-or-disable-rules)
-    - How to turn rules on and off
+- [Configuration File Types](#configuration-file-types)
+- [Configuration Sources and Layering](#configuration-sources-and-layering)
+- [Set command](#set-command)
+- [Strict Configuration Mode](#strict-configuration-mode)
 - [Available Configuration Items](#available-configuration-items)
-    - A complete list of configuration items and options for changing their values.
+- [Choosing Between Command Line and Configuration Files](#choosing-between-command-line-and-configuration-files)
 
-## Nomenclature
+If a topic isn't listed explicitly, look for nearby categories &mdash; for example,
+Rule Plugin configuration is under "Available Configuration Items." Your browser's
+page search can also help you find specific keys or terms.
 
-See the [Nomenclature section](https://application-properties.readthedocs.io/en/latest/getting-started/#nomenclature)
-of the `application_properties` project documentation.
+## Configuration File Types
 
-## Configuration Files
+PyMarkdown reads configuration from JSON, YAML, and TOML files via the
+[`application_properties`](https://github.com/jackdewinter/application_properties)
+package. This document assumes you are comfortable with at least one of these formats.
 
-PyMarkdown supports configuration files in JSON, YAML, and TOML formats by using
-the [application_properties](https://github.com/jackdewinter/application_properties)
-package.
+At a high level:
 
-See the [Configuration Files section](https://application-properties.readthedocs.io/en/latest/file-types/)
-of the `application_properties` project documentation for more information.
+- JSON/JSON5 uses a single top‑level object with sections like system, log, plugins,
+  and extensions.
+- YAML uses nested mappings with the same keys.
+- TOML uses a `[tool.pymarkdown]` table and dotted keys (for example, `log.level`
+  and `plugins.MD013.enabled`).
+
+For full parsing details, see
+[Configuration File Types](https://application-properties.readthedocs.io/en/latest/file-types/#configuration-file-types).
+The examples below are sufficient for most PyMarkdown configurations.
 
 ### Examples
 
-These three example files are in different file formats, but all provide the same
-configuration information to PyMarkdown.  To ensure that this documentation is
-consistent, the `test_markdown_documentation_advanced_configuration_` tests in
-this project verify the behavior stated below.
+Each of the three file types is presented on its own tab with the same information:
 
-#### JSON
+- the names for implicitly loaded configuration files of that type
+- suggested names for the explicitly loaded configuration files that use the `--config`
+  command-line argument
+- a code block with an example configuration file in the specified format
 
-Valid file names for JSON files are:
+Even though these three files use different formats, they provide identical configuration
+data to PyMarkdown. Scenario tests (prefixed with `test_markdown_documentation_advanced_configuration_`)
+verify this for each release.
 
-- implicitly loaded: `.pymarkdown` in current directory
-- explicitly loaded with `--config`: `anything`, `anything.json`
+<!-- pyml disable code-block-style-->
+=== "JSON"
 
-```json
-{
-    "system" : {
-        "exclude_path" : "temp/"
-    },
-    "extensions": {
-        "markdown-tables": {
-            "enabled" : true
-        }
-    },
-    "plugins": {
-        "md013": {
-            "enabled": true,
-            "line_length": 100
+    **NOTE:** To maintain parity with the other file types, we use a JSON5 parser that allows for inline comments.
+
+    Valid file names for JSON files are:
+
+    - implicitly loaded: `.pymarkdown` in current directory
+    - explicitly loaded with `--config`: `anything`, `anything.json`
+
+    ```json
+    {
+        // Do not allow any files starting with `draft-`
+        "system" : {
+            "exclude_path" : "draft-*.md"
+        },
+        "extensions": {
+            "markdown-tables": {
+                "enabled" : true
+            }
+        },
+        "plugins": {
+            "MD013": {
+                "enabled": true,
+                "line_length": 100
+            }
         }
     }
-}
-```
+    ```
 
-#### YAML
+=== "YAML"
 
-Valid file names for YAML files are:
+    Valid file names for YAML files are:
 
-- implicitly loaded: `.pymarkdown.yml` and `.pymarkdown.yaml` in current directory
-- explicitly loaded with `--config`: `anything`, `anything.yml`, `anything.yaml`
+    - implicitly loaded: `.pymarkdown.yml` and `.pymarkdown.yaml` in current directory
+    - explicitly loaded with `--config`: `anything`, `anything.yml`, `anything.yaml`
 
-```yaml
-system:
-  exclude_path: temp/
-extensions:
-  markdown-tables:
-    enabled: true
-plugins:
-  md013:
-    enabled: true
-    line_length: 100
-```
+    ```yaml
+    # Do not allow any files starting with `draft-`
+    system:
+      exclude_path: "draft-*.md"
+    extensions:
+      markdown-tables:
+        enabled: true
+    plugins:
+      MD013:
+        enabled: true
+        line_length: 100
+    ```
 
-#### TOML
+=== "TOML"
 
-Valid file names for TOML files are:
+    Valid file names for TOML files are:
 
-- implicitly loaded: `project.toml` in current directory
-- explicitly loaded with `--config`: `anything`, `anything.toml`
+    - implicitly loaded: `pyproject.toml` in current directory
+    - explicitly loaded with `--config`: `anything`, `anything.toml`
 
-```toml
-[tool.pymarkdown]
+    ```toml
+    [tool.pymarkdown]
 
-system.exclude_path = "temp/"
+    # Do not allow any files starting with `draft-`
+    system.exclude_path = "draft-*.md"
 
-extensions.markdown-tables.enabled = true
+    extensions.markdown-tables.enabled = true
 
-plugins.md013.enabled = true
-plugins.md013.line_length = 100
-```
+    plugins.MD013.enabled = true
+    plugins.MD013.line_length = 100
+    ```
+
+<!-- pyml enable code-block-style-->
+
+When `--config` is given a file whose extension is not `.json`, `.yaml`, `.yml`,
+or `.toml`,
+`application_properties` tries the formats in order: JSON, then YAML, then TOML.
+This allows extensionless or custom‑named files (such as `anything`) to work without
+an explicit extension.
+
+### Need More Information
+
+For a deeper explanation of how we evaluate these file types, refer to the `application_properties`
+[Configuration File Types](https://application-properties.readthedocs.io/en/latest/file-types/)
+documentation.
 
 ### Which One Is Best - Addendum for PyMarkdown
 
@@ -137,40 +169,126 @@ In the original documentation, we made the following observation:
 
 > If comments are important to you, then JSON is out.
 
-However, starting with version 0.9.32 of PyMarkdown (and version 0.9.0 of `application_properties`),
-we now support the JSON5 parser, which allows comments in JSON files. This feature
-is enabled by default. (See [this section](./user-guide.md#-no-json5-configuration)
-for more details.)
+However, starting with PyMarkdown version `0.9.32` (and `application_properties`
+version `0.9.0`), JSON5 support allows comments in JSON files. This feature is enabled
+by default. (See [this section](./user-guide.md#-no-json5-configuration) for more
+details.)
 
-When discussing the pros and cons of JSON5 versus YAML with friends and colleagues,
-we found that the best answer is: it depends.
+In practice, there is no single "best" format &mdash; use what fits your team:
 
-From these conversations, it became clear that both background and personal preference
-play a significant role in choosing one file type over another. Our team’s advice
-is that JSON tends to be stricter and more explicit, while YAML is more flexible
-and forgiving. When we shared these observations, only a small percentage of people
-disagreed—and those who did were typically strong advocates for either JSON or YAML.
+- **JSON/JSON5**: stricter and more explicit; good if you want a rigid structure.
+- **YAML**: more flexible and forgiving; good if you value readability and brevity.
+- **TOML**: a good fit if you already use `pyproject.toml` and want to keep everything
+  together.
 
-Ultimately, choose the format that works best for you and your team. And remember,
-if you ever change your mind, there are easy-to-use format converters available.
+Most teams are well served by either JSON5 or YAML. If your needs change, it's easy
+to convert between formats.
 
-### Command Line
+## Configuration Sources and Layering
 
-See the [Configuration Files section](https://application-properties.readthedocs.io/en/latest/file-types/)
-of the `application_properties` project documentation.
+Most users configure PyMarkdown through command‑line arguments only.
+
+Other users combine multiple configuration sources. For example, they might:
+
+- use an implicit `.pymarkdown` file in the project root for defaults
+- pass `--config newdocs.json` to adjust settings in certain subdirectories
+- use `--set` for temporary overrides before committing them to a file
+
+PyMarkdown applies these sources in order: earlier sources provide defaults; later
+sources override them. This means:
+
+- a `pyproject.toml` setting can be overridden by a local `.pymarkdown` file,
+- which can be overridden by a `--config` file,
+- which can be overridden by `--set` values,
+- which can be overridden by explicit command‑line flags like `--log-level`.
+
+For the exact ordering and override rules used by the configuration library, see
+`application_properties`' [Configuration Ordering](https://application-properties.readthedocs.io/en/latest/getting-started/#configuration-ordering-layering).
+
+## Set Command
+
+PyMarkdown provides command-line arguments like `--enable-rule` to enable a given
+Rule Plugin. These are [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar):
+most of them are shortcuts for using `--set` directly.
+
+The `--set` argument is followed by another argument in the form of:
+
+<!-- pyml disable code-block-style-->
+```text
+<configuration item key>=<optional format prefix><configuration item value>
+```
+<!-- pyml enable code-block-style-->
+
+For example, the `--log-level` argument (described in the ["Logs" section](#logs))
+is syntactic sugar for setting the `log.level` configuration item, which controls
+the minimum log level. Assuming the second argument is a valid value like `INFO`,
+you can achieve the same effect with this `--set` usage:
+
+<!-- pyml disable code-block-style-->
+```sh
+--set `log.level=INFO`
+```
+<!-- pyml enable code-block-style-->
+
+In this example, you substitute `log.level` for `<configuration item key>` and `INFO`
+for `<configuration item value>`.
+
+On the command line, everything starts as text, but configuration items expect strings,
+integers, or booleans. By default, values are treated as strings. To distinguish
+values that look numeric from true integers
+or booleans, `--set` uses an optional format prefix:
+
+| Prefix | Type | Examples |
+| -- | -- | -- |
+| (None) | String | `abc` |
+| `$#` | Integer | `$#1` or `$#-1` |
+| `$!` | Boolean | case-insensitive `$!true`, anything else is false |
+
+For example, skipping ahead a bit to the next section on "Strict Configuration
+Mode", that configuration item requires a boolean value, and can be set using the
+`--set` command using the following format:
+
+<!-- pyml disable code-block-style-->
+```sh
+--set `mode.strict-config=$!True`
+```
+<!-- pyml enable code-block-style-->
+
+## Strict Configuration Mode
+
+When configuration values are wrong, different systems behave differently. Some
+silently fall back to defaults; others raise errors immediately.
+
+PyMarkdown supports both approaches via `mode.strict-config`.
+
+- When mode.strict-config is false (the default, when `--strict-config` is not used),
+  PyMarkdown ignores configuration errors and uses defaults, allowing runs to complete
+  even with bad configuration.
+- When mode.strict-config is true (or `--strict-config` is specified), any configuration
+  error is reported, and PyMarkdown stops with an explanatory message.
+
+**Note:** You can adjust the "stop on error" behavior with
+[Continuing on Errors](#continuing-on-errors). With `mode.strict-config=true`, configuration
+errors are still detected and reported, but `--continue-on-error` causes PyMarkdown
+to log them and continue scanning instead of stopping. Use this combination carefully:
+runs may complete with incorrect or partial results if your configuration is wrong.
 
 ## Available Configuration Items
 
-The available configuration items are broken down into the following areas:
+The available configuration items are grouped into:
 
 - [General - `mode.*` + command line](#general) - Global settings.
 - [Logs - `log.*`](#logs) - Settings that affect how logging works.
-- [System - `system.*`](#logs) - Settings that affect the entire system.
-- [Rules - `plugins.*` + command line](#rule-plugins) - Settings that affect the
-  various plugins.
+- [System - `system.*`](#system) - Settings that affect the entire system.
+- [Rule Plugins - `plugins.*` + command line](#rule-plugins) - Settings that affect
+  the various Rule Plugins.
 - [Extensions - `extensions.*`](#extensions) - Settings that affect the various
   extensions.
 - [Other - command line](#other) - Settings that do not fit into other categories.
+
+Each area starts with a table of items, followed by brief explanations and examples
+in all supported formats (command line, `--set`, JSON, YAML, and TOML). Where relevant,
+the table links to more detailed documentation in the User's Guide or elsewhere.
 
 ### General
 
@@ -180,150 +298,459 @@ are interpreted.
 <!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| --                    | --config {file}           | string    | Path to the configuration file to use. |
-| --                    | --set {key}={value}       | string    | Manually set an individual configuration property. |
-| mode.strict-config    | --strict-config           | boolean   | Throw an error if the configuration is bad, instead of assuming default values. (Default: `false`) |
+| [(see Configuration File Types)](#configuration-file-types) | `--config {file}`           | String    | Path to the configuration file to use. |
+| [(see Set Command)](#set-command)                           | [`--set {key}={value}`](./user-guide.md#-set-configuration) | String    | Manually set an individual configuration property. |
+| [`mode.strict-config`](#strict-configuration-mode)          | [`--strict-config`](./user-guide.md#-strict-config-configuration) | Boolean   | Throw an error if the configuration is bad, instead of assuming default values. (Default: `false`) |
+
+These items recap configuration options covered earlier; use the links in the first
+column to jump to the detailed explanations.
 
 ### Logs
 
-These items affect the logging for the application.
+These items affect the logging for PyMarkdown.
 
 <!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| log.file          | --log-file        | string  | Destination file for log messages. |
-| log.level         | --log-level       | string* | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`)  |
-| log.stack-trace | --stack-trace | boolean | if an error occurs, print out the stack trace for debug purposes.  Also sets the initial logging (config processing) to debug. (Default: `false`) |
+| `log.file`        | [--log-file](./user-guide.md#-log-level-with-log-file-logging) | String  | Destination file for log messages. |
+| `log.level`       | [--log-level](./user-guide.md#-log-level-with-log-file-logging) | String | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`)  |
+| `log.stack-trace` | [--stack-trace](./user-guide.md#-stack-trace-error-reporting) | Boolean | When enabled, prints a stack trace on errors and sets initial logging (config processing) to debug. (Default: `false`) |
 
-These configuration values control how the application logs information. The `*file`
-and `*level` options are straightforward: they determine the log level for the application
-and whether log messages are written to a file instead of standard output (stdout).
+#### Basic Logging
 
-The `log.stack-trace` configuration item (and its `--stack-trace` command line flag)
-has a more nuanced role. At its core, enabling this setting causes the application
-to print a debugging stack trace whenever an error occurs. While this information
-can be overwhelming for typical users, it is invaluable for diagnosing application
-errors.
+These configuration values control how PyMarkdown logs information. The `log.file`
+and `log.level` configuration items are straightforward: they set the log level
+and control whether messages are written to a file or to standard output (stdout).
 
-There is an additional subtlety regarding when this flag takes effect. Since the
-configuration manager must be initialized before the `log.stack-trace` setting can
-be accessed, there is a brief period during startup when log settings and stack
-trace output cannot be controlled. Because the primary use case for the `--stack-trace`
-flag is debugging application errors, we chose to enable debug-level logging from
-startup until the configuration manager is fully initialized.
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --stack-trace --log-file logs/my.log --log-level INFO
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'log.stack-trace=true' --set 'log.file=logs/my.log' --set 'log.level=INFO'
+    ```
+=== "JSON"
+    ```json
+    {
+      "log": {
+        "stack-trace": true,
+        "file": "logs/my.log",
+        "level": "INFO"
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    log:
+      stack-trace: true
+      file: "logs/my.log"
+      level: "INFO"
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    log.stack-trace = true
+    log.file = "logs/my.log"
+    log.level = "INFO"
+    ```
+<!-- pyml enable code-block-style-->
 
-Although we usually follow a "one configuration item, one result" principle, this
-was a case where making an exception provided a better user experience for debugging.
+#### Stack Traces
+
+The `log.stack-trace` configuration item (and `--stack-trace` flag) enables a stack
+trace whenever an error occurs. This is mainly intended for debugging. Because the
+configuration manager is initialized early in startup, enabling this flag also turns
+on debug-level logging from startup until configuration is fully loaded, so you
+see any errors that occur during initialization.
 
 ### System
 
-These items affect various aspects of the application:
+These items configure PyMarkdown's system‑level behavior:
 
-<!-- pyml disable-num-lines 2 line-length-->
+<!-- pyml disable-num-lines 3 line-length-->
 | Key | Command Line | Type | Description |
-| system.exclude_path | --exclude | string | Comma separated list of relative glob paths to exclude. |
+| --- | --- | --- | --- |
+| `system.exclude_path` | [`--exclude`](./user-guide.md#-e-exclude-path_exclusions) | String | Comma separated list of relative glob paths to exclude. |
 
-The `system.exclude_path` configuration item (and its command line equivalent)
-allows you to instruct the application to scan a path while excluding one or more
-globbed paths. This feature was introduced in response to
-[issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462),
-which highlighted the need for both command line and configuration-based methods
-to specify excluded glob paths.
+#### Excluding Paths
 
-There is a key difference between the two approaches:
+The `system.exclude_path` configuration item (and its command-line equivalent)
+lets you scan a path while excluding one or more glob patterns in a comma-separated
+list. It is supported both on the command line and in configuration files (see
+[issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462) for the original
+request).
 
-- On the command line, you can specify multiple glob paths to exclude by repeating
-  the argument (e.g., `--exclude 1.md --exclude 2.md`).
-- In the configuration file, the item can only be specified once, so you provide
-  a comma-separated list of paths (e.g., `-s system.exclude_path=1.md,2.md`).
-
-This flexibility allows you to choose the method that best fits your workflow.
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --exclude draft_*.md --exclude draft-*.md
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'system.exclude_path=draft_*.md,draft-*.md'
+    ```
+=== "JSON"
+    ```json
+    {
+      "system": {
+        "exclude_path": "draft_*.md,draft-*.md"
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    system:
+      exclude_path: "draft_*.md,draft-*.md"
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    system.exclude_path = "draft_*.md,draft-*.md"
+    ```
+<!-- pyml enable code-block-style-->
 
 ### Rule Plugins
 
-These affect the collection of rule plugins and whether they are called.
+These items show the various ways of enabling and disabling Rule Plugins on a global
+level:
+
+<!-- pyml disable-num-lines 6 line-length-->
+| Key | Command Line | Type | Description |
+| -- | -- | -- |-- |
+| *special* | [--enable-rules,-e](./user-guide.md#enabling-and-disabling-rule-plugins)   | String    | Comma separated list of Rule Plugins to enable. |
+| *special* | [--disable-rules,-d](./user-guide.md#-enable-rules-disable-rules-rule-plugins)  | String    | Comma separated list of Rule Plugins to disable. |
+| [`plugins.selectively_enable_rules`](#selectively-enable-rule-plugins) | -- | Boolean | Specify whether to enable selective enable mode. |
+| [`per-file-plugins.ignores`](#per-file-disabling-of-rule-plugins) | -- | Nested | Specify glob paths to match, and Rule Plugins to disable if matched. |
+
+This item points to the Development documentation with instructions for creating
+your own plugins:
+
+<!-- pyml disable-num-lines 3 line-length-->
+| Key | Command Line | Type | Description |
+| -- | -- | -- |-- |
+| [`plugins.additional_paths`](./development.md) | --add-plugin     | String    | Path to a plugin containing a new Rule Plugins to load. |
+
+These items give examples on how specific configuration items can be applied to
+Rule Plugins:
+
+<!-- pyml disable-num-lines 4 line-length-->
+| Key | Command Line | Type | Description |
+| -- | -- | -- |-- |
+| [`plugins.{id}.enabled`](#specific-plugin-settings) | -- | Boolean | Specify whether the Rule Plugin is enabled. |
+| [`plugins.{id}.other`](#specific-plugin-settings) | -- | Various | Specify other configuration properties specific to the Rule Plugins. |
+
+For more on plugin behavior (including per‑file suppression and advanced options),
+see [Advanced Rule Plugins](./advanced_plugins.md).
+
+#### Enabling/Disabling Rule Plugins
+
+Rule Plugins can be enabled or disabled either through the command line or by using
+a configuration file. On the command line, you can use the `--enable-rules` and
+`--disable-rules` arguments to specify a comma-separated list of Rule Plugin identifiers
+to enable or disable, with the `--set` command available if needed. If you prefer
+to manage plugin settings through a configuration file, you can enable Rule Plugins
+in the configuration file by setting their `enabled` configuration item to `true`,
+as shown in the following examples.
+
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --enable-rules MD013
+    # OR
+    -e MD013
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'plugins.MD013.enabled=$!True'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "MD013": {
+          "enabled": true
+        }
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      MD013:
+        enabled: true
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.MD013.enabled = true
+    ```
+<!-- pyml enable code-block-style-->
+
+**NOTE:** These examples enable a Rule Plugin. To disable instead, either set the
+configuration value to `false` or, on the command line, use `--disable-rules` or
+`-d` rather than `--enable-rules` or `-e`.
+
+##### Selectively Enable Rule Plugins
+
+In some situations, you may want to apply only a minimal set of Rule Plugins to
+your Markdown
+documents. This configuration item enables this selective mode. When set to `True`,
+all Rule Plugins are disabled by default, allowing you to explicitly enable only
+the Rule Plugins
+you want to use. A command-line shortcut, `-d "*"`, is available to disable all
+Rule Plugins from the command line.
+
+For instance, if you want PyMarkdown to apply only Rule Plugin `MD007` to a group
+of documents,
+you would use the following configuration:
+
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --disable-rules "*"
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'plugins.selectively_enable_rules=$!True' --set 'plugins.MD007.enabled=$!True'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "selectively_enable_rules": true,
+        "MD007": {
+          "enabled": true
+        }
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      selectively_enable_rules: true
+      MD007:
+        enabled: true
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.selectively_enable_rules = true
+    plugins.MD007.enabled = true
+    ```
+<!-- pyml enable code-block-style-->
+
+With this configuration, all Rule Plugins are disabled except for `MD007`, regardless
+of
+the system's default Rule Plugins settings.
+
+##### Per-File Disabling Of Rule Plugins
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.36**
+
+In some cases, you may have a base configuration that enables or disables Rule Plugins
+at the project level, but you still need to disable certain Rule Plugins for specific
+files.
+The `plugins.per-file-ignores` configuration item takes inspiration from the
+[Flake8 linter](https://flake8.pycqa.org/en/latest/user/options.html#cmdoption-flake8-per-file-ignores)
+and the [Ruff linter](https://docs.astral.sh/ruff/settings/#lint_per-file-ignores),
+in being able to disable the Rule Plugins belonging to a comma-separated set of
+identifiers associated with one ore more matching
+paths.
+
+The file paths are specified using the same glob-based syntax as `.gitignore` files
+used with the [`--respect-gitignore` command-line argument](./user-guide.md#-respect-gitignore)
+and the [`--exclude` command-line argument](./user-guide.md#-e-exclude-path_exclusions).
+This feature is strictly for disabling Rule Plugins. It does not enable Rule Plugins
+that are
+currently disabled.
+
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    Not Available
+=== "--set Argument"
+    Not Available
+=== "JSON"
+    ```json
+    {
+        "plugins": {
+            "per-file-ignores": {
+                "changelog/*.md": "MD013,MD041"
+            }
+        }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      per-file-ignores:
+        changelog/*.md: "MD013,MD041"
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.per-file-ignores."changelog/*.md" = "MD013,MD041"
+    ```
+<!-- pyml enable code-block-style-->
+
+#### Adding Rule Plugins
+
+You can add additional Rule Plugins either temporarily or permanently. For temporary
+evaluation, the recommended approach is to use the `--add-plugin` command-line
+argument for each plugin you want to add, with each argument followed by the path
+to the plugin file. If you want a more permanent setup, use the `plugins.additional_paths`
+configuration value with a comma‑separated list of plugin paths. This works well
+for both one‑off experiments and long‑term setups.
+
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --add-plugin /path/to/plugin1.py --add-plugin /path/to/plugin2.py
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'plugins.additional_paths=/path/to/plugin1.py,/path/to/plugin2.py'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "additional_paths": "/path/to/plugin1.py,/path/to/plugin2.py"
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      additional_paths: "/path/to/plugin1.py,/path/to/plugin2.py"
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.additional_paths = "/path/to/plugin1.py,/path/to/plugin2.py"
+    ```
+<!-- pyml enable code-block-style-->
+
+For more information regarding creating your own Rule Plugin, consult our
+[Developer Guide](./development.md).
+
+#### Specific Plugin Settings
+
+Each Rule Plugin uses its own configuration namespace under `plugins.{rule-id}`.
+The primary boolean `plugins.{id}.enabled` determines whether the Rule Plugin is
+active, where
+`{rule-id}` is the Rule Plugin's identifier. Additional settings for that Rule Plugin
+are also stored
+under `plugins.{rule-id}.`, so each plugin's options are grouped together.
+
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    Not Applicable
+=== "--set Argument"
+    ```sh
+    --set 'plugins.MD013.enabled=$!True' --set 'plugins.MD013.line_length=$#150'
+    ```
+=== "JSON"
+    ```json
+    {
+      "plugins": {
+        "MD013": {
+          "enabled": true,
+          "line_length" : 150
+        }
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    plugins:
+      MD013:
+        enabled: true
+        line_length: 150
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    plugins.MD013.enabled = true
+    plugins.MD013.line_length = 150
+    ```
+<!-- pyml enable code-block-style-->
+
+For a Rule Plugin's available configuration items, start with the
+[Advanced Rule Plugins](./advanced_plugins.md)
+overview, then use the [Rule Plugins document](./rules.md) for each Rule Plugin's
+details.
+
+### Extensions
+
+This item shows how to enable specific extensions:
 
 <!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| *special* | --enable-rules,-e   | string    | Comma separated list of rules to enable. |
-| *special* | --disable-rules,-d  | string    | Comma separated list of rules to disable. |
-| plugins.additional_paths | --add-plugin     | string    | Path to a plugin containing a new rule to apply. |
+| *special* | [--enable-extensions](./user-guide.md#enabling-extensions)   | String    | Comma separated list of extensions to enable. |
 
-Plugins can be enabled or disabled either through the command line or by using
-a configuration file. On the command line, you can use the `--enable-rules` and
-`--disable-rules` arguments to specify a comma-separated list of rule identifiers
-to enable or disable. If you prefer to manage plugin settings through a configuration
-file, you can enable rule plugins as described in the following section.
+#### Enable Extensions
 
-You can add additional rule plugins either temporarily or permanently. For temporary
-evaluation, the recommended approach is to use the `--add-plugin` command line argument
-for each plugin you want to add, with each argument followed by the path to the
-plugin file. If you want a more permanent setup, you can use the `plugins.additional_paths`
-configuration value, specifying one or more plugin paths as a comma-separated list.
-This allows you to tailor plugin management to your workflow, whether you need a
-quick test or a lasting configuration.
+Extensions are configured similarly to Rule Plugins, but there are no general
+command-line options for enabling or configuring them. Most teams enable
+extensions in project‑level configuration files, so additional command‑line
+flags were not added.
 
-#### General Plugin Settings
+By default, only the [Pragmas Extension](./extensions/pragmas.md) is enabled, because
+it underpins PyMarkdown's Rule Failure Suppression. The two most commonly enabled
+additional extensions are:
 
-<!-- pyml disable-next-line no-emphasis-as-heading-->
-**Available: Version 0.9.30**
+- [Front-Matter Extension](./extensions/front-matter.md): enables YAML metadata
+  at the start of the file.
+- [Markdown Tables Extension](./extensions/markdown-tables.md): enables Markdown
+  tables.
 
-<!-- pyml disable-num-lines 4 line-length-->
-| Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| `plugins.selectively_enable_rules` | -- | Boolean | Specify whether to enable selective enable mode. |
+You can enable both with:
 
-In some situations, you may want to apply only a minimal set of rules to your Markdown
-documents. The selectively_enable_rules configuration setting enables this selective
-mode. When set to True, all rules are disabled by default, and you can then explicitly
-enable only the rules you want to use. This option is available through both the
-[command line](#exception-selective-enabling-of-rules) and configuration settings.
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --enable-extensions front-matter,markdown-tables
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'extensions.front-matter.enabled=$!True' --set 'extensions.markdown-tables.enabled=$!True'
+    ```
+=== "JSON"
+    ```json
+    {
+      "extensions": {
+        "front-matter": {
+          "enabled": true
+        },
+        "markdown-tables": {
+          "enabled": true
+        }
+      }
+    }
+    ```
+=== "YAML"
+    ```yaml
+    extensions:
+      front-matter:
+        enabled: true
+      markdown-tables:
+        enabled: true
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    extensions.front-matter.enabled = true
+    extensions.markdown-tables.enabled = true
+    ```
+<!-- pyml enable code-block-style-->
 
-For instance, if you want the PyMarkdown linter to apply only rule Md007 to a group
-of documents, you would use the following configuration:
-
-```text
-plugins.selectively_enable_rules: True
-plugins.Md007.enabled: True
-```
-
-With this configuration, all rules are disabled except for Md007, regardless of
-the system's default rule settings. For more details, see the section on
-[Selective Enabling of Rules](#exception-selective-enabling-of-rules).
-
-#### Specific Plugin Settings
-
-<!-- pyml disable-num-lines 4 line-length-->
-| Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| `plugins.{id}.enabled` | -- | Boolean | Specify whether the plugin rule is enabled. |
-| `plugins.{id}.other` | -- | Various | Specify other configuration properties specific to the rule. |
-
-The configuration values for rule plugins differ somewhat from those used elsewhere
-in the system. Each rule plugin has a primary boolean configuration value, written
-as `plugins.{id}.enabled`, which determines whether that rule is enabled. Here,
-`{id}` represents any valid identifier for a plugin rule.
-
-After a rule plugin is enabled, it manages its own configuration properties, all
-of which are organized under the `plugins.{id}.` hierarchy. This structure allows
-each plugin to define and control its specific settings independently from the
-rest of the system. The full list of configuration values available for each standard
-plugin rule is shown in the `Configuration` section for
-each [standard rule plugin](./advanced_plugins.md).
-
-### Extensions
-
-Extensions are configured in much the same way as rule plugins, but unlike plugins,
-there are no general command line options available for enabling or configuring
-extensions. In our experience, extensions are typically enabled through configuration
-files and applied at the project level. For this reason, we have found that providing
-general command line options for extensions does not offer significant value to
-users.
-
-As with rule plugins, the configuration options for each extension are detailed
-in the `Configuration` section of their respective
-[extension documentation](./advanced_extensions.md).
+For details on available extensions and their settings, see
+[Advanced Extensions](./advanced_extensions.md#categories-of-extensions), which
+also links to each extension's page.
 
 ### Other
 
@@ -332,176 +759,72 @@ These items do not fit nicely into any other category.
 <!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| -- | --continue-on-error | Boolean | Enable PyMarkdown to continue after application errors. |
-| -- | --return-code-scheme | String | Specify a scheme to use when formulating the return code. |
+| -- | [`--continue-on-error`](./user-guide.md#-continue-on-error-error-reporting) | Boolean | Enable PyMarkdown to continue after application errors. |
+| `mode.return_code_scheme` | [`--return-code-scheme`](./user-guide.md#-return-code-scheme-observability) | String | Specify a scheme to use when formulating the return code. |
 
-These two arguments are not associated with any configuration items and are handled
-directly from the command line. The `--continue-on-error` option allows the application
-to keep running after an error occurs, while still returning a code that indicates
-an error was encountered. The `--return-code-scheme` option changes the return code
-values according to a specified mapping of outcomes to return codes. For more details,
-see the User Guide section on
-[General Command Line Arguments](./user-guide.md#general-command-line-arguments).
+#### Continuing on Errors
 
-## Common Topics
+The `--continue-on-error` argument instructs PyMarkdown to log any application errors
+but continue processing the remaining Markdown files. It is only supported through
+the command line.
 
-### How To Enable or Disable Rules
+When combined with `mode.strict-config=true`, configuration errors are still validated
+and reported, but they do not stop the run; they are logged and processing continues.
+This can be useful in CI when you need a full report but still want visibility into
+invalid configuration.
 
-The simplest way to enable or disable rules is by using the command line. For example:
+#### Controlling Return Codes
 
-```text
-pymarkdown -d MD041,md013 scan .
-```
+The `mode.return_code_scheme` configuration item controls PyMarkdown's return codes
+by selecting either the `default` or `minimal` scheme. These schemes help scripts
+interpret success and failure consistently using the return codes [identified here](./user-guide.md#-return-code-scheme-observability).
 
-Whether you specify these settings in a configuration file or on the command line,
-the enable and disable options follow the standard rules of
-[Configuration Ordering](https://application-properties.readthedocs.io/en/latest/getting-started/#configuration-ordering-layering).
-This means that command line arguments, such as the example above, will override
-any enable or disable settings provided via the `--set` option or within a configuration
-file.
-
-#### Exception: Enabling/Disabling Rules From The Command Line
-
-One tenet that we strive to follow is to have a clearly defined behavior for
-our application.  And for observant readers, there was a bit of undefined behavior
-talked about in the last section.  Consider the following example:
-
-```text
-pymarkdown -e Md041 -d Md041 scan .
-```
-
-As PyMarkdown allows for both enabling and disabling of a plugin to occur on
-the command line and assigns it to its highest layer, what happens if both
-are specified for the same rule?
-
-Encountering this rule during our own testing, we did some more research to
-determine the scope of this issue.  With every other layer of the configuration
-manager, there is a combined enable and disable setting, instead of having a
-split setting.  As such, the scope of this issue was solely focused on the
-command line.  Since we believe that users will disabling plugins more often
-than enabling plugins, we decided that command line disables would have
-priority over command line enables.
-
-#### Exception: Selective Enabling of Rules
-
-<!-- pyml disable-next-line no-emphasis-as-heading-->
-**Available: Version 0.9.30**
-
-Suggested by a user in [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396),
-the PyMarkdown linter now supports the blanket disabling of all rules.  As mentioned
-above, the disabling of a specific rule at a given level will cause that rule to
-be forcibly disabled for that level and any lower levels, regardless of any enabling
-done at the same level or lower.  Selectively enabling rules presents an interesting
-twist to that pattern.
-
-When selectively enabling items with any system, the enabling mechanism disables
-every instance of the specific thing while presenting the user the ability to enable
-a specified subset of those things. A popular example is an internet firewall, where
-any incoming communication into a system is disabled unless someone has specifically
-opened a way through the firewall. If you do not follow the proscribed method to
-cross the firewall, your traffic bounces off the firewall.
-
-Previously exposed for testing purposes, the PyMarkdown linter now provides the
-ability to selectively enable rules using a command line like:
-
-```bash
-pymarkdown -e Md041 -d "*" scan .
-```
-
-This command line instructs the application to disable all rules, enabling only
-Rule Md041. There are various uses for this mechanism, but the simplest one to
-explain is the onboarding of a team to using the PyMarkdown linter.  Enabling the
-full scanning of a set of Markdown documents without using a measured approach
-can be daunting and overwhelming to a team. By using the selective enablement of
-rules, that team can iteratively go onboard sets of rules until the complete
-set of desired rules is in place.
-
-##### Configuration Layers Matter
-
-Selective enablement of rules is implemented at both the command line and general
-configuration levels [(see General Plugin Settings)](#general-plugin-settings).
-At the command line level, only command line enable arguments can activate a rule.
-At the general configuration level, rules can be enabled either through the configuration
-file or command line arguments.
-
-Command line enablement takes precedence over general configuration, meaning if
-a rule is enabled at the command line, it overrides any conflicting settings in
-the general configuration. This precedence can be visualized as a layered approach:
-if the command line layer provides a definitive setting, the general configuration
-layer is not consulted.
-
-### Multiple Identifiers For The Same Rule Plugin
-
-A rule plugin can have multiple identifiers: a primary ID and one or more aliases.
-When separate configuration hierarchies use different identifiers for the same plugin
-rule, there must be a clear and predictable order to determine which configuration
-takes precedence. The rule is as follows: the plugin's primary ID is considered
-first, followed by each alias in the order they are defined within the plugin. This
-ordering applies to the entire group of configuration values for that plugin.
-
-For example, consider the following configuration file:
-
-```json
-{
-"plugins" : {
-    "heading-style-h1" : { 
-        "enabled" : true,
-        "style" : "consistent"
-    },
-    "md003" : { 
-        "enabled" : false
+<!-- pyml disable code-block-style-->
+=== "Command Line"
+    ```sh
+    --return-code-scheme minimal
+    ```
+=== "--set Argument"
+    ```sh
+    --set 'mode.return_code_scheme=minimal'
+    ```
+=== "JSON"
+    ```json
+    {
+      "mode": {
+        "return_code_scheme": "minimal"
+      }
     }
-}
-```
+    ```
+=== "YAML"
+    ```yaml
+    mode:
+      return_code_scheme: "minimal"
+    ```
+=== "TOML"
+    ```toml
+    [tool.pymarkdown]
+    mode.return_code_scheme = "minimal"
+    ```
+<!-- pyml enable code-block-style-->
 
-According to the documentation for [Rule Md003](./plugins/rule_md003.md), the primary
-ID for this rule is `md003`, and it has an alias heading-style-h1. In this case,
-the `plugins.md003` configuration takes precedence over the `plugins.heading-style-h1`
-configuration, regardless of their order in the file. If the `"enabled": false`
-value under `md003` were instead `"enabled": true`, the property `plugins.heading-style-h1.style`
-would still not be used by the configuration manager unless the entire `plugins.md003`
-hierarchy was removed. This is because precedence is determined at the hierarchy
-level, not for individual configuration properties.
+## Choosing Between Command Line and Configuration Files
 
-### Command Line Vs Configuration File
+A common question &mdash; for PyMarkdown and other projects &mdash; is whether to
+use configuration files or command-line arguments. The answer depends on your context
+and needs.
 
-A common question, both for PyMarkdown and other projects, is whether to use a
-configuration file or command line arguments. The answer depends on your specific
-context and needs.
+In practice, your workflow determines whether configuration files or command-line
+arguments are better:
 
-In our experience, configuration files are often preferred for several reasons.
-They allow you to keep all configuration values in a single, organized location,
-making it easier to manage and review settings. Configuration files also promote
-reusability, as you can reference the same settings in different scripts or environments.
-They simplify complex configurations by reducing the need for lengthy or repetitive
-command line options. If you want to separate concerns, you can dedicate configuration
-files to specific purposes, such as pre-commit hooks, while keeping other settings
-elsewhere. And sometimes, the choice simply comes down to personal or team preference.
+- **Configuration files** work best when:
+    - You run PyMarkdown from multiple places or scripts.
+    - You want a stable, reviewable record of settings.
+    - You manage more than a handful of options.
+- **Command-line arguments** work best when:
+    - You are experimenting with new options.
+    - You need temporary overrides for a single run.
 
-Ultimately, the decision between configuration files and command line arguments
-should be based on what works best for your workflow and team. Consider your project's
-requirements, how often settings change, and how you want to manage and share configuration
-information.
-
-If you are only using PyMarkdown in a single part of your project and not invoking
-it elsewhere, the reasons for choosing configuration files over command line arguments
-may not be as relevant or influential. Other factors, such as team guidelines or
-project conventions, might also play a role in your decision. Ultimately, the choice
-comes down to what works best for your team.
-
-In our experience, we prefer to keep configuration items in dedicated configuration
-files. This approach offers greater reusability and readability. Our team’s guideline
-is to maintain one configuration file per tool whenever possible, and to be as precise
-as possible with configuration items. As a result, we use a JSON configuration file
-that we explicitly specify on the command line each time we run the tool. This deliberate
-approach works well for us and makes it easy to explain our rationale to each other.
-
-We also use the command line for experimenting with new configuration items. For
-us, the configuration file serves as "well-tested cold storage," while the command
-line acts as a test platform. When we see a configuration option on the command
-line, we know it’s being evaluated and hasn’t yet been fully adopted. These are
-our team’s practices, and they suit our workflow.
-
-Whatever you decide, make sure to discuss and document your team’s approach. Having
-clear documentation will help you revisit and understand your decisions later,
-especially as team members and project requirements change over time.
+In practice, our team stores most settings in a JSON config file and reserves command-line
+flags for experiments. Choose a comparable convention for your team and document
+it.

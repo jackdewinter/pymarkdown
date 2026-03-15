@@ -110,9 +110,9 @@ and made sense within the scope of the document.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `siblings_only` | `boolean` | `False` | Whether the plugin rule allows the same text on sibling headings. |
-| `allow_different_nesting` | `boolean` | `False` | Whether the plugin rule allows the same text within different nesting hierarchies. |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
+| `siblings_only` | `boolean` | `False` | Whether the Rule Plugin allows the same text on sibling headings. |
+| `allow_different_nesting` | `boolean` | `False` | Whether the Rule Plugin allows the same text within different nesting hierarchies. |
 
 ## Origination of Rule
 

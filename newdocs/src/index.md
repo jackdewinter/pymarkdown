@@ -1,9 +1,3 @@
----
-summary: Base information about the PyMarkdown Linter
-authors:
-  - Jack De Winter
----
-
 # Introduction
 
 ## Note to New Readers
@@ -29,25 +23,23 @@ If you have already viewed our Quick Start guides, or simply want more informati
 on PyMarkdown and its capabilities, continue reading. By using the contents located
 on the left and right sidebars, you can quickly navigate to information about advanced
 options, configuration details, and other reference material that you can explore
-as you become more comfortable with PyMarkdown and ant to go beyond the basics.
+as you become more comfortable with PyMarkdown and want to go beyond the basics.
 
 ## Core PyMarkdown Concepts
 
-PyMarkdown is primarily a Markdown linter. To ensure that the Markdown
-[linting](https://en.wikipedia.org/wiki/Lint_%28software%29) is conducted with the
-highest attention to detail, our linting rules analyze the tokens produced by the
-project's own Markdown parser. The project's Markdown parser aims to be highly compliant
-with both the [GitHub Flavored Markdown](https://github.github.com/gfm/) specification
-and the [CommonMark](https://spec.commonmark.org/) specification. This is important
-because we estimate that over 90% of existing Markdown parsers are mostly compliant
-with one of those two specifications. Because our parser adheres to those specifications,
-we have a high degree of confidence that the rules we have written are based on
-accurate information about the structure of the Markdown documents that they are
-evaluating. Since the rules have precise information on how compliant parsers view
-the structure of a given Markdown document, each rule can make the best decision
-possible on whether it should trigger a failure. That decision is based on how that
-failure relates to how other compliant parsers will interpret the same document
-and how your Markdown will render in popular tools and platforms.
+PyMarkdown is primarily a Markdown linter. It scans your Markdown files and checks
+them against a set of rules to find potential problems and style issues.
+
+To do this, PyMarkdown uses its own Markdown parser instead of relying on regular
+expressions or ad‑hoc text patterns. This parser is designed to follow the
+[GitHub Flavored Markdown](https://github.github.com/gfm/) and
+[CommonMark](https://spec.commonmark.org/) specifications, which many other
+Markdown tools also follow.
+
+Because our rules work with the structured output of this parser, they can reason
+about headings, lists, links, and other elements in the same way that typical
+Markdown renderers do. This helps ensure that the issues they report match how
+your documents will be interpreted on common platforms.
 
 ## Background and Foundational Information
 
@@ -57,31 +49,16 @@ these topics, continue on to the section on [What to Do Next](#what-to-do-next).
 
 ## What is Markdown?
 
-While [this introductory article](https://www.markdownguide.org/getting-started/)
-does a better job of explaining Markdown than we can, we feel confident that we
-can provide a summary of what Markdown means to our team in practice. Instead of
-using complex editors to author articles and documentation, our team prefers to
-use the Markdown language to write our documents. Markdown was designed from the
-start to be easily human-readable, adding only simple markers to plain-text documents
-that clarify the structure of each part of the document. These markers clarify the
-document's organization without significantly detracting from its readability. To
-illustrate our point, please look at the raw Markdown source for
-[this page](https://raw.githubusercontent.com/jackdewinter/pymarkdown/main/newdocs/src/index.md).
-That file is the unprocessed source for this page, before any processing is applied
-to convert it into the form that you are reading now. Except for a few easily learnable
-formatting markers and annotations, we believe that most people can read a Markdown
-document with relative ease. This makes it easier to compare the raw Markdown to
-the rendered page that they are currently viewing.
+Markdown is a plain‑text format with simple markers that indicate structure, such
+as headings, lists, and links. These markers keep the text readable while making
+it easy for tools to turn it into HTML or other formats. If you look at the raw
+Markdown for [this page](https://raw.githubusercontent.com/jackdewinter/pymarkdown/main/newdocs/src/index.md),
+you will see that, apart from a few simple markers, it reads like normal text.
 
-For our team, there is an added benefit in that using Markdown enables us to be
-more efficient. When our team writes documentation, we always strive to make each
-page of documentation the best it can be. With Markdown, we feel that we can focus
-more on the content and organization of the document without concerning ourselves
-with the style of the document. From experience, we know that if we focus on style
-when authoring a document, we [rabbit-hole](https://www.merriam-webster.com/dictionary/rabbit%20hole)
-on the style to the detriment of the content. Using Markdown, we know we can focus
-on our strengths as writers and leave any style decisions for later, where we can
-then apply those decisions consistently across the entire document.
+Our team prefers Markdown because it lets us focus on content instead of layout.
+When we write documentation, we can concentrate on what we want to say and how it
+is organized. We defer visual style decisions until later, when we can apply them
+consistently across the site.
 
 ## What Is a Linter?
 
@@ -100,17 +77,18 @@ team only publishes documentation after running it through both spell and gramma
 checkers. This parallels our source code, where we run Python checkers over our
 source code to ensure that we are adhering to our own source code guidelines. If
 we extend that idea to view documentation as a kind of source code, it makes sense
-to have a checker for it as well. That checker should ensure that our Markdown documents
-follow guidelines for quality and consistency similar to the ones we use for our
-source code. That is where the PyMarkdown linter fits into the picture for our projects.
+to have a checker for it as well. That checker should help keep our Markdown documents
+consistent and easy to read, just like the tools we use for our source code. That
+is where the PyMarkdown linter fits into the picture for our projects.
 
 ## Can It Do Anything Else?
 
 While PyMarkdown is primarily a Markdown linter, the breadth of the application
-has grown over the years of its development. In `scan` mode, the linter can
-detect Markdown issues using a robust set of Markdown-specific rules. In `fix`
+has grown over the years of its development. In **scan** mode, the linter can
+detect Markdown issues using a robust set of Markdown-specific rules. In **fix**
 mode, certain Markdown issues can be automatically corrected without external
-involvement or manual editing. While fix mode is a relatively new part of the project,
+involvement or manual editing. While **fix** mode is a relatively new part of the
+project,
 we believe that it provides a measurable benefit to our users by reducing the effort
 required to clean up documents. That combination is something we are enormously
 proud of!
@@ -158,64 +136,45 @@ are inconvenienced.
 As mentioned above, we strive to keep the project's Markdown parser compliant with
 both the [GitHub Flavored Markdown](https://github.github.com/gfm/)
 specification and the [CommonMark](https://spec.commonmark.org/) specification.
-Utilizing that foundation, the rule engine does not have to guess how a Markdown
+Utilizing that foundation, the Rule Engine does not have to guess how a Markdown
 parser may handle a given situation. Instead, PyMarkdown's own compliant parser
-feeds the rule engine with information on how it handled the document. From
+feeds the Rule Engine with information on how it handled the document. From
 experience, we find that this approach produces more accurate results than trying
 to use text-based patterns and regular expressions to guess how a Markdown
 parser may parse Markdown text.
 
 ### Flexible
 
-Before any rules are applied to a Markdown document, the document is first parsed
-by the project's Markdown parser into a stream of internal tokens (small, structured
-pieces of the document, such as headings, paragraphs, or links) that represent the
-structure and content of the document. Each rule can then decide whether to take
-advantage of that stream of tokens or to use a simple line-by-line pattern matching
-algorithm. That choice is made on a per-rule basis, using whichever method is the
-clearest and most efficient for each rule.
+You can run PyMarkdown in several ways, depending on your workflow. It supports
+direct command‑line use, integration into your own Python tools, and Git Pre‑Commit
+hooks that run automatically before each commit.
 
-In addition to the internals of the project being flexible, the ways you can invoke
-the project to scan Markdown documents are also flexible. The PyMarkdown linter
-can be executed from a script on the command line, from within another Python program
-using our simple API to integrate PyMarkdown into your own tooling, or using the
-popular Git Pre-Commit hooks.
+Behind the scenes, PyMarkdown's rules can either work with a structured view of
+your document or use simpler line‑by‑line checks. For more details about how this
+works, see the [User Guide](./user-guide.md#nomenclature) sections on the parser
+and Rule Engine.
 
 ### Thoroughly Tested
 
-The project currently has over 8000 scenario tests (tests that run PyMarkdown against
-realistic Markdown documents), covering 100 percent of the code base. We encourage
-our user base to discuss the benefits of scenario testing, code coverage (how much
-of the code is exercised by tests), and other metrics (quantitative measures of
-code and test quality). Together, these metrics provide our team with the confidence
-to know we have a solidly tested project that behaves predictably when analyzing
-Markdown documents, even as the codebase evolves. As a result, you can rely on consistent
-behavior over time and across different nvironments.
+We track how thoroughly PyMarkdown is tested and use that information to guide
+our development. By regularly running tests on real Markdown documents and monitoring
+how much of the code they exercise, we can detect problems early and avoid surprising
+changes in behavior.
+
+As a result, PyMarkdown remains a reliable tool for checking your Markdown documents,
+even as the project continues to evolve.
 
 ### Extensible
 
-While the core parts of the Markdown parser are coded within the core of the project
-itself, enhancements to that parser are provided using carefully orchestrated [extensions](./advanced_extensions.md)
-(optional add-ons that change or extend how the parser behaves). These extensions
-allow optional behavior to be included by configuration while keeping the project
-compliant with the two core specifications. This flexibility allows the base parser
-to remain compliant with its specifications while still adapting to the needs of
-its users by enabling additional, opt-in behavior. If a user does not require the
-flexibility offered by an extension, that extension is simply left disabled. In
-that case, the parser continues to follow the default specification-compliant behavior
-that matches GitHub Flavored Markdown and CommonMark, which is what most users encounter
-on popular platforms such as GitHub and many documentation sites.
+PyMarkdown lets you turn optional features on and off as needed. Parser extensions
+allow you to enable extra Markdown behaviors (such as tables or front matter) while
+still staying compatible with the core Markdown specifications.
 
-For the rule engine (the part of PyMarkdown that runs all the linting rules) itself,
-each rule in the ever-expanding set of [rules](./advanced_plugins.md) is implemented
-as a plugin (a small, self-contained component that adds a specific rule). Because
-all rules are implemented as plugins, support for adding, enabling, and disabling
-plugins has been present since the start of the project. The core set of rules are
-our own implementations of the `MD*` rules provided in the npm [markdownlint](https://github.com/DavidAnson/markdownlint)
-project. As a result, users familiar with "markdownlint" will recognize many of
-the rule names and behaviors. This makes it easier to transition between existing
-Markdown linting setups and PyMarkdown, especially if you are already using the
-Node-based markdownlint in your projects and want to move to a Python-based tool.
+Rules are also extensible. Each rule is contained with a Rule Plugin that can be
+enabled, disabled,
+or replaced. The built‑in set includes Python versions of many `MD*` rules from
+the npm [markdownlint](https://github.com/DavidAnson/markdownlint) project, which
+makes it easier to switch to PyMarkdown if you already use markdownlint today.
 
 ## What to Do Next?
 
@@ -233,7 +192,7 @@ you tailor PyMarkdown to your specific projects and documentation standards.
 
 If, after trying PyMarkdown on your own documents and workflows, you are left thinking
 "it is almost there, but it would be great if it did {something}", please read our
-section on [Reporting Issues](./usual.md#reporting-issues). We cannot promise that
+section on [Reporting Issues](./usual.md). We cannot promise that
 we will implement every suggestion that you ask for. However, we do promise to carefully
 consider each issue you submit, to explain our decision when possible, and to treat
 your contribution with the respect it deserves as part of the PyMarkdown community.

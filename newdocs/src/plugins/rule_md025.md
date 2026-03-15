@@ -60,7 +60,7 @@ title: this is a title
 ### Correct Scenarios
 
 This rule does not trigger if there is only one top-level heading in
-the entire document, including any parsed front-matter:
+the entire document, including any parsed Front-Matter:
 
 ````Markdown
 # Top Level
@@ -68,10 +68,10 @@ the entire document, including any parsed front-matter:
 ## Used To Be Another Top Level
 ````
 
-If front-matter parsing is enabled and a front-matter section is present, the
+If Front-Matter parsing is enabled and a Front-Matter section is present, the
 `front_matter_title` configuration item specifies the key in the
-front-matter's data map that is considered the title.  If that key is
-present in the document's front-matter, then all headings in the
+Front-Matter's data map that is considered the title.  If that key is
+present in the document's Front-Matter, then all headings in the
 document must be level 2 or below.  For example, if the configuration
 item is set to `subject`, then this example is valid:
 
@@ -110,8 +110,8 @@ any possible fixes for this rule.
 <!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document.** |
+| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
+| `front_matter_title` | `string` | `title` | Name of the Front-Matter field that has the title associated with the document.** |
 | `level` | `integer` | `1` | Heading level to be considered as the top-level. |
 
 ** Any leading or trailing space characters are removed from the `front_matter_title`
@@ -127,6 +127,6 @@ This rule is largely inspired by the MarkdownLint rule
 
 The difference between this rule and the original rule is that the
 original rule specified a regular expression used to look for the
-specific element within a raw front-matter element.  By default, this
+specific element within a raw Front-Matter element.  By default, this
 was `"^\s*"?title"?\s*[:=]"`.  To support simplicity, this rule
-simply looks for the value of the front-matter key `title` by default.
+simply looks for the value of the Front-Matter key `title` by default.
