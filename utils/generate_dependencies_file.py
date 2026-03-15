@@ -156,7 +156,23 @@ def __abc():
             )
     if not error_messages:
 
+        sorted_map = None
+        try:
+            with open(
+                os.path.join(".", "publish", "dependencies.json"),
+                "rt",
+                encoding="utf-8",
+            ) as output_file:
+                sorted_map  = json.load(output_file)
+        except BaseException as this_exception:  # noqa: B036
+            error_messages.append(
+                f"Failed to read combined dependencies file: {str(this_exception)}"
+            )
+
+        print(f"old:{sorted_map}")
         sorted_map = {i: pipefile_map[i] for i in sorted(pipefile_map.keys())}
+        print(f"new:{sorted_map}")
+
         try:
             with open(
                 os.path.join(".", "publish", "dependencies.json"),
