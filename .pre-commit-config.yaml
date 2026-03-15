@@ -1,13 +1,13 @@
 repos:
 -   repo: https://github.com/ambv/black
-    rev: 26.1.0
+    rev: 26.3.1
     hooks:
     -   id: black
         name: "Format: Black"
         args: ["--exclude", "test/resources", "--exclude", ".venv", "."]
         pass_filenames: false
 -   repo: https://github.com/pycqa/isort
-    rev: 8.0.0
+    rev: 8.0.1
     hooks:
     -   id: isort
         name: "Format: ISort"
@@ -32,7 +32,7 @@ repos:
         additional_dependencies: ["flake8-bugbear==24.8.19", "flake8-bandit==4.1.1"]
         pass_filenames: false
 -   repo: https://github.com/PyCQA/bandit
-    rev: 1.9.3
+    rev: 1.9.4
     hooks:
     -   id: bandit
         name: "Scan:   Bandit"
@@ -75,38 +75,40 @@ repos:
     -   id: mypy
         name: "Scan:   MyPy"
         args: [--warn-return-any, --strict, pymarkdown, stubs]
-        additional_dependencies: ["application_properties==0.9.2","application_file_scanner==0.6.4","types-pyyaml",types-PyYAML, columnar
-]
+        additional_dependencies: ["application_properties==0.9.2", "application_file_scanner==0.6.4",
+          "types-pyyaml", types-PyYAML, columnar]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.19.1
     hooks:
     -   id: mypy
         name: "Scan:   MyPy (test)"
-        args: [--warn-return-any, --exclude, test/resources, --strict, test, stubs]
-        additional_dependencies: ["application_properties==0.9.2","application_file_scanner==0.6.4","types-pyyaml",types-PyYAML, columnar, pytest]
+        args: [--warn-return-any, --exclude, test/resources, --strict, test,
+              stubs]
+        additional_dependencies: ["application_properties==0.9.2", "application_file_scanner==0.6.4",
+          "types-pyyaml", types-PyYAML, columnar, pytest]
         pass_filenames: false
 -   repo: local
     hooks:
-    - id: generate-docs
-      name: "Docs:   Generate Rules File"
-      language: system
-      entry: pipenv run python newdocs/generate_rules_file.py
-      pass_filenames: false
+    -   id: generate-docs
+        name: "Docs:   Generate Rules File"
+        language: system
+        entry: pipenv run python newdocs/generate_rules_file.py
+        pass_filenames: false
 -   repo: local
     hooks:
-    - id: generate-docs
-      name: "Docs:   Generate Extensions File"
-      language: system
-      entry: pipenv run python newdocs/generate_extensions_file.py
-      pass_filenames: false
+    -   id: generate-docs
+        name: "Docs:   Generate Extensions File"
+        language: system
+        entry: pipenv run python newdocs/generate_extensions_file.py
+        pass_filenames: false
 -   repo: local
     hooks:
-    - id: generate-docs
-      name: "Docs:   Generate API docs"
-      language: system
-      entry: pipenv run python utils/correct_pdoc_issues.py
-      pass_filenames: false
+    -   id: generate-docs
+        name: "Docs:   Generate API docs"
+        language: system
+        entry: pipenv run python utils/correct_pdoc_issues.py
+        pass_filenames: false
 -   repo: local
     hooks:
     -   id: generate-dependencies

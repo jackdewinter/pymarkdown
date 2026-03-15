@@ -95,6 +95,10 @@ def __load_precommit_packages_and_versions_translate_ouptut(
         next_line = next_line.strip()
         if not next_line:
             continue
+
+        if "No changes detected" in next_line:
+            continue
+
         split_line = list(next_line.split(" "))
         matched_icon = __match_icons(split_line[0])
         assert (
