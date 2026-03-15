@@ -1,6 +1,6 @@
 default_context:
     project_name: "pymarkdown"
-    project_version: "0.9.35"
+    project_version: "0.9.36"
 
     main_class_name : "PyMarkdownLint"
     project_src_additional_path: ", stubs"

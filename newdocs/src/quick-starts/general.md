@@ -80,7 +80,7 @@ This will return a version number similar to:
 
 <!-- pyml disable code-block-style-->
 ```text
-0.9.35
+0.9.36
 ```
 <!-- pyml enable code-block-style-->
 
