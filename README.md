@@ -116,7 +116,7 @@ linked from [Jumping Off Points](#jumping-off-points).
 ## What Linting Checks Does PyMarkdown Release With?
 
 PyMarkdown includes dozens of built‑in linting rules (see the full
-[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/rules/)).
+[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/rules/)).
 They cover common concerns such as:
 
 - heading structure
@@ -168,8 +168,8 @@ specifications and with typical real‑world documents, so results are more pred
 and useful.
 
 For an overview of everything that is available, see the
-[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/rules/)
-and the [Extensions Reference](https://pymarkdown.readthedocs.io/en/latest/user-guide/extensions/).
+[Rules Reference](https://pymarkdown.readthedocs.io/en/latest/rules/)
+and the [Extensions Reference](https://pymarkdown.readthedocs.io/en/latest/extensions/).
 
 ## How Do I Run This Tool?
 
@@ -181,7 +181,7 @@ Most users rely on:
 
 In addition to the command‑line modes, PyMarkdown can also be run in these ways:
 
-- easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/quick-starts/installation/#use-pymarkdown-through-precommit)
+- easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/quick-starts/installation/#install-pymarkdown-through-precommit)
 - a simple [API layer](https://pymarkdown.readthedocs.io/en/latest/api/)
 
 For detailed command‑line usage, see:
@@ -207,7 +207,8 @@ Building on the [Core Concepts](#core-concepts):
 The Rule Engine is designed around plugins and extensions, so adding new rules or
 extensions fits naturally into the existing architecture.
 
-The [Extending PyMarkdown](https://pymarkdown.readthedocs.io/en/latest/) section
+The [Extending PyMarkdown](https://pymarkdown.readthedocs.io/en/latest/development/#extending-pymarkdown)
+section
 in our "Development Documentation" explains how we add extensions and Rule Plugins
 to PyMarkdown. This process acts as a quality safeguard. Features may take longer
 to release, but the additional design, implementation, and testing make their behavior
