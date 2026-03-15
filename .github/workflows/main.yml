@@ -153,9 +153,9 @@ jobs:
       - name: Sync With Repository
         run: |
           export PYTHONIOENCODING=utf-8
-          grep -v '^sourcery' Pipfile > temp
-          mv temp Pipfile
-          cat Pipfile
+          # grep -v '^sourcery' Pipfile > temp
+          # mv temp Pipfile
+          # cat Pipfile
           pipenv lock --clear --python ${{ env.default-python-version }}
           pipenv sync -d
           pipenv graph
