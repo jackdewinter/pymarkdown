@@ -1334,33 +1334,6 @@ Use:
   for local, in‑document exceptions where disabling a Rule Plugin globally would
   be too broad.
 
-##### A Word Of Caution
-
-Use caution when enabling rules that are disabled by default.
-
-By design, the default set of enabled rules does not conflict with itself. When
-you enable additional rules, you can sometimes create competing failures between
-two rules. This means that fixing the failures reported by rule A causes rule B
-to report new failures, and fixing rule B’s failures causes rule A to start reporting
-failures again, creating a back‑and‑forth loop.
-
-This section focuses on configuration options that apply regardless of which command
-you run. Earlier sections described flags specific to individual commands (such
-as `scan`, `scan-stdin`, and `fix`), along with extensions and Rule Plugins. Here
-we step back and look at general command‑line arguments that shape how PyMarkdown
-behaves for every command.
-
-Note that most of these command-line arguments are part of configuration items that
-allow them to be used from a configuration file.  To examine the full list of configuration
-options for PyMarkdown, see [Available Configuration Items](./advanced_configuration.md#available-configuration-items)
-in the Advanced Configuration document. This section focuses on the most commonly
-used command‑line flags; the Advanced Configuration reference is the complete catalog.
-
-We thought it was a bit too heavy to start there, as most users start their
-configuration journey with command-line arguments.  Instead, we decided to focus
-this part of the user guide on the command-line arguments that configure PyMarkdown
-directly.
-
 #### General Command Line Arguments
 
 PyMarkdown provides a healthy amount of configuration that is independent of the

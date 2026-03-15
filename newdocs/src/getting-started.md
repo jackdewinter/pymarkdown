@@ -25,13 +25,6 @@ This page is for readers who want a more complete setup: why we recommend Pipenv
 how to wire PyMarkdown into Pre‑Commit, and how to verify everything locally before
 CI. If you already know some of this, skim or jump to the sections you care about.
 
-## Quick Start Guide
-
-These notes are in-depth and attempt to cover as many plausible installation
-scenarios as possible.  If you are just looking for a quick "how do I install
-PyMarkdown" and hope that everything goes right, check out our
-[Quick Start - Installation](./quick-starts/installation.md) guide.
-
 ## Keeping Things Simple
 
 The examples on this page use simple Markdown files and command lines.
