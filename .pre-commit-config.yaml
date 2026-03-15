@@ -107,6 +107,13 @@ repos:
       language: system
       entry: pipenv run python utils/correct_pdoc_issues.py
       pass_filenames: false
+-   repo: local
+    hooks:
+    -   id: generate-dependencies
+        name: "Audit:  Generate Dependencies File"
+        language: system
+        entry: pipenv run python utils/generate_dependencies_file.py
+        pass_filenames: false
 -   repo: https://github.com/jackdewinter/pymarkdown
     rev: v0.9.35
     hooks:
