@@ -5,6 +5,23 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.36 - 2026-03-15
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
     - Added `plugins.per-file-ignores.*` configuration items to allow for rules
       to be disabled by matching against a glob-path.
@@ -25,6 +42,8 @@
       TOML configurations.
 - [Issue 1539](https://github.com/jackdewinter/pymarkdown/issues/1539)
     - Did full sweep through existing documentation, to clean up.
+- [Issue 1555](https://github.com/jackdewinter/pymarkdown/issues/1555)
+    - Badges were out of sync, needed new mechanism to properly fetch
 
 ## Version 0.9.35 - 2026-01-24
 

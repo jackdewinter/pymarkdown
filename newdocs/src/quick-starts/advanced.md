@@ -148,7 +148,7 @@ the latest tagged release:
 
 ```yaml
 - repo: https://github.com/jackdewinter/pymarkdown
-  rev: v0.9.35 # replace with the latest tag
+  rev: v0.9.36 # replace with the latest tag
   hooks:
     - id: pymarkdown
 ```

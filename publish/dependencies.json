@@ -25,7 +25,7 @@
     "py-walk": "0.3.3",
     "pylint": "4.0.5",
     "pylint-utils": "0.6.0",
-    "pymarkdown": "v0.9.35",
+    "pymarkdown": "v0.9.36",
     "pymdown-extensions": "10.21",
     "pyroma": "5.0.1",
     "pytest": "9.0.2",

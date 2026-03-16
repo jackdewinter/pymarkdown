@@ -117,7 +117,7 @@ repos:
         entry: pipenv run python utils/generate_dependencies_file.py
         pass_filenames: false
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.35
+    rev: v0.9.36
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (Old Documentation)"
@@ -129,7 +129,7 @@ repos:
         -   changelog.md
         -   ./docs
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.35
+    rev: v0.9.36
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (README.md)"
@@ -142,7 +142,7 @@ repos:
         -   scan
         -   README.md
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.35
+    rev: v0.9.36
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (New Documentation)"
