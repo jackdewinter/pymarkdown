@@ -117,7 +117,7 @@ jobs:
             ./report/coverage
 
       - name: Report Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
