@@ -17,6 +17,12 @@
 
 - [Issue 1563](https://github.com/jackdewinter/pymarkdown/issues/1563)
     - whitespace differences with new list items in nested containers
+- [Issue 1569](https://github.com/jackdewinter/pymarkdown/issues/1569)
+    - whitespace was reported in both the list and the paragraph with
+      nested containers
+- [Issue 1574](https://github.com/jackdewinter/pymarkdown/issues/1574)
+    - in certain nested cases with adjusting indent of a list, the following
+      parsing does not take that into account when calculating indentation
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

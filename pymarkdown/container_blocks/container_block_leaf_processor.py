@@ -1219,13 +1219,11 @@ class ContainerBlockLeafProcessor:
             return stack_token.last_new_list_token.indent_level
         list_token = cast(ListStartMarkdownToken, stack_token.matching_markdown_token)
         il = list_token.indent_level
-        # 1574
-        if False:
-            if current_stack_index + 1 < len(parser_state.token_stack) and parser_state.token_stack[current_stack_index + 1].is_list and parser_state.token_stack[current_stack_index + 1].last_new_list_token:
-                x1 = cast(ListStackToken, parser_state.token_stack[current_stack_index + 1].last_new_list_token).column_number
-                x2 = il + 1
-                x3 = max(x1 - x2, 0)
-                il += x3
+        if current_stack_index + 1 < len(parser_state.token_stack) and parser_state.token_stack[current_stack_index + 1].is_list and parser_state.token_stack[current_stack_index + 1].last_new_list_token:
+            x1 = cast(ListStackToken, parser_state.token_stack[current_stack_index + 1].last_new_list_token).column_number
+            x2 = il + 1
+            x3 = max(x1 - x2, 0)
+            il += x3
         return il
 
     @staticmethod
