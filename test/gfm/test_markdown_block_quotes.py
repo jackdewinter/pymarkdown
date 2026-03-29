@@ -840,7 +840,7 @@ brr</li>
 @pytest.mark.gfm
 def test_block_quotes_214() -> None:
     """
-    Test case 214:  (part 1) For the same reason, we can’t omit the > in front of
+    Test case 214:  (part 1) For the same reason, we can't omit the > in front of
                     subsequent lines of an indented or fenced code block:
     Variation: - test_paragraph_series_n_bq_i4_t_nl_bq_i4_t
                  - proper indent and block quotes on both
@@ -879,7 +879,7 @@ def test_block_quotes_214() -> None:
 @pytest.mark.gfm
 def test_block_quotes_215() -> None:
     """
-    Test case 215:  (part 2) For the same reason, we can’t omit the > in front of
+    Test case 215:  (part 2) For the same reason, we can't omit the > in front of
                     subsequent lines of an indented or fenced code block:
 
     Variation: - test_paragraph_series_n_bq_t_nl_bq_fb

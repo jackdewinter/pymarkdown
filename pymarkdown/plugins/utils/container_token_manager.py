@@ -22,6 +22,7 @@ class ContainerTokenManager:
         self.bq_line_index: Dict[int, int] = {}
         self.last_leaf_token: Optional[MarkdownToken] = None
         self.list_adjust_map: Dict[int, int] = {}
+        self.bq_close_map = {}
 
     def clear(self) -> None:
         """
@@ -128,8 +129,19 @@ class ContainerTokenManager:
             self.container_token_stack.append(token)
             self.bq_line_index[len(self.container_token_stack)] = 0
         elif token.is_block_quote_end:
+            # 1573
+            x = self.bq_line_index[len(self.container_token_stack)]
+            y = x
             del self.bq_line_index[len(self.container_token_stack)]
             del self.container_token_stack[-1]
+            if False:
+                z = len(self.container_token_stack) - 1
+                while z >= 0:
+                    zz = self.container_token_stack[z]
+                    if zz.is_block_quote_start:
+                        self.bq_close_map[z] = self.bq_close_map.get(z,0)+ y
+                        break
+                    z -= 1
         elif token.is_list_start:
             self.container_token_stack.append(token)
             self.bq_line_index[len(self.container_token_stack)] = 0

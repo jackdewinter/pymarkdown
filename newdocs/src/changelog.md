@@ -15,7 +15,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1563](https://github.com/jackdewinter/pymarkdown/issues/1563)
+    - whitespace differences with new list items in nested containers
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
