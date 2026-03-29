@@ -1323,39 +1323,37 @@ class ContainerBlockLeafProcessor:
             x2 = grab_bag.text_removed_by_container
             x3 = xposition_marker.index_indent
 
-            # 1569
-            if False:
-                if new_ex and "\t" not in parser_state.original_line_to_parse and "\t" not in grab_bag.original_line and grab_bag.is_para_continue and parser_state.token_stack[-1].is_paragraph and parser_state.token_stack[-2].is_list:
-                    x5 = parser_state.token_stack[-2].matching_markdown_token
-                    x6 = parser_state.copy_of_x1_token
-                    assert x5.leading_spaces is not None
-                    x7 = x5.leading_spaces
-                    if "\n" in x7:
-                        x7 = x7[x7.rindex("\n") + 1:]
+            if new_ex and "\t" not in parser_state.original_line_to_parse and "\t" not in grab_bag.original_line and grab_bag.is_para_continue and parser_state.token_stack[-1].is_paragraph and parser_state.token_stack[-2].is_list:
+                x5 = parser_state.token_stack[-2].matching_markdown_token
+                x6 = parser_state.copy_of_x1_token
+                assert x5.leading_spaces is not None
+                x7 = x5.leading_spaces
+                if "\n" in x7:
+                    x7 = x7[x7.rindex("\n") + 1:]
 
-                    x11 = max(current_indent_level - xposition_marker.index_indent, 0)
-                    x12 = len(new_ex)
-                    x13 = len(x7)
-                    x8 = 0
-                    keep_going = (
-                        not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
-                            parser_state,
-                            xposition_marker.text_to_parse,
-                            x12,
-                            "",
-                            grab_bag.original_line,
-                            xposition_marker.index_indent,
-                        )
+                x11 = max(current_indent_level - xposition_marker.index_indent, 0)
+                x12 = len(new_ex)
+                x13 = len(x7)
+                x8 = 0
+                keep_going = (
+                    not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                        parser_state,
+                        xposition_marker.text_to_parse,
+                        x12,
+                        "",
+                        grab_bag.original_line,
+                        xposition_marker.index_indent,
                     )
+                )
 
-                    if keep_going and x11:
-                        assert x12 == x13
-                        w1 = xposition_marker.text_to_parse[x11]
-                        w2 = xposition_marker.text_to_parse[x12]
-                        if x11 != x12:
-                            assert w1 == " " and w2 != " "
-                            current_indent_level = x12
-                            is_current_calculated = True
+                if keep_going and x11:
+                    assert x12 == x13
+                    w1 = xposition_marker.text_to_parse[x11]
+                    w2 = xposition_marker.text_to_parse[x12]
+                    if x11 != x12:
+                        assert w1 == " " and w2 != " "
+                        current_indent_level = x12
+                        is_current_calculated = True
             
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             if not is_current_calculated:
