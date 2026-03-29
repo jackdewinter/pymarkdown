@@ -17687,7 +17687,7 @@ properly indented content</li>
     )
 
 @pytest.mark.gfm
-def test_extra_059i() -> None:
+def test_extra_issue_1569_a() -> None:
     """
     TBD
     """
@@ -17725,7 +17725,7 @@ properly indented content</li>
     )
 
 @pytest.mark.gfm
-def test_extra_059j() -> None:
+def test_extra_issue_1569_b() -> None:
     """
     TBD
     """
