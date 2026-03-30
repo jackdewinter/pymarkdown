@@ -848,17 +848,13 @@ class ContainerBlockLeafProcessor:
                 "__adjust_for_list_container_after_block_quote>>list_token>>$",
                 list_token,
             )
-            # TODO DIAGNOSE
-            if False:
-                old_leading_spaces = parser_state.copy_of_x1_token.leading_spaces
-                current_leading_spaces = list_token.leading_spaces
-                if old_leading_spaces is None:
-                    do_add = current_leading_spaces is None
-                else:
-                    do_add = current_leading_spaces == old_leading_spaces
-                if do_add or new_ex:
-                    list_token.add_leading_spaces(new_ex)
+            old_leading_spaces = parser_state.copy_of_x1_token.leading_spaces
+            current_leading_spaces = list_token.leading_spaces
+            if old_leading_spaces is None:
+                do_add = current_leading_spaces is None
             else:
+                do_add = current_leading_spaces == old_leading_spaces
+            if do_add or new_ex:
                 list_token.add_leading_spaces(new_ex)
             POGGER.debug(
                 "__adjust_for_list_container_after_block_quote>>list_token>>$",

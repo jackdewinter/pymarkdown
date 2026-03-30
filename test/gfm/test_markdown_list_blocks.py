@@ -2745,7 +2745,7 @@ continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[block-quote(1,4):   :   > \n]",
-        "[olist(1,6):.:1:8::\n]",
+        "[olist(1,6):.:1:8::]",
         "[para(1,9):\n]",
         "[text(1,9):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
