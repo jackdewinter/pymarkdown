@@ -17,6 +17,9 @@
 
 - [Issue 1563](https://github.com/jackdewinter/pymarkdown/issues/1563)
     - whitespace differences with new list items in nested containers
+- [Issue 1566](https://github.com/jackdewinter/pymarkdown/issues/1566)
+    - change of indent in list causes issues, making calculations wrong
+      for following elements
 - [Issue 1569](https://github.com/jackdewinter/pymarkdown/issues/1569)
     - whitespace was reported in both the list and the paragraph with
       nested containers

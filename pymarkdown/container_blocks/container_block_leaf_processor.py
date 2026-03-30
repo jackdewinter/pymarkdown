@@ -966,13 +966,9 @@ class ContainerBlockLeafProcessor:
                 delta = len(actual_removed_leading_space)
             else:
                 assert list_token is not None
-                # 1566
-                if True:
-                    assert list_stack_token is not None
-                    if list_stack_token.last_new_list_token:
-                        delta = list_stack_token.last_new_list_token.indent_level - total_removed
-                    else:
-                        delta = list_token.indent_level - total_removed
+                assert list_stack_token is not None
+                if list_stack_token.last_new_list_token:
+                    delta = list_stack_token.last_new_list_token.indent_level - total_removed
                 else:
                     delta = list_token.indent_level - total_removed
             xposition_marker = PositionMarker(
