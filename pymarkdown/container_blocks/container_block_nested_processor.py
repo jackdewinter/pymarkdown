@@ -554,8 +554,7 @@ class ContainerBlockNestedProcessor:
                     parser_state.nested_list_start is not None
                 ), "The nested list start cannot be None."
 
-            # TODO DIAGNOSE
-            elif False:
+            else:
                 j = parser_state.find_last_container_on_stack()
                 k = parser_state.token_document[j]
                 l = k.extracted_whitespace

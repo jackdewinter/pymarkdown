@@ -753,12 +753,8 @@ class ContainerBlockLeafProcessor:
             POGGER.debug(
                 "text_removed_by_container-->:$:<", grab_bag.text_removed_by_container
             )
-            # TODO DIAGNOSE
-            if False:
-                x = grab_bag.text_removed_by_container and grab_bag.text_removed_by_container.startswith("> >") \
-                    and parser_state.token_stack[-1].is_paragraph
-            else:
-                x = False
+            x = grab_bag.text_removed_by_container and grab_bag.text_removed_by_container.startswith("> >") \
+                and parser_state.token_stack[-1].is_paragraph
             if (
                 grab_bag.text_removed_by_container
                 and grab_bag.adj_line_to_parse
@@ -1569,10 +1565,7 @@ class ContainerBlockLeafProcessor:
                     is_total_ws_in_range
                     and not adj_ws
                     and is_para_continue
-                    and last_list_index == last_block_index + 1
                 ):
-                    # TODO DIAGNOSE
-                    # remove last part of above conditional
                     after_ws_index, extracted_whitespace = (
                         ParserHelper.extract_spaces_verified(
                             position_marker.text_to_parse,

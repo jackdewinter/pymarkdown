@@ -2104,6 +2104,44 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() 
         expected_output, expected_error, expected_return_code
     )
 
+@pytest.mark.rules
+def test_md018_issue_1566() -> None:
+    """
+    Test to make sure this rule handles a single pragma that occurs
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """
+> > a block
+> >
+> > 1. another list
+> >    properly indented content
+> >  1. another list
+> >     properly indented content
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "-d",
+            "md005,md027,md041",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = f""""""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 def test_md018_query_config() -> None:
     config_test = pluginQueryConfigTest(

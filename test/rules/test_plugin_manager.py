@@ -1337,7 +1337,7 @@ def test_markdown_with_plugins_list_only() -> None:
   md048   code-fence-style                True       True       0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
 """
     expected_error = ""
 
@@ -1422,6 +1422,7 @@ def test_markdown_with_plugins_list_only_all() -> None:
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
 """
     expected_error = ""
 
@@ -1504,7 +1505,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules() -> No
   md048   code-fence-style                True       False      0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
 """
     expected_error = ""
 
@@ -1592,7 +1593,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> N
   md048   code-fence-style                True       False      0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
 """
         expected_error = ""
 
@@ -1684,7 +1685,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md048   code-fence-style                True       False      0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
 """
     expected_error = ""
 
