@@ -17762,7 +17762,7 @@ properly indented content</li>
         source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map, show_debug=False
     )
 @pytest.mark.gfm
-def test_extra_059k() -> None:
+def test_extra_issue_1573_a() -> None:
     """
     TBD
     """
@@ -17799,7 +17799,7 @@ properly indented content</li>
         source_markdown, expected_gfm, expected_tokens, config_map=tables_config_map, show_debug=False
     )
 @pytest.mark.gfm
-def test_extra_059l() -> None:
+def test_extra_issue_1573_b() -> None:
     """
     TBD
     """

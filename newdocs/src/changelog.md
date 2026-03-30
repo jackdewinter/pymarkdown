@@ -23,6 +23,9 @@
 - [Issue 1569](https://github.com/jackdewinter/pymarkdown/issues/1569)
     - whitespace was reported in both the list and the paragraph with
       nested containers
+- [Issue 1573](https://github.com/jackdewinter/pymarkdown/issues/1573)
+    - ContainerTokenManager not handling nested block quotes separated
+      by lists
 - [Issue 1574](https://github.com/jackdewinter/pymarkdown/issues/1574)
     - in certain nested cases with adjusting indent of a list, the following
       parsing does not take that into account when calculating indentation
