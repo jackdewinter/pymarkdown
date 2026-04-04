@@ -2104,6 +2104,7 @@ def test_md018_issue_1479_triple_trigger_within_block_quote_pragma_with_blank() 
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_issue_1566() -> None:
     """
@@ -2132,7 +2133,7 @@ def test_md018_issue_1566() -> None:
         ]
 
         expected_return_code = 0
-        expected_output = f""""""
+        expected_output = """"""
         expected_error = ""
 
         # Act
@@ -2142,6 +2143,7 @@ def test_md018_issue_1566() -> None:
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 def test_md018_query_config() -> None:
     config_test = pluginQueryConfigTest(

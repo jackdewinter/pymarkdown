@@ -555,12 +555,16 @@ class ContainerBlockNestedProcessor:
                 ), "The nested list start cannot be None."
 
             else:
-                j = parser_state.find_last_container_on_stack()
-                k = parser_state.token_document[j]
-                l = k.extracted_whitespace
-                i = 0
+                last_container_token_index = parser_state.find_last_container_on_stack()
+                last_container_token = cast(
+                    BlockQuoteMarkdownToken,
+                    parser_state.token_document[last_container_token_index],
+                )
 
-                if not l and grab_bag.text_removed_by_container == "> > ":
+                if (
+                    not last_container_token.extracted_whitespace
+                    and grab_bag.text_removed_by_container == "> > "
+                ):
                     return True
         return False
 

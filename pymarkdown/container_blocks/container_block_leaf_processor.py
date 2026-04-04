@@ -534,11 +534,17 @@ class ContainerBlockLeafProcessor:
         assert last_bq_char_index == len(removed_text_copy)
 
         ws_to_use = 0
-        dd = parser_state.token_stack[stack_index].matching_markdown_token
-        assert dd is not None
-        assert dd.is_list_start
-        dd_list = cast(ListStartMarkdownToken, dd)
-        indent_delta = dd_list.indent_level - len(removed_text_copy)
+        token_at_top_of_stack =parser_state.token_stack[stack_index]
+        assert token_at_top_of_stack.is_list
+        list_token_at_top_of_stack = cast(ListStackToken, token_at_top_of_stack)
+        if list_token_at_top_of_stack.last_new_list_token is not None:
+            list_indent = list_token_at_top_of_stack.last_new_list_token.indent_level
+        else:
+            list_markdown_token = token_at_top_of_stack.matching_markdown_token
+            assert list_markdown_token is not None
+            assert list_markdown_token.is_list_start
+            list_indent = cast(ListStartMarkdownToken, list_markdown_token).indent_level
+        indent_delta = list_indent - len(removed_text_copy)
         if len(extracted_leaf_whitespace) >= indent_delta:
             ws_to_use += indent_delta
 
@@ -753,13 +759,16 @@ class ContainerBlockLeafProcessor:
             POGGER.debug(
                 "text_removed_by_container-->:$:<", grab_bag.text_removed_by_container
             )
-            x = grab_bag.text_removed_by_container and grab_bag.text_removed_by_container.startswith("> >") \
+            remote_text_kludge = (
+                grab_bag.text_removed_by_container
+                and grab_bag.text_removed_by_container.startswith("> >")
                 and parser_state.token_stack[-1].is_paragraph
+            )
             if (
                 grab_bag.text_removed_by_container
                 and grab_bag.adj_line_to_parse
                 and grab_bag.original_line
-                and (grab_bag.text_removed_by_container == "> " or x)
+                and (grab_bag.text_removed_by_container == "> " or remote_text_kludge)
             ):
                 recon_line = (
                     grab_bag.text_removed_by_container + grab_bag.adj_line_to_parse
@@ -840,34 +849,18 @@ class ContainerBlockLeafProcessor:
                 grab_bag,
             )
 
-            POGGER.debug(
-                "__adjust_for_list_container_after_block_quote>>list_token>>$",
-                list_token,
+            actual_removed_leading_space, removed_leading_space = (
+                ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_complete(
+                    parser_state,
+                    new_ex,
+                    list_token,
+                    xposition_marker,
+                    grab_bag,
+                    removed_leading_space,
+                    extracted_leaf_whitespace,
+                )
             )
-            old_leading_spaces = parser_state.copy_of_x1_token.leading_spaces
-            current_leading_spaces = list_token.leading_spaces
-            if old_leading_spaces is None:
-                do_add = current_leading_spaces is None
-            else:
-                do_add = current_leading_spaces == old_leading_spaces
-            if do_add or new_ex:
-                list_token.add_leading_spaces(new_ex)
-            POGGER.debug(
-                "__adjust_for_list_container_after_block_quote>>list_token>>$",
-                list_token,
-            )
-            actual_removed_leading_space = extracted_leaf_whitespace
 
-            if not grab_bag.container_depth and not xposition_marker.index_indent:
-                removed_leading_space = extracted_leaf_whitespace
-            POGGER.debug(
-                "__adjust_for_list_container_after_block_quote>>removed_leading_space>>:$:<<",
-                removed_leading_space,
-            )
-            POGGER.debug(
-                "__adjust_for_list_container_after_block_quote>>actual_removed_leading_space>>:$:<<",
-                actual_removed_leading_space,
-            )
             POGGER.debug(
                 "__adjust_for_list_container_after_block_quote>>new_ex>>:$:<<", new_ex
             )
@@ -878,6 +871,50 @@ class ContainerBlockLeafProcessor:
             list_stack_token,
             new_ex,
         )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_for_list_container_after_block_quote_complete(
+        parser_state: ParserState,
+        new_ex: str,
+        list_token: ListStartMarkdownToken,
+        xposition_marker: PositionMarker,
+        grab_bag: ContainerGrabBag,
+        removed_leading_space: Optional[str],
+        extracted_leaf_whitespace: str,
+    ) -> Tuple[Optional[str], Optional[str]]:
+        POGGER.debug(
+            "__adjust_for_list_container_after_block_quote>>list_token>>$",
+            list_token,
+        )
+        assert parser_state.copy_of_x1_token is not None
+        old_leading_spaces = parser_state.copy_of_x1_token.leading_spaces
+        current_leading_spaces = list_token.leading_spaces
+        if old_leading_spaces is None:
+            do_add = current_leading_spaces is None
+        else:
+            do_add = current_leading_spaces == old_leading_spaces
+        if do_add or new_ex:
+            list_token.add_leading_spaces(new_ex)
+        POGGER.debug(
+            "__adjust_for_list_container_after_block_quote>>list_token>>$",
+            list_token,
+        )
+
+        actual_removed_leading_space = extracted_leaf_whitespace
+        if not grab_bag.container_depth and not xposition_marker.index_indent:
+            removed_leading_space = extracted_leaf_whitespace
+        POGGER.debug(
+            "__adjust_for_list_container_after_block_quote>>removed_leading_space>>:$:<<",
+            removed_leading_space,
+        )
+        POGGER.debug(
+            "__adjust_for_list_container_after_block_quote>>actual_removed_leading_space>>:$:<<",
+            actual_removed_leading_space,
+        )
+        return actual_removed_leading_space, removed_leading_space
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -947,27 +984,15 @@ class ContainerBlockLeafProcessor:
             last_block_index,
         ):
             assert actual_removed_leading_space is not None
-            assert (
-                grab_bag.text_removed_by_container is not None
-            ), "If here, some text must have been removed."
-            total_removed = len(grab_bag.text_removed_by_container) + len(
-                actual_removed_leading_space
-            )
             assert list_stack_token is not None
-            if total_removed < list_stack_token.start_index:
-                delta = len(actual_removed_leading_space)
-            else:
-                assert list_token is not None
-                assert list_stack_token is not None
-                if list_stack_token.last_new_list_token:
-                    delta = list_stack_token.last_new_list_token.indent_level - total_removed
-                else:
-                    delta = list_token.indent_level - total_removed
-            xposition_marker = PositionMarker(
-                xposition_marker.line_number,
-                xposition_marker.index_number,
-                xposition_marker.text_to_parse[delta:],
-                xposition_marker.index_indent,
+            xposition_marker = (
+                ContainerBlockLeafProcessor.__adjust_for_list_container_after_kludge(
+                    xposition_marker,
+                    grab_bag,
+                    actual_removed_leading_space,
+                    list_stack_token,
+                    list_token,
+                )
             )
             # POGGER.debug("position_marker.text>>:$:<<", xposition_marker.text_to_parse)
             # POGGER.debug("position_marker.index>>:$:<<", xposition_marker.index_number)
@@ -980,6 +1005,39 @@ class ContainerBlockLeafProcessor:
         )
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_for_list_container_after_kludge(
+        xposition_marker: PositionMarker,
+        grab_bag: ContainerGrabBag,
+        actual_removed_leading_space: str,
+        list_stack_token: ListStackToken,
+        list_token: Optional[ListStartMarkdownToken],
+    ) -> PositionMarker:
+        assert (
+            grab_bag.text_removed_by_container is not None
+        ), "If here, some text must have been removed."
+        total_removed = len(grab_bag.text_removed_by_container) + len(
+            actual_removed_leading_space
+        )
+        if total_removed < list_stack_token.start_index:
+            delta = len(actual_removed_leading_space)
+        else:
+            assert list_token is not None
+            assert list_stack_token is not None
+            if list_stack_token.last_new_list_token:
+                delta = (
+                    list_stack_token.last_new_list_token.indent_level - total_removed
+                )
+            else:
+                delta = list_token.indent_level - total_removed
+        xposition_marker = PositionMarker(
+            xposition_marker.line_number,
+            xposition_marker.index_number,
+            xposition_marker.text_to_parse[delta:],
+            xposition_marker.index_indent,
+        )
+        return xposition_marker
 
     # pylint: disable=too-many-boolean-expressions,too-many-arguments
     @staticmethod
@@ -1145,10 +1203,12 @@ class ContainerBlockLeafProcessor:
             "xposition_marker.index_indent>:$:<", xposition_marker.index_indent
         )
         POGGER.debug(
-            "grab_bag.was_paragraph_continuation>:$:<", grab_bag.was_paragraph_continuation
+            "grab_bag.was_paragraph_continuation>:$:<",
+            grab_bag.was_paragraph_continuation,
         )
         POGGER.debug(
-            "grab_bag.was_indent_already_processed>:$:<", grab_bag.was_indent_already_processed
+            "grab_bag.was_indent_already_processed>:$:<",
+            grab_bag.was_indent_already_processed,
         )
         if (
             xposition_marker.text_to_parse
@@ -1206,13 +1266,20 @@ class ContainerBlockLeafProcessor:
         if stack_token.last_new_list_token:
             return stack_token.last_new_list_token.indent_level
         list_token = cast(ListStartMarkdownToken, stack_token.matching_markdown_token)
-        il = list_token.indent_level
-        if current_stack_index + 1 < len(parser_state.token_stack) and parser_state.token_stack[current_stack_index + 1].is_list and parser_state.token_stack[current_stack_index + 1].last_new_list_token:
-            x1 = cast(ListStackToken, parser_state.token_stack[current_stack_index + 1].last_new_list_token).column_number
-            x2 = il + 1
-            x3 = max(x1 - x2, 0)
-            il += x3
-        return il
+        indent_level = list_token.indent_level
+        if (
+            current_stack_index + 1 < len(parser_state.token_stack)
+            and parser_state.token_stack[current_stack_index + 1].is_list
+        ):
+            lst = cast(
+                ListStackToken, parser_state.token_stack[current_stack_index + 1]
+            )
+            if lst.last_new_list_token:
+                new_list_token_column_number = lst.last_new_list_token.column_number
+                indent_level += max(
+                    new_list_token_column_number - (indent_level + 1), 0
+                )
+        return indent_level
 
     @staticmethod
     def __post_leaf_block_adjustment(
@@ -1304,43 +1371,16 @@ class ContainerBlockLeafProcessor:
             grab_bag.text_removed_by_container = grab_bag.weird_adjusted_text
             new_text_to_parse = parser_state.original_line_to_parse[new_index_indent:]
         else:
-            is_current_calculated = False
-            x1 = parser_state.original_line_to_parse
-            x2 = grab_bag.text_removed_by_container
-            x3 = xposition_marker.index_indent
-
-            if new_ex and "\t" not in parser_state.original_line_to_parse and "\t" not in grab_bag.original_line and grab_bag.is_para_continue and parser_state.token_stack[-1].is_paragraph and parser_state.token_stack[-2].is_list:
-                x5 = parser_state.token_stack[-2].matching_markdown_token
-                x6 = parser_state.copy_of_x1_token
-                assert x5.leading_spaces is not None
-                x7 = x5.leading_spaces
-                if "\n" in x7:
-                    x7 = x7[x7.rindex("\n") + 1:]
-
-                x11 = max(current_indent_level - xposition_marker.index_indent, 0)
-                x12 = len(new_ex)
-                x13 = len(x7)
-                x8 = 0
-                keep_going = (
-                    not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
-                        parser_state,
-                        xposition_marker.text_to_parse,
-                        x12,
-                        "",
-                        grab_bag.original_line,
-                        xposition_marker.index_indent,
-                    )
+            is_current_calculated, current_indent_level = (
+                ContainerBlockLeafProcessor.__make_adjustments_not_weird(
+                    parser_state,
+                    grab_bag,
+                    new_ex,
+                    current_indent_level,
+                    xposition_marker,
                 )
+            )
 
-                if keep_going and x11:
-                    assert x12 == x13
-                    w1 = xposition_marker.text_to_parse[x11]
-                    w2 = xposition_marker.text_to_parse[x12]
-                    if x11 != x12:
-                        assert w1 == " " and w2 != " "
-                        current_indent_level = x12
-                        is_current_calculated = True
-            
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             if not is_current_calculated:
                 current_indent_level -= xposition_marker.index_indent
@@ -1380,6 +1420,68 @@ class ContainerBlockLeafProcessor:
             )
         return new_index_indent, new_text_to_parse
 
+    # pylint: disable=too-many-boolean-expressions
+    @staticmethod
+    def __make_adjustments_not_weird(
+        parser_state: ParserState,
+        grab_bag: ContainerGrabBag,
+        new_ex: Optional[str],
+        current_indent_level: int,
+        xposition_marker: PositionMarker,
+    ) -> Tuple[bool, int]:
+        is_current_calculated = False
+        if (
+            new_ex
+            and parser_state.original_line_to_parse is not None
+            and "\t" not in parser_state.original_line_to_parse
+            and "\t" not in grab_bag.original_line
+            and grab_bag.is_para_continue
+            and parser_state.token_stack[-1].is_paragraph
+            and parser_state.token_stack[-2].is_list
+        ):
+
+            def xx() -> str:
+                list_markdown_token = cast(
+                    Optional[ListStartMarkdownToken],
+                    parser_state.token_stack[-2].matching_markdown_token,
+                )
+                assert list_markdown_token is not None
+                assert list_markdown_token.leading_spaces is not None
+                list_token_leading_spaces = list_markdown_token.leading_spaces
+                if "\n" in list_token_leading_spaces:
+                    list_token_leading_spaces = list_token_leading_spaces[
+                        list_token_leading_spaces.rindex("\n") + 1 :
+                    ]
+                return list_token_leading_spaces
+
+            list_token_leading_spaces = xx()
+
+            calc_indent = max(current_indent_level - xposition_marker.index_indent, 0)
+            new_ex_length = len(new_ex)
+            list_token_leading_spaces_length = len(list_token_leading_spaces)
+            keep_going = not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                parser_state,
+                xposition_marker.text_to_parse,
+                new_ex_length,
+                "",
+                grab_bag.original_line,
+                xposition_marker.index_indent,
+            )
+
+            if keep_going: # and calc_indent:
+                assert new_ex_length == list_token_leading_spaces_length
+                if calc_indent != new_ex_length:
+                    index_ws,ext_ws = ParserHelper.extract_spaces_verified(xposition_marker.text_to_parse, 0)
+                    if calc_indent <= index_ws and new_ex_length <= index_ws:
+                        calc_indent_char = xposition_marker.text_to_parse[calc_indent]
+                        new_ex_char = xposition_marker.text_to_parse[new_ex_length]
+                        assert calc_indent_char == " " and new_ex_char != " "
+                        current_indent_level = new_ex_length
+                        is_current_calculated = True
+        return is_current_calculated, current_indent_level
+
+    # pylint: enable=too-many-boolean-expressions
+
     @staticmethod
     def __make_adjustments_inner(
         parser_state: ParserState,
@@ -1411,6 +1513,7 @@ class ContainerBlockLeafProcessor:
                     )
                 )
             if apply_adjustment:
+                assert False
                 new_index_indent += len(new_ex)
                 new_text_to_parse = new_text_to_parse[len(new_ex) :]
         return new_index_indent, new_text_to_parse
@@ -1551,6 +1654,7 @@ class ContainerBlockLeafProcessor:
         did_hit_indent_level_threshold: bool,
         continue_in_loop: bool,
     ) -> Tuple[bool, bool, int]:
+        _ = (last_block_index, last_list_index)
         assert (
             proposed_indent_level is not None
         ), "Proposed ident level within lists must be decided."
@@ -1561,11 +1665,7 @@ class ContainerBlockLeafProcessor:
                 is_total_ws_in_range = (
                     total_ws > current_indent_level and total_ws < proposed_indent_level
                 )
-                if (
-                    is_total_ws_in_range
-                    and not adj_ws
-                    and is_para_continue
-                ):
+                if is_total_ws_in_range and not adj_ws and is_para_continue:
                     after_ws_index, extracted_whitespace = (
                         ParserHelper.extract_spaces_verified(
                             position_marker.text_to_parse,
