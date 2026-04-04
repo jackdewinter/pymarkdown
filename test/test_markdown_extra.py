@@ -17192,9 +17192,7 @@ def test_extra_058d() -> None:
 </script>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17229,9 +17227,7 @@ LRD.
 LRD.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17267,9 +17263,7 @@ LRD.
 LRD.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17302,9 +17296,7 @@ paragraph&quot;
 LRD.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17339,9 +17331,7 @@ paragraph&quot;
 LRD.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17389,9 +17379,7 @@ properly indented content</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17439,9 +17427,7 @@ properly indented content</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17489,9 +17475,7 @@ properly indented content</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -17539,9 +17523,7 @@ properly indented content</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -18560,9 +18542,8 @@ another list</li>
     )
 
 
-
 @pytest.mark.gfm
-def test_extra_059e() -> None:
+def test_extra_issue_1577_a() -> None:
     """
     TBD
     """
@@ -18582,13 +18563,43 @@ def test_extra_059e() -> None:
 >    first line
 >    another list
 """
-    expected_tokens = ['[BLANK(1,1):]', '[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> \n> \n> ]', '[para(2,3):]', '[text(2,3):block start:]', '[end-para:::True]',
-                       '[BLANK(3,2):]', '[ulist(4,3):+::4::\n  þ\n  \n  \n\n   þ\n   \n   ]', '[para(4,5):]', '[text(4,5):first list:]', '[end-para:::True]',
-                       '[block-quote(5,5)::> \n> ]', '[para(5,7):]', '[text(5,7):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]',
-                       '[tbreak(6,5):-::----]', '[para(7,5):\n]', '[text(7,5):first line\nanother list::\n]', '[end-para:::True]', '[li(9,4):5: :]',
-                       '[para(9,6):]', '[text(9,6):second list:]', '[end-para:::True]',
-                       '[block-quote(10,6)::> \n> ]', '[para(10,8):]', '[text(10,8):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]',
-                       '[tbreak(11,6):-::----]', '[para(12,6):\n]', '[text(12,6):first line\nanother list::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[BLANK(14,1):]']
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[para(2,3):]",
+        "[text(2,3):block start:]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[ulist(4,3):+::4::\n  þ\n  \n  \n\n   þ\n   \n   ]",
+        "[para(4,5):]",
+        "[text(4,5):first list:]",
+        "[end-para:::True]",
+        "[block-quote(5,5)::> \n> ]",
+        "[para(5,7):]",
+        "[text(5,7):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(6,5):-::----]",
+        "[para(7,5):\n]",
+        "[text(7,5):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[li(9,4):5: :]",
+        "[para(9,6):]",
+        "[text(9,6):second list:]",
+        "[end-para:::True]",
+        "[block-quote(10,6)::> \n> ]",
+        "[para(10,8):]",
+        "[text(10,8):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(11,6):-::----]",
+        "[para(12,6):\n]",
+        "[text(12,6):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(14,1):]",
+    ]
     expected_gfm = """<blockquote>
 <p>block start</p>
 <ul>
@@ -18613,11 +18624,13 @@ another list</li>
     act_and_assert(
         source_markdown,
         expected_gfm,
-        expected_tokens,show_debug=False,
+        expected_tokens,
+        show_debug=False,
     )
+
+
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_extra_059f() -> None:
+def test_extra_issue_1577_b() -> None:
     """
     TBD
     """
@@ -18642,7 +18655,56 @@ def test_extra_059f() -> None:
 >    first line
 >    another list
 """
-    expected_tokens = ['[BLANK(1,1):]', '[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> ]', '[para(2,3):]', '[text(2,3):block start:]', '[end-para:::True]', '[BLANK(3,2):]', '[ulist(4,3):+::4::\n  þ\n  \n  \n\n  þ\n  \n  \n\n   þ\n   \n   ]', '[para(4,5):]', '[text(4,5):first list:]', '[end-para:::True]', '[block-quote(5,5)::> \n> ]', '[para(5,7):]', '[text(5,7):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]', '[tbreak(6,5):-::----]', '[para(7,5):\n]', '[text(7,5):first line\nanother list::\n]', '[end-para:::True]', '[li(9,3):4::]', '[para(9,5):]', '[text(9,5):second list:]', '[end-para:::True]', '[block-quote(10,5)::> \n> ]', '[para(10,7):]', '[text(10,7):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]', '[tbreak(11,5):-::----]', '[para(12,5):\n]', '[text(12,5):first line\nanother list::\n]', '[end-para:::True]', '[li(14,4):5: :]', '[para(14,6):]', '[text(14,6):third list:]', '[end-para:::True]', '[block-quote(15,6)::> \n> ]', '[para(15,8):]', '[text(15,8):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]', '[tbreak(16,6):-::----]', '[para(17,6):\n]', '[text(17,6):first line\nanother list::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[BLANK(19,1):]']
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[para(2,3):]",
+        "[text(2,3):block start:]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[ulist(4,3):+::4::\n  þ\n  \n  \n\n  þ\n  \n  \n\n   þ\n   \n   ]",
+        "[para(4,5):]",
+        "[text(4,5):first list:]",
+        "[end-para:::True]",
+        "[block-quote(5,5)::> \n> ]",
+        "[para(5,7):]",
+        "[text(5,7):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(6,5):-::----]",
+        "[para(7,5):\n]",
+        "[text(7,5):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):second list:]",
+        "[end-para:::True]",
+        "[block-quote(10,5)::> \n> ]",
+        "[para(10,7):]",
+        "[text(10,7):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(11,5):-::----]",
+        "[para(12,5):\n]",
+        "[text(12,5):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[li(14,4):5: :]",
+        "[para(14,6):]",
+        "[text(14,6):third list:]",
+        "[end-para:::True]",
+        "[block-quote(15,6)::> \n> ]",
+        "[para(15,8):]",
+        "[text(15,8):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(16,6):-::----]",
+        "[para(17,6):\n]",
+        "[text(17,6):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(19,1):]",
+    ]
     expected_gfm = """<blockquote>
 <p>block start</p>
 <ul>
@@ -18674,8 +18736,10 @@ another list</li>
     act_and_assert(
         source_markdown,
         expected_gfm,
-        expected_tokens,show_debug=False,
+        expected_tokens,
+        show_debug=False,
     )
+
 
 @pytest.mark.gfm
 @pytest.mark.skip
@@ -18697,7 +18761,37 @@ def test_extra_059g() -> None:
 >    first line
 >    another list
 """
-    expected_tokens = ['[BLANK(1,1):]', '[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> ]', '[para(2,3):]', '[text(2,3):block start:]', '[end-para:::True]', '[BLANK(3,2):]', '[ulist(4,3):+::4::  þ\n  \n  \n\n   þ\n   \n   ]', '[block-quote(4,5)::> \n> ]', '[para(4,7):]', '[text(4,7):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]', '[tbreak(5,5):-::----]', '[para(6,5):\n]', '[text(6,5):first line\nanother list::\n]', '[end-para:::True]', '[li(8,4):5: :]', '[block-quote(8,6)::> \n> ]', '[para(8,8):]', '[text(8,8):block within list:]', '[end-para:::False]', '[end-block-quote::> :True]', '[tbreak(9,6):-::----]', '[para(10,6):\n]', '[text(10,6):first line\nanother list::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[BLANK(12,1):]']
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> \n>\n> \n> \n> \n> \n> \n> ]",
+        "[para(2,3):]",
+        "[text(2,3):block start:]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[ulist(4,3):+::4::  þ\n  \n  \n\n   þ\n   \n   ]",
+        "[block-quote(4,5)::> \n> ]",
+        "[para(4,7):]",
+        "[text(4,7):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(5,5):-::----]",
+        "[para(6,5):\n]",
+        "[text(6,5):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[li(8,4):5: :]",
+        "[block-quote(8,6)::> \n> ]",
+        "[para(8,8):]",
+        "[text(8,8):block within list:]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[tbreak(9,6):-::----]",
+        "[para(10,6):\n]",
+        "[text(10,6):first line\nanother list::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+    ]
     expected_gfm = """<blockquote>
 <p>block start</p>
 <ul>
@@ -18722,8 +18816,10 @@ another list</li>
     act_and_assert(
         source_markdown,
         expected_gfm,
-        expected_tokens,show_debug=False,
+        expected_tokens,
+        show_debug=False,
     )
+
 
 @pytest.mark.gfm
 def test_extra_issue_1569_c() -> None:
@@ -18740,11 +18836,25 @@ def test_extra_issue_1569_c() -> None:
       properly indented content
 """
     expected_tokens = [
-        '[BLANK(1,1):]',
-        '[ulist(2,1):+::2::]',
-        '[block-quote(2,3):  :  > \n  > \n  > \n  > \n]', '[para(2,5):]', '[text(2,5):first list:]', '[end-para:::True]',
-        '[ulist(3,5):+::6:: \n      ]', '[para(3,7):\n]', '[text(3,7):inner list\nproperly indented content::\n]', '[end-para:::True]',
-        '[li(5,5):6::]', '[para(5,7):\n]', '[text(5,7):another list\nproperly indented content::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[BLANK(7,1):]', '[end-ulist:::True]']
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::]",
+        "[block-quote(2,3):  :  > \n  > \n  > \n  > \n]",
+        "[para(2,5):]",
+        "[text(2,5):first list:]",
+        "[end-para:::True]",
+        "[ulist(3,5):+::6:: \n      ]",
+        "[para(3,7):\n]",
+        "[text(3,7):inner list\nproperly indented content::\n]",
+        "[end-para:::True]",
+        "[li(5,5):6::]",
+        "[para(5,7):\n]",
+        "[text(5,7):another list\nproperly indented content::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <blockquote>
@@ -18765,6 +18875,7 @@ properly indented content</li>
         expected_gfm,
         expected_tokens,
     )
+
 
 @pytest.mark.gfm
 def test_extra_999() -> None:

@@ -31,6 +31,12 @@
 - [Issue 1574](https://github.com/jackdewinter/pymarkdown/issues/1574)
     - in certain nested cases with adjusting indent of a list, the following
       parsing does not take that into account when calculating indentation
+- [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
+    - whitespace for block quotes within a list that has just had a new
+      list item added that is indented 1 extra space, was not correct
+- [Issue 1578](https://github.com/jackdewinter/pymarkdown/issues/1578)
+    - after correcting [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
+      regeneration was still not adding the proper indentation
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

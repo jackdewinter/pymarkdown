@@ -2,11 +2,8 @@
 Module to provide tests related to the PMl102 rule.
 """
 
+from test.rules.utils import pluginRuleTest
 from typing import List
-
-from test.rules.utils import (
-    pluginRuleTest,
-)
 
 scanTests_olist_olist_olist: List[pluginRuleTest] = [
     pluginRuleTest(

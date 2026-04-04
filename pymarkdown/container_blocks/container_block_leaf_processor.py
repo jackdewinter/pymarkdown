@@ -512,6 +512,7 @@ class ContainerBlockLeafProcessor:
                     grab_bag.block_quote_data.stack_count - stack_delta,
                 )
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __xx1(
         parser_state: ParserState,
@@ -534,7 +535,7 @@ class ContainerBlockLeafProcessor:
         assert last_bq_char_index == len(removed_text_copy)
 
         ws_to_use = 0
-        token_at_top_of_stack =parser_state.token_stack[stack_index]
+        token_at_top_of_stack = parser_state.token_stack[stack_index]
         assert token_at_top_of_stack.is_list
         list_token_at_top_of_stack = cast(ListStackToken, token_at_top_of_stack)
         if list_token_at_top_of_stack.last_new_list_token is not None:
@@ -569,6 +570,8 @@ class ContainerBlockLeafProcessor:
             text_removed_by_container,
             ex_space,
         )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1468,10 +1471,12 @@ class ContainerBlockLeafProcessor:
                 xposition_marker.index_indent,
             )
 
-            if keep_going: # and calc_indent:
+            if keep_going:  # and calc_indent:
                 assert new_ex_length == list_token_leading_spaces_length
                 if calc_indent != new_ex_length:
-                    index_ws,ext_ws = ParserHelper.extract_spaces_verified(xposition_marker.text_to_parse, 0)
+                    index_ws, _ = ParserHelper.extract_spaces_verified(
+                        xposition_marker.text_to_parse, 0
+                    )
                     if calc_indent <= index_ws and new_ex_length <= index_ws:
                         calc_indent_char = xposition_marker.text_to_parse[calc_indent]
                         new_ex_char = xposition_marker.text_to_parse[new_ex_length]
@@ -1512,10 +1517,10 @@ class ContainerBlockLeafProcessor:
                         grab_bag, new_ex
                     )
                 )
-            if apply_adjustment:
-                assert False
-                new_index_indent += len(new_ex)
-                new_text_to_parse = new_text_to_parse[len(new_ex) :]
+            assert not apply_adjustment
+            # if apply_adjustment:
+            # new_index_indent += len(new_ex)
+            # new_text_to_parse = new_text_to_parse[len(new_ex) :]
         return new_index_indent, new_text_to_parse
 
     @staticmethod

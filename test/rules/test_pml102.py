@@ -4,28 +4,20 @@ Module to provide tests related to the PMl102 rule.
 
 from test.rules.test_pml102_bq_bq_olist import scanTests_bq_bq_olist
 from test.rules.test_pml102_bq_bq_ulist import scanTests_bq_bq_ulist
-
-from test.rules.test_pml102_bq_ulist import scanTests_bq_ulist
 from test.rules.test_pml102_bq_olist import scanTests_bq_olist
-
 from test.rules.test_pml102_bq_olist_bq import scanTests_bq_olist_bq
-from test.rules.test_pml102_bq_ulist_bq import scanTests_bq_ulist_bq
-
 from test.rules.test_pml102_bq_olist_olist import scanTests_bq_olist_olist
+from test.rules.test_pml102_bq_ulist import scanTests_bq_ulist
+from test.rules.test_pml102_bq_ulist_bq import scanTests_bq_ulist_bq
 from test.rules.test_pml102_bq_ulist_ulist import scanTests_bq_ulist_ulist
-
 from test.rules.test_pml102_olist_bq_bq import scanTests_olist_bq_bq
-from test.rules.test_pml102_ulist_bq_bq import scanTests_ulist_bq_bq
-
 from test.rules.test_pml102_olist_bq_olist import scanTests_olist_bq_olist
-from test.rules.test_pml102_ulist_bq_ulist import scanTests_ulist_bq_ulist
-
 from test.rules.test_pml102_olist_olist import scanTests_olist_olist
-from test.rules.test_pml102_ulist_ulist import scanTests_ulist_ulist
-
 from test.rules.test_pml102_olist_olist_bq import scanTests_olist_olist_bq
-
 from test.rules.test_pml102_olist_olist_olist import scanTests_olist_olist_olist
+from test.rules.test_pml102_ulist_bq_bq import scanTests_ulist_bq_bq
+from test.rules.test_pml102_ulist_bq_ulist import scanTests_ulist_bq_ulist
+from test.rules.test_pml102_ulist_ulist import scanTests_ulist_ulist
 from test.rules.utils import (
     execute_query_configuration_test,
     execute_scan_test,
