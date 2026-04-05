@@ -163,7 +163,7 @@ item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
@@ -404,7 +404,7 @@ again"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[para(1,17):]",
         "[text(1,17):list:]",
         "[end-para:::True]",
@@ -907,7 +907,7 @@ list"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[BLANK(1,16):]",
         "[li(2,14):16:   :1]",
         "[para(2,17):\n]",
@@ -1091,7 +1091,7 @@ item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
@@ -1939,7 +1939,7 @@ item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
@@ -2166,7 +2166,7 @@ redux"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   > \n]",
-        "[olist(1,14):.:1:16:   :        \n\n]",
+        "[olist(1,14):.:1:16:   :        \n]",
         "[para(1,17):\n\n]",
         "[text(1,17):list\n1. item\nredux::\n\n]",
         "[end-para:::True]",
@@ -2798,7 +2798,7 @@ item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
-        "[olist(1,14):.:1:16:   :\n]",
+        "[olist(1,14):.:1:16:   :]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
@@ -3025,7 +3025,7 @@ redux"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n\n]",
-        "[olist(1,14):.:1:16:   :             \n\n]",
+        "[olist(1,14):.:1:16:   :             \n]",
         "[para(1,17):\n\n]",
         "[text(1,17):list\n1. item\nredux::\n\n]",
         "[end-para:::True]",

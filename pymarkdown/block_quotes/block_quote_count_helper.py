@@ -911,9 +911,9 @@ class BlockQuoteCountHelper:
         ) = BlockQuoteCountHelper.__calculate_stack_hard_limit_if_eligible(
             parser_state,
             position_marker,
-            # length_of_available_whitespace,
-            # adjust_current_block_quote,
-            # last_bq_index,
+            length_of_available_whitespace,
+            adjust_current_block_quote,
+            last_bq_index,
         )
         POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
         POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
@@ -948,9 +948,9 @@ class BlockQuoteCountHelper:
     def __calculate_stack_hard_limit_if_eligible(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        # length_of_available_whitespace: int,
-        # adjust_current_block_quote: bool,
-        # last_bq_index: int,
+        length_of_available_whitespace: int,
+        adjust_current_block_quote: bool,
+        last_bq_index: int,
     ) -> Tuple[Optional[int], Optional[int]]:
         POGGER.debug("eligible")
         stack_hard_limit, extra_consumed_whitespace = None, None
@@ -961,46 +961,48 @@ class BlockQuoteCountHelper:
             : -len(position_marker.text_to_parse)
         ]
         assert not remaining_text
-        # POGGER.debug("eligible - remaining_text:$:", remaining_text)
+        _ = (length_of_available_whitespace, adjust_current_block_quote, last_bq_index)
+        # if remaining_text:
+        #     POGGER.debug("eligible - remaining_text:$:", remaining_text)
 
-        # # use up already extracted text/ws
-        # current_stack_index, indent_text_count, extra_consumed_whitespace = 1, 0, 0
-        # assert parser_state.token_stack[
-        #     current_stack_index
-        # ].is_block_quote, "The specified index must point to a block quote."
-        # POGGER.debug("bq")
-        # start_index = remaining_text.find(">")
-        # assert (
-        #     start_index != -1
-        # ), "A block quote start character (>) must be present in the remaing text to parse."
-        # POGGER.debug("bq-found")
-        # indent_text_count = start_index + 1
-        # assert (
-        #     indent_text_count < len(remaining_text)
-        #     and remaining_text[indent_text_count] == ParserHelper.space_character
-        # ), "The indent_text_count needs rooms to grow, and currently specifies a space character."
-        # POGGER.debug("bq-space-found")
-        # indent_text_count += 1
-        # current_stack_index += 1
-        # assert indent_text_count == len(
-        #     remaining_text
-        # ), "Counts should equal each other."
+        #     # use up already extracted text/ws
+        #     current_stack_index, indent_text_count, extra_consumed_whitespace = 1, 0, 0
+        #     assert parser_state.token_stack[
+        #         current_stack_index
+        #     ].is_block_quote, "The specified index must point to a block quote."
+        #     POGGER.debug("bq")
+        #     start_index = remaining_text.find(">")
+        #     assert (
+        #         start_index != -1
+        #     ), "A block quote start character (>) must be present in the remaing text to parse."
+        #     POGGER.debug("bq-found")
+        #     indent_text_count = start_index + 1
+        #     assert (
+        #         indent_text_count < len(remaining_text)
+        #         and remaining_text[indent_text_count] == ParserHelper.space_character
+        #     ), "The indent_text_count needs rooms to grow, and currently specifies a space character."
+        #     POGGER.debug("bq-space-found")
+        #     indent_text_count += 1
+        #     current_stack_index += 1
+        #     assert indent_text_count == len(
+        #         remaining_text
+        #     ), "Counts should equal each other."
 
-        # # if there is whitespace
-        # (
-        #     stack_hard_limit,
-        #     indent_text_count,
-        #     length_of_available_whitespace,
-        #     extra_consumed_whitespace,
-        # ) = BlockQuoteCountHelper.__calculate_eligible_stack_hard_limit(
-        #     parser_state,
-        #     current_stack_index,
-        #     indent_text_count,
-        #     length_of_available_whitespace,
-        #     extra_consumed_whitespace,
-        #     adjust_current_block_quote,
-        #     last_bq_index,
-        # )
+        #     # if there is whitespace
+        #     (
+        #         stack_hard_limit,
+        #         indent_text_count,
+        #         length_of_available_whitespace,
+        #         extra_consumed_whitespace,
+        #     ) = BlockQuoteCountHelper.__calculate_eligible_stack_hard_limit(
+        #         parser_state,
+        #         current_stack_index,
+        #         indent_text_count,
+        #         length_of_available_whitespace,
+        #         extra_consumed_whitespace,
+        #         adjust_current_block_quote,
+        #         last_bq_index,
+        #     )
         return stack_hard_limit, extra_consumed_whitespace
 
     # # pylint: disable=too-many-arguments
@@ -1072,4 +1074,4 @@ class BlockQuoteCountHelper:
     #         extra_consumed_whitespace,
     #     )
 
-    # # pylint: enable=too-many-arguments
+    # # # pylint: enable=too-many-arguments

@@ -242,7 +242,7 @@ def test_nested_three_unordered_block_skip_ordered() -> None:
     expected_tokens = [
         "[ulist(1,1):+::2:]",
         "[block-quote(1,3):  :  > \n]",
-        "[olist(1,5):.:1:7::       \n]",
+        "[olist(1,5):.:1:7::       ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -789,7 +789,7 @@ def test_nested_three_unordered_max_block_max_ordered_max_no_bq1() -> None:
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
         "[block-quote(1,9):        :        > \n]",
-        "[olist(1,14):.:1:16:   :                \n]",
+        "[olist(1,14):.:1:16:   :                ]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",

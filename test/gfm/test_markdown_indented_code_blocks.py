@@ -421,7 +421,7 @@ def test_indented_code_blocks_087() -> None:
 @pytest.mark.gfm
 def test_indented_code_blocks_088() -> None:
     """
-    Test case 088:  Trailing spaces are included in the code block’s content:
+    Test case 088:  Trailing spaces are included in the code block's content:
     """
 
     # Arrange
