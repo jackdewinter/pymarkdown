@@ -45,6 +45,8 @@ To help you quickly find what you need, here is a roadmap of what this page cove
 - [List Rule Plugins from the Command Line](#list-rule-plugins-from-the-command-line)
 - [Suppressing Rule Failures (Pragmas)](#suppressing-rule-failures-pragmas)
 - [Compiled List of Rule Plugins](#compiled-list-of-rule-plugins)
+    - [Rule Plugin Documentation Structure](#rule-plugin-documentation-structure)
+    - [Rules Disabled By Default](#rules-disabled-by-default)
 - [Rule Plugin Configuration for Specific Parsers](#rule-plugin-configuration-for-specific-parsers)
     - [Python-Markdown](#python-markdown)
 
@@ -471,7 +473,7 @@ effectively.
 
 ### Rule Plugin Documentation Structure
 
-We apply the following pattern to every Rule Plugins's documentation to keep the
+We apply the following pattern to every Rule Plugin's documentation to keep the
 structure
 consistent and make key information easy to locate.
 
@@ -499,6 +501,67 @@ consistent and make key information easy to locate.
 - Differences From MarkdownLint Rule (optional)
     - When derived from a MarkdownLint rule, documents the differences and the rationale
       for them.
+
+### Rules Disabled By Default
+
+Most of PyMarkdown's standard Rule Plugins are enabled by default as they are generally
+applicable over most Markdown documents. In some cases, additional configuration
+is required to meet the user's linting needs, and sometimes Rule Plugins are disabled
+when they do not meet those needs.
+
+However, in the case of these Rule Plugins, they start in a disabled state for one
+or more reasons.  Below is the list of Rule Plugins disabled by default, with explanations
+as to why they are disabled by default.
+
+#### [Rule Plugin MD002](./plugins/rule_md002.md)
+
+As stated in its [Deprecation](./plugins/rule_md002.md#deprecation) section, the
+`first-heading-h1` Rule Plugin has been deprecated in favor of [Rule Plugin MD041](./plugins/rule_md041.md),
+otherwise known as `first-line-heading`.
+Rule Plugin MD041 supports everything that Rule Plugin MD002 supports, as well as
+supporting a "title" field that can be specified with the [Front-Matter](./extensions/front-matter.md)
+extension.
+
+#### [Rule Plugin MD006](./plugins/rule_md006.md)
+
+As stated in its [Deprecation](./plugins/rule_md006.md#deprecation) section, the
+`ul-start-left`
+Rule Plugin has been deprecated in favor of [Rule Plugin MD007](./plugins/rule_md007.md),
+otherwise known as `ul-indent`.
+As stated in the [Differences From MarkdownLint Rule](./plugins/rule_md006.md#differences-from-markdownlint-rule)
+section of Rule Plugin MD006, it is not immediately clear why the MarkdownLint Rule
+MD006 was deprecated and replaced with MarkdownLint Rule MD007.
+
+#### [Rule Plugin PML100](./plugins/rule_pml100.md)
+
+This Rule Plugin, otherwise known as `disallowed-html`, was created as the Rule
+Plugin-based version of the [Markdown Disallowed Raw HTML](./extensions/disallowed-raw-html.md)
+extension. It provides the same checks as the extension but exposes them through
+the Rule Plugin system. Unlike the extension which instructs the [PyMarkdown parser](./user-guide.md#markdown-parser)
+to replace the first `<` character with the `&gt;` sequence, this Rule Plugin
+generates a Rule Failure to be dealt with by the user.
+
+#### [Rule Plugin PML101](./plugins/rule_pml101.md)
+
+The `list-anchored-indent` Rule Plugin was specifically created
+as an alternative to the [MD007](./plugins/rule_md007.md) or `ul-indent`
+Rule Plugin. As described in the follow section on
+[Rule Plugin Configuration for Specific Parsers](#rule-plugin-configuration-for-specific-parsers),
+the [Python-Markdown](https://python-markdown.github.io/) parser has a couple
+of inconsistencies in following the Github Flavored Markdown (GFM) specification.
+This rule allows for Rule Plugin MD007 to be disabled in favor of enabling
+this Rule Plugin with default settings. With Rule Plugin PML101 enabled,
+list indentation Rule Failures will properly track with what Python-Markdown
+expects, instead of what the GFM expects.
+
+#### [Rule Plugin PML102](./plugins/rule_pml102.md)
+
+The `disallow-lazy-list-indentation` Rule Plugin was created in response to a user
+request to forbid [lazy continuation lines](https://github.github.com/gfm/#lazy-continuation-line)
+in list paragraphs. We go into more detail in the [Reasoning](./plugins/rule_pml102.md#reasoning)
+section of that Rule Plugin's documentation. In short, we agree with the user's
+request to warn when lazy continuation lines are used instead of properly indenting
+paragraphs to match the current list indentation.
 
 ## Rule Plugin Configuration for Specific Parsers
 

@@ -18,6 +18,8 @@ from test.rules.test_pml102_olist_olist_olist import scanTests_olist_olist_olist
 from test.rules.test_pml102_ulist_bq_bq import scanTests_ulist_bq_bq
 from test.rules.test_pml102_ulist_bq_ulist import scanTests_ulist_bq_ulist
 from test.rules.test_pml102_ulist_ulist import scanTests_ulist_ulist
+from test.rules.test_pml102_ulist_ulist_bq import scanTests_ulist_ulist_bq
+from test.rules.test_pml102_ulist_ulist_ulist import scanTests_ulist_ulist_ulist
 from test.rules.utils import (
     execute_query_configuration_test,
     execute_scan_test,
@@ -394,6 +396,8 @@ all_scan_tests.extend(scanTests_olist_bq_olist)
 all_scan_tests.extend(scanTests_ulist_bq_ulist)
 all_scan_tests.extend(scanTests_olist_olist_bq)
 all_scan_tests.extend(scanTests_olist_olist_olist)
+all_scan_tests.extend(scanTests_ulist_ulist_ulist)
+all_scan_tests.extend(scanTests_ulist_ulist_bq)
 
 
 @pytest.mark.parametrize("test", all_scan_tests, ids=id_test_plug_rule_fn)

@@ -11,6 +11,9 @@
 - [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
     - Added documentation under the extensions section to provide
       information on the tables extension.
+- [Issue 979](https://github.com/jackdewinter/pymarkdown/issues/979)
+    - Added Rule Plugin PML102 that raises Rule Failures when lists
+      contain lazy continuation lines.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

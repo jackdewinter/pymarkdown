@@ -183,7 +183,7 @@ another list
       > inner block
       > inner block
       ----
-       first line
+      first line
       another list
     1. second list
        > inner block
