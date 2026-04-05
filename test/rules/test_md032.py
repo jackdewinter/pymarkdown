@@ -342,6 +342,64 @@ This is any non-text block
         scan_expected_output="""{temp_source_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
         disable_rules="md022",
     ),
+    pluginRuleTest(
+        "issue-1576-a",
+        source_file_contents="""# H1 Test
+
+## Lorem Ipsum
+
+Lorem ipsum dolor sit amet:
+- Item one
+- Item two
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+    ),
+    pluginRuleTest(
+        "issue-1576-b",
+        source_file_contents="""# H1 Test
+
+## Prior Section
+
+- Lorem ipsum
+- Dolor sit amet
+
+## Lorem Ipsum
+
+Lorem ipsum dolor sit amet:
+- Item one
+- Item two
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:11:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+    ),
+    pluginRuleTest(
+        "issue-1576-c",
+        disable_rules="md022",
+        source_file_contents="""# H1 Test
+
+## Prior Section
+- Lorem ipsum
+- Dolor sit amet
+## End Of Document
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{temp_source_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+    ),
+    pluginRuleTest(
+        "issue-1576-d",
+        disable_rules="md022",
+        source_file_contents="""# H1 Test
+
+## Prior Section
+- abc
+## End Of Document
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{temp_source_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+    ),
 ]
 
 
