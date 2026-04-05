@@ -699,3 +699,25 @@ Disallowed HTML elements.
 ### Summary
 
 Anchored list indentation.
+
+## Rule - PML102
+
+[Full Documentation](./plugins/rule_pml102.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `pml102`, `disallow-lazy-list-indentation` |
+| Autofix Available | In Queue |
+| Enabled By Default | No |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Disallow "lazy" paragraph continuations within lists.
+
+## Enable This Rule If
+
+This rule is disabled by default.  Enable this rule if you want to generate
+Rule Failures when the Markdown documents contain multiple line paragraphs
+where the indentation for each paragraph line does not match the indentation
+for the list that contains it.

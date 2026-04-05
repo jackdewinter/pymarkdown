@@ -187,6 +187,7 @@ class TransformToMarkdown:
         """
         container_stack: List[MarkdownToken] = []
         container_records: List[MarkdownChangeRecord] = []
+        new_list_item_map: Dict[str, List[Tuple[int, int, int]]] = {}
         (
             transformed_data,
             previous_token,
@@ -240,6 +241,7 @@ class TransformToMarkdown:
                 container_records,
                 transformed_data_length_before_add,
                 actual_tokens,
+                new_list_item_map,
             )
 
             POGGER.debug("---")

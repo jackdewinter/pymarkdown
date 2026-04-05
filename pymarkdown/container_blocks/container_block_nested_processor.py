@@ -548,12 +548,24 @@ class ContainerBlockNestedProcessor:
             not nested_container_starts.block_index
             and grab_bag.adj_line_to_parse
             and grab_bag.adj_line_to_parse[0] == ParserHelper.space_character
-            and indent_was_adjusted
-            and parser_state.nested_list_start
         ):
-            assert (
-                parser_state.nested_list_start is not None
-            ), "The nested list start cannot be None."
+            if indent_was_adjusted:
+                assert (
+                    parser_state.nested_list_start is not None
+                ), "The nested list start cannot be None."
+
+            else:
+                last_container_token_index = parser_state.find_last_container_on_stack()
+                last_container_token = cast(
+                    BlockQuoteMarkdownToken,
+                    parser_state.token_document[last_container_token_index],
+                )
+
+                if (
+                    not last_container_token.extracted_whitespace
+                    and grab_bag.text_removed_by_container == "> > "
+                ):
+                    return True
         return False
 
     # pylint: disable=too-many-locals

@@ -28,11 +28,35 @@
 - [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
     - Added documentation under the extensions section to provide
       information on the tables extension.
+- [Issue 979](https://github.com/jackdewinter/pymarkdown/issues/979)
+    - Added Rule Plugin PML102 that raises Rule Failures when lists
+      contain lazy continuation lines.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1563](https://github.com/jackdewinter/pymarkdown/issues/1563)
+    - whitespace differences with new list items in nested containers
+- [Issue 1564](https://github.com/jackdewinter/pymarkdown/issues/1564)
+    - extra newlines inserted
+- [Issue 1566](https://github.com/jackdewinter/pymarkdown/issues/1566)
+    - change of indent in list causes issues, making calculations wrong
+      for following elements
+- [Issue 1569](https://github.com/jackdewinter/pymarkdown/issues/1569)
+    - whitespace was reported in both the list and the paragraph with
+      nested containers
+- [Issue 1573](https://github.com/jackdewinter/pymarkdown/issues/1573)
+    - ContainerTokenManager not handling nested block quotes separated
+      by lists
+- [Issue 1574](https://github.com/jackdewinter/pymarkdown/issues/1574)
+    - in certain nested cases with adjusting indent of a list, the following
+      parsing does not take that into account when calculating indentation
+- [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
+    - whitespace for block quotes within a list that has just had a new
+      list item added that is indented 1 extra space, was not correct
+- [Issue 1578](https://github.com/jackdewinter/pymarkdown/issues/1578)
+    - after correcting [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
+      regeneration was still not adding the proper indentation
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

@@ -205,7 +205,7 @@ def test_emphasis_420() -> None:
 @pytest.mark.gfm
 def test_emphasis_421() -> None:
     """
-    Test case 421:  For the same reason, we don’t get two consecutive emphasis sections in this example:
+    Test case 421:  For the same reason, we don't get two consecutive emphasis sections in this example:
     """
 
     # Arrange

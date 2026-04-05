@@ -1236,7 +1236,7 @@
         },
         {
             "name": "test.rules.test_md018",
-            "totalTests": 57,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1268,7 +1268,7 @@
         },
         {
             "name": "test.rules.test_md022",
-            "totalTests": 59,
+            "totalTests": 60,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1539,6 +1539,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.rules.test_pml102",
+            "totalTests": 437,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_application_file_scanner",
             "totalTests": 8,
             "failedTests": 0,
@@ -1636,10 +1644,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 351,
+            "totalTests": 374,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {

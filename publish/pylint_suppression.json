@@ -29,10 +29,10 @@
         },
         "pymarkdown/container_blocks/container_block_leaf_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 10,
+            "too-many-locals": 3,
+            "too-many-arguments": 11,
             "chained-comparison": 2,
-            "too-many-boolean-expressions": 1,
-            "too-many-locals": 2
+            "too-many-boolean-expressions": 2
         },
         "pymarkdown/container_blocks/container_block_nested_processor.py": {
             "too-few-public-methods": 1,
@@ -371,6 +371,10 @@
         "pymarkdown/plugins/rule_md_048.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
+        "pymarkdown/plugins/rule_pml_102.py": {
+            "too-many-arguments": 1,
+            "too-many-locals": 1
+        },
         "pymarkdown/plugins/utils/container_token_manager.py": {},
         "pymarkdown/plugins/utils/leading_space_index_tracker.py": {},
         "pymarkdown/plugins/utils/list_tracker.py": {},
@@ -509,7 +513,7 @@
         "pymarkdown/transform_markdown/transform_block_quote.py": {},
         "pymarkdown/transform_markdown/transform_containers.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 21,
+            "too-many-arguments": 24,
             "too-many-locals": 3,
             "too-many-boolean-expressions": 4,
             "chained-comparison": 1
@@ -530,11 +534,11 @@
     "disables-by-name": {
         "too-many-instance-attributes": 30,
         "too-many-public-methods": 5,
-        "too-many-arguments": 273,
+        "too-many-arguments": 278,
         "too-few-public-methods": 39,
-        "too-many-locals": 53,
+        "too-many-locals": 55,
         "chained-comparison": 3,
-        "too-many-boolean-expressions": 8,
+        "too-many-boolean-expressions": 9,
         "protected-access": 31,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3,
