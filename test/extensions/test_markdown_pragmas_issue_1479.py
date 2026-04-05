@@ -8904,7 +8904,7 @@ A code block
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md033,md041",
+            "md032,md033,md041",
             "scan",
             markdown_file_path,
         ]
@@ -9029,7 +9029,7 @@ A code block
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md033,md041",
+            "md032,md033,md041",
             "scan",
             markdown_file_path,
         ]

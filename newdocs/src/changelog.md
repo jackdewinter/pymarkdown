@@ -51,6 +51,9 @@
 - [Issue 1574](https://github.com/jackdewinter/pymarkdown/issues/1574)
     - in certain nested cases with adjusting indent of a list, the following
       parsing does not take that into account when calculating indentation
+- [Issue 1576](https://github.com/jackdewinter/pymarkdown/issues/1576)
+    - fixed issue with Md032 not removing a list from the stack after
+      exitting the list
 - [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
     - whitespace for block quotes within a list that has just had a new
       list item added that is indented 1 extra space, was not correct

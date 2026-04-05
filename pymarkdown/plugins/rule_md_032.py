@@ -132,7 +132,7 @@ class RuleMd032(RulePlugin):
         if parent_leaf_or_container_token.is_fenced_code_block:
             return self.__calculate_override_for_fenced_code_block(token_index)
 
-        assert self.__previous_tokens[token_index].is_leaf
+        assert token_index >= 0 and self.__previous_tokens[token_index].is_leaf
         token_index -= 1
         if self.__previous_tokens[token_index].is_container:
             token_index -= 1
@@ -149,7 +149,9 @@ class RuleMd032(RulePlugin):
             and is_base_at_right_place
         )
 
-    def __report_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
+    def __report_token_after_list_end(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
 
         override_is_error_token_prefaced_by_blank_line = self.__calculate_override(
             token
@@ -177,7 +179,7 @@ class RuleMd032(RulePlugin):
                 and not token.is_block_quote_end
                 and not token.is_end_of_stream
             ):
-                self.__report_token(context, token)
+                self.__report_token_after_list_end(context, token)
             self.__end_list_end_token = None
 
         if token.is_block_quote_start:
@@ -190,7 +192,7 @@ class RuleMd032(RulePlugin):
             assert self.__last_non_end_token is not None
             if not self.__last_non_end_token.is_blank_line:
                 self.__end_list_end_token = token
-                del self.__container_token_stack[-1]
+            del self.__container_token_stack[-1]
 
         if (
             not token.is_end_token
