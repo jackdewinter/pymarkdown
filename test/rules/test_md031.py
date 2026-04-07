@@ -9321,6 +9321,50 @@ another list
 """,
         scan_expected_return_code=0,
     ),
+    pluginRuleTest(
+        "issue-1568-a",
+        source_file_contents="""```text
+...
+```
+
+    ```text
+    tscom2.masterdata.zkServers=awfuxtccap01p:5301,awfuxtccap02p:5301,awfuxtccap03p:5301,awfuxtccap04p:5301,awfuxtccap05p:5301,awfuxtccap06p:5301
+    ```
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD046: Code block style [Expected: fenced; Actual: indented] (code-block-style)
+""",
+        fix_expected_file_contents="""```text
+...
+```
+
+```
+```text
+tscom2.masterdata.zkServers=awfuxtccap01p:5301,awfuxtccap02p:5301,awfuxtccap03p:5301,awfuxtccap04p:5301,awfuxtccap05p:5301,awfuxtccap06p:5301
+```
+
+```
+""",
+        # use_fix_debug=True,
+        # use_fix_file_debug=True
+    ),
+    pluginRuleTest(
+        "issue-1568-b",
+        source_file_contents="""```text
+```
+```text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""```text
+```
+
+```text
+""",
+        # use_fix_debug=True
+    ),
 ]
 
 

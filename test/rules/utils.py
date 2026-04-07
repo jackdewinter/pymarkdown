@@ -45,6 +45,7 @@ class pluginRuleTest:
     use_debug: bool = False
     use_strict_config: bool = False
     use_fix_debug: bool = False
+    use_fix_file_debug: bool = False
     disable_rules: str = ""
     enable_rules: str = ""
     enable_extensions: str = ""
@@ -126,6 +127,8 @@ def build_arguments(
             supplied_arguments.extend(("--disable-rules", test.disable_rules))
 
         if is_fix:
+            if test.use_fix_file_debug:
+                supplied_arguments.append("-x-fix-file-debug")
             if test.use_fix_debug:
                 supplied_arguments.append("-x-fix-debug")
             supplied_arguments.extend(("fix", temp_source_path))

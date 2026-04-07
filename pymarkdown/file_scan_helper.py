@@ -470,7 +470,7 @@ class FileScanHelper:
         per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[bool, bool, int]:
         keep_processing = False
-        collect_list = []
+        collect_list: List[str] = []
         fix_list = []
         for fix_level, level_list in plugins_by_fix_level.items():
             if fix_level == minimum_fix_level:

@@ -1372,7 +1372,7 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 657,
+            "totalTests": 661,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 15,
