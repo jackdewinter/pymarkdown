@@ -68,6 +68,8 @@ class RuleMd031(RulePlugin):
         self.__container_adjustments: List[List[PendingContainerAdjustment]] = []
         self.__container_x: List[int] = []
 
+        self.__submitted_fix = False
+
         self.__fix_count = 0
         self.__removed_container_stack_token: Optional[MarkdownToken] = None
         self.__x1: List[MarkdownToken] = []
@@ -97,6 +99,7 @@ class RuleMd031(RulePlugin):
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md031.md",
             plugin_configuration="list_items",
             plugin_supports_fix=True,
+            plugin_fix_level=3,
         )
 
     def initialize_from_config(self) -> None:
@@ -218,7 +221,7 @@ class RuleMd031(RulePlugin):
         new_token.adjust_line_number(context, self.__fix_count)
 
         assert self.__second_last_token is not None
-        replacement_tokens = [
+        replacement_tokens: List[MarkdownToken] = [
             BlankLineMarkdownToken(
                 extracted_whitespace="",
                 position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
@@ -227,7 +230,7 @@ class RuleMd031(RulePlugin):
             self.__last_token,
             new_token,
         ]
-        self.register_replace_tokens_request(
+        self.__replace_tokens_request(
             context, self.__second_last_token, token, replacement_tokens
         )
 
@@ -946,9 +949,7 @@ class RuleMd031(RulePlugin):
                 self.__last_end_container_tokens[end_container_index + 1 :]
             )
         replacement_tokens.append(new_token)
-        self.register_replace_tokens_request(
-            context, first_token, token, replacement_tokens
-        )
+        self.__replace_tokens_request(context, first_token, token, replacement_tokens)
 
     def __fix_spacing_with_special_list_fix(
         self, context: PluginScanContext, token: MarkdownToken, new_token: MarkdownToken
@@ -956,7 +957,7 @@ class RuleMd031(RulePlugin):
         assert self.__last_token and self.__last_token.is_block_quote_end
         new_end_token = cast(EndMarkdownToken, copy.copy(self.__last_token))
         new_end_token.set_extra_end_data(None)
-        replacement_tokens = [
+        replacement_tokens: List[MarkdownToken] = [
             BlankLineMarkdownToken(
                 extracted_whitespace="",
                 position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
@@ -965,14 +966,14 @@ class RuleMd031(RulePlugin):
             new_end_token,
             new_token,
         ]
-        self.register_replace_tokens_request(
+        self.__replace_tokens_request(
             context, self.__last_token, token, replacement_tokens
         )
 
     def __fix_spacing_with_else(
         self, context: PluginScanContext, token: MarkdownToken, new_token: MarkdownToken
     ) -> None:
-        replacement_tokens = [
+        replacement_tokens: List[MarkdownToken] = [
             BlankLineMarkdownToken(
                 extracted_whitespace="",
                 position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
@@ -980,7 +981,21 @@ class RuleMd031(RulePlugin):
             ),
             new_token,
         ]
-        self.register_replace_tokens_request(context, token, token, replacement_tokens)
+
+        self.__replace_tokens_request(context, token, token, replacement_tokens)
+
+    def __replace_tokens_request(
+        self,
+        context: PluginScanContext,
+        start_token: MarkdownToken,
+        end_token: MarkdownToken,
+        replacement_tokens: List[MarkdownToken],
+    ) -> None:
+        if not self.__submitted_fix:
+            self.register_replace_tokens_request(
+                context, start_token, end_token, replacement_tokens
+            )
+            self.__submitted_fix = True
 
     def __calc_kludge_one(self, at_least_one_container: bool) -> bool:
         if not at_least_one_container:
@@ -1372,6 +1387,10 @@ class RuleMd031(RulePlugin):
         """
         Event that a new token is being processed.
         """
+
+        # There are special cases where this rule tries to submit 2 fixes for the same token,
+        # especially in the scenario where two fenced code blocks are one after another with no blank line in between.
+        self.__submitted_fix = False
 
         special_case, special_case_2 = self.__calculate_specials(context, token)
         if not token.is_end_token or token.is_end_of_stream:

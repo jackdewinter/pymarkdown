@@ -42,6 +42,11 @@
 - [Issue 1566](https://github.com/jackdewinter/pymarkdown/issues/1566)
     - change of indent in list causes issues, making calculations wrong
       for following elements
+- [Issue 1568](https://github.com/jackdewinter/pymarkdown/issues/1568)
+    - Md046 and Md031 can both fix fenced blocks, so moved to different
+      fix levels
+    - added extra check to make sure that if two fenced code blocks are
+      one after the other, first one fixed spacing, not both
 - [Issue 1569](https://github.com/jackdewinter/pymarkdown/issues/1569)
     - whitespace was reported in both the list and the paragraph with
       nested containers
