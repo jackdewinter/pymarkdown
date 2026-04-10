@@ -35,6 +35,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1482](https://github.com/jackdewinter/pymarkdown/issues/1482)
+    - addressed weird case where a block quote, at least 4 levels of lists
+      in, contains a new list, was generating an assert
 - [Issue 1563](https://github.com/jackdewinter/pymarkdown/issues/1563)
     - whitespace differences with new list items in nested containers
 - [Issue 1564](https://github.com/jackdewinter/pymarkdown/issues/1564)

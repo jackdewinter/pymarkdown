@@ -1644,10 +1644,74 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 374,
+            "totalTests": 356,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 2,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1482",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1563",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1564",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1566",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1569",
+            "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1573",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1574",
+            "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_extra_issue_1577",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
