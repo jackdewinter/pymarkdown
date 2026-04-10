@@ -1651,6 +1651,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_markdown_extra_issue_1482",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_markdown_extra_issue_1563",
             "totalTests": 4,
             "failedTests": 0,
@@ -1669,14 +1677,6 @@
         {
             "name": "test.test_markdown_extra_issue_1566",
             "totalTests": 2,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_extra_issue_1568",
-            "totalTests": 9,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
