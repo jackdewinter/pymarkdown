@@ -660,6 +660,32 @@ class ContainerBlockNonLeafProcessor:
         return False, found_stack_index, remaining_whitespace
 
     @staticmethod
+    def __handle_leading_whitespace_loop_a_bq(
+        parser_state: ParserState,
+        i: int,
+        inner_block_token: BlockQuoteMarkdownToken,
+        remaining_whitespace: str,
+    ) -> Tuple[Optional[MarkdownToken], bool, int, str]:
+        start_bq_index = remaining_whitespace.find(">")
+        found_stack_index = 0
+        if start_bq_index < 0 or start_bq_index >= 4:
+            # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
+            # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
+            if len(remaining_whitespace) >= 4:
+                olp = parser_state.original_line_to_parse
+                assert olp is not None
+                itl = (
+                    inner_block_token.bleading_spaces
+                    if inner_block_token.bleading_spaces is not None
+                    else ""
+                )
+                itl_split = itl.split(ParserHelper.newline_character)[-1]
+                if not olp.startswith(itl_split):
+                    found_stack_index = i
+            return inner_block_token, True, found_stack_index, remaining_whitespace
+        raise AssertionError()
+
+    @staticmethod
     def __handle_leading_whitespace_loop_a(
         parser_state: ParserState, i: int, remaining_whitespace: str
     ) -> Tuple[Optional[MarkdownToken], bool, int, str]:
@@ -671,14 +697,10 @@ class ContainerBlockNonLeafProcessor:
             ), "If there is no matching stack token, this must be a link definition or table."
             return inner_token, True, 0, remaining_whitespace
         if inner_token.is_block_quote_start:
-            start_bq_index = remaining_whitespace.find(">")
-            if start_bq_index < 0 or start_bq_index >= 4:
-                # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
-                # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
-                if len(remaining_whitespace) >= 4:
-                    found_stack_index = i
-                return inner_token, True, found_stack_index, remaining_whitespace
-            raise AssertionError()
+            inner_block_token = cast(BlockQuoteMarkdownToken, inner_token)
+            return ContainerBlockNonLeafProcessor.__handle_leading_whitespace_loop_a_bq(
+                parser_state, i, inner_block_token, remaining_whitespace
+            )
         if not inner_token.is_list_start:
             # POGGER.debug("2-->")
             if len(remaining_whitespace) >= 4:
