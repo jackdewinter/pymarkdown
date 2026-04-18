@@ -332,7 +332,7 @@ My 10 lines
 1. barney
 """,
         scan_expected_return_code=0,
-        disable_rules="md009",
+        disable_rules="md009,md032",
     ),
     pluginRuleTest(  # test_extra_051a0
         "bad_in_list_with_double_blanks_at_end",
@@ -690,7 +690,7 @@ My 10 lines
 > 1. barney
 """,
         scan_expected_return_code=0,
-        disable_rules="md027",
+        disable_rules="md027,md032",
     ),
     pluginRuleTest(
         "bad_in_list_in_block_quote_with_double_blanks_at_end",

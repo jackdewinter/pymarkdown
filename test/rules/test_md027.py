@@ -916,6 +916,7 @@ scanTests = [
     ),
     pluginRuleTest(  # test_extra_051b2
         "md012_bad_in_list_in_block_quote_with_double_blanks_at_start",
+        disable_rules="md032",
         source_file_contents="""> 1.
 >
 >    fred2
