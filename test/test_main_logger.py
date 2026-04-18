@@ -4,9 +4,11 @@ Module to provide tests related to logging.
 
 import logging
 import os
-import tempfile
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
+from typing import Tuple
 
+import py  # type: ignore[import-untyped]
 from pytest import LogCaptureFixture
 
 from pymarkdown.application_logging import ApplicationLogging
@@ -18,23 +20,28 @@ from .utils import (
     assert_file_is_as_expected,
     create_temporary_configuration_file,
     create_temporary_file_for_reuse,
+    create_temporary_markdown_file,
     read_contents_of_text_file,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-def test_markdown_with_dash_dash_log_level_debug(caplog: LogCaptureFixture) -> None:
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md047", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
+def test_markdown_with_dash_dash_log_level_debug(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for debug.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--log-level",
         "DEBUG",
@@ -42,18 +49,14 @@ def test_markdown_with_dash_dash_log_level_debug(caplog: LogCaptureFixture) -> N
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = """"""
+    expected_results = ExpectedResults()
 
     # Act
     ParserLogger.sync_on_next_call()
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
     # Info messages
     assert "Number of files found: " in caplog.text
@@ -65,17 +68,16 @@ def test_markdown_with_dash_dash_log_level_debug(caplog: LogCaptureFixture) -> N
     )
 
 
-def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> None:
+def test_markdown_with_dash_dash_log_level_info(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for info.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--log-level",
         "INFO",
@@ -83,18 +85,14 @@ def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> No
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
     ParserLogger.sync_on_next_call()
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
     # Info messages
     assert "Number of files found: " in caplog.text
@@ -104,17 +102,16 @@ def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> No
     assert f"Provided path '{source_path}' is a valid file. Adding." not in caplog.text
 
 
-def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) -> None:
+def test_markdown_with_dash_dash_log_level_invalid(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for an invalid log level.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--log-level",
         "invalid",
@@ -122,9 +119,9 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) ->
         source_path,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -134,16 +131,15 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) ->
                [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
 main.py: error: argument --log-level: invalid validate_log_level_type value: 'invalid'
-"""
+""",
+    )
 
     # Act
     ParserLogger.sync_on_next_call()
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
     # Info messages
     assert "Number of scanned files found: " not in caplog.text
@@ -161,7 +157,9 @@ main.py: error: argument --log-level: invalid validate_log_level_type value: 'in
     )
 
 
-def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
+def test_markdown_with_dash_dash_log_level_info_with_file(
+    scanner_default: MarkdownScanner,
+) -> None:
     # sourcery skip: extract-method
     """
     Test to make sure we get the right effect if the `--log-level` flag
@@ -171,11 +169,8 @@ def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     with create_temporary_file_for_reuse() as log_file_name:
-        scanner = MarkdownScanner()
         supplied_arguments = [
             "--log-level",
             "INFO",
@@ -185,18 +180,13 @@ def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
-
+        expected_results = ExpectedResults()
         # Act
         ParserLogger.sync_on_next_call()
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
         file_data = read_contents_of_text_file(log_file_name).replace("\n", "")
 
@@ -210,7 +200,9 @@ def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
         )
 
 
-def test_markdown_with_dash_dash_log_level_info_with_file_as_directory() -> None:
+def test_markdown_with_dash_dash_log_level_info_with_file_as_directory(
+    scanner_default: MarkdownScanner, tmpdir: py._path.local.LocalPath
+) -> None:
     """
     Test to make sure we get the right effect if a directory is specified
     as the file to log to.
@@ -220,32 +212,26 @@ def test_markdown_with_dash_dash_log_level_info_with_file_as_directory() -> None
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+
+    supplied_arguments = [
+        "--log-file",
+        str(tmpdir),
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem.",
     )
-    with tempfile.TemporaryDirectory() as temp_directory:
-        log_file_name = temp_directory
 
-        scanner = MarkdownScanner()
-        supplied_arguments = [
-            "--log-file",
-            log_file_name,
-            "scan",
-            source_path,
-        ]
+    # Act
+    ParserLogger.sync_on_next_call()
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
-
-        # Act
-        ParserLogger.sync_on_next_call()
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_logger_stack_token_normal_output() -> None:
@@ -439,20 +425,19 @@ def test_markdown_logger_translate_log_level_invalid() -> None:
     assert log_level == logging.NOTSET
 
 
-def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> None:
+def test_markdown_fix_with_no_rescan_log_debug(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     original_file_contents = """* Item 1
  * Item 2
 """
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
+    with create_temporary_markdown_file(original_file_contents) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
             "md007,md029",
@@ -463,9 +448,9 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> Non
             temp_source_path,
         ]
 
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=3, expected_output=f"Fixed: {temp_source_path}"
+        )
 
         expected_file_contents = """* Item 1
 * Item 2
@@ -473,12 +458,10 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> Non
 
         # Act
         ParserLogger.sync_on_next_call()
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
         # Info messages
@@ -498,20 +481,19 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> Non
         assert "Restoring log level to DEBUG." in caplog.text
 
 
-def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None:
+def test_markdown_fix_with_no_rescan_log_info(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     original_file_contents = """* Item 1
  * Item 2
 """
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
+    with create_temporary_markdown_file(original_file_contents) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
             "md007,md029",
@@ -522,9 +504,9 @@ def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None
             temp_source_path,
         ]
 
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=3, expected_output=f"Fixed: {temp_source_path}"
+        )
 
         expected_file_contents = """* Item 1
 * Item 2
@@ -532,12 +514,10 @@ def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None
 
         # Act
         ParserLogger.sync_on_next_call()
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
         # Info messages
@@ -554,20 +534,19 @@ def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None
         assert "Restoring log level to INFO." in caplog.text
 
 
-def test_markdown_fix_with_no_rescan_log_warn(caplog: LogCaptureFixture) -> None:
+def test_markdown_fix_with_no_rescan_log_warn(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     original_file_contents = """* Item 1
  * Item 2
 """
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
+    with create_temporary_markdown_file(original_file_contents) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
             "md007,md029",
@@ -578,9 +557,9 @@ def test_markdown_fix_with_no_rescan_log_warn(caplog: LogCaptureFixture) -> None
             temp_source_path,
         ]
 
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=3, expected_output=f"Fixed: {temp_source_path}"
+        )
 
         expected_file_contents = """* Item 1
 * Item 2
@@ -588,12 +567,10 @@ def test_markdown_fix_with_no_rescan_log_warn(caplog: LogCaptureFixture) -> None
 
         # Act
         ParserLogger.sync_on_next_call()
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
         # Info messages

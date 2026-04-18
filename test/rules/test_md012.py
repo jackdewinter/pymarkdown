@@ -2,7 +2,6 @@
 Module to provide tests related to the MD012 rule.
 """
 
-import os
 from test.rules.utils import (
     calculate_fix_tests,
     execute_configuration_test,
@@ -17,7 +16,7 @@ from test.rules.utils import (
 
 import pytest
 
-source_path = os.path.join("test", "resources", "rules", "md012") + os.sep
+# source_path = os.path.join("test", "resources", "rules", "md012") + os.sep
 
 configTests = [
     pluginConfigErrorTest(
@@ -915,6 +914,7 @@ z
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md012_scan(test: pluginRuleTest) -> None:
     """
@@ -923,6 +923,7 @@ def test_md012_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md012")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -933,6 +934,7 @@ def test_md012_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md012_config(test: pluginConfigErrorTest) -> None:
     """
@@ -947,6 +949,7 @@ this is another line
     )
 
 
+@pytest.mark.rules
 def test_md012_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md012",

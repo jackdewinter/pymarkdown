@@ -44,10 +44,8 @@ scanTests = [
  * Second Item
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:2:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-        ),
+        scan_expected_output="""{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:2:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
         fix_expected_file_contents="""* First Item
 * Second Item
 """,
@@ -66,10 +64,8 @@ scanTests = [
 >  * Second Item
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:1:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-        ),
+        scan_expected_output="""{temp_source_path}:1:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
         fix_expected_file_contents="""> * First Item
 > * Second Item
 """,
@@ -86,10 +82,8 @@ scanTests = [
 * Second Item
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:4:5: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-        ),
+        scan_expected_output="""{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:4:5: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
         fix_expected_file_contents="""* First Item
   * First-First
   * First-Second
@@ -168,12 +162,10 @@ scanTests = [
    - Second Item
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:5:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-            + "{temp_source_path}:6:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-        ),
+        scan_expected_output="""{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:5:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:6:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
         fix_expected_file_contents="""- top level 1
   - First Item
   - Second Item
@@ -218,6 +210,7 @@ scanTests = [
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md006_scan(test: pluginRuleTest) -> None:
     """
@@ -226,6 +219,7 @@ def test_md006_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, plugin_enable_this_rule)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -236,6 +230,7 @@ def test_md006_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md006_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md006",

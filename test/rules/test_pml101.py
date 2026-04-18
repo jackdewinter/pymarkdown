@@ -539,6 +539,7 @@ scanTests = [
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_pml101_scan(test: pluginRuleTest) -> None:
     """
@@ -555,17 +556,19 @@ def test_pml101_scan(test: pluginRuleTest) -> None:
 #     execute_fix_test(test)
 
 
-source_path = os.path.join("test", "resources", "rules", "md007") + os.sep
-
-
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_pml101_config(test: pluginConfigErrorTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """
-    execute_configuration_test(test, f"{source_path}good_list_indentation.md")
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation.md"
+    )
+    execute_configuration_test(test, source_path)
 
 
+@pytest.mark.rules
 def test_pml101_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml101",

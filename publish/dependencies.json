@@ -7,6 +7,7 @@
     "columnar": "1.4.0",
     "cookieslicer": "0.1.5",
     "coverage": "7.13.4",
+    "docvet": "1.14.1",
     "flake8": "7.3.0",
     "importlib-metadata": "8.7.1",
     "isort": "8.0.1",

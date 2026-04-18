@@ -4,128 +4,111 @@ Module to provide tests related to the MD022 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
-from test.utils import create_temporary_configuration_file
+from test.utils import (
+    create_temporary_configuration_file,
+    create_temporary_markdown_file,
+)
+from typing import Tuple
 
 import pytest
 
 # pylint: disable=too-many-lines
 
 
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md022", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx() -> None:
+def test_md022_bad_proper_line_spacing_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with proper spacing around them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
-    )
+    source_path, _ = __generate_source_path("proper_line_spacing_atx.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_proper_line_spacing_setext() -> None:
+def test_md022_good_proper_line_spacing_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with proper spacing around them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "proper_line_spacing_setext.md"
-    )
+    source_path, _ = __generate_source_path("proper_line_spacing_setext.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx() -> None:
+def test_md022_bad_no_line_spacing_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_atx.md"
-    )
+    source_path, abs_source_path = __generate_source_path("no_line_spacing_atx.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_same_block_quote() -> None:
+def test_md022_bad_no_line_spacing_atx_in_same_block_quote(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in a block quote.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_atx_in_same_block_quote.md",
     )
     supplied_arguments = [
@@ -133,43 +116,31 @@ def test_md022_bad_no_line_spacing_atx_in_same_block_quote() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_same_list_item() -> None:
+def test_md022_bad_no_line_spacing_atx_in_same_list_item(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in a list item.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_atx_in_same_list_item.md",
     )
     supplied_arguments = [
@@ -177,43 +148,31 @@ def test_md022_bad_no_line_spacing_atx_in_same_list_item() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_different_list_items() -> None:
+def test_md022_bad_no_line_spacing_atx_in_different_list_items(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in different list items.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_atx_in_different_list_items.md",
     )
     supplied_arguments = [
@@ -221,77 +180,59 @@ def test_md022_bad_no_line_spacing_atx_in_different_list_items() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:4:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:4:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx() -> None:
+def test_md022_bad_no_line_spacing_before_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_before_atx.md"
+    source_path, abs_source_path = __generate_source_path(
+        "no_line_spacing_before_atx.md"
     )
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:5:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_same_list_item() -> None:
+def test_md022_bad_no_line_spacing_before_atx_in_same_list_item(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in a list item.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_before_atx_in_same_list_item.md",
     )
     supplied_arguments = [
@@ -299,37 +240,29 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_list_item() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_different_list_items() -> None:
+def test_md022_bad_no_line_spacing_before_atx_in_different_list_items(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in different list items.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_before_atx_in_different_list_items.md",
     )
     supplied_arguments = [
@@ -337,37 +270,29 @@ def test_md022_bad_no_line_spacing_before_atx_in_different_list_items() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote() -> None:
+def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in a block quote.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_before_atx_in_same_block_quote.md",
     )
     supplied_arguments = [
@@ -375,104 +300,83 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_setext() -> None:
+def test_md022_bad_no_line_spacing_before_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with no proper spacing before them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_before_setext.md"
-    )
+    source_path, _ = __generate_source_path("no_line_spacing_before_setext.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx() -> None:
+def test_md022_bad_no_line_spacing_after_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_after_atx.md"
+    source_path, abs_source_path = __generate_source_path(
+        "no_line_spacing_after_atx.md"
     )
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:5:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_same_list_item() -> None:
+def test_md022_bad_no_line_spacing_after_atx_in_same_list_item(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in the same list item.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_after_atx_in_same_list_item.md",
     )
     supplied_arguments = [
@@ -480,40 +384,30 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_list_item() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote() -> None:
+def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in a block quote.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_after_atx_in_same_block_quote.md",
     )
     supplied_arguments = [
@@ -521,40 +415,30 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_different_list_items() -> None:
+def test_md022_bad_no_line_spacing_after_atx_in_different_list_items(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in different list items.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_after_atx_in_different_list_items.md",
     )
     supplied_arguments = [
@@ -562,40 +446,30 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_list_items() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes() -> None:
+def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in different block quotes.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "no_line_spacing_after_atx_in_different_block_quotes.md",
     )
     supplied_arguments = [
@@ -605,28 +479,23 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes() -> None
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:5:3: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_html_and_good_line_spacing() -> None:
+def test_md022_good_atx_with_html_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the HTML
@@ -634,30 +503,25 @@ def test_md022_good_atx_with_html_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "atx_with_html_and_good_line_spacing.md"
-    )
+    source_path, _ = __generate_source_path("atx_with_html_and_good_line_spacing.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_html_and_bad_line_spacing() -> None:
+def test_md022_bad_atx_with_html_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings without good spacing between them and the HTML
@@ -665,37 +529,31 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "atx_with_html_and_bad_line_spacing.md"
+    source_path, abs_source_path = __generate_source_path(
+        "atx_with_html_and_bad_line_spacing.md"
     )
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:3:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:8:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:3:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:8:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_paragraph_and_good_line_spacing() -> None:
+def test_md022_good_atx_with_paragraph_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the paragraphs
@@ -703,12 +561,7 @@ def test_md022_good_atx_with_paragraph_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "atx_with_paragraph_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -716,21 +569,19 @@ def test_md022_good_atx_with_paragraph_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_paragraph_and_bad_line_spacing() -> None:
+def test_md022_bad_atx_with_paragraph_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the paragraphs
@@ -738,12 +589,7 @@ def test_md022_bad_atx_with_paragraph_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "atx_with_paragraph_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -751,28 +597,23 @@ def test_md022_bad_atx_with_paragraph_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:7:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:7:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_code_block_and_good_line_spacing() -> None:
+def test_md022_good_atx_with_code_block_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the code
@@ -780,12 +621,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "atx_with_code_block_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -795,21 +631,19 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_code_block_and_bad_line_spacing() -> None:
+def test_md022_bad_atx_with_code_block_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing between them and the code
@@ -817,12 +651,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "atx_with_code_block_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -832,28 +661,23 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:9:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:9:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_thematic_break_and_good_line_spacing() -> None:
+def test_md022_good_atx_with_thematic_break_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the thematic
@@ -861,12 +685,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "atx_with_thematic_break_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -874,21 +693,19 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing() -> None:
+def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing between them and the thematic
@@ -896,12 +713,7 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "atx_with_thematic_break_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -909,28 +721,21 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:7:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:7:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_setext() -> None:
+def test_md022_bad_no_line_spacing_setext(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing after them and the
@@ -942,37 +747,29 @@ def test_md022_bad_no_line_spacing_setext() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_setext.md"
-    )
+    source_path, abs_source_path = __generate_source_path("no_line_spacing_setext.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:6:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_setext() -> None:
+def test_md022_bad_no_line_spacing_after_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing after them and the
@@ -980,37 +777,31 @@ def test_md022_bad_no_line_spacing_after_setext() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "no_line_spacing_after_setext.md"
+    source_path, abs_source_path = __generate_source_path(
+        "no_line_spacing_after_setext.md"
     )
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:6:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_code_block_and_good_line_spacing() -> None:
+def test_md022_good_setext_with_code_block_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1018,12 +809,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "setext_with_code_block_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -1033,21 +819,19 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_code_block_and_bad_line_spacing() -> None:
+def test_md022_bad_setext_with_code_block_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1055,12 +839,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "setext_with_code_block_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -1070,28 +849,23 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:10:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:10:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_html_and_good_line_spacing() -> None:
+def test_md022_good_setext_with_html_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1099,12 +873,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "setext_with_html_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -1112,21 +881,19 @@ def test_md022_good_setext_with_html_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_html_and_bad_line_spacing() -> None:
+def test_md022_bad_setext_with_html_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1134,12 +901,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "setext_with_html_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -1147,28 +909,23 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:3:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:9:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:3:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:9:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_thematic_break_and_good_line_spacing() -> None:
+def test_md022_good_setext_with_thematic_break_and_good_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1176,12 +933,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "setext_with_thematic_break_and_good_line_spacing.md",
     )
     supplied_arguments = [
@@ -1189,21 +941,19 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing() -> None:
+def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1211,12 +961,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "setext_with_thematic_break_and_bad_line_spacing.md",
     )
     supplied_arguments = [
@@ -1224,28 +969,23 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:8:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:8:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above() -> None:
+def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the
@@ -1253,10 +993,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
-    )
+    source_path, abs_source_path = __generate_source_path("proper_line_spacing_atx.md")
     supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -1268,25 +1005,22 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above() -> None:
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{os.path.abspath(source_path)}:7:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{abs_source_path}:7:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above() -> None:
+def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing between them and the
@@ -1294,10 +1028,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above() -
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "double_line_spacing_above_atx.md"
-    )
+    source_path, _ = __generate_source_path("double_line_spacing_above_atx.md")
     supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -1311,21 +1042,19 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above() -
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below() -> None:
+def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the
@@ -1333,10 +1062,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
-    )
+    source_path, abs_source_path = __generate_source_path("proper_line_spacing_atx.md")
     supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -1348,28 +1074,23 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below() -> None:
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{os.path.abspath(source_path)}:1:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:7:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:7:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below() -> None:
+def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing between them and the
@@ -1377,10 +1098,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below() -
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "double_line_spacing_below_atx.md"
-    )
+    source_path, _ = __generate_source_path("double_line_spacing_below_atx.md")
     supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -1394,23 +1112,19 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below() -
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both() -> (
-    None
-):
+def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing above them and the
@@ -1418,12 +1132,7 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "double_line_spacing_above_and_below_atx.md",
     )
     supplied_configuration = {
@@ -1441,21 +1150,17 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_alternating_heading_types() -> None:
+def test_md022_good_alternating_heading_types(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1463,10 +1168,7 @@ def test_md022_good_alternating_heading_types() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "alternating_heading_types.md"
-    )
+    source_path, _ = __generate_source_path("alternating_heading_types.md")
     supplied_arguments = [
         "--disable-rules",
         "MD003,md025",
@@ -1474,21 +1176,19 @@ def test_md022_good_alternating_heading_types() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing() -> None:
+def test_md022_bad_alternating_heading_types_with_alternate_spacing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1496,9 +1196,8 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "alternating_heading_types.md"
+    source_path, abs_source_path = __generate_source_path(
+        "alternating_heading_types.md"
     )
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
@@ -1515,45 +1214,28 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing() -> None:
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{os.path.abspath(source_path)}:1:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:3:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:3:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:6:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:6:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:8:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:8:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:3:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:3:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:8:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:8:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config() -> (
-    None
-):
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1562,9 +1244,8 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "alternating_heading_types.md"
+    source_path, abs_source_path = __generate_source_path(
+        "alternating_heading_types.md"
     )
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
@@ -1581,42 +1262,30 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{os.path.abspath(source_path)}:3:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:6:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + f"{os.path.abspath(source_path)}:8:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
-            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{abs_source_path}:3:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:8:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode() -> (
-    None
-):
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule fails with alternative configuration that is invalid.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "alternating_heading_types.md"
-    )
+    source_path, _ = __generate_source_path("alternating_heading_types.md")
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
     }
@@ -1633,24 +1302,23 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = (
-            "BadPluginError encountered while configuring plugins:\n"
-            + "The value for property 'plugins.md022.lines_below' is not valid: Value must not be zero or a positive integer.\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md022.lines_below' is not valid: Value must not be zero or a positive integer.""",
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_unordered_list_into_atx_into_paragraph() -> None:
+def test_md022_good_unordered_list_into_atx_into_paragraph(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading types with good spacing between them and
@@ -1658,12 +1326,7 @@ def test_md022_good_unordered_list_into_atx_into_paragraph() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "unordered_list_into_atx_into_paragraph.md",
     )
     supplied_arguments = [
@@ -1671,21 +1334,19 @@ def test_md022_good_unordered_list_into_atx_into_paragraph() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_heading_surrounded_by_block_quote() -> None:
+def test_md022_bad_heading_surrounded_by_block_quote(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains an Atx heading types with block quotes directly before
@@ -1693,12 +1354,7 @@ def test_md022_bad_heading_surrounded_by_block_quote() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "bad_heading_surrounded_by_block_quote.md",
     )
     supplied_arguments = [
@@ -1706,28 +1362,21 @@ def test_md022_bad_heading_surrounded_by_block_quote() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_heading_surrounded_by_list() -> None:
+def test_md022_bad_heading_surrounded_by_list(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains an Atx heading types with list items directly before
@@ -1735,9 +1384,8 @@ def test_md022_bad_heading_surrounded_by_list() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "bad_heading_surrounded_by_list.md"
+    source_path, abs_source_path = __generate_source_path(
+        "bad_heading_surrounded_by_list.md"
     )
     supplied_arguments = [
         "--disable-rules",
@@ -1746,28 +1394,21 @@ def test_md022_bad_heading_surrounded_by_list() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_heading_in_block_quote() -> None:
+def test_md022_good_heading_in_block_quote(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading in a block quote, with nicely spaced
@@ -1775,30 +1416,23 @@ def test_md022_good_heading_in_block_quote() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "good_heading_in_block_quote.md"
-    )
+    source_path, _ = __generate_source_path("good_heading_in_block_quote.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_heading_in_list() -> None:
+def test_md022_good_heading_in_list(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading in a list item, with nicely spaced
@@ -1806,41 +1440,31 @@ def test_md022_good_heading_in_list() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "good_heading_in_list.md"
-    )
+    source_path, _ = __generate_source_path("good_heading_in_list.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_link_reference_definition_before_header() -> None:
+def test_md022_link_reference_definition_before_header(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, _ = __generate_source_path(
         "link_reference_definition_before_header.md",
     )
     supplied_arguments = [
@@ -1848,32 +1472,25 @@ def test_md022_link_reference_definition_before_header() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_link_reference_definition_around_header() -> None:
+def test_md022_link_reference_definition_around_header(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md022",
+    source_path, abs_source_path = __generate_source_path(
         "bad_link_reference_definition_around_header.md",
     )
     supplied_arguments = [
@@ -1883,96 +1500,78 @@ def test_md022_link_reference_definition_around_header() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 2; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:7:1: MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 2; Above] (blanks-around-headings,blanks-around-headers)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 2; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:7:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 2; Above] (blanks-around-headings,blanks-around-headers)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_fenced_block_before_header() -> None:
+def test_md022_fenced_block_before_header(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md022", "fenced_block_before_header.md"
-    )
+    source_path, _ = __generate_source_path("fenced_block_before_header.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_issue_1268() -> None:
+def test_md022_issue_1268(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """# My header
 
 <!-- pyml disable-num-lines 3 md011,md013-->
 
 Some long lines
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_arguments = [
             "scan",
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_after_around_and_before() -> None:
+def test_md022_good_with_pragmas_blanks_after_around_and_before(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """# Heading 1
 
 <!--pyml disable-num-lines 1 md012-->
@@ -1989,9 +1588,7 @@ Some more text
 
 ## Heading 3
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 1, "lines_above": 1}}
         }
@@ -2005,27 +1602,24 @@ Some more text
                 source_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_after_around_and_before() -> None:
+def test_md022_bad_with_pragmas_blanks_after_around_and_before(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """# Heading 1
 
 <!--pyml disable-num-lines 1 md012-->
@@ -2042,9 +1636,7 @@ Some more text
 
 ## Heading 3
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
         }
@@ -2058,40 +1650,38 @@ Some more text
                 source_path,
             ]
 
-            expected_return_code = 1
-            expected_output = f"""{source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
 {source_path}:11:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
 {source_path}:11:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)
 {source_path}:15:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
-{source_path}:15:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)"""
-            expected_error = ""
+{source_path}:15:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
+            )
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_before() -> None:
+def test_md022_good_with_pragmas_blanks_before(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """# Heading 1
 
 <!--pyml disable-num-lines 1 md012-->
 
 Some text
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 1, "lines_above": 1}}
         }
@@ -2105,36 +1695,29 @@ Some text
                 source_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_before() -> None:
+def test_md022_bad_with_pragmas_blanks_before(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """# Heading 1
 
 <!--pyml disable-num-lines 1 md012-->
 
 Some text
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
         }
@@ -2148,27 +1731,27 @@ Some text
                 source_path,
             ]
 
-            expected_return_code = 1
-            expected_output = f"""{source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)"""
-            expected_error = ""
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
+            )
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_around() -> None:
+def test_md022_good_with_pragmas_blanks_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """Some text
 
 <!--pyml disable-num-lines 1 md012-->
@@ -2179,9 +1762,7 @@ def test_md022_good_with_pragmas_blanks_around() -> None:
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 1, "lines_above": 1}}
         }
@@ -2195,27 +1776,22 @@ Some more text
                 source_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_around() -> None:
+def test_md022_bad_with_pragmas_blanks_around(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """Some text
 
 <!--pyml disable-num-lines 1 md012-->
@@ -2226,9 +1802,7 @@ def test_md022_bad_with_pragmas_blanks_around() -> None:
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
         }
@@ -2242,35 +1816,31 @@ Some more text
                 source_path,
             ]
 
-            expected_return_code = 1
-            expected_output = f"""{source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
-{source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)"""
-            expected_error = ""
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{source_path}:5:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
+            )
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_after() -> None:
+def test_md022_good_with_pragmas_blanks_after(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """<!--pyml disable-num-lines 5 md012-->
 
 ## Heading 3
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 1, "lines_above": 1}}
         }
@@ -2284,35 +1854,28 @@ def test_md022_good_with_pragmas_blanks_after() -> None:
                 source_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
             # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
-            )
+            execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_after() -> None:
+def test_md022_bad_with_pragmas_blanks_after(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_file_contents = """
 <!--pyml disable-num-lines 5 md012-->
 
 ## Heading 3
 """
-    with create_temporary_configuration_file(
-        source_file_contents, file_name_suffix=".md"
-    ) as source_path:
+    with create_temporary_markdown_file(source_file_contents) as source_path:
         supplied_configuration = {
             "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
         }
@@ -2326,20 +1889,50 @@ def test_md022_bad_with_pragmas_blanks_after() -> None:
                 source_path,
             ]
 
-            expected_return_code = 1
-            expected_output = f"""{source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
-{source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)"""
-            expected_error = ""
-
-            # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-            # Assert
-            execute_results.assert_results(
-                expected_output, expected_error, expected_return_code
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)
+{source_path}:4:1: MD022: Headings should be surrounded by blank lines. [Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)""",
             )
 
+            # Act
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
+            # Assert
+            execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md022_bad_xxx(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure...
+    """
+
+    # Arrange
+    source_file_contents = """# First Heading
+# Another First Heading
+"""
+    with create_temporary_markdown_file(source_file_contents) as source_path:
+        supplied_arguments = [
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{source_path}:2:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)""",
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
 def test_md022_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md022",

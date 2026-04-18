@@ -4,69 +4,68 @@ Module to provide tests related to alternate extensions.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
+from typing import Tuple
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension() -> None:
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
+def test_markdown_with_dash_ae_with_invalid_file_extension(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         ".abc",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults(return_code=1)
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_ae_with_valid_file_extension() -> None:
+def test_markdown_with_dash_ae_with_valid_file_extension(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         ".txt",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_ae_with_valid_file_extension_multiple() -> None:
+def test_markdown_with_dash_ae_with_valid_file_extension_multiple(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that a file with a non-md extension but with
     alternate extensions is accepted as a valid file.
@@ -76,7 +75,6 @@ def test_markdown_with_dash_ae_with_valid_file_extension_multiple() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
     supplied_arguments = [
         "scan",
@@ -85,235 +83,215 @@ def test_markdown_with_dash_ae_with_valid_file_extension_multiple() -> None:
         file_to_scan,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_no_period() -> None:
+def test_markdown_with_dash_ae_with_invalid_file_extension_no_period(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         "md",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+main.py scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         ".*",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+main.py scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_only_period() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_with_invalid_file_extension_only_period(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         ".",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         ".md;.txt",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' must only contain alphanumeric characters after the period."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+main.py scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' must only contain alphanumeric characters after the period.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_empty() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_with_invalid_file_extension_empty(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    file_to_scan = os.path.join(
-        "test", "resources", "double-line-with-blank-and-trailing.txt"
-    )
+    path_to_scan, _ = __generate_source_path("double-line-with-blank-and-trailing.txt")
     supplied_arguments = [
         "scan",
         "-ae",
         "",
-        file_to_scan,
+        path_to_scan,
     ]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Alternate extensions cannot be an empty string."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+main.py scan: error: argument -ae/--alternate-extensions: Alternate extensions cannot be an empty string.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_xxx1() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_xxx1(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    directory_to_scan = os.path.join("test", "resources", "test-directory-1")
+    path_to_scan, absolute_path_to_scan = __generate_source_path("test-directory-1")
     supplied_arguments = [
         "scan",
         "-l",
         "--alternate-extension=.qmd",
-        f"{directory_to_scan}/*",
+        f"{path_to_scan}/*",
     ]
 
-    expected_return_code = 0
-    expected_output = f"{os.path.abspath(directory_to_scan)}{os.sep}test.qmd"
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        expected_output=f"{absolute_path_to_scan}{os.sep}test.qmd"
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_ae_xxx2() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_ae_xxx2(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    directory_to_scan = os.path.join("test", "resources", "test-directory-1")
+    path_to_scan, absolute_path_to_scan = __generate_source_path("test-directory-1")
     supplied_arguments = [
         "scan",
         "-l",
         "--alternate-extension=.qmd",
-        f"{directory_to_scan}/",
+        f"{path_to_scan}/",
     ]
 
-    expected_return_code = 0
-    expected_output = f"{os.path.abspath(directory_to_scan)}{os.sep}test.qmd"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        expected_output=f"{absolute_path_to_scan}{os.sep}test.qmd"
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)

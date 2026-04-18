@@ -371,7 +371,6 @@ properly indented content
 """,
     ),
 ]
-# TODO add sets of tests with ulist instead of olist
 
 
 all_scan_tests: List[pluginRuleTest] = []
@@ -400,6 +399,7 @@ all_scan_tests.extend(scanTests_ulist_ulist_ulist)
 all_scan_tests.extend(scanTests_ulist_ulist_bq)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", all_scan_tests, ids=id_test_plug_rule_fn)
 def test_pml102_scan(test: pluginRuleTest) -> None:
     """
@@ -408,6 +408,7 @@ def test_pml102_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "pml102")
 
 
+@pytest.mark.rules
 def test_pml102_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml102",
