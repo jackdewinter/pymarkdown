@@ -1,14 +1,24 @@
 """
 Module to provide tests related to the basic parts of the scanner.
+
+Note: Because of the {} in the output, we cannot use f-strings for some
+of the tests.
 """
 
 import logging
 import os
 import runpy
-import sys
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
-from typing import List
+from test.pytest_execute import ExpectedResults
+from test.utils import (
+    ARGPARSE_X,
+    CONFIG_FILE_X,
+    DISABLE_RULES_X,
+    ENABLE_RULES_X,
+    SET_CONFIG_X,
+)
+from typing import List, Tuple
 
 from pytest import LogCaptureFixture
 
@@ -16,35 +26,27 @@ from pymarkdown.general.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
-if sys.version_info < (3, 10):
-    ARGPARSE_X = "optional arguments:"
-else:
-    ARGPARSE_X = "options:"
 
-if sys.version_info < (3, 13):
-    ENABLE_RULES_X = "-e ENABLE_RULES, --enable-rules ENABLE_RULES"
-    DISABLE_RULES_X = "-d DISABLE_RULES, --disable-rules DISABLE_RULES"
-    CONFIG_FILE_X = "--config CONFIGURATION_FILE, -c CONFIGURATION_FILE"
-    SET_CONFIG_X = "--set SET_CONFIGURATION, -s SET_CONFIGURATION"
-else:
-    ENABLE_RULES_X = "-e, --enable-rules ENABLE_RULES"
-    DISABLE_RULES_X = "-d, --disable-rules DISABLE_RULES"
-    CONFIG_FILE_X = "--config, -c CONFIGURATION_FILE"
-    SET_CONFIG_X = "--set, -s SET_CONFIGURATION"
+def __generate_source_path(
+    source_file_name: str, alternate_rule: str = "md020"
+) -> Tuple[str, str]:
+    source_path = os.path.join(
+        "test", "resources", "rules", alternate_rule, source_file_name
+    )
+    return source_path, os.path.abspath(source_path)
 
 
-def test_markdown_with_no_parameters() -> None:
+def test_markdown_with_no_parameters(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments: List[str] = []
 
-    expected_return_code = 2
-    expected_output = (
-        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -96,32 +98,30 @@ positional arguments:
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X),
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_no_parameters_through_module() -> None:
+def test_markdown_with_no_parameters_through_module(
+    scanner_module: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied,
     but through the module interface.
     """
 
     # Arrange
-    scanner = MarkdownScanner(use_module=True)
     supplied_arguments: List[str] = []
 
-    expected_return_code = 2
-    expected_output = (
-        """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                    [--enable-extensions ENABLE_EXTENSIONS]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -173,32 +173,30 @@ positional arguments:
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X),
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_module.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_no_parameters_through_main() -> None:
+def test_markdown_with_no_parameters_through_main(
+    scanner_main: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied,
     but through the main interface.
     """
 
     # Arrange
-    scanner = MarkdownScanner(use_main=True)
     supplied_arguments: List[str] = []
 
-    expected_return_code = 2
-    expected_output = (
-        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -250,31 +248,26 @@ positional arguments:
         .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X),
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_main.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_h() -> None:
+def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get help if '-h' is supplied.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["-h"]
 
-    expected_return_code = 0
-    expected_output = (
-        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_results = ExpectedResults(
+        expected_output="""usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -328,18 +321,15 @@ positional arguments:
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
         .replace("{SET_CONFIG_X}", SET_CONFIG_X)
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_version() -> None:
+def test_markdown_with_version(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get help if 'version' is supplied.
 
@@ -348,28 +338,25 @@ def test_markdown_with_version() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["version"]
 
     version_path = os.path.join(".", "pymarkdown", "version.py")
     version_meta = runpy.run_path(version_path)
     semantic_version = version_meta["__version__"]
 
-    expected_return_code = 0
-    expected_output = """{version}
-""".replace("{version}", semantic_version)
-    expected_error = ""
+    expected_results = ExpectedResults(expected_output="""{version}
+""".replace("{version}", semantic_version))
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_direct_args(caplog: LogCaptureFixture) -> None:
+def test_markdown_with_direct_args(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test to make sure we can specify the arguments directly.
 
@@ -378,27 +365,27 @@ def test_markdown_with_direct_args(caplog: LogCaptureFixture) -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner(use_main=False)
     supplied_arguments = ["--log-level", "DEBUG", "scan", "does-not-exist.md"]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist."""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""Provided path 'does-not-exist.md' does not exist.""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, use_direct_arguments=True
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
     assert "Using direct arguments: [" in caplog.text
 
 
-def test_markdown_without_direct_args(caplog: LogCaptureFixture) -> None:
+def test_markdown_without_direct_args(
+    caplog: LogCaptureFixture, scanner_default: MarkdownScanner
+) -> None:
     """
     Test to make sure we can specify the arguments normally.
 
@@ -406,36 +393,33 @@ def test_markdown_without_direct_args(caplog: LogCaptureFixture) -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner(use_main=False)
     supplied_arguments = ["--log-level", "DEBUG", "scan", "does-not-exist.md"]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """Provided path 'does-not-exist.md' does not exist."""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""Provided path 'does-not-exist.md' does not exist.""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, use_direct_arguments=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
     assert "Using supplied command line arguments." in caplog.text
 
 
-def test_markdown_with_failure_during_file_scan() -> None:
+def test_markdown_with_failure_during_file_scan(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get simulate a test scan exception.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md", "md047")
     supplied_arguments = [
         "scan",
         source_path,
@@ -444,25 +428,24 @@ def test_markdown_with_failure_during_file_scan() -> None:
         os.path.join("pymarkdown", "resources", "entities.json")
     )
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""
     
 BadTokenizationError encountered while initializing tokenizer:
-Named character entity map file '{source_path}' was not loaded (bob).
-""".replace("{source_path}", exception_path)
+Named character entity map file '{exception_path}' was not loaded (bob).
+""",
+    )
 
     # Act
     with path_builtin_open_with_exception(exception_path, "rt", IOError("bob"), True):
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_x_init() -> None:
+def test_markdown_with_dash_x_init(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get simulate a test initialization exception if the
     `-x-init` flag is set.
@@ -472,39 +455,35 @@ def test_markdown_with_dash_x_init() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md", "md047")
     exception_path = os.path.join("pymarkdown", "resources", "entities.json")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadTokenizationError encountered while initializing tokenizer:\n"
-        + f"Named character entity map file '{os.path.abspath(exception_path)}' was not loaded (blah)."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadTokenizationError encountered while initializing tokenizer:
+Named character entity map file '{os.path.abspath(exception_path)}' was not loaded (blah).""",
     )
 
     # Act
     with path_builtin_open_with_exception(
         os.path.abspath(exception_path), "rt", OSError("blah")
     ):
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 # TODO add Markdown parsing of some binary file to cause the tokenizer to throw an exception?
 
 
-def test_markdown_with_multiple_errors_reported() -> None:
+def test_markdown_with_multiple_errors_reported(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we properly sort errors from files.
 
@@ -513,45 +492,26 @@ def test_markdown_with_multiple_errors_reported() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md020",
+    source_path, abs_source_path = __generate_source_path(
         "single_paragraph_with_whitespace_at_end.md",
     )
-    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:1:12: "
-        + "MD010: Hard tabs "
-        + "[Column: 12] (no-hard-tabs)\n"
-        + f"{os.path.abspath(source_path)}:2:2: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
-        + "(no-multiple-space-closed-atx)\n"
-        + f"{os.path.abspath(source_path)}:2:2: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:2:2: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{os.path.abspath(source_path)}:2:14: "
-        + "MD010: Hard tabs "
-        + "[Column: 14] (no-hard-tabs)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:1:12: MD010: Hard tabs [Column: 12] (no-hard-tabs)
+{abs_source_path}:2:2: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{abs_source_path}:2:2: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:2:2: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{abs_source_path}:2:14: MD010: Hard tabs [Column: 14] (no-hard-tabs)""",
     )
-
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)

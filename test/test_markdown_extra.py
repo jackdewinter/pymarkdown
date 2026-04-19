@@ -4,6 +4,7 @@ Extra tests.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import act_and_assert, create_temporary_configuration_file
 
 import pytest
@@ -4444,8 +4445,7 @@ def test_extra_030ba() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
-def test_extra_031x() -> None:
+def test_extra_031x(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from test_md010_bad_xxx
 
@@ -4453,7 +4453,6 @@ def test_extra_031x() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """This is an example of running `dig @8.8.8.8 MX +noall +ans oisix.com`:
 
 ```text
@@ -4483,29 +4482,23 @@ oisix.com.\t\t300\tIN\tMX\t250 mx3.idc.jp.
             "scan-stdin",
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, standard_input_to_use=stdin_to_use
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_032() -> None:
+def test_extra_032(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from test_md010_bad_xxx
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """> > <html>
 > >   <script>
 > >     <!-- some script stuff -->
@@ -4522,29 +4515,23 @@ def test_extra_032() -> None:
         "scan-stdin",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=stdin_to_use
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_033x() -> None:
+def test_extra_033x(scanner_default: MarkdownScanner) -> None:
     """
     TBD
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """> - <script>
 >     <!-- some script stuff -->
 >   </script>
@@ -4558,29 +4545,23 @@ def test_extra_033x() -> None:
         "scan-stdin",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=stdin_to_use
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_033a() -> None:
+def test_extra_033a(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from test_md010_bad_xxx
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """> - ```abc
 >   <!-- some script stuff -->
 >   ```
@@ -4594,29 +4575,23 @@ def test_extra_033a() -> None:
         "scan-stdin",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=stdin_to_use
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_034d() -> None:
+def test_extra_034d(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """- Test List
   > 1) Test1
   > 2) Test2
@@ -4630,29 +4605,23 @@ block
         "scan-stdin",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=stdin_to_use
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_034e() -> None:
+def test_extra_034e(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     stdin_to_use = """# Headline 1
 
 - Test List
@@ -4667,45 +4636,38 @@ def test_extra_034e() -> None:
         "scan-stdin",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=stdin_to_use
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_extra_035x() -> None:
+def test_extra_035x(scanner_default: MarkdownScanner) -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/945
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     input_path = os.path.join("test", "resources", "test-issue-945.md")
 
     supplied_arguments = ["scan", input_path]
 
-    expected_return_code = 1
-    expected_output = f"""{os.path.abspath(input_path)}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
-{os.path.abspath(input_path)}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)"""
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{os.path.abspath(input_path)}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{os.path.abspath(input_path)}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm

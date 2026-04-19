@@ -2,7 +2,6 @@
 Module to provide tests related to the MD031 rule.
 """
 
-import os
 from test.rules.utils import (
     calculate_fix_tests,
     calculate_scan_tests,
@@ -17,8 +16,6 @@ from test.rules.utils import (
 )
 
 import pytest
-
-source_path = os.path.join("test", "resources", "rules", "md031") + os.sep
 
 configTests = [
     pluginConfigErrorTest(
@@ -6491,7 +6488,6 @@ another list
 >   > -----
 > + another list
 """,
-        scan_expected_output="",
         disable_rules="md032",
     ),
     pluginRuleTest(
@@ -9304,8 +9300,6 @@ another list
 
 1. This should be element 3 of the list 🤞
 """,
-        scan_expected_return_code=0,
-        scan_expected_output="",
         disable_rules="md010,md040",
     ),
     pluginRuleTest(
@@ -9378,6 +9372,7 @@ def test_md031_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md031")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -9388,6 +9383,7 @@ def test_md031_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md031_config(test: pluginConfigErrorTest) -> None:
     """
@@ -9400,6 +9396,7 @@ def test_md031_config(test: pluginConfigErrorTest) -> None:
     )
 
 
+@pytest.mark.rules
 def test_md031_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md031",

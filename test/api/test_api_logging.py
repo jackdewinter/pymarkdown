@@ -7,7 +7,6 @@ and the test_api_list_for_non_existant_file function test data to test logging.
 
 import logging
 import os
-import tempfile
 from test.utils import (
     assert_if_lists_different,
     assert_that_exception_is_raised,
@@ -17,6 +16,7 @@ from test.utils import (
 )
 from typing import List, Set, cast
 
+import py  # type: ignore[import-untyped]
 from pytest import LogCaptureFixture
 
 from pymarkdown.api import (
@@ -116,7 +116,9 @@ def test_api_logging_debug_to_file() -> None:
         __ensure_log_levels_in_log_file(log_path, expected_log_levels)
 
 
-def test_api_logging_debug_to_file_as_directory() -> None:
+def test_api_logging_debug_to_file_as_directory(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke the logging subsystem with
     the log file being a directory, and having it fail properly.
@@ -127,21 +129,22 @@ def test_api_logging_debug_to_file_as_directory() -> None:
 
     # Arrange
     source_path = "my-bad-path"
-    with tempfile.TemporaryDirectory() as temp_directory:
-        log_path = temp_directory
+    log_path = tmpdir
 
-        expected_output = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
+    expected_output = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
 
-        # Act & Assert
-        assert_that_exception_is_raised(
-            PyMarkdownApiException,
-            expected_output,
-            PyMarkdownApi().log_debug_and_above().log_to_file(log_path).list_path,
-            source_path,
-        )
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().log_debug_and_above().log_to_file(str(log_path)).list_path,
+        source_path,
+    )
 
 
-def test_api_logging_debug_to_file_as_directory_and_stack_trace() -> None:
+def test_api_logging_debug_to_file_as_directory_and_stack_trace(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke the logging subsystem with
     the log file being a directory, and having it fail properly.
@@ -151,20 +154,19 @@ def test_api_logging_debug_to_file_as_directory_and_stack_trace() -> None:
     source_path = "my-bad-path"
     expected_output = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem.\nTraceback (most recent call last):"
 
-    with tempfile.TemporaryDirectory() as temp_directory:
-        log_path = temp_directory
+    log_path = tmpdir
 
-        # Act & Assert
-        assert_that_exception_is_raised2(
-            PyMarkdownApiException,
-            expected_output,
-            PyMarkdownApi()
-            .log_debug_and_above()
-            .enable_stack_trace()
-            .log_to_file(log_path)
-            .list_path,
-            source_path,
-        )
+    # Act & Assert
+    assert_that_exception_is_raised2(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi()
+        .log_debug_and_above()
+        .enable_stack_trace()
+        .log_to_file(str(log_path))
+        .list_path,
+        source_path,
+    )
 
 
 def test_api_logging_info(caplog: LogCaptureFixture) -> None:

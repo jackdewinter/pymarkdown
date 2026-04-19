@@ -25,7 +25,28 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
-# from test.verify_line_and_column_numbers import verify_line_and_column_numbers
+if sys.version_info < (3, 10):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
+if sys.version_info < (3, 13):
+    ALT_EXTENSIONS_X = (
+        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    )
+    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
+
+    ENABLE_RULES_X = "-e ENABLE_RULES, --enable-rules ENABLE_RULES"
+    DISABLE_RULES_X = "-d DISABLE_RULES, --disable-rules DISABLE_RULES"
+    CONFIG_FILE_X = "--config CONFIGURATION_FILE, -c CONFIGURATION_FILE"
+    SET_CONFIG_X = "--set SET_CONFIGURATION, -s SET_CONFIGURATION"
+else:
+    ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
+    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
+
+    ENABLE_RULES_X = "-e, --enable-rules ENABLE_RULES"
+    DISABLE_RULES_X = "-d, --disable-rules DISABLE_RULES"
+    CONFIG_FILE_X = "--config, -c CONFIGURATION_FILE"
+    SET_CONFIG_X = "--set, -s SET_CONFIGURATION"
 
 
 # pylint: disable=too-many-arguments, too-many-locals
@@ -351,6 +372,31 @@ def create_temporary_configuration_file(
 
 
 @contextmanager
+def create_temporary_markdown_file(
+    supplied_configuration: Union[str, Dict[str, Any]],
+    file_name: Optional[str] = None,
+    directory: Optional[str] = None,
+    file_name_prefix: Optional[str] = None,
+) -> Generator[str, None, None]:
+    """
+    Context manager to create a temporary markdown file.
+    """
+    temp_source_path = None
+    try:
+        temp_source_path = write_temporary_configuration(
+            supplied_configuration,
+            file_name=file_name,
+            directory=directory,
+            file_name_suffix=".md",
+            file_name_prefix=file_name_prefix,
+        )
+        yield temp_source_path
+    finally:
+        if temp_source_path and os.path.exists(temp_source_path):
+            os.remove(temp_source_path)
+
+
+@contextmanager
 def temporary_change_to_directory(
     path_to_change_to: str,
 ) -> Generator[None, None, None]:
@@ -502,3 +548,9 @@ def assert_that_exception_is_raised2(
 
 
 # pylint: enable=broad-exception-caught
+
+
+def generate_path_to_bad_plugin(source_file_name: str) -> str:
+    """Generate a path to a bad plugin file in the test resources directory structure."""
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", source_file_name)
+    return plugin_path

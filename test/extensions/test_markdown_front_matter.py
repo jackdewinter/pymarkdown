@@ -5,8 +5,9 @@ Tests for the optional front-matter processing
 import copy
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import act_and_assert, assert_that_exception_is_raised
-from typing import List
+from typing import List, Tuple
 
 import pytest
 
@@ -14,6 +15,11 @@ from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 config_map = {"extensions": {"front-matter": {"enabled": True}}}
+
+
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "pragmas", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 @pytest.mark.gfm
@@ -807,7 +813,7 @@ test: assert
     )
 
 
-def test_front_matter_21x() -> None:
+def test_front_matter_21x(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure that a properly setup front matter section and enabled
     extension works as intended.
@@ -817,10 +823,7 @@ def test_front_matter_21x() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, _ = __generate_source_path("extensions_issue_637.md")
     supplied_arguments = [
         "-s",
         "extensions.front-matter.enabled=$!True",
@@ -828,31 +831,24 @@ def test_front_matter_21x() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_front_matter_21a() -> None:
+def test_front_matter_21a(scanner_default: MarkdownScanner) -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, abs_source_path = __generate_source_path("extensions_issue_637.md")
     supplied_arguments = [
         "-s",
         "extensions.front-matter.enabled=true",
@@ -860,40 +856,30 @@ def test_front_matter_21a() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: MD041: First line in file should be a top level heading "
-        + "(first-line-heading,first-line-h1)\n"
-        + f"{os.path.abspath(source_path)}:2:1: MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:6:1: MD003: Heading style should be consistent throughout the document. "
-        + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + f"{os.path.abspath(source_path)}:8:1: MD003: Heading style should be consistent throughout the document. "
-        + "[Expected: setext; Actual: atx] (heading-style,header-style)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
+{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)
+{abs_source_path}:8:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_front_matter_21b() -> None:
+def test_front_matter_21b(scanner_default: MarkdownScanner) -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, _ = __generate_source_path("extensions_issue_637.md")
     supplied_arguments = [
         "--strict-config",
         "-s",
@@ -902,32 +888,28 @@ def test_front_matter_21b() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """Configuration error ValueError encountered while initializing extensions:
-The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""Configuration error ValueError encountered while initializing extensions:
+The value for property 'extensions.front-matter.enabled' must be of type 'bool'.""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_front_matter_21c() -> None:
+def test_front_matter_21c(scanner_default: MarkdownScanner) -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, abs_source_path = __generate_source_path("extensions_issue_637.md")
     supplied_arguments = [
         "--strict-config",
         "-s",
@@ -936,25 +918,18 @@ def test_front_matter_21c() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: MD041: First line in file should be a top level heading "
-        + "(first-line-heading,first-line-h1)\n"
-        + f"{os.path.abspath(source_path)}:2:1: MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{os.path.abspath(source_path)}:6:1: MD003: Heading style should be consistent throughout the document. "
-        + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + f"{os.path.abspath(source_path)}:8:1: MD003: Heading style should be consistent throughout the document. "
-        + "[Expected: setext; Actual: atx] (heading-style,header-style)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
+{abs_source_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{abs_source_path}:6:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)
+{abs_source_path}:8:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)

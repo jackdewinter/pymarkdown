@@ -3,15 +3,15 @@ Module for directly using PyMarkdown's scan api.
 """
 
 import os
-import tempfile
 from test.utils import (
     assert_if_lists_different,
     assert_that_exception_is_raised,
-    create_temporary_configuration_file,
+    create_temporary_markdown_file,
     write_temporary_configuration,
 )
-from typing import List, cast
+from typing import List, Tuple, cast
 
+import py  # type: ignore[import-untyped]
 import pytest
 
 from pymarkdown.api import (
@@ -22,6 +22,15 @@ from pymarkdown.api import (
     PyMarkdownPragmaError,
     PyMarkdownScanFailure,
 )
+
+
+def __generate_source_path(
+    source_file_name: str, alternate_rule: str = "md020"
+) -> Tuple[str, str]:
+    source_path = os.path.join(
+        "test", "resources", "rules", alternate_rule, source_file_name
+    )
+    return source_path, os.path.abspath(source_path)
 
 
 def test_api_scan_bad_path_to_scan() -> None:
@@ -85,9 +94,7 @@ def test_api_scan_simple_clean() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md", "md047")
 
     # Act
     scan_result = PyMarkdownApi().scan_path(source_path)
@@ -131,7 +138,7 @@ def test_api_scan_for_non_matching_glob() -> None:
     """
 
     # Arrange
-    source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
+    source_path, _ = __generate_source_path("z*.md", "md001")
 
     expected_output = "No matching files found."
 
@@ -154,7 +161,7 @@ def test_api_scan_for_non_markdown_file() -> None:
     """
 
     # Arrange
-    source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
+    source_path, _ = __generate_source_path("z*.md", "md001")
 
     expected_output = "No matching files found."
 
@@ -248,9 +255,7 @@ def test_api_scan_recursive_for_directory() -> None:
     # Assert
     assert scan_result
 
-    itemized_scan_failures = ""
-    for i in scan_result.scan_failures:
-        itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
+    itemized_scan_failures = "\n".join(str(i) for i in scan_result.scan_failures)
     print(itemized_scan_failures)
     assert len(scan_result.scan_failures) == 141
 
@@ -272,12 +277,8 @@ def test_api_scan_with_multiple_scan_issues() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md020",
-        "single_paragraph_with_whitespace_at_end.md",
+    source_path, abs_source_path = __generate_source_path(
+        "single_paragraph_with_whitespace_at_end.md", "md020"
     )
 
     # Act
@@ -288,26 +289,22 @@ def test_api_scan_with_multiple_scan_issues() -> None:
     assert len(scan_result.scan_failures) == 6
     print(scan_result.scan_failures)
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 1, 1, "MD022", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 1, 1, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(
-            os.path.abspath(source_path), 1, 12, "MD010", "", "", None
-        )
+        PyMarkdownScanFailure(abs_source_path, 1, 12, "MD010", "", "", None)
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD021", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 2, 2, "MD021", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD022", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 2, 2, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[4].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 2, "MD023", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 2, 2, "MD023", "", "", None)
     )
     assert scan_result.scan_failures[5].partial_equals(
-        PyMarkdownScanFailure(
-            os.path.abspath(source_path), 2, 14, "MD010", "", "", None
-        )
+        PyMarkdownScanFailure(abs_source_path, 2, 14, "MD010", "", "", None)
     )
 
     # TODO, same, but disable rules
@@ -501,22 +498,23 @@ The line after this line should be blank.
     assert expected_string == scan_result.fixed_file
 
 
-def test_api_fix_path_no_files() -> None:
+def test_api_fix_path_no_files(tmpdir: py._path.local.LocalPath) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where none are found.
     """
 
     # Arrange
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir))
 
-        # Assert
-        assert not scan_result.files_fixed
+    # Assert
+    assert not scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_no_fix_required() -> None:
+def test_api_fix_path_single_file_no_fix_required(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring no fixes.
     """
@@ -527,19 +525,20 @@ def test_api_fix_path_single_file_no_fix_required() -> None:
 The line after this line should be blank.
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
+    write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir))
 
-        # Assert
-        assert not scan_result.files_fixed
+    # Assert
+    assert not scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_fix_required() -> None:
+def test_api_fix_path_single_file_fix_required(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes.
     """
@@ -549,20 +548,21 @@ def test_api_fix_path_single_file_fix_required() -> None:
 
 The line after this line should be blank."""
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        file_name = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
+    file_name = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir))
 
-        # Assert
-        assert scan_result.files_fixed
-        assert file_name in scan_result.files_fixed
+    # Assert
+    assert scan_result.files_fixed
+    assert file_name in scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_fix_required_with_error() -> None:
+def test_api_fix_path_single_file_fix_required_with_error(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes,
     but an exception is thrown during processing.
@@ -575,23 +575,24 @@ test: assert
 """
     expected_error_message = "Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
+    write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
 
-        # Act & Assert
-        assert_that_exception_is_raised(
-            PyMarkdownApiException,
-            expected_error_message,
-            PyMarkdownApi()
-            .set_boolean_property("extensions.front-matter.enabled", True)
-            .fix_path,
-            tmp_dir_path,
-        )
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_error_message,
+        PyMarkdownApi()
+        .set_boolean_property("extensions.front-matter.enabled", True)
+        .fix_path,
+        str(tmpdir),
+    )
 
 
-def test_api_fix_path_single_file_fix_required_with_alternate_extension() -> None:
+def test_api_fix_path_single_file_fix_required_with_alternate_extension(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes,
     but with a non-standard extension.
@@ -602,22 +603,21 @@ def test_api_fix_path_single_file_fix_required_with_alternate_extension() -> Non
 
 The line after this line should be blank."""
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        file_name = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".nse"
-        )
+    file_name = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".nse"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(
-            tmp_dir_path, alternate_extensions=".nse"
-        )
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir), alternate_extensions=".nse")
 
-        # Assert
-        assert scan_result.files_fixed
-        assert file_name in scan_result.files_fixed
+    # Assert
+    assert scan_result.files_fixed
+    assert file_name in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_same_directory_fix_required() -> None:
+def test_api_fix_path_multiple_files_same_directory_fix_required(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files are found requiring fixes.
     """
@@ -627,26 +627,25 @@ def test_api_fix_path_multiple_files_same_directory_fix_required() -> None:
 
 The line after this line should be blank."""
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        file_name_one = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
-        file_name_two = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
+    file_name_one = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
+    file_name_two = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir))
 
-        # Assert
-        assert scan_result.files_fixed
-        assert file_name_one in scan_result.files_fixed
-        assert file_name_two in scan_result.files_fixed
+    # Assert
+    assert scan_result.files_fixed
+    assert file_name_one in scan_result.files_fixed
+    assert file_name_two in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_nested_directory_fix_required_no_recursion() -> (
-    None
-):
+def test_api_fix_path_multiple_files_nested_directory_fix_required_no_recursion(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files in nested
     directories exist requiring fixes, but only the base directory is specified.
@@ -657,28 +656,27 @@ def test_api_fix_path_multiple_files_nested_directory_fix_required_no_recursion(
 
 The line after this line should be blank."""
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        file_name_one = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
-        nested_directory = os.path.join(tmp_dir_path, "inner")
-        os.mkdir(nested_directory)
-        file_name_two = write_temporary_configuration(
-            string_to_scan, directory=nested_directory, file_name_suffix=".md"
-        )
+    file_name_one = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
+    nested_directory = os.path.join(tmpdir, "inner")
+    os.mkdir(nested_directory)
+    file_name_two = write_temporary_configuration(
+        string_to_scan, directory=nested_directory, file_name_suffix=".md"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir))
 
-        # Assert
-        assert scan_result.files_fixed
-        assert file_name_one in scan_result.files_fixed
-        assert file_name_two not in scan_result.files_fixed
+    # Assert
+    assert scan_result.files_fixed
+    assert file_name_one in scan_result.files_fixed
+    assert file_name_two not in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_nested_directory_fix_required_with_recursion() -> (
-    None
-):
+def test_api_fix_path_multiple_files_nested_directory_fix_required_with_recursion(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files in nested
     directories exist requiring fixes, and the base directory is specified with recursion enabled.
@@ -689,23 +687,22 @@ def test_api_fix_path_multiple_files_nested_directory_fix_required_with_recursio
 
 The line after this line should be blank."""
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        file_name_one = write_temporary_configuration(
-            string_to_scan, directory=tmp_dir_path, file_name_suffix=".md"
-        )
-        nested_directory = os.path.join(tmp_dir_path, "inner")
-        os.mkdir(nested_directory)
-        file_name_two = write_temporary_configuration(
-            string_to_scan, directory=nested_directory, file_name_suffix=".md"
-        )
+    file_name_one = write_temporary_configuration(
+        string_to_scan, directory=tmpdir, file_name_suffix=".md"
+    )
+    nested_directory = os.path.join(tmpdir, "inner")
+    os.mkdir(nested_directory)
+    file_name_two = write_temporary_configuration(
+        string_to_scan, directory=nested_directory, file_name_suffix=".md"
+    )
 
-        # Act
-        scan_result = PyMarkdownApi().fix_path(tmp_dir_path, recurse_if_directory=True)
+    # Act
+    scan_result = PyMarkdownApi().fix_path(str(tmpdir), recurse_if_directory=True)
 
-        # Assert
-        assert scan_result.files_fixed
-        assert file_name_one in scan_result.files_fixed
-        assert file_name_two in scan_result.files_fixed
+    # Assert
+    assert scan_result.files_fixed
+    assert file_name_one in scan_result.files_fixed
+    assert file_name_two in scan_result.files_fixed
 
 
 def test_api_scan_with_enabling_front_matter_extension() -> None:
@@ -771,7 +768,9 @@ Invalid extensions ids supplied to the --enable-extensions command-line option: 
     )
 
 
-def test_api_scan_with_disabling_json5_configuration_parsing() -> None:
+def test_api_scan_with_disabling_json5_configuration_parsing(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can
     """
@@ -791,19 +790,18 @@ def test_api_scan_with_disabling_json5_configuration_parsing() -> None:
 
 this is a very long line
 """
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file_name = write_temporary_configuration(
-            supplied_configuration, directory=tmp_dir_path, file_name_suffix=".json"
-        )
+    configuration_file_name = write_temporary_configuration(
+        supplied_configuration, directory=tmpdir, file_name_suffix=".json"
+    )
 
-        # Act
-        try:
-            PyMarkdownApi().configuration_file_path(
-                configuration_file_name
-            ).disable_json5_configuration().scan_string(source_string)
-            raise AssertionError("Should have failed by now.")
-        except PyMarkdownApiException as this_exception:
-            found_exception = this_exception
+    # Act
+    try:
+        PyMarkdownApi().configuration_file_path(
+            configuration_file_name
+        ).disable_json5_configuration().scan_string(source_string)
+        raise AssertionError("Should have failed by now.")
+    except PyMarkdownApiException as this_exception:
+        found_exception = this_exception
 
     # Assert
     assert found_exception
@@ -813,7 +811,9 @@ this is a very long line
     )
 
 
-def test_api_scan_middle_file_exception_with_continue_on_error() -> None:
+def test_api_scan_middle_file_exception_with_continue_on_error(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can
 
@@ -830,62 +830,54 @@ This triggers several rules:
 test: assert
 ---
 """
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            contents_file_1_and_3,
-            directory=tmp_dir_path,
-            file_name_prefix="tmp1",
-            file_name_suffix=".md",
-        ) as file_name_1:
-            with create_temporary_configuration_file(
-                contents_file_2,
-                directory=tmp_dir_path,
-                file_name_prefix="tmp2",
-                file_name_suffix=".md",
-            ) as file_name_2:
-                with create_temporary_configuration_file(
-                    contents_file_1_and_3,
-                    directory=tmp_dir_path,
-                    file_name_prefix="tmp3",
-                    file_name_suffix=".md",
-                ) as file_name_3:
-                    # Arrange
-                    expected_output = [
-                        f"{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
-                        f"{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
-                        f"{file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
-                        f"{file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
-                        f"{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
-                        f"{file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
-                        f"{file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
-                        f"{file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
-                    ]
-                    expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+    with create_temporary_markdown_file(
+        contents_file_1_and_3,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ) as file_name_1:
+        with create_temporary_markdown_file(
+            contents_file_2,
+            directory=tmpdir,
+            file_name_prefix="tmp2",
+        ) as file_name_2:
+            with create_temporary_markdown_file(
+                contents_file_1_and_3,
+                directory=tmpdir,
+                file_name_prefix="tmp3",
+            ) as file_name_3:
+                # Arrange
+                expected_output = [
+                    f"{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
+                    f"{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
+                    f"{file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
+                    f"{file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
+                    f"{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
+                    f"{file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
+                    f"{file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
+                    f"{file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
+                ]
+                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
 
-                    # Act
-                    try:
-                        scan_result = (
-                            PyMarkdownApi()
-                            .enable_extension_by_identifier("front-matter")
-                            .enable_continue_on_error()
-                            .scan_path(os.path.join(tmp_dir_path, "*"))
-                        )
-                    except PyMarkdownApiException as this_exception:
-                        raise AssertionError(f"Unexpected exception: {this_exception}")
+                # Act
+                try:
+                    scan_result = (
+                        PyMarkdownApi()
+                        .enable_extension_by_identifier("front-matter")
+                        .enable_continue_on_error()
+                        .scan_path(os.path.join(tmpdir, "*"))
+                    )
+                except PyMarkdownApiException as this_exception:
+                    raise AssertionError(f"Unexpected exception: {this_exception}")
 
     # Assert
     assert scan_result is not None
     assert len(scan_result.scan_failures) == len(expected_output)
     for failure_index, next_failure in enumerate(scan_result.scan_failures):
 
-        extra_data = (
-            f"{next_failure.extra_error_information} "
-            if next_failure.extra_error_information
-            else " "
-        )
+        extra_data = next_failure.extra_error_information or ""
         assert (
             expected_output[failure_index]
-            == f"{next_failure.scan_file}:{next_failure.line_number}:{next_failure.column_number}: {next_failure.rule_id}: {next_failure.rule_description}{extra_data}({next_failure.rule_name})"
+            == f"{next_failure.scan_file}:{next_failure.line_number}:{next_failure.column_number}: {next_failure.rule_id}: {next_failure.rule_description}{extra_data} ({next_failure.rule_name})"
         )
 
     assert len(scan_result.pragma_errors) == 0
@@ -893,7 +885,9 @@ test: assert
     assert scan_result.critical_errors == [expected_error]
 
 
-def test_api_fix_middle_file_exception_with_continue_on_error() -> None:
+def test_api_fix_middle_file_exception_with_continue_on_error(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can
 
@@ -910,38 +904,34 @@ This triggers several rules:
 test: assert
 ---
 """
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            contents_file_1_and_3,
-            directory=tmp_dir_path,
-            file_name_prefix="tmp1",
-            file_name_suffix=".md",
-        ) as file_name_1:
-            with create_temporary_configuration_file(
-                contents_file_2,
-                directory=tmp_dir_path,
-                file_name_prefix="tmp2",
-                file_name_suffix=".md",
-            ) as file_name_2:
-                with create_temporary_configuration_file(
-                    contents_file_1_and_3,
-                    directory=tmp_dir_path,
-                    file_name_prefix="tmp3",
-                    file_name_suffix=".md",
-                ) as file_name_3:
-                    # Arrange
-                    expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+    with create_temporary_markdown_file(
+        contents_file_1_and_3,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ) as file_name_1:
+        with create_temporary_markdown_file(
+            contents_file_2,
+            directory=tmpdir,
+            file_name_prefix="tmp2",
+        ) as file_name_2:
+            with create_temporary_markdown_file(
+                contents_file_1_and_3,
+                directory=tmpdir,
+                file_name_prefix="tmp3",
+            ) as file_name_3:
+                # Arrange
+                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
 
-                    # Act
-                    try:
-                        fix_result = (
-                            PyMarkdownApi()
-                            .enable_extension_by_identifier("front-matter")
-                            .enable_continue_on_error()
-                            .fix_path(os.path.join(tmp_dir_path, "*"))
-                        )
-                    except PyMarkdownApiException as this_exception:
-                        raise AssertionError(f"Unexpected exception: {this_exception}")
+                # Act
+                try:
+                    fix_result = (
+                        PyMarkdownApi()
+                        .enable_extension_by_identifier("front-matter")
+                        .enable_continue_on_error()
+                        .fix_path(os.path.join(tmpdir, "*"))
+                    )
+                except PyMarkdownApiException as this_exception:
+                    raise AssertionError(f"Unexpected exception: {this_exception}")
 
     # Assert
     assert fix_result is not None
@@ -950,7 +940,9 @@ test: assert
     assert fix_result.critical_errors == [expected_error]
 
 
-def test_api_scan_middle_file_exception_no_continue_on_error() -> None:
+def test_api_scan_middle_file_exception_no_continue_on_error(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can
 
@@ -966,44 +958,42 @@ This triggers several rules:
 test: assert
 ---
 """
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            contents_file_1_and_3,
-            directory=tmp_dir_path,
-            file_name_prefix="tmp1",
-            file_name_suffix=".md",
+    with create_temporary_markdown_file(
+        contents_file_1_and_3,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ):
+        with create_temporary_markdown_file(
+            contents_file_2,
+            directory=tmpdir,
+            file_name_prefix="tmp2",
         ):
-            with create_temporary_configuration_file(
-                contents_file_2,
-                directory=tmp_dir_path,
-                file_name_prefix="tmp2",
-                file_name_suffix=".md",
+            with create_temporary_markdown_file(
+                contents_file_1_and_3,
+                directory=tmpdir,
+                file_name_prefix="tmp3",
             ):
-                with create_temporary_configuration_file(
-                    contents_file_1_and_3,
-                    directory=tmp_dir_path,
-                    file_name_prefix="tmp3",
-                    file_name_suffix=".md",
-                ):
 
-                    # Arrange
-                    expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+                # Arrange
+                expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
 
-                    # Act
-                    try:
-                        PyMarkdownApi().enable_extension_by_identifier(
-                            "front-matter"
-                        ).scan_path(os.path.join(tmp_dir_path, "*"))
-                        raise AssertionError("Should have failed by now.")
-                    except PyMarkdownApiException as this_exception:
-                        found_exception = this_exception
+                # Act
+                try:
+                    PyMarkdownApi().enable_extension_by_identifier(
+                        "front-matter"
+                    ).scan_path(os.path.join(tmpdir, "*"))
+                    raise AssertionError("Should have failed by now.")
+                except PyMarkdownApiException as this_exception:
+                    found_exception = this_exception
 
-                # Assert
-                print(found_exception)
-                assert str(found_exception) == expected_error
+            # Assert
+            print(found_exception)
+            assert str(found_exception) == expected_error
 
 
-def test_api_fix_middle_file_exception_no_continue_on_error() -> None:
+def test_api_fix_middle_file_exception_no_continue_on_error(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that we can
 
@@ -1019,41 +1009,37 @@ This triggers several rules:
 test: assert
 ---
 """
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            contents_file_1_and_3,
-            directory=tmp_dir_path,
-            file_name_prefix="tmp1",
-            file_name_suffix=".md",
+    with create_temporary_markdown_file(
+        contents_file_1_and_3,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ):
+        with create_temporary_markdown_file(
+            contents_file_2,
+            directory=tmpdir,
+            file_name_prefix="tmp2",
         ):
-            with create_temporary_configuration_file(
-                contents_file_2,
-                directory=tmp_dir_path,
-                file_name_prefix="tmp2",
-                file_name_suffix=".md",
+            with create_temporary_markdown_file(
+                contents_file_1_and_3,
+                directory=tmpdir,
+                file_name_prefix="tmp3",
             ):
-                with create_temporary_configuration_file(
-                    contents_file_1_and_3,
-                    directory=tmp_dir_path,
-                    file_name_prefix="tmp3",
-                    file_name_suffix=".md",
-                ):
 
-                    # Arrange
-                    expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+                # Arrange
+                expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
 
-                    # Act
-                    try:
-                        PyMarkdownApi().enable_extension_by_identifier(
-                            "front-matter"
-                        ).fix_path(os.path.join(tmp_dir_path, "*"))
-                        raise AssertionError("Should have failed by now.")
-                    except PyMarkdownApiException as this_exception:
-                        found_exception = this_exception
+                # Act
+                try:
+                    PyMarkdownApi().enable_extension_by_identifier(
+                        "front-matter"
+                    ).fix_path(os.path.join(tmpdir, "*"))
+                    raise AssertionError("Should have failed by now.")
+                except PyMarkdownApiException as this_exception:
+                    found_exception = this_exception
 
-                # Assert
-                print(found_exception)
-                assert str(found_exception) == expected_error
+            # Assert
+            print(found_exception)
+            assert str(found_exception) == expected_error
 
 
 # change print_system_error to also accept optional exception?

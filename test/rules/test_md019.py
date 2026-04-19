@@ -390,6 +390,7 @@ a line of text
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md019_scan(test: pluginRuleTest) -> None:
     """
@@ -398,6 +399,7 @@ def test_md019_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md019")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -408,6 +410,7 @@ def test_md019_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md019_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md019",

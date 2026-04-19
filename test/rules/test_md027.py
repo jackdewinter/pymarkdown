@@ -721,8 +721,6 @@ scanTests = [
 > > --------
 """,
         disable_rules="md007,md009,md012,md030",
-        # use_debug=True,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block",
@@ -737,8 +735,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        # use_debug=True,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block",
@@ -752,8 +748,6 @@ scanTests = [
 > > > --------
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        # use_debug=True,
-        scan_expected_output="",
     ),
     pluginRuleTest(  # test_extra_044mb
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_x",
@@ -761,8 +755,6 @@ scanTests = [
 > > fourth block 1
 """,
         disable_rules="",
-        # use_debug=True,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "md031_orig_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics",
@@ -795,7 +787,6 @@ scanTests = [
 >   > -----
 > + another list""",
         disable_rules="md047,md032",
-        scan_expected_output="""""",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block",
@@ -808,7 +799,6 @@ scanTests = [
    >   ----
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_list_in_block_quote_wtih_previous_block",
@@ -823,8 +813,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        # use_debug=True,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "good_in_block_quote_with_table_first_line",
@@ -925,7 +913,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_output="",
     ),
     pluginRuleTest(  # test_extra_051b2
         "md012_bad_in_list_in_block_quote_with_double_blanks_at_start",
@@ -1029,6 +1016,7 @@ scanTests = [
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_scan_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -1039,6 +1027,7 @@ def test_md027_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md027")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -1049,6 +1038,7 @@ def test_md027_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md027_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md027",

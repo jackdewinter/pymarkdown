@@ -3,6 +3,7 @@
 # conftest.py
 import json
 import os
+from test.markdown_scanner import MarkdownScanner
 from typing import List
 from xml.etree import ElementTree as ET
 
@@ -87,3 +88,21 @@ def pytest_sessionfinish(session: "Session", exitstatus: int) -> None:
                     raise
         # Save the XML report file, with any modifications.
         tree.write(xml_path)
+
+
+@pytest.fixture
+def scanner_default() -> MarkdownScanner:
+    """Fixture to create a default MarkdownScanner instance."""
+    return MarkdownScanner()
+
+
+@pytest.fixture
+def scanner_module() -> MarkdownScanner:
+    """Fixture to create a MarkdownScanner instance for module interface tests."""
+    return MarkdownScanner(use_module=True)
+
+
+@pytest.fixture
+def scanner_main() -> MarkdownScanner:
+    """Fixture to create a MarkdownScanner instance for main interface tests."""
+    return MarkdownScanner(use_main=True)

@@ -350,6 +350,7 @@ Emits MD020 warning.
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_scan_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -360,6 +361,7 @@ def test_md020_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md020")
 
 
+@pytest.mark.rules
 def test_md020_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md020",

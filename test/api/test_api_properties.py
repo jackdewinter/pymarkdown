@@ -4,7 +4,7 @@ Module for specifying configuration properties through the API.
 
 import os
 from test.utils import assert_that_exception_is_raised
-from typing import cast
+from typing import Optional, Tuple, cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -12,6 +12,18 @@ from pymarkdown.api import (
     PyMarkdownApiException,
     PyMarkdownScanFailure,
 )
+
+
+def __generate_source_path(
+    source_file_name: str, optional_rule: Optional[str] = None
+) -> Tuple[str, str]:
+    if optional_rule:
+        source_path = os.path.join(
+            "test", "resources", "rules", optional_rule, source_file_name
+        )
+    else:
+        source_path = os.path.join("test", "resources", "pragmas", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 def test_api_properties_set_property_with_empty_property_name() -> None:
@@ -202,9 +214,7 @@ def test_api_properties_with_strict_and_bad_extension_initialize() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, _ = __generate_source_path("extensions_issue_637.md")
     property_name = "extensions.front-matter.enabled"
     property_value = "true"
 
@@ -235,9 +245,7 @@ def test_api_properties_without_strict_and_bad_extension_initialize() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, abs_source_path = __generate_source_path("extensions_issue_637.md")
     property_name = "extensions.front-matter.enabledd"
     property_value = "true"
 
@@ -254,16 +262,16 @@ def test_api_properties_without_strict_and_bad_extension_initialize() -> None:
     assert not scan_result.pragma_errors
     assert len(scan_result.scan_failures) == 4
     assert scan_result.scan_failures[0].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 1, 1, "MD041", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 1, 1, "MD041", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 2, 1, "MD022", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 2, 1, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 6, 1, "MD003", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 6, 1, "MD003", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PyMarkdownScanFailure(os.path.abspath(source_path), 8, 1, "MD003", "", "", None)
+        PyMarkdownScanFailure(abs_source_path, 8, 1, "MD003", "", "", None)
     )
 
 
@@ -277,9 +285,7 @@ def test_api_properties_with_strict_and_good_extension_initialize() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, _ = __generate_source_path("extensions_issue_637.md")
     property_name = "extensions.front-matter.enabled"
     property_value = True
 
@@ -306,9 +312,7 @@ def test_api_properties_with_good_integer_property_but_exception() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "pragmas", "extensions_issue_637.md"
-    )
+    source_path, _ = __generate_source_path("extensions_issue_637.md")
     property_name = "extensions.front-matter.enabled"
     property_value = 10
 
@@ -337,9 +341,7 @@ def test_api_properties_with_good_integer_property() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md007", "good_list_indentation_by_four.md"
-    )
+    source_path, _ = __generate_source_path("good_list_indentation_by_four.md", "md007")
     property_name = "plugins.md007.indent"
     property_value = 4
 
@@ -368,8 +370,8 @@ def test_api_properties_with_good_string_property() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    source_path, _ = __generate_source_path(
+        "good_list_asterisk_single_level.md", "md004"
     )
     property_name = "plugins.md004.style"
     property_value = "asterisk"

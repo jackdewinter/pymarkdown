@@ -304,8 +304,7 @@ class RuleMd023(RulePlugin):
             list_start_token = end_token.start_markdown_token
             if list_start_token in self.__leading_spaces_split and context.in_fix_mode:
                 assert list_start_token.is_list_start
-                list_token = cast(ListStartMarkdownToken, list_start_token)
-                new_leading_spaces = self.__leading_spaces_split[list_token]
+                new_leading_spaces = self.__leading_spaces_split[list_start_token]
                 self.register_fix_token_request(
                     context,
                     list_start_token,

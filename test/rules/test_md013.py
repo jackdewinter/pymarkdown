@@ -4,25 +4,29 @@ Module to provide tests related to the MD013 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
+from typing import Tuple
 
 import pytest
 
 # pylint: disable=too-many-lines
 
 
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md013", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
 @pytest.mark.rules
-def test_md013_bad_configuration_line_length() -> None:
+def test_md013_bad_configuration_line_length(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     line_length value with a string that is not an integer.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=not-integer",
@@ -31,34 +35,30 @@ def test_md013_bad_configuration_line_length() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.line_length' must be of type 'int'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.line_length' must be of type 'int'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_line_length_zero() -> None:
+def test_md013_bad_configuration_line_length_zero(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     line_length value with an integer that is 0.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#0",
@@ -67,34 +67,30 @@ def test_md013_bad_configuration_line_length_zero() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.line_length' is not valid: Allowable values are any integer greater than 0."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.line_length' is not valid: Allowable values are any integer greater than 0.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_heading_line_length() -> None:
+def test_md013_bad_configuration_heading_line_length(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     heading_line_length value with a string that is not an integer.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=not-integer",
@@ -103,34 +99,30 @@ def test_md013_bad_configuration_heading_line_length() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.heading_line_length' must be of type 'int'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.heading_line_length' must be of type 'int'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_headings_active() -> None:
+def test_md013_bad_configuration_headings_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     headings value with a string that is not a boolean.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=not-integer",
@@ -139,34 +131,30 @@ def test_md013_bad_configuration_headings_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.headings' must be of type 'bool'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.headings' must be of type 'bool'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_code_block_line_length() -> None:
+def test_md013_bad_configuration_code_block_line_length(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     code_block_line_length value with a string that is not an integer.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=not-integer",
@@ -175,34 +163,30 @@ def test_md013_bad_configuration_code_block_line_length() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.code_block_line_length' must be of type 'int'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.code_block_line_length' must be of type 'int'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_code_blocks_active() -> None:
+def test_md013_bad_configuration_code_blocks_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     code_blocks value with a string that is not a boolean.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=not-integer",
@@ -211,34 +195,28 @@ def test_md013_bad_configuration_code_blocks_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.code_blocks' must be of type 'bool'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.code_blocks' must be of type 'bool'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_strict_mode() -> None:
+def test_md013_bad_configuration_strict_mode(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     strict value with a string that is not a boolean.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.strict=not-integer",
@@ -247,34 +225,28 @@ def test_md013_bad_configuration_strict_mode() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.strict' must be of type 'bool'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.strict' must be of type 'bool'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_stern_mode() -> None:
+def test_md013_bad_configuration_stern_mode(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     stern value with a string that is not a boolean.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.stern=not-integer",
@@ -283,54 +255,44 @@ def test_md013_bad_configuration_stern_mode() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md013.stern' must be of type 'bool'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md013.stern' must be of type 'bool'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_small_line() -> None:
+def test_md013_good_small_line(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 38 characters.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, _ = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_small_line_with_config() -> None:
+def test_md013_good_small_line_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 38 characters, with configuration
@@ -338,10 +300,7 @@ def test_md013_good_small_line_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_small_line.md"
-    )
+    source_path, abs_source_path = __generate_source_path("good_small_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#25",
@@ -350,55 +309,43 @@ def test_md013_good_small_line_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 25, Actual: 38] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 25, Actual: 38] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line() -> None:
+def test_md013_good_medium_line(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 80 characters.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_medium_line.md"
-    )
+    source_path, _ = __generate_source_path("good_medium_line.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_config() -> None:
+def test_md013_good_medium_line_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 80 characters with a configured maximum
@@ -406,10 +353,7 @@ def test_md013_good_medium_line_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_medium_line.md"
-    )
+    source_path, abs_source_path = __generate_source_path("good_medium_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#50",
@@ -418,59 +362,46 @@ def test_md013_good_medium_line_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 50, Actual: 80] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 50, Actual: 80] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_long_line() -> None:
+def test_md013_good_long_line(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 80 characters.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_long_line.md"
-    )
+    source_path, abs_source_path = __generate_source_path("good_long_line.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 100] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 100] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_long_line_with_config() -> None:
+def test_md013_good_long_line_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 80 characters with a configured maximum
@@ -478,10 +409,7 @@ def test_md013_good_long_line_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_long_line.md"
-    )
+    source_path, _ = __generate_source_path("good_long_line.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#110",
@@ -490,21 +418,19 @@ def test_md013_good_long_line_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word() -> None:
+def test_md013_good_medium_line_with_long_last_word(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -512,12 +438,7 @@ def test_md013_good_medium_line_with_long_last_word() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, _ = __generate_source_path(
         "good_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -525,21 +446,19 @@ def test_md013_good_medium_line_with_long_last_word() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word_with_config_strict() -> None:
+def test_md013_good_medium_line_with_long_last_word_with_config_strict(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -547,12 +466,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict() -> None
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, abs_source_path = __generate_source_path(
         "good_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -563,25 +477,22 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict() -> None
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 102] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 102] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word_with_config_stern() -> None:
+def test_md013_good_medium_line_with_long_last_word_with_config_stern(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -589,12 +500,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, abs_source_path = __generate_source_path(
         "good_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -605,25 +511,22 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 102] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 102] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word() -> None:
+def test_md013_bad_medium_line_with_long_last_word(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -631,12 +534,7 @@ def test_md013_bad_medium_line_with_long_last_word() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, abs_source_path = __generate_source_path(
         "bad_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -644,25 +542,22 @@ def test_md013_bad_medium_line_with_long_last_word() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 102] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 102] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word_with_config_strict() -> None:
+def test_md013_bad_medium_line_with_long_last_word_with_config_strict(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -670,12 +565,7 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, abs_source_path = __generate_source_path(
         "bad_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -686,25 +576,22 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:1:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 102] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 102] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word_with_config_stern() -> None:
+def test_md013_bad_medium_line_with_long_last_word_with_config_stern(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -712,12 +599,7 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_stern() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, _ = __generate_source_path(
         "bad_medium_line_with_very_long_last_word.md",
     )
     supplied_arguments = [
@@ -728,33 +610,26 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_stern() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_paragraph_with_long_line_in_middle() -> None:
+def test_md013_bad_paragraph_with_long_line_in_middle(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a multiple lines with a very long line in the middle.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md013",
+    source_path, abs_source_path = __generate_source_path(
         "bad_paragraph_with_long_line_in_middle.md",
     )
     supplied_arguments = [
@@ -762,85 +637,71 @@ def test_md013_bad_paragraph_with_long_line_in_middle() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:3:1: "
-        + "MD013: Line length "
-        + "[Expected: 80, Actual: 91] (line-length)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:3:1: MD013: Line length [Expected: 80, Actual: 91] (line-length)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_fenced_code_block() -> None:
+def test_md013_good_fenced_code_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a good line within a fenced code block.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_fenced_code_block.md"
-    )
+    source_path, _ = __generate_source_path("good_fenced_code_block.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block() -> None:
+def test_md013_bad_fenced_code_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a fenced code block.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_fenced_code_block.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block_with_config() -> None:
+def test_md013_bad_fenced_code_block_with_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a very long line within a fenced code block, even with
@@ -848,10 +709,7 @@ def test_md013_bad_fenced_code_block_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_fenced_code_block.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=$#100",
@@ -860,21 +718,22 @@ def test_md013_bad_fenced_code_block_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block_with_config_active() -> None:
+def test_md013_bad_fenced_code_block_with_config_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a fenced code block, but with the
@@ -882,10 +741,7 @@ def test_md013_bad_fenced_code_block_with_config_active() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
-    )
+    source_path, _ = __generate_source_path("bad_fenced_code_block.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=$!False",
@@ -894,21 +750,17 @@ def test_md013_bad_fenced_code_block_with_config_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_indented_code_block() -> None:
+def test_md013_good_indented_code_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -916,60 +768,51 @@ def test_md013_good_indented_code_block() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_indented_code_block.md"
-    )
+    source_path, _ = __generate_source_path("good_indented_code_block.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block() -> None:
+def test_md013_bad_indented_code_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within an indented code block.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_indented_code_block.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block_with_config() -> None:
+def test_md013_bad_indented_code_block_with_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -977,10 +820,7 @@ def test_md013_bad_indented_code_block_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_indented_code_block.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=$#100",
@@ -989,21 +829,22 @@ def test_md013_bad_indented_code_block_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block_with_config_active() -> None:
+def test_md013_bad_indented_code_block_with_config_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -1011,10 +852,7 @@ def test_md013_bad_indented_code_block_with_config_active() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
-    )
+    source_path, _ = __generate_source_path("bad_indented_code_block.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=$!False",
@@ -1023,81 +861,66 @@ def test_md013_bad_indented_code_block_with_config_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_thematic_break() -> None:
+def test_md013_good_thematic_break(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a thematic break.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_thematic_break.md"
-    )
+    source_path, _ = __generate_source_path("good_thematic_break.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_thematic_break() -> None:
+def test_md013_bad_thematic_break(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a thematic break.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_thematic_break.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_thematic_break.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_thematic_break_with_config() -> None:
+def test_md013_bad_thematic_break_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a thematic break, but with a configuration
@@ -1105,10 +928,7 @@ def test_md013_bad_thematic_break_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_thematic_break.md"
-    )
+    source_path, _ = __generate_source_path("bad_thematic_break.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#100",
@@ -1117,81 +937,66 @@ def test_md013_bad_thematic_break_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_atx_heading() -> None:
+def test_md013_good_atx_heading(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within an Atx Heading.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_atx_heading.md"
-    )
+    source_path, _ = __generate_source_path("good_atx_heading.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading() -> None:
+def test_md013_bad_atx_heading(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within an Atx Heading.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_atx_heading.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_atx_heading.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading_with_config() -> None:
+def test_md013_bad_atx_heading_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an Atx Heading, but with configuration
@@ -1199,10 +1004,7 @@ def test_md013_bad_atx_heading_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_atx_heading.md"
-    )
+    source_path, _ = __generate_source_path("bad_atx_heading.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=$#100",
@@ -1211,21 +1013,19 @@ def test_md013_bad_atx_heading_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading_with_config_active() -> None:
+def test_md013_bad_atx_heading_with_config_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an Atx Heading, but with configuration
@@ -1233,10 +1033,7 @@ def test_md013_bad_atx_heading_with_config_active() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_atx_heading.md"
-    )
+    source_path, _ = __generate_source_path("bad_atx_heading.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=$!False",
@@ -1245,81 +1042,66 @@ def test_md013_bad_atx_heading_with_config_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_setext_heading() -> None:
+def test_md013_good_setext_heading(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a SetExt Heading.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_setext_heading.md"
-    )
+    source_path, _ = __generate_source_path("good_setext_heading.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading() -> None:
+def test_md013_bad_setext_heading(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a SetExt Heading.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_setext_heading.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_setext_heading.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading_with_config() -> None:
+def test_md013_bad_setext_heading_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a SetExt Heading, but configuration to
@@ -1327,10 +1109,7 @@ def test_md013_bad_setext_heading_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_setext_heading.md"
-    )
+    source_path, _ = __generate_source_path("bad_setext_heading.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=$#100",
@@ -1339,21 +1118,19 @@ def test_md013_bad_setext_heading_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading_with_config_active() -> None:
+def test_md013_bad_setext_heading_with_config_active(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a SetExt Heading, but with headings
@@ -1361,10 +1138,7 @@ def test_md013_bad_setext_heading_with_config_active() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_setext_heading.md"
-    )
+    source_path, _ = __generate_source_path("bad_setext_heading.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=$!False",
@@ -1373,81 +1147,66 @@ def test_md013_bad_setext_heading_with_config_active() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_good_html_block() -> None:
+def test_md013_good_html_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a HTML block.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "good_html_block.md"
-    )
+    source_path, _ = __generate_source_path("good_html_block.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_html_block() -> None:
+def test_md013_bad_html_block(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a HTML block.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_html_block.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_html_block.md")
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_html_block.md",
+        source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{os.path.abspath(source_path)}:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)"
-    expected_error = ""
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md013_bad_html_block_with_config() -> None:
+def test_md013_bad_html_block_with_config(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a HTML block, but configuration to allow
@@ -1455,10 +1214,7 @@ def test_md013_bad_html_block_with_config() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md013", "bad_html_block.md"
-    )
+    source_path, _ = __generate_source_path("bad_html_block.md")
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#100",
@@ -1467,17 +1223,13 @@ def test_md013_bad_html_block_with_config() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_md013_query_config() -> None:
