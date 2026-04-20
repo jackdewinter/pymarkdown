@@ -370,6 +370,198 @@ properly indented content
         scan_expected_output="""{temp_source_path}:5:1: PML102: Disallows lazy list indentation [Expected: 3; Actual: 0] (disallow-lazy-list-indentation)
 """,
     ),
+    pluginRuleTest(
+        "good_single_ulist_new_item_indent_normal_test",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+- taking a second pass at the outputs from the recent `fix` addition, re-verifying
+  the output and fixing any issues
+- cleaning up documentation to properly note what type of whitespace is used
+  in the core and well as various extensions and plugins
+- for parsers like Python-Markdown, used in the MkDocs tools, added Rule Pml101
+  to handle the different indentation requirements
+""",
+        scan_expected_return_code=0,
+        # scan_expected_output="""{temp_source_path}:5:1: PML102: Disallows lazy list indentation [Expected: 3; Actual: 0] (disallow-lazy-list-indentation)""",
+    ),
+    pluginRuleTest(
+        "good_single_ulist_new_item_indent_normal_with_sublists",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+- taking a second pass at the outputs from the recent `fix` addition, re-verifying
+  the output and fixing any issues
+- cleaning up documentation to properly note what type of whitespace is used
+  in the core and well as various extensions and plugins
+  - at the same time, clearly followed the specification on what kind of whitespace
+    to use, instead of allowing unicode whitespace by default
+- for parsers like Python-Markdown, used in the MkDocs tools, added Rule Pml101
+  to handle the different indentation requirements
+  - note that this new rule give advice against Md007, so only one of the two
+    rules should be enabled at any one time
+""",
+        scan_expected_return_code=0,
+        # scan_expected_output="""{temp_source_path}:5:1: PML102: Disallows lazy list indentation [Expected: 3; Actual: 0] (disallow-lazy-list-indentation)""",
+    ),
+    pluginRuleTest(
+        "issue-1588-full-text",
+        enable_rules="pml102",
+        disable_rules="md007,md012",
+        source_file_contents="""
+1. **You have a concrete idea.**
+
+    - Read our feedback carefully. We review each issue seriously and try to be clear
+      about constraints and priorities.
+    - If the idea is important to you, contributing is often the best way to move
+      it forward while still respecting the project's direction.
+    - While your idea may not fit our roadmap, we can work with you to figure out
+      if your idea has merit outside of our project, and how you can realize that.
+
+2. **You want to help but do not have a specific idea yet.**  
+
+    You might be looking for something you can
+    [sink your teeth into](https://dictionary.cambridge.org/dictionary/english/sink-teeth-into),
+    want to build your open-source resume, or just want to explore the project.
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-lists",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+1. list 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2
+   - list 2.2 - line 1
+   - list 2.2 - line 2
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraph-good",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - line 1
+   list 2 - line 2
+   list 2 - line 3
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraph-bad",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - line 1
+ list 2 - line 2
+ list 2 - line 3
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:10:2: PML102: Disallows lazy list indentation [Expected: 3; Actual: 1] (disallow-lazy-list-indentation)
+{temp_source_path}:11:2: PML102: Disallows lazy list indentation [Expected: 3; Actual: 1] (disallow-lazy-list-indentation)        
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraphs-2-good",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - para 1 - line 1
+
+   list 2 - para 2 - line 1
+   list 2 - para 2 - line 2
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraphs-2-bad",
+        enable_rules="pml102",
+        disable_rules="md012",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - para 1 - line 1
+
+   list 2 - para 2 - line 1
+  list 2 - para 2 - line 2
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:12:3: PML102: Disallows lazy list indentation [Expected: 3; Actual: 2] (disallow-lazy-list-indentation)""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraphs-3-good",
+        enable_rules="pml102",
+        disable_rules="md012,md009",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - para 1 - line 1
+
+   list 2 - para 2 - line 1
+   list 2 - para 2 - line 2
+
+   list 2 - para 3 - line 1
+   list 2 - para 3 - line 2
+""",
+    ),
+    pluginRuleTest(
+        "issue-1588-level-2-paragraphs-3-bad",
+        enable_rules="pml102",
+        disable_rules="md012,md009",
+        source_file_contents="""
+1. list 1 - line 1
+   - list 1.1 - line 1
+     list 1.1 - line 2
+   - list 1.2 - line 1
+     list 1.2 - line 2
+   - list 1.3 - line 1
+     list 1.3 - line 2
+2. list 2 - para 1 - line 1
+
+   list 2 - para 2 - line 1
+   list 2 - para 2 - line 2
+
+   list 2 - para 3 - line 1
+list 2 - para 3 - line 2
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:15:1: PML102: Disallows lazy list indentation [Expected: 3; Actual: 0] (disallow-lazy-list-indentation)""",
+    ),
 ]
 
 

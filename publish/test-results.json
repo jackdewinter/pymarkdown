@@ -1540,7 +1540,7 @@
         },
         {
             "name": "test.rules.test_pml102",
-            "totalTests": 437,
+            "totalTests": 447,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
