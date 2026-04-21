@@ -151,7 +151,9 @@ class FileScanHelper:
             if args.x_test_stdin_fault:
                 raise IOError("made up")
 
-            with tempfile.NamedTemporaryFile("wt", delete=False) as outfile:
+            with tempfile.NamedTemporaryFile(
+                "wt", delete=False, encoding="utf-8"
+            ) as outfile:
                 temporary_file = outfile.name
 
                 if string_to_scan:

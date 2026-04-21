@@ -1042,6 +1042,35 @@ test: assert
             assert str(found_exception) == expected_error
 
 
+def test_api_scan_issue_1582() -> None:
+    """
+    Test to make sure that we enable utf-8 encoding when writing out the file to scane.
+    """
+
+    # Arrange
+    string_to_scan = """## Heading for Italian Text
+Testo con caratteri accentati: à è ò ù
+"""
+
+    # Act
+    scan_result = PyMarkdownApi().scan_string(string_to_scan)
+
+    # Assert
+    assert scan_result
+    assert not scan_result.pragma_errors
+    assert len(scan_result.scan_failures) == 2
+
+    assert scan_result.scan_failures[0].scan_file == "in-memory"
+    assert scan_result.scan_failures[0].line_number == 1
+    assert scan_result.scan_failures[0].column_number == 1
+    assert scan_result.scan_failures[0].rule_id == "MD022"
+
+    assert scan_result.scan_failures[1].scan_file == "in-memory"
+    assert scan_result.scan_failures[1].line_number == 1
+    assert scan_result.scan_failures[1].column_number == 1
+    assert scan_result.scan_failures[1].rule_id == "MD041"
+
+
 # change print_system_error to also accept optional exception?
 # OR
 # move format_error into presentation?
