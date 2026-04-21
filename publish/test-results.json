@@ -60,7 +60,7 @@
         },
         {
             "name": "test.api.test_api_scan",
-            "totalTests": 31,
+            "totalTests": 32,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

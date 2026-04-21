@@ -68,6 +68,9 @@
 - [Issue 1578](https://github.com/jackdewinter/pymarkdown/issues/1578)
     - after correcting [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
       regeneration was still not adding the proper indentation
+- [Issue 1582](https://github.com/jackdewinter/pymarkdown/issues/1582)
+    - reading from standard in and writing to temporary file did not
+      have an encoding specified, causing an unicode error
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
