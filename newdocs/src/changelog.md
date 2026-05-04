@@ -17,17 +17,11 @@
 
 - None
 
-## Version 0.9.36 - 2026-03-15
+## Version 0.9.37 - 2026-05-03
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
-    - Added `plugins.per-file-ignores.*` configuration items to allow for rules
-      to be disabled by matching against a glob-path.
-- [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
-    - Added documentation under the extensions section to provide
-      information on the tables extension.
 - [Issue 979](https://github.com/jackdewinter/pymarkdown/issues/979)
     - Added Rule Plugin PML102 that raises Rule Failures when lists
       contain lazy continuation lines.
@@ -68,6 +62,18 @@
 - [Issue 1578](https://github.com/jackdewinter/pymarkdown/issues/1578)
     - after correcting [Issue 1577](https://github.com/jackdewinter/pymarkdown/issues/1577)
       regeneration was still not adding the proper indentation
+
+## Version 0.9.36 - 2026-03-15
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
+    - Added `plugins.per-file-ignores.*` configuration items to allow for rules
+      to be disabled by matching against a glob-path.
+- [Issue 1535](https://github.com/jackdewinter/pymarkdown/issues/1535)
+    - Added documentation under the extensions section to provide
+      information on the tables extension.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

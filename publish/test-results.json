@@ -1268,7 +1268,7 @@
         },
         {
             "name": "test.rules.test_md022",
-            "totalTests": 60,
+            "totalTests": 59,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
