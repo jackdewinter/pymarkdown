@@ -167,7 +167,7 @@ kick in if there is a title field in the front matter.
 ]
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md001_scan(test: pluginRuleTest, request: pytest.FixtureRequest) -> None:
     """
@@ -176,7 +176,7 @@ def test_md001_scan(test: pluginRuleTest, request: pytest.FixtureRequest) -> Non
     execute_scan_test(test, "md001", request=request)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -187,7 +187,7 @@ def test_md001_fix(test: pluginRuleTest, request: pytest.FixtureRequest) -> None
     execute_fix_test(test, request=request)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md001_config(test: pluginConfigErrorTest) -> None:
     """
@@ -196,7 +196,7 @@ def test_md001_config(test: pluginConfigErrorTest) -> None:
     execute_configuration_test(test, f"{source_path}front_matter_with_title.md")
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 def test_md001_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md001",

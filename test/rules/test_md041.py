@@ -312,6 +312,7 @@ the `plugins.md041.level` configuration -->
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md041_scan(test: pluginRuleTest) -> None:
     """
@@ -320,6 +321,7 @@ def test_md041_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md041", suppress_first_line_heading_rule=False)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md041_config(test: pluginConfigErrorTest) -> None:
     """
@@ -332,6 +334,7 @@ def test_md041_config(test: pluginConfigErrorTest) -> None:
     )
 
 
+@pytest.mark.rules
 def test_md041_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md041",

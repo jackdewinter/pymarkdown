@@ -10,7 +10,8 @@ Note that these tests are not present to test the validity of any scenario again
 """
 
 from test.markdown_scanner import MarkdownScanner
-from test.utils import create_temporary_configuration_file
+from test.pytest_execute import ExpectedResults
+from test.utils import create_temporary_markdown_file
 
 import pytest
 
@@ -63,7 +64,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_xx_0() -> None:
+def test_pragmas_issue_1479_xx_0(scanner_default: MarkdownScanner) -> None:
     """
     Test the case where we have a single blank line between the pragma and a rule that triggers
     on an inline element.  Because of the tokenization of links, the first instance of the
@@ -77,13 +78,12 @@ def test_pragmas_issue_1479_xx_0() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 [a paragraph inspired link](/paragraph "paragraph")
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -92,21 +92,17 @@ def test_pragmas_issue_1479_xx_0() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_xx_1() -> None:
+def test_pragmas_issue_1479_xx_1(scanner_default: MarkdownScanner) -> None:
     """
     Test the case where we have a single blank line between the pragma and a rule that triggers
     on an inline element.  This should trigger the first two sections of the add_triggered_rule function
@@ -116,34 +112,29 @@ def test_pragmas_issue_1479_xx_1() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-links -->
 
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_xx_2() -> None:
+def test_pragmas_issue_1479_xx_2(scanner_default: MarkdownScanner) -> None:
     """
     Test the case where we have a single blank line between the pragma and a rule that triggers
     on a list start element.  This should trigger the last section of the add_triggered_rule function
@@ -153,7 +144,6 @@ def test_pragmas_issue_1479_xx_2() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-anchored-indent -->
 
  1. this is level 1
@@ -161,8 +151,8 @@ def test_pragmas_issue_1479_xx_2() -> None:
 
  1. this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -173,21 +163,17 @@ def test_pragmas_issue_1479_xx_2() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_xx3() -> None:
+def test_pragmas_issue_1479_xx3(scanner_default: MarkdownScanner) -> None:
     """
     Test the case where we have a single blank line between the pragma and a rule that triggers
     on a list start element that follows another list start element.  This should trigger the
@@ -198,7 +184,6 @@ def test_pragmas_issue_1479_xx3() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* first
 <!-- pyml disable-next-line ul-style -->
 
@@ -207,228 +192,214 @@ def test_pragmas_issue_1479_xx3() -> None:
 
 - third
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_no_pragma_then_atx() -> None:
+def test_pragmas_issue_1479_Md026_no_pragma_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and no pragma, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Hi there! :wave:
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:16: MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:16: MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_pragma_without_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md026_pragma_without_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-punctuation -->
 # Hi there! :wave:
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_pragma_with_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md026_pragma_with_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-punctuation -->
 
 # Hi there! :wave:
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_no_pragma_then_setext() -> None:
+def test_pragmas_issue_1479_Md026_no_pragma_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Hi there! :wave:
 ----------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:1:16: MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:1:16: MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_pragma_without_space_then_setext() -> None:
+def test_pragmas_issue_1479_Md026_pragma_without_space_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-punctuation -->
 Hi there! :wave:
 ----------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md026_pragma_with_space_then_setext() -> None:
+def test_pragmas_issue_1479_Md026_pragma_with_space_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md026 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-punctuation -->
 
 Hi there! :wave:
 ----------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md001_no_pragma_then_atx() -> None:
+def test_pragmas_issue_1479_Md001_no_pragma_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and no pragma, and we expect the rule to fire.
 
@@ -436,43 +407,42 @@ def test_pragmas_issue_1479_Md001_no_pragma_then_atx() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 ### Heading 3
 
 We skipped out a 2nd level heading in this document
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md001_pragma_without_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md001_pragma_without_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line heading-increment -->
@@ -480,35 +450,32 @@ def test_pragmas_issue_1479_Md001_pragma_without_space_then_atx() -> None:
 
 We skipped out a 2nd level heading in this document
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md001_pragma_with_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md001_pragma_with_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line heading-increment -->
@@ -517,29 +484,27 @@ def test_pragmas_issue_1479_Md001_pragma_with_space_then_atx() -> None:
 
 We skipped out a 2nd level heading in this document
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md001_no_pragma_then_setext_1_and_setext_2() -> None:
+def test_pragmas_issue_1479_Md001_no_pragma_then_setext_1_and_setext_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and no pragma, and we expect the rule to fire.
 
@@ -551,48 +516,44 @@ def test_pragmas_issue_1479_Md001_no_pragma_then_setext_1_and_setext_2() -> None
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Foo *bar*
 =========
 
 Foo
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_no_pragma_then_atx() -> None:
+def test_pragmas_issue_1479_Md002_no_pragma_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md002 violation and no pragma, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """## This isn't an H1 heading
 
 ### Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -601,35 +562,35 @@ def test_pragmas_issue_1479_Md002_no_pragma_then_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_pragma_without_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md002_pragma_without_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md002 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-heading-h1 -->
 ## This isn't an H1 heading
 
 ### Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -638,35 +599,32 @@ def test_pragmas_issue_1479_Md002_pragma_without_space_then_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_pragma_with_space_then_atx() -> None:
+def test_pragmas_issue_1479_Md002_pragma_with_space_then_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-heading-h1 -->
 
 ## This isn't an H1 heading
 
 ### Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -675,32 +633,28 @@ def test_pragmas_issue_1479_Md002_pragma_with_space_then_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_no_pragma_then_setext() -> None:
+def test_pragmas_issue_1479_Md002_no_pragma_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md002 violation and no pragma, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This isn't an H1 heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -709,34 +663,34 @@ def test_pragmas_issue_1479_Md002_no_pragma_then_setext() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_pragma_without_space_then_setext() -> None:
+def test_pragmas_issue_1479_Md002_pragma_without_space_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md002 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-heading-h1 -->
 This isn't an H1 heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -745,34 +699,31 @@ This isn't an H1 heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md002_pragma_with_space_then_setext() -> None:
+def test_pragmas_issue_1479_Md002_pragma_with_space_then_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md001 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-heading-h1 -->
 
 This isn't an H1 heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -781,27 +732,24 @@ This isn't an H1 heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_no_pragma_then_setext_setext_atx() -> None:
+def test_pragmas_issue_1479_Md003_no_pragma_then_setext_setext_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and no pragma, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Heading 1
 =========
 
@@ -810,36 +758,35 @@ Heading 2
 
 ### Heading 3
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_pragma_without_space_then_setext_setext_atx() -> None:
+def test_pragmas_issue_1479_Md003_pragma_without_space_then_setext_setext_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Heading 1
 =========
 
@@ -849,35 +796,32 @@ Heading 2
 <!-- pyml disable-next-line heading-style -->
 ### Heading 3
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_pragma_with_space_then_setext_setext_atx() -> None:
+def test_pragmas_issue_1479_Md003_pragma_with_space_then_setext_setext_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line heading-increment -->
@@ -886,105 +830,99 @@ def test_pragmas_issue_1479_Md003_pragma_with_space_then_setext_setext_atx() -> 
 
 We skipped out a 2nd level heading in this document
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_no_pragma_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md003_no_pragma_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and no pragma, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 Heading 2
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_pragma_without_space_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md003_pragma_without_space_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and a disable-next-line pragma on the line before it,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line heading-style -->
 Heading 2
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md003_pragma_with_space_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md003_pragma_with_space_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have a Md003 violation and a disable-next-line pragma two lines before it with a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line heading-style -->
@@ -992,41 +930,38 @@ def test_pragmas_issue_1479_Md003_pragma_with_space_then_atx_setext() -> None:
 Heading 2
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md004_no_pragma_then_ul_ul_ul() -> None:
+def test_pragmas_issue_1479_Md004_no_pragma_then_ul_ul_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md004 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* first
 + second
 - third
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1035,37 +970,37 @@ def test_pragmas_issue_1479_Md004_no_pragma_then_ul_ul_ul() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)
-{markdown_file_path}:3:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)
+{markdown_file_path}:3:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md004_pragma_without_space_then_ul_ul_ul() -> None:
+def test_pragmas_issue_1479_Md004_pragma_without_space_then_ul_ul_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md004 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* first
 <!-- pyml disable-next-line ul-style -->
 + second
 <!-- pyml disable-next-line ul-style -->
 - third
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1074,27 +1009,24 @@ def test_pragmas_issue_1479_Md004_pragma_without_space_then_ul_ul_ul() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md004_pragma_with_space_then_ul_ul_ul() -> None:
+def test_pragmas_issue_1479_Md004_pragma_with_space_then_ul_ul_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md004 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* first
 <!-- pyml disable-next-line ul-style -->
 
@@ -1103,40 +1035,37 @@ def test_pragmas_issue_1479_Md004_pragma_with_space_then_ul_ul_ul() -> None:
 
 - third
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_no_pragma_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md005_no_pragma_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Item 1
  1. Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1145,34 +1074,34 @@ def test_pragmas_issue_1479_Md005_no_pragma_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_pragma_without_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md005_pragma_without_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Item 1
 <!-- pyml disable-next-line list-indent -->
  1. Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1181,34 +1110,31 @@ def test_pragmas_issue_1479_Md005_pragma_without_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_pragma_with_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md005_pragma_with_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Item 1
 <!-- pyml disable-next-line list-indent -->
 
  1. Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1217,32 +1143,29 @@ def test_pragmas_issue_1479_Md005_pragma_with_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_no_pragma_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md005_no_pragma_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ Item 1
  + Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1251,34 +1174,34 @@ def test_pragmas_issue_1479_Md005_no_pragma_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_pragma_without_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md005_pragma_without_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ Item 1
 <!-- pyml disable-next-line list-indent -->
  + Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1287,34 +1210,31 @@ def test_pragmas_issue_1479_Md005_pragma_without_space_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md005_pragma_with_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md005_pragma_with_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md005 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ Item 1
 <!-- pyml disable-next-line list-indent -->
 
  + Item 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -1323,31 +1243,28 @@ def test_pragmas_issue_1479_Md005_pragma_with_space_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_no_pragma_then_ol() -> None:
+def test_pragmas_issue_1479_Md006_no_pragma_then_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """ * First Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1358,33 +1275,33 @@ def test_pragmas_issue_1479_Md006_no_pragma_then_ol() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol() -> None:
+def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-start-left -->
  * First Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1395,33 +1312,30 @@ def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol() -> None:
+def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-start-left -->
 
  * First Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1432,32 +1346,29 @@ def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_no_pragma_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md006_no_pragma_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* First Item
  * Second Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1468,34 +1379,34 @@ def test_pragmas_issue_1479_Md006_no_pragma_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """* First Item
 <!-- pyml disable-next-line ul-start-left -->
  * Second Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1506,27 +1417,24 @@ def test_pragmas_issue_1479_Md006_pragma_without_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md006 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-start-left -->
 
  * First Item
@@ -1536,8 +1444,8 @@ def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol_li() -> None:
 
  * Second Item
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-e",
@@ -1548,192 +1456,180 @@ def test_pragmas_issue_1479_Md006_pragma_with_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_no_pragma_then_ul() -> None:
+def test_pragmas_issue_1479_Md007_no_pragma_then_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """ * this is level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_pragma_without_space_then_ul() -> None:
+def test_pragmas_issue_1479_Md007_pragma_without_space_then_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-indent -->
  * this is level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_pragma_with_space_then_ul_ul() -> None:
+def test_pragmas_issue_1479_Md007_pragma_with_space_then_ul_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-indent -->
 
  * this is level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_no_pragma_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md007_no_pragma_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """ * this is level 1
  * this is level 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
-{markdown_file_path}:2:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{markdown_file_path}:2:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_pragma_without_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md007_pragma_without_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-indent -->
  * this is level 1
 <!-- pyml disable-next-line ul-indent -->
  * this is level 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md007_pragma_with_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Md007_pragma_with_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ul-indent -->
 
  * this is level 1
@@ -1741,107 +1637,99 @@ def test_pragmas_issue_1479_Md007_pragma_with_space_then_ul_li() -> None:
 
  * this is level 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md009_no_pragma_then_para_with_trailing() -> None:
+def test_pragmas_issue_1479_Md009_no_pragma_then_para_with_trailing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md007 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is some text\a
 each line has extra spaces\a\a
 but not all are invalid\a\a\a
 """.replace("\a", " ")
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:18: MD009: Trailing spaces [Expected: 0 or 2; Actual: 1] (no-trailing-spaces)
-{markdown_file_path}:3:24: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:18: MD009: Trailing spaces [Expected: 0 or 2; Actual: 1] (no-trailing-spaces)
+{markdown_file_path}:3:24: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md009_pragma_without_space_then_para_with_trailing() -> (
-    None
-):
+def test_pragmas_issue_1479_Md009_pragma_without_space_then_para_with_trailing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md009 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-spaces -->
 this is some text\a
 each line has extra spaces\a\a
 <!-- pyml disable-next-line no-trailing-spaces -->
 but not all are invalid\a\a\a
 """.replace("\a", " ")
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md009_pragma_with_space_then_para_with_trailing() -> None:
+def test_pragmas_issue_1479_Md009_pragma_with_space_then_para_with_trailing(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md009 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-trailing-spaces -->
 
 this is some text\a
@@ -1850,268 +1738,250 @@ each line has extra spaces\a\a
 
 but not all are invalid\a\a\a
 """.replace("\a", " ")
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md010_no_pragma_then_para_with_tab() -> None:
+def test_pragmas_issue_1479_Md010_no_pragma_then_para_with_tab(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md010 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """before-tab\tafter-tab\tafter-tab
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
-{markdown_file_path}:1:22: MD010: Hard tabs [Column: 22] (no-hard-tabs)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+{markdown_file_path}:1:22: MD010: Hard tabs [Column: 22] (no-hard-tabs)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md010_pragma_without_space_then_para_with_tab() -> None:
+def test_pragmas_issue_1479_Md010_pragma_without_space_then_para_with_tab(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md010 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-hard-tabs -->
 before-tab\tafter-tab\tafter-tab
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md010_pragma_with_space_then_para_with_tab() -> None:
+def test_pragmas_issue_1479_Md010_pragma_with_space_then_para_with_tab(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md010 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-hard-tabs -->
 
 before-tab\tafter-tab\tafter-tab
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md011_no_pragma_then_para_including_found() -> None:
+def test_pragmas_issue_1479_Md011_no_pragma_then_para_including_found(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md011 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a normal paragraph
 with a (reversed)[link] syntax
 found within it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:8: MD011: Reversed link syntax [(reversed)[link]] (no-reversed-links)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:8: MD011: Reversed link syntax [(reversed)[link]] (no-reversed-links)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md011_pragma_without_space_then_para_including_found() -> (
-    None
-):
+def test_pragmas_issue_1479_Md011_pragma_without_space_then_para_including_found(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md011 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a normal paragraph
 <!-- pyml disable-next-line no-reversed-links -->
 with a (reversed)[link] syntax
 found within it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md011_pragma_with_space_then_para_including_found() -> None:
+def test_pragmas_issue_1479_Md011_pragma_with_space_then_para_including_found(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md011 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a normal paragraph
 <!-- pyml disable-next-line no-reversed-links -->
 
 with a (reversed)[link] syntax
 found within it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md012_no_pragma_then_para_blank_lines_para() -> None:
+def test_pragmas_issue_1479_Md012_no_pragma_then_para_blank_lines_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md012 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is one line
 
 
 this is another line
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md012_pragma_without_space_then_para_blank_lines_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md012_pragma_without_space_then_para_blank_lines_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md012 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
@@ -2124,38 +1994,33 @@ def test_pragmas_issue_1479_Md012_pragma_without_space_then_para_blank_lines_par
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is one line
 
 <!-- pyml disable-next-line line-length -->
 
 this is another line
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md012_pragma_with_space_then_para_blank_lines_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md012_pragma_with_space_then_para_blank_lines_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md012 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -2165,7 +2030,6 @@ def test_pragmas_issue_1479_Md012_pragma_with_space_then_para_blank_lines_para()
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is one line
 
 <!-- pyml disable-next-line no-multiple-blanks -->
@@ -2173,196 +2037,185 @@ def test_pragmas_issue_1479_Md012_pragma_with_space_then_para_blank_lines_para()
 
 this is another line
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md013_no_pragma_then_para_with_long_atx() -> None:
+def test_pragmas_issue_1479_Md013_no_pragma_then_para_with_long_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md013 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a heading that is way way way way way way way way way way way way way too long
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md013_pragma_without_space_then_long_atx() -> None:
+def test_pragmas_issue_1479_Md013_pragma_without_space_then_long_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md013 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line line-length -->
 # This is a heading that is way way way way way way way way way way way way way too long
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md013_pragma_with_space_then_long_atx() -> None:
+def test_pragmas_issue_1479_Md013_pragma_with_space_then_long_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md013 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line line-length -->
 
 # This is a heading that is way way way way way way way way way way way way way too long
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md014_no_pragma_then_para_with_shell_fcb() -> None:
+def test_pragmas_issue_1479_Md014_no_pragma_then_para_with_shell_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md014 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```shell
 $ ls /my/dir
 $ cat /my/dir/file
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD014: Dollar signs used before commands without showing output (commands-show-output)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD014: Dollar signs used before commands without showing output (commands-show-output)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md014_pragma_without_space_then_shell_fcb() -> None:
+def test_pragmas_issue_1479_Md014_pragma_without_space_then_shell_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md014 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```shell
 <!-- pyml disable-next-line commands-show-output -->
 $ ls /my/dir
 $ cat /my/dir/file
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md014_pragma_with_space_then_shell_fcb() -> None:
+def test_pragmas_issue_1479_Md014_pragma_with_space_then_shell_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md014 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -2374,7 +2227,6 @@ def test_pragmas_issue_1479_Md014_pragma_with_space_then_shell_fcb() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```shell
 <!-- pyml disable-next-line line-length -->
 
@@ -2382,109 +2234,99 @@ $ ls /my/dir
 $ cat /my/dir/file
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_no_pragma_then_para_with_possible_atx_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md018_no_pragma_then_para_with_possible_atx_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """#Heading 1
 more text here
 ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
-{markdown_file_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{markdown_file_path}:3:1: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_pragma_without_space_then_possible_atx_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md018_pragma_without_space_then_possible_atx_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-atx -->
 #Heading 1
 more text here
 <!-- pyml disable-next-line no-missing-space-atx -->
 ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_pragma_with_space_then_possible_atx_in_para() -> None:
+def test_pragmas_issue_1479_Md018_pragma_with_space_then_possible_atx_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-atx -->
 
 #Heading 1
@@ -2493,111 +2335,99 @@ more text here
 
 ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_no_pragma_then_para_with_possible_atx_in_list_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md018_no_pragma_then_para_with_possible_atx_in_list_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. #Heading 1
    more text here
    ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
-{markdown_file_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)
+{markdown_file_path}:3:4: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_pragma_without_space_then_possible_atx_in_list_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md018_pragma_without_space_then_possible_atx_in_list_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-atx -->
 1. #Heading 1
    more text here
 <!-- pyml disable-next-line no-missing-space-atx -->
    ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md018_pragma_with_space_then_possible_atx_in_list_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md018_pragma_with_space_then_possible_atx_in_list_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md018 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-atx -->
 
 1. #Heading 1
@@ -2606,109 +2436,99 @@ def test_pragmas_issue_1479_Md018_pragma_with_space_then_possible_atx_in_list_in
 
    ##Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md019_no_pragma_then_atx_with_extra_spaces() -> None:
+def test_pragmas_issue_1479_Md019_no_pragma_then_atx_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md019 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """#  Heading 1
 
 ##  Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
-{markdown_file_path}:3:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{markdown_file_path}:3:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md019_pragma_without_space_then_atx_with_extra_spaces() -> (
-    None
-):
+def test_pragmas_issue_1479_Md019_pragma_without_space_then_atx_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md019 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-atx -->
 #  Heading 1
 
 <!-- pyml disable-next-line no-multiple-space-atx -->
 ##  Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md019_pragma_with_space_then_atx_with_extra_spaces() -> (
-    None
-):
+def test_pragmas_issue_1479_Md019_pragma_with_space_then_atx_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md019 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-atx -->
 
 #  Heading 1
@@ -2717,111 +2537,99 @@ def test_pragmas_issue_1479_Md019_pragma_with_space_then_atx_with_extra_spaces()
 
 ##  Heading 2
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md020_no_pragma_then_para_with_possible_atx_closed_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md020_no_pragma_then_para_with_possible_atx_closed_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md020 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. #Heading 1#
    more text here
    ##Heading 2##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:4: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
-{markdown_file_path}:3:4: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:4: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
+{markdown_file_path}:3:4: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md020_pragma_without_space_then_para_with_possible_atx_closed_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md020_pragma_without_space_then_para_with_possible_atx_closed_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md020 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-closed-atx -->
 1. #Heading 1#
    more text here
 <!-- pyml disable-next-line no-missing-space-closed-atx -->
    ##Heading 2##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md020_pragma_with_space_then_para_with_possible_atx_closed_in_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md020_pragma_with_space_then_para_with_possible_atx_closed_in_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md020 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-missing-space-closed-atx -->
 
 1. #Heading 1#
@@ -2830,109 +2638,99 @@ def test_pragmas_issue_1479_Md020_pragma_with_space_then_para_with_possible_atx_
 
    ##Heading 2##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md021_no_pragma_then_atx_closed_with_extra_spaces() -> None:
+def test_pragmas_issue_1479_Md021_no_pragma_then_atx_closed_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md021 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1  #
 
 ## Heading 2  ##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
-{markdown_file_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{markdown_file_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md021_pragma_without_space_then_atx_closed_with_extra_spaces() -> (
-    None
-):
+def test_pragmas_issue_1479_Md021_pragma_without_space_then_atx_closed_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md021 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-closed-atx -->
 # Heading 1  #
 
 <!-- pyml disable-next-line no-multiple-space-closed-atx -->
 ## Heading 2  ##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md021_pragma_with_space_then_atx_closed_with_extra_spaces() -> (
-    None
-):
+def test_pragmas_issue_1479_Md021_pragma_with_space_then_atx_closed_with_extra_spaces(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md021 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-closed-atx -->
 
 # Heading 1  #
@@ -2941,102 +2739,93 @@ def test_pragmas_issue_1479_Md021_pragma_with_space_then_atx_closed_with_extra_s
 
 ##  Heading 2  ##
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_no_pragma_then_atx_with_no_space_around() -> None:
+def test_pragmas_issue_1479_Md022_no_pragma_then_atx_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph
 # Heading 1
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
-{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_pragma_without_space_then_atx_with_no_space_around() -> (
-    None
-):
+def test_pragmas_issue_1479_Md022_pragma_without_space_then_atx_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph
 <!-- pyml disable-next-line blanks-around-headings -->
 # Heading 1
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_pragma_with_space_then_atx_with_no_space_around() -> (
-    None
-):
+def test_pragmas_issue_1479_Md022_pragma_with_space_then_atx_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -3045,111 +2834,101 @@ def test_pragmas_issue_1479_Md022_pragma_with_space_then_atx_with_no_space_aroun
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph
 <!-- pyml disable-next-line blanks-around-headings -->
 
 # Heading 1
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_no_pragma_then_setext_with_no_space_around() -> None:
+def test_pragmas_issue_1479_Md022_no_pragma_then_setext_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """--------
 SetExt
 ------
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
-{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)
+{markdown_file_path}:2:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_pragma_without_space_then_setext_with_no_space_around() -> (
-    None
-):
+def test_pragmas_issue_1479_Md022_pragma_without_space_then_setext_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """--------
 <!-- pyml disable-next-line blanks-around-headings -->
 SetExt
 ------
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md022_pragma_with_space_then_setext_with_no_space_around() -> (
-    None
-):
+def test_pragmas_issue_1479_Md022_pragma_with_space_then_setext_with_no_space_around(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md022 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -3158,7 +2937,6 @@ def test_pragmas_issue_1479_Md022_pragma_with_space_then_setext_with_no_space_ar
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """--------
 <!-- pyml disable-next-line blanks-around-headings -->
 
@@ -3166,73 +2944,68 @@ SetExt
 ------
 Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_no_pragma_then_leading_spaces_before_atx() -> None:
+def test_pragmas_issue_1479_Md023_no_pragma_then_leading_spaces_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
   ## Heading 2
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_before_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
 <!-- pyml disable-next-line heading-start-left -->
@@ -3240,37 +3013,32 @@ def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_befor
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
 <!-- pyml disable-next-line heading-start-left -->
@@ -3279,35 +3047,32 @@ def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_a
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_no_pragma_then_leading_spaces_before_setext() -> None:
+def test_pragmas_issue_1479_Md023_no_pragma_then_leading_spaces_before_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
   Heading 2
@@ -3315,38 +3080,36 @@ def test_pragmas_issue_1479_Md023_no_pragma_then_leading_spaces_before_setext() 
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_before_setext() -> (
-    None
-):
+def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_before_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
 <!-- pyml disable-next-line heading-start-left -->
@@ -3355,37 +3118,32 @@ def test_pragmas_issue_1479_Md023_pragma_without_space_then_leading_spaces_befor
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_setext() -> (
-    None
-):
+def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md023 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Some text
 
 <!-- pyml disable-next-line heading-start-left -->
@@ -3395,147 +3153,136 @@ def test_pragmas_issue_1479_Md023_pragma_with_space_then_leading_spaces_before_s
 
 Some more text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_no_pragma_then_atx_with_same_title() -> None:
+def test_pragmas_issue_1479_Md024_no_pragma_then_atx_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 ## Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_pragma_without_space_then_atx_with_same_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md024_pragma_without_space_then_atx_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 <!-- pyml disable-next-line no-duplicate-heading -->
 ## Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_pragma_with_space_then_atx_with_same_title() -> None:
+def test_pragmas_issue_1479_Md024_pragma_with_space_then_atx_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 <!-- pyml disable-next-line no-duplicate-heading -->
 
 ## Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_no_pragma_then_setext_with_same_title() -> None:
+def test_pragmas_issue_1479_Md024_no_pragma_then_setext_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 Some text
 --------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3544,38 +3291,36 @@ Some text
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_pragma_without_space_then_setext_with_same_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md024_pragma_without_space_then_setext_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 <!-- pyml disable-next-line no-duplicate-heading -->
 Some text
 --------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3583,38 +3328,32 @@ Some text
             "scan",
             markdown_file_path,
         ]
-
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md024_pragma_with_space_then_setext_with_same_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md024_pragma_with_space_then_setext_with_same_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md024 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Some text
 
 <!-- pyml disable-next-line no-duplicate-heading -->
 
 ## Some text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3623,27 +3362,24 @@ def test_pragmas_issue_1479_Md024_pragma_with_space_then_setext_with_same_title(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_no_pragma_then_atx_atx() -> None:
+def test_pragmas_issue_1479_Md025_no_pragma_then_atx_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3652,36 +3388,36 @@ No other headings.
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_pragma_without_space_then_atx_atx() -> None:
+def test_pragmas_issue_1479_Md025_pragma_without_space_then_atx_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3691,35 +3427,32 @@ No other headings.
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_pragma_with_space_then_atx_atx() -> None:
+def test_pragmas_issue_1479_Md025_pragma_with_space_then_atx_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3730,35 +3463,32 @@ No other headings.
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_no_pragma_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md025_no_pragma_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3768,8 +3498,8 @@ This is another top level heading
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3778,28 +3508,28 @@ No other headings.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:1: MD025: Multiple top-level headings in the same document (single-title,single-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_pragma_without_space_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md025_pragma_without_space_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3810,8 +3540,8 @@ This is another top level heading
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3820,27 +3550,24 @@ No other headings.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md025_pragma_with_space_then_atx_setext() -> None:
+def test_pragmas_issue_1479_Md025_pragma_with_space_then_atx_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md025 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a top level heading
 
 No other headings.
@@ -3852,8 +3579,8 @@ This is another top level heading
 
 No other headings.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3862,21 +3589,19 @@ No other headings.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_trivial() -> None:
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_trivial(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -3884,46 +3609,43 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_trivial() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """>  this is text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_trivial() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_trivial(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  this is text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3932,33 +3654,30 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_trivial(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_trivial() -> None:
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_trivial(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  this is text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -3967,23 +3686,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_trivial() -
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_block_quote() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_block_quote(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -3991,36 +3706,31 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_b
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  > just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -4028,13 +3738,12 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_o
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4043,37 +3752,35 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_o
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4082,37 +3789,32 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4121,23 +3823,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_double_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_double_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -4145,13 +3843,12 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_double_block_quote_with_space_b
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> > this is text
 > >  1. just normal text
 > > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4160,37 +3857,35 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_double_block_quote_with_space_b
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:2:5: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:2:5: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_double_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_double_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> > this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 > >  1. just normal text
 > > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4199,37 +3894,32 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_double_block_quote_w
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_double_block_quote_with_space_before_ordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_double_block_quote_with_space_before_ordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> > this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 > >  1. just normal text
 > > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4238,23 +3928,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_double_block_quote_with
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_ordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_ordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -4262,14 +3948,13 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_o
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > 1. start of list
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4278,38 +3963,36 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_o
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_ordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_ordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > 1. start of list
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4318,29 +4001,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_ordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_ordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > 1. start of list
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -4348,8 +4026,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  1. just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4358,23 +4036,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_unordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_unordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -4382,13 +4056,12 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_u
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4397,37 +4070,35 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_u
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_unordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_unordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4436,37 +4107,32 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_unordered_list_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_unordered_list_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4475,23 +4141,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_unordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_unordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -4499,14 +4161,13 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_u
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > + start of list
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4515,38 +4176,36 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_u
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_unordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_unordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > + start of list
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4555,29 +4214,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_unordered_list_li() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_unordered_list_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > + start of list
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -4585,8 +4239,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  + just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4595,109 +4249,97 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  ______
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  ______
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  ______
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4706,35 +4348,30 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  # atx heading
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4743,37 +4380,35 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_a
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  # atx heading
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4782,37 +4417,32 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  # atx heading
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4821,36 +4451,31 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  setext heading
 > ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4859,38 +4484,36 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_s
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  setext heading
 > ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4899,29 +4522,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -4929,8 +4547,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4939,36 +4557,31 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > setext heading
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -4977,38 +4590,36 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_s
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > setext heading
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5017,29 +4628,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > setext heading
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -5047,8 +4653,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5057,36 +4663,31 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_both_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_setext_both_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  setext heading
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5095,31 +4696,29 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_s
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
-{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_both_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_setext_both_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  setext heading
@@ -5127,8 +4726,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5137,29 +4736,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_both_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_setext_both_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > setext heading
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -5167,8 +4761,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  ==============
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5177,23 +4771,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_icb_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_icb_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -5201,15 +4791,14 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_i
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 >      icb 1
 >     icb 2
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5218,37 +4807,32 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_i
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  ```text
 > some text
 > ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5257,30 +4841,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_f
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  ```text
@@ -5288,8 +4870,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5298,29 +4880,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -5329,8 +4906,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5339,23 +4916,19 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
 
@@ -5363,15 +4936,14 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_f
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > ```text
 >  some text
 > ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5380,37 +4952,32 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_f
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > ```text
 > some text
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5419,30 +4986,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_f
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > ```text
 > some text
@@ -5450,8 +5015,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5460,29 +5025,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > ```text
 > some text
@@ -5491,8 +5051,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5501,37 +5061,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_all_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_fcb_all_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  ```text
 >  some text
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5540,31 +5095,29 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_f
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
-{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_all_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_fcb_all_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  ```text
@@ -5573,8 +5126,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5583,29 +5136,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_all_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_fcb_all_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -5616,8 +5164,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  ```
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5626,37 +5174,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  <-- this
 > is a
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5665,30 +5208,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_h
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  <-- this
@@ -5696,8 +5237,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5706,29 +5247,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -5737,8 +5273,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5747,37 +5283,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 >  is a
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5786,30 +5317,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_h
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -5817,8 +5346,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5827,29 +5356,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -5858,8 +5382,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5868,37 +5392,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_html_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 > is a
 >  comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5907,30 +5426,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_h
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_html_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 > is a
@@ -5938,8 +5455,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5948,29 +5465,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_html_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > <-- this
 > is a
@@ -5979,8 +5491,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  comment -->
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -5989,29 +5501,24 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 >  [abc]:
@@ -6019,8 +5526,8 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6029,30 +5536,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6061,8 +5566,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6071,29 +5576,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
@@ -6102,8 +5602,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6112,29 +5612,24 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6142,8 +5637,8 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6152,30 +5647,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6184,8 +5677,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6194,29 +5687,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6226,8 +5714,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6236,29 +5724,24 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_lrd_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6266,8 +5749,8 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
 >  "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6276,30 +5759,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_lrd_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6308,8 +5789,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6318,29 +5799,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_lrd_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > [abc]:
@@ -6350,8 +5826,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  "title"
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6360,37 +5836,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 >  | abc | def |
 > | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6401,30 +5872,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6432,8 +5901,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 > | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6444,29 +5913,24 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6475,8 +5939,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 > | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6487,37 +5951,32 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
 >  | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6528,30 +5987,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
@@ -6559,8 +6016,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6571,23 +6028,19 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -6596,7 +6049,6 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
@@ -6605,8 +6057,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  | --- | --- |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6617,29 +6069,24 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_table_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
@@ -6647,8 +6094,8 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
 >  | abc | def |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6659,30 +6106,28 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_table_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
@@ -6691,8 +6136,8 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
 >  | abc | def |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6703,23 +6148,19 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_third_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_table_third_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -6727,7 +6168,6 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >
 > | abc | def |
@@ -6737,8 +6177,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  | abc | def |
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -6749,109 +6189,97 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_text_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_text_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_text_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_text_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_text_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_text_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6860,103 +6288,91 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_text_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_text_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > this is still text
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_text_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_text_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > this is still text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_text_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_text_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 > this is still text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
@@ -6964,8 +6380,8 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
 >  just normal text
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -6974,109 +6390,97 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_codespan() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_codespan(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 >  `code span`
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_codespan() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_space_before_codespan(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 >  `code span`
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_codespan() -> (
-    None
-):
+def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_before_codespan(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md027 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is text
 <!-- pyml disable-next-line no-multiple-space-blockquote -->
 
 >  `code span`
 > a real test
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7085,93 +6489,84 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md028_no_pragma_then_block_quote_with_blank() -> None:
+def test_pragmas_issue_1479_Md028_no_pragma_then_block_quote_with_blank(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md028 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> This is one section of a block quote
 
 > This is the other section.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD028: Blank line inside blockquote (no-blanks-blockquote)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD028: Blank line inside blockquote (no-blanks-blockquote)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md028_pragma_without_space_then_block_quote_with_blank() -> (
-    None
-):
+def test_pragmas_issue_1479_Md028_pragma_without_space_then_block_quote_with_blank(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md028 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> This is one section of a block quote
 <!-- pyml disable-next-line no-blanks-blockquote -->
 
 > This is the other section.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md028_pragma_with_space_then_block_quote_with_blank() -> (
-    None
-):
+def test_pragmas_issue_1479_Md028_pragma_with_space_then_block_quote_with_blank(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md028 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -7179,15 +6574,14 @@ def test_pragmas_issue_1479_Md028_pragma_with_space_then_block_quote_with_blank(
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> This is one section of a block quote
 <!-- pyml disable-next-line no-blanks-blockquote -->
 
 
 > This is the other section.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7196,313 +6590,283 @@ def test_pragmas_issue_1479_Md028_pragma_with_space_then_block_quote_with_blank(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_no_pragma_then_ol_ol_ol_out_of_order() -> None:
+def test_pragmas_issue_1479_Md029_no_pragma_then_ol_ol_ol_out_of_order(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Simple
 2. One
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD029: Ordered list item prefix [Expected: 3; Actual: 1; Style: 1/2/3] (ol-prefix)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD029: Ordered list item prefix [Expected: 3; Actual: 1; Style: 1/2/3] (ol-prefix)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_pragma_without_space_then_ol_ol_ol_out_of_order() -> (
-    None
-):
+def test_pragmas_issue_1479_Md029_pragma_without_space_then_ol_ol_ol_out_of_order(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Simple
 2. One
 <!-- pyml disable-next-line ol-prefix -->
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_pragma_with_space_then_ol_ol_ol_out_of_order() -> (
-    None
-):
+def test_pragmas_issue_1479_Md029_pragma_with_space_then_ol_ol_ol_out_of_order(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. Simple
 2. One
 <!-- pyml disable-next-line ol-prefix -->
 
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_no_pragma_then_ol_ol_ol_bad_start() -> None:
+def test_pragmas_issue_1479_Md029_no_pragma_then_ol_ol_ol_bad_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """3. Simple
 2. One
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD029: Ordered list item prefix [Expected: 1; Actual: 3; Style: 1/2/3] (ol-prefix)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD029: Ordered list item prefix [Expected: 1; Actual: 3; Style: 1/2/3] (ol-prefix)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_pragma_without_space_then_ol_ol_ol_bad_start() -> (
-    None
-):
+def test_pragmas_issue_1479_Md029_pragma_without_space_then_ol_ol_ol_bad_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ol-prefix -->
 3. Simple
 2. One
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md029_pragma_with_space_then_ol_ol_ol_bad_start() -> None:
+def test_pragmas_issue_1479_Md029_pragma_with_space_then_ol_ol_ol_bad_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md029 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line ol-prefix -->
 
 3. Simple
 2. One
 1. List
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_no_pragma_then_ul_extra_indent_ul_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_no_pragma_then_ul_extra_indent_ul_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """*  First
 *  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
-{markdown_file_path}:2:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{markdown_file_path}:2:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_pragma_without_space_then_ul_extra_indent_ul_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_pragma_without_space_then_ul_extra_indent_ul_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-marker-space -->
 *  First
 <!-- pyml disable-next-line list-marker-space -->
 *  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_pragma_with_space_then_ul_extra_indent_ul_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_pragma_with_space_then_ul_extra_indent_ul_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-marker-space -->
 
 *  First
@@ -7510,109 +6874,97 @@ def test_pragmas_issue_1479_Md030_pragma_with_space_then_ul_extra_indent_ul_extr
 
 *  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_no_pragma_then_ol_extra_indent_ol_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_no_pragma_then_ol_extra_indent_ol_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1.  First
 1.  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
-{markdown_file_path}:2:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{markdown_file_path}:2:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_pragma_without_space_then_ol_extra_indent_ol_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_pragma_without_space_then_ol_extra_indent_ol_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-marker-space -->
 1.  First
 <!-- pyml disable-next-line list-marker-space -->
 1.  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md030_pragma_with_space_then_ol_extra_indent_ol_extra_indent() -> (
-    None
-):
+def test_pragmas_issue_1479_Md030_pragma_with_space_then_ol_extra_indent_ol_extra_indent(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md030 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-marker-space -->
 
 1.  First
@@ -7620,76 +6972,69 @@ def test_pragmas_issue_1479_Md030_pragma_with_space_then_ol_extra_indent_ol_extr
 
 1.  Second
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_thematic_fenced_block_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_no_pragma_then_thematic_fenced_block_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 ```block
 A code block
 ```
 ---
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_thematic_fenced_block_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_thematic_fenced_block_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -7698,31 +7043,27 @@ A code block
 ```
 ---
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_thematic_fenced_block_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_thematic_fenced_block_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -7732,7 +7073,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_thematic_fenced_block_t
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 <!-- pyml disable-next-line line-length -->
 
@@ -7743,43 +7083,40 @@ A code block
 ```
 ---
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_atx_fenced_block_atx() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_atx_fenced_block_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Atx Heading
 ```block
 A code block
 ```
 ## Another Atx Heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7788,31 +7125,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_atx_fenced_block_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_atx_fenced_block_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Atx Heading
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -7821,8 +7156,8 @@ A code block
 ```
 ## Another Atx Heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7831,21 +7166,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_atx_fenced_block_atx() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_atx_fenced_block_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -7855,7 +7188,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_atx_fenced_block_atx() 
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Atx Heading
 <!-- pyml disable-next-line line-length -->
 
@@ -7866,8 +7198,8 @@ A code block
 ```
 ## Another Atx Heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7876,27 +7208,24 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_setext_fenced_block_setext() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_setext_fenced_block_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """SetExt Heading
 ---
 ```block
@@ -7905,8 +7234,8 @@ A code block
 Another SetExt Heading
 ===
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7915,31 +7244,29 @@ Another SetExt Heading
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_setext_fenced_block_setext() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_setext_fenced_block_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """SetExt Heading
 ---
 <!-- pyml disable-next-line blanks-around-fences -->
@@ -7950,8 +7277,8 @@ A code block
 Another SetExt Heading
 ===
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -7960,23 +7287,19 @@ Another SetExt Heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_setext_fenced_block_setext() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_setext_fenced_block_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -7986,7 +7309,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_setext_fenced_block_set
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """SetExt Heading
 ---
 <!-- pyml disable-next-line line-length -->
@@ -7999,8 +7321,8 @@ A code block
 Another SetExt Heading
 ===
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8009,35 +7331,32 @@ Another SetExt Heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_icb_fenced_block_icb() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_icb_fenced_block_icb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    Indented Code Block
 ```block
 A code block
 ```
     Another Indented Code Block
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8046,31 +7365,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_icb_fenced_block_icb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_icb_fenced_block_icb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    Indented Code Block
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -8079,8 +7396,8 @@ A code block
 ```
     Another Indented Code Block
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8089,21 +7406,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_icb_fenced_block_icb() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_icb_fenced_block_icb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8113,7 +7428,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_icb_fenced_block_icb() 
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    Indented Code Block
 <!-- pyml disable-next-line line-length -->
 
@@ -8124,8 +7438,8 @@ A code block
 ```
     Another Indented Code Block
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8134,27 +7448,24 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_fenced_block_fenced_block() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_fenced_block_fenced_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```block
 A code block
 ```
@@ -8162,8 +7473,8 @@ A code block
 A code block
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8172,31 +7483,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_fenced_block_fenced_block() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_fenced_block_fenced_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```block
 A code block
 <!-- pyml disable-next-line blanks-around-fences -->
@@ -8206,8 +7515,8 @@ A code block
 A code block
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8216,23 +7525,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_fenced_block_fenced_block() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_fenced_block_fenced_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8242,7 +7547,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_fenced_block_fenced_blo
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```block
 A code block
 <!-- pyml disable-next-line line-length -->
@@ -8254,8 +7558,8 @@ A code block
 A code block
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8264,29 +7568,24 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_html_block_fenced_block_html_block() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_no_pragma_then_html_block_fenced_block_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 ```block
@@ -8295,8 +7594,8 @@ A code block
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8305,31 +7604,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_html_block_fenced_block_html_block() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_html_block_fenced_block_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 <!-- pyml disable-next-line blanks-around-fences -->
@@ -8340,8 +7637,8 @@ A code block
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8350,23 +7647,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_html_block_fenced_block_html_block() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_html_block_fenced_block_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8376,7 +7669,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_html_block_fenced_block
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 <!-- pyml disable-next-line line-length -->
@@ -8389,8 +7681,8 @@ A code block
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8399,35 +7691,32 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_lrd_fenced_block_lrd() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_lrd_fenced_block_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 ```block
 A code block
 ```
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8436,31 +7725,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_lrd_fenced_block_lrd() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_lrd_fenced_block_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -8469,8 +7756,8 @@ A code block
 ```
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8479,21 +7766,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_lrd_fenced_block_lrd() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_lrd_fenced_block_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8503,7 +7788,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_lrd_fenced_block_lrd() 
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 <!-- pyml disable-next-line line-length -->
 
@@ -8514,8 +7798,8 @@ A code block
 ```
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8524,35 +7808,32 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_para_fenced_block_para() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_para_fenced_block_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """first paragraph
 ```block
 A code block
 ```
 second paragraph
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8561,31 +7842,29 @@ second paragraph
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_para_fenced_block_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_para_fenced_block_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """first paragraph
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -8594,8 +7873,8 @@ A code block
 ```
 second paragraph
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8604,23 +7883,19 @@ second paragraph
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_para_fenced_block_para() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_para_fenced_block_para(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8630,7 +7905,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_para_fenced_block_para(
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """first paragraph
 <!-- pyml disable-next-line line-length -->
 
@@ -8641,8 +7915,8 @@ A code block
 ```
 second paragraph
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8651,27 +7925,24 @@ second paragraph
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_table_fenced_block_table() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_table_fenced_block_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 ```block
@@ -8680,8 +7951,8 @@ A code block
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -8690,31 +7961,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_table_fenced_block_table() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_table_fenced_block_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 <!-- pyml disable-next-line blanks-around-fences -->
@@ -8725,8 +7994,8 @@ A code block
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -8735,23 +8004,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_table_fenced_block_table() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_table_fenced_block_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8761,7 +8026,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_table_fenced_block_tabl
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 <!-- pyml disable-next-line line-length -->
@@ -8774,8 +8038,8 @@ A code block
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8784,35 +8048,32 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_ul_fenced_block_ul() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_ul_fenced_block_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ first list
 ```block
 A code block
 ```
 + second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8821,31 +8082,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_ul_fenced_block_ul() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_ul_fenced_block_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ first list
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -8854,8 +8113,8 @@ A code block
 ```
 + second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8864,21 +8123,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_ul_fenced_block_ul() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_ul_fenced_block_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -8888,7 +8145,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_ul_fenced_block_ul() ->
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ first list
 <!-- pyml disable-next-line line-length -->
 
@@ -8899,8 +8155,8 @@ A code block
 ```
 + second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8909,35 +8165,32 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_ol_fenced_block_ol() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_ol_fenced_block_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. first list
 ```block
 A code block
 ```
 1. second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8946,31 +8199,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_ol_fenced_block_ol() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_ol_fenced_block_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. first list
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -8979,8 +8230,8 @@ A code block
 ```
 1. second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -8989,21 +8240,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_ol_fenced_block_ol() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_ol_fenced_block_ol(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9013,7 +8262,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_ol_fenced_block_ol() ->
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. first list
 <!-- pyml disable-next-line line-length -->
 
@@ -9024,8 +8272,8 @@ A code block
 ```
 1. second list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9034,35 +8282,32 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_no_pragma_then_bq_fenced_block_bq() -> None:
+def test_pragmas_issue_1479_Md031_no_pragma_then_bq_fenced_block_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> first quote
 ```block
 A code block
 ```
 > second quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9071,31 +8316,29 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{markdown_file_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_without_space_then_bq_fenced_block_bq() -> (
-    None
-):
+def test_pragmas_issue_1479_Md031_pragma_without_space_then_bq_fenced_block_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> first quote
 <!-- pyml disable-next-line blanks-around-fences -->
 ```block
@@ -9104,8 +8347,8 @@ A code block
 ```
 > second quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9114,21 +8357,19 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md031_pragma_with_space_then_bq_fenced_block_bq() -> None:
+def test_pragmas_issue_1479_Md031_pragma_with_space_then_bq_fenced_block_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md031 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9138,7 +8379,6 @@ def test_pragmas_issue_1479_Md031_pragma_with_space_then_bq_fenced_block_bq() ->
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> first quote
 <!-- pyml disable-next-line line-length -->
 
@@ -9149,8 +8389,8 @@ A code block
 ```
 > second quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9159,64 +8399,61 @@ A code block
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ul_ul_bq() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ul_ul_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 + a list
 + still a list
 + still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line blanks-around-lists -->
 + a list
@@ -9225,29 +8462,27 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_bq() -> Non
 + still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9255,7 +8490,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_bq() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line line-length -->
 
@@ -9266,35 +8500,32 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_bq() -> None:
 + still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ul_ul_2_lines_bq() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ul_ul_2_lines_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 + a list
 + still a list
@@ -9302,39 +8533,37 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ul_ul_2_lines_bq() -> None:
   just a longer item
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_2_lines_bq() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_2_lines_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line blanks-around-lists -->
 + a list
@@ -9344,29 +8573,27 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ul_ul_2_lines_bq(
   just a longer item
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_2_lines_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_2_lines_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9374,7 +8601,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_2_lines_bq() -
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line line-length -->
 
@@ -9386,72 +8612,69 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ul_ul_2_lines_bq() -
   just a longer item
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ol_ol_ol_bq() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_bq_ol_ol_ol_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 1. a list
 1. still a list
 1. still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ol_ol_ol_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ol_ol_ol_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line blanks-around-lists -->
 1. a list
@@ -9460,29 +8683,27 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_bq_ol_ol_ol_bq() -> 
 1. still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ol_ol_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ol_ol_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9490,7 +8711,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ol_ol_bq() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """> this is a block quote
 <!-- pyml disable-next-line line-length -->
 
@@ -9501,73 +8721,70 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_bq_ol_ol_bq() -> None:
 1. still still a list
 > this is a block quote
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ul_ol_ol_ol_ul() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ul_ol_ol_ol_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """+ this is a list
 1. a list
 1. still a list
 + this is a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 {markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 {markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ul_ol_ol_ol_ul() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ul_ol_ol_ol_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line blanks-around-lists -->
 + this is a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -9577,29 +8794,27 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ul_ol_ol_ol_ul() -> 
 <!-- pyml disable-next-line blanks-around-lists -->
 + this is a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ul_ol_ol_ol_ul() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ul_ol_ol_ol_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9607,7 +8822,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ul_ol_ol_ol_ul() -> Non
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line blanks-around-lists -->
 
 + this is a list
@@ -9621,43 +8835,40 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ul_ol_ol_ol_ul() -> Non
 
 + this is a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_thematic_ol_ol_thematic() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_thematic_ol_ol_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """___
 1. a list
 1. still a list
 1. still still a list
 ___
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9666,31 +8877,29 @@ ___
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_thematic_ol_ol_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_thematic_ol_ol_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """___
 <!-- pyml disable-next-line blanks-around-lists -->
 1. a list
@@ -9699,8 +8908,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_thematic_ol_ol_thema
 1. still still a list
 ___
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9709,23 +8918,19 @@ ___
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_thematic_ol_ol_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_thematic_ol_ol_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9733,7 +8938,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_thematic_ol_ol_thematic
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """___
 <!-- pyml disable-next-line blanks-around-lists -->
 
@@ -9744,8 +8948,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_thematic_ol_ol_thematic
 1. still still a list
 ___
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9754,35 +8958,32 @@ ___
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_atx_ol_ol_atx() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_atx_ol_ol_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# this is an atx heading
 1. a list
 1. still a list
 1. still still a list
 # this is an atx heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9791,29 +8992,29 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_atx_ol_ol_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_atx_ol_ol_atx() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_atx_ol_ol_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# this is an atx heading
 <!-- pyml disable-next-line blanks-around-lists -->
 1. a list
@@ -9822,8 +9023,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_atx_ol_ol_atx() -> N
 1. still still a list
 # this is an atx heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9832,21 +9033,19 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_atx_ol_ol_atx() -> N
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_atx_ol_ol_atx() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_atx_ol_ol_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9854,7 +9053,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_atx_ol_ol_atx() -> None
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# this is an atx heading
 <!-- pyml disable-next-line line-length -->
 
@@ -9865,8 +9063,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_atx_ol_ol_atx() -> None
 1. still still a list
 # this is an atx heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9875,21 +9073,19 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_atx_ol_ol_atx() -> None
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_setext_ol_ol_setext() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_setext_ol_ol_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
 
@@ -9899,7 +9095,6 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_setext_ol_ol_setext() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is a setext heading
 =====
 1. a list
@@ -9908,8 +9103,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_setext_ol_ol_setext() -> None:
 this is a setext heading
 -----
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9918,24 +9113,23 @@ this is a setext heading
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_setext_ol_ol_setext() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_setext_ol_ol_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
@@ -9946,7 +9140,6 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_setext_ol_ol_setext(
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is a setext heading
 =====
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -9957,8 +9150,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_setext_ol_ol_setext(
 this is a setext heading
 -----
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -9967,21 +9160,19 @@ this is a setext heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_setext_ol_ol_setext() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_setext_ol_ol_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -9992,7 +9183,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_setext_ol_ol_setext() -
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is a setext heading
 =====
 <!-- pyml disable-next-line line-length -->
@@ -10005,8 +9195,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_setext_ol_ol_setext() -
 this is a setext heading
 -----
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10015,27 +9205,24 @@ this is a setext heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_fenced_ol_ol_fenced() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_fenced_ol_ol_fenced(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```text
 ```
 1. a list
@@ -10044,8 +9231,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_fenced_ol_ol_fenced() -> None:
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10054,31 +9241,29 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_fenced_ol_ol_fenced() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_fenced_ol_ol_fenced() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_fenced_ol_ol_fenced(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```text
 ```
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10089,8 +9274,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_fenced_ol_ol_fenced(
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10099,21 +9284,19 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_fenced_ol_ol_fenced(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_fenced_ol_ol_fenced() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_fenced_ol_ol_fenced(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -10121,7 +9304,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_fenced_ol_ol_fenced() -
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```text
 ```
 <!-- pyml disable-next-line line-length -->
@@ -10134,8 +9316,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_fenced_ol_ol_fenced() -
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10144,27 +9326,24 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_fenced_ol_ol_fenced() -
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_html_ol_ol_html() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_html_ol_ol_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 1. a list
@@ -10173,8 +9352,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_html_ol_ol_html() -> None:
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10183,29 +9362,29 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_html_ol_ol_html() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_html_ol_ol_html() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_html_ol_ol_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10216,8 +9395,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_html_ol_ol_html() ->
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10226,21 +9405,19 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_html_ol_ol_html() ->
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_html_ol_ol_html() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_html_ol_ol_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -10248,7 +9425,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_html_ol_ol_html() -> No
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<script>
 </script>
 <!-- pyml disable-next-line line-length -->
@@ -10261,8 +9437,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_html_ol_ol_html() -> No
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10271,21 +9447,19 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_html_ol_ol_html() -> No
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_lrd_ol_ol_lrd() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_lrd_ol_ol_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
 
@@ -10295,36 +9469,36 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_lrd_ol_ol_lrd() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 1. a list
 1. still a list
 1. still still a list
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_lrd_ol_ol_lrd() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_lrd_ol_ol_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
@@ -10335,7 +9509,6 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_lrd_ol_ol_lrd() -> N
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 <!-- pyml disable-next-line blanks-around-lists -->
 1. a list
@@ -10343,29 +9516,27 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_lrd_ol_ol_lrd() -> N
 1. still still a list
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_lrd_ol_ol_lrd() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_lrd_ol_ol_lrd(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -10376,7 +9547,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_lrd_ol_ol_lrd() -> None
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd]: /url
 <!-- pyml disable-next-line line-length -->
 
@@ -10385,29 +9555,27 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_lrd_ol_ol_lrd() -> None
 1. still still a list
 [lrd]: /url
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_table_ol_ol_table() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_table_ol_ol_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
 
@@ -10417,7 +9585,6 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_table_ol_ol_table() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 1. a list
@@ -10426,8 +9593,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_table_ol_ol_table() -> None:
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -10436,28 +9603,28 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_table_ol_ol_table() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_table_ol_ol_table() -> None:
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_table_ol_ol_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10467,8 +9634,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_table_ol_ol_table() 
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10477,21 +9644,19 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_table_ol_ol_table() 
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_table_ol_ol_table() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_table_ol_ol_table(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -10499,7 +9664,6 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_table_ol_ol_table() -> 
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """| abc | def |
 | --- | --- |
 <!-- pyml disable-next-line line-length -->
@@ -10510,8 +9674,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_table_ol_ol_table() -> 
 | abc | def |
 | --- | --- |
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10520,99 +9684,91 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_table_ol_ol_table() -> 
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_bq_and_bq() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_bq_and_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    > inner bq
 > outer bq
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_bq_and_bq() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_bq_and_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
    > inner bq
 > outer bq
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_bq_and_bq() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_bq_and_bq(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10620,73 +9776,68 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_bq_and_bq() 
    > inner bq
 > outer bq
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_ul_and_ul() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_ul_and_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    + inner list
 + outer list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
-{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_ul_and_ul() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_ul_and_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10694,35 +9845,32 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_ul_and_ul
 <!-- pyml disable-next-line blanks-around-lists -->
 + outer list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_ul_and_ul() -> None:
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_ul_and_ul(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10730,111 +9878,99 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_ul_and_ul() 
    _______
 _______
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_thematic_and_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_thematic_and_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    _______
 _______
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_thematic_and_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_thematic_and_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
    _______
 _______
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_thematic_and_thematic() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_thematic_and_thematic(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10842,42 +9978,39 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_thematic_and
    _______
 _______
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_atx_and_atx() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_atx_and_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    # atx within a list
 # not a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-extensions",
@@ -10888,38 +10021,36 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_atx_and_atx() -> Non
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_atx_and_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_atx_and_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
    # atx within a list
 # not a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10928,29 +10059,24 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_atx_and_a
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_atx_and_atx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_atx_and_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
 <!-- pyml disable-next-line blanks-around-lists -->
@@ -10958,8 +10084,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_atx_and_atx(
    # atx within a list
 # not a list
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -10968,27 +10094,24 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_atx_and_atx(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_and_fcb() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -10996,8 +10119,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_and_fcb() -> Non
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11006,30 +10129,28 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_and_fcb() -> Non
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11038,8 +10159,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_and_f
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11048,29 +10169,24 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_and_f
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11080,8 +10196,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_and_fcb(
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11090,27 +10206,24 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_and_fcb(
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_and_fcb() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11119,8 +10232,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_and_fcb() -
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11129,30 +10242,28 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_and_fcb() -
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11162,8 +10273,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11172,29 +10283,24 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11205,8 +10311,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_and
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11215,29 +10321,24 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_and
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_nl_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_nl_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11247,8 +10348,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_nl_and_fcb(
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11257,30 +10358,28 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_fcb_text_nl_and_fcb(
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_nl_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_nl_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11291,8 +10390,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11301,29 +10400,24 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_fcb_text_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_nl_and_fcb() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_nl_and_fcb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    ```text
@@ -11335,8 +10429,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_nl_
 ```text
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11345,27 +10439,24 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_fcb_text_nl_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_html_and_html() -> None:
+def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_html_and_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    <script>
@@ -11373,8 +10464,8 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_html_and_html() -> N
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11383,30 +10474,28 @@ def test_pragmas_issue_1479_Md032_no_pragma_then_ol_ol_with_html_and_html() -> N
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_html_and_html() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_html_and_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    <script>
@@ -11415,8 +10504,8 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_html_and_
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11425,29 +10514,24 @@ def test_pragmas_issue_1479_Md032_pragma_without_space_then_ol_ol_with_html_and_
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_html_and_html() -> (
-    None
-):
+def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_html_and_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md032 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """1. a list
 1. still a list
    <script>
@@ -11457,8 +10541,8 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_html_and_htm
 <script>
 </script>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -11467,1447 +10551,1301 @@ def test_pragmas_issue_1479_Md032_pragma_with_space_then_ol_ol_with_html_and_htm
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_no_pragma_then_html_block() -> None:
+def test_pragmas_issue_1479_Md033_no_pragma_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<img src="fred">
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD033: Inline HTML [Element: img] (no-inline-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD033: Inline HTML [Element: img] (no-inline-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_without_space_then_html_block() -> None:
+def test_pragmas_issue_1479_Md033_pragma_without_space_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-inline-html -->
 <img src="fred">
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_with_space_then_html_block() -> None:
+def test_pragmas_issue_1479_Md033_pragma_with_space_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-inline-html -->
 
 <img src="fred">
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_no_pragma_then_text_with_inline_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_no_pragma_then_text_with_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is paragraph <img src="fred"> with in image embedded.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:19: MD033: Inline HTML [Element: img] (no-inline-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:19: MD033: Inline HTML [Element: img] (no-inline-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_without_space_then_text_with_inline_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_pragma_without_space_then_text_with_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-inline-html -->
 This is paragraph <img src="fred"> with in image embedded.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_with_space_then_text_with_inline_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_pragma_with_space_then_text_with_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-inline-html -->
 
 This is paragraph <img src="fred"> with in image embedded.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_no_pragma_then_text_with_non_first_line_inline_html() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_no_pragma_then_text_with_non_first_line_inline_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph with an image embedded
 in something other <img src="fred"> than the first line.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:20: MD033: Inline HTML [Element: img] (no-inline-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:20: MD033: Inline HTML [Element: img] (no-inline-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_without_space_then_text_with_non_first_line_inline_html() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_pragma_without_space_then_text_with_non_first_line_inline_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph with an image embedded
 <!-- pyml disable-next-line no-inline-html -->
 in something other <img src="fred"> than the first line.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md033_pragma_with_space_then_text_with_non_first_line_inline_html() -> (
-    None
-):
+def test_pragmas_issue_1479_Md033_pragma_with_space_then_text_with_non_first_line_inline_html(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md033 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a paragraph with an image embedded
 <!-- pyml disable-next-line no-inline-html -->
 
 in something other <img src="fred"> than the first line.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_no_pragma_then_para_with_url_first_line() -> None:
+def test_pragmas_issue_1479_Md034_no_pragma_then_para_with_url_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This text has a bare http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"""{markdown_file_path}:1:31: MD034: Bare URL used (no-bare-urls)"""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:31: MD034: Bare URL used (no-bare-urls)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_pragma_without_space_then_para_with_url_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md034_pragma_without_space_then_para_with_url_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-bare-urls -->
 This text has a bare http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_pragma_with_space_then_para_with_url_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md034_pragma_with_space_then_para_with_url_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-bare-urls -->
 
 This text has a bare http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_no_pragma_then_para_with_url_second_line() -> None:
+def test_pragmas_issue_1479_Md034_no_pragma_then_para_with_url_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This text has a bare
 http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"""{markdown_file_path}:2:10: MD034: Bare URL used (no-bare-urls)"""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:10: MD034: Bare URL used (no-bare-urls)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_pragma_without_space_then_para_with_url_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md034_pragma_without_space_then_para_with_url_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This text has a bare
 <!-- pyml disable-next-line no-bare-urls -->
 http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md034_pragma_with_space_then_para_with_url_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md034_pragma_with_space_then_para_with_url_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md034 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This text has a bare
 <!-- pyml disable-next-line no-bare-urls -->
 
 http URL http://www.google.com in it.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md035_no_pragma_then_tb_text_tb() -> None:
+def test_pragmas_issue_1479_Md035_no_pragma_then_tb_text_tb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md035 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 this is one section
 - - -
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD035: Horizontal rule style [Expected: ---, Actual: - - -] (hr-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD035: Horizontal rule style [Expected: ---, Actual: - - -] (hr-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md035_pragma_without_space_then_tb_text_tb() -> None:
+def test_pragmas_issue_1479_Md035_pragma_without_space_then_tb_text_tb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md035 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 this is one section
 <!-- pyml disable-next-line hr-style -->
 - - -
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md035_pragma_with_space_then_tb_text_tb() -> None:
+def test_pragmas_issue_1479_Md035_pragma_with_space_then_tb_text_tb(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md035 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """---
 this is one section
 <!-- pyml disable-next-line hr-style -->
 
 - - -
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md036_no_pragma_then_text_in_emphasis_with_para_following() -> (
-    None
-):
+def test_pragmas_issue_1479_Md036_no_pragma_then_text_in_emphasis_with_para_following(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md036 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """**text**
 
 Lorem ipsum dolor sit amet...
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md036_pragma_without_space_then_text_in_emphasis_with_para_following() -> (
-    None
-):
+def test_pragmas_issue_1479_Md036_pragma_without_space_then_text_in_emphasis_with_para_following(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md036 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-emphasis-as-heading -->
 **text**
 
 Lorem ipsum dolor sit amet...
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md036_pragma_with_space_then_text_in_emphasis_with_para_following() -> (
-    None
-):
+def test_pragmas_issue_1479_Md036_pragma_with_space_then_text_in_emphasis_with_para_following(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md036 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-emphasis-as-heading -->
 
 **text**
 
 Lorem ipsum dolor sit amet...
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_no_pragma_then_text_with_space_within_emphasis_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_no_pragma_then_text_with_space_within_emphasis_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_pragma_without_space_then_text_with_space_within_emphasis_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_pragma_without_space_then_text_with_space_within_emphasis_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-emphasis -->
 this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_pragma_with_space_then_text_with_space_within_emphasis_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_pragma_with_space_then_text_with_space_within_emphasis_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-emphasis -->
 
 this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_no_pragma_then_text_with_space_within_emphasis_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_no_pragma_then_text_with_space_within_emphasis_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_pragma_without_space_then_text_with_space_within_emphasis_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_pragma_without_space_then_text_with_space_within_emphasis_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-emphasis -->
 this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md037_pragma_with_space_then_text_with_space_within_emphasis_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md037_pragma_with_space_then_text_with_space_within_emphasis_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md037 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-emphasis -->
 
 this text * is* in italics
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_no_pragma_then_text_with_code_span_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_no_pragma_then_text_with_code_span_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:9: MD038: Spaces inside code span elements (no-space-in-code)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:9: MD038: Spaces inside code span elements (no-space-in-code)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_pragma_without_space_then_text_with_code_span_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_pragma_without_space_then_text_with_code_span_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-code -->
 this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_pragma_with_space_then_text_with_code_span_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_pragma_with_space_then_text_with_code_span_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-code -->
 
 this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_no_pragma_then_text_with_code_span_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_no_pragma_then_text_with_code_span_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:9: MD038: Spaces inside code span elements (no-space-in-code)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:9: MD038: Spaces inside code span elements (no-space-in-code)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_pragma_without_space_then_text_with_code_span_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_pragma_without_space_then_text_with_code_span_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-code -->
 this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md038_pragma_with_space_then_text_with_code_span_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md038_pragma_with_space_then_text_with_code_span_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md038 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-code -->
 
 this is ` bad code span` text
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_no_pragma_then_text_with_link_first_line() -> None:
+def test_pragmas_issue_1479_Md039_no_pragma_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:13: MD039: Spaces inside link text (no-space-in-links)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:13: MD039: Spaces inside link text (no-space-in-links)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_pragma_without_space_then_text_with_link_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md039_pragma_without_space_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-links -->
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_pragma_with_space_then_text_with_link_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md039_pragma_with_space_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-space-in-links -->
 
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_no_pragma_then_text_with_link_second_line() -> None:
+def test_pragmas_issue_1479_Md039_no_pragma_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:13: MD039: Spaces inside link text (no-space-in-links)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:13: MD039: Spaces inside link text (no-space-in-links)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_pragma_without_space_then_text_with_link_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md039_pragma_without_space_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-links -->
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md039_pragma_with_space_then_text_with_link_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md039_pragma_with_space_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md039 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-space-in-links -->
 
 this is not [ a proper ](https://www.example.com) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md040_no_pragma_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md040_no_pragma_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md040 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```
 def func(arg1, arg2):
     return arg1 + arg2
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD040: Fenced code blocks should have a language specified (fenced-code-language)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD040: Fenced code blocks should have a language specified (fenced-code-language)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md040_pragma_without_space_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md040_pragma_without_space_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md040 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line fenced-code-language -->
 ```
 def func(arg1, arg2):
     return arg1 + arg2
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md040_pragma_with_space_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md040_pragma_with_space_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md040 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line fenced-code-language -->
 
 ```
@@ -12915,248 +11853,233 @@ def func(arg1, arg2):
     return arg1 + arg2
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_no_pragma_then_atx_level_2() -> None:
+def test_pragmas_issue_1479_Md041_no_pragma_then_atx_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """## Not Top Level
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_without_space_then_atx_level_2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_without_space_then_atx_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 ## Not Top Level
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_with_space_then_atx_level_2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_with_space_then_atx_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 
 ## Not Top Level
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_no_pragma_then_setext_level_2() -> None:
+def test_pragmas_issue_1479_Md041_no_pragma_then_setext_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Not Top Level
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_without_space_then_setext_level_2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_without_space_then_setext_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 Not Top Level
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_with_space_then_setext_level_2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_with_space_then_setext_level_2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 
 Not Top Level
 ---------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_no_pragma_then_html_h2() -> None:
+def test_pragmas_issue_1479_Md041_no_pragma_then_html_h2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<h2>Not Top Level</h2>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13165,35 +12088,35 @@ def test_pragmas_issue_1479_Md041_no_pragma_then_html_h2() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_without_space_then_html_h2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_without_space_then_html_h2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 <h2>Not Top Level</h2>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13202,35 +12125,32 @@ def test_pragmas_issue_1479_Md041_pragma_without_space_then_html_h2() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_with_space_then_html_h2() -> None:
+def test_pragmas_issue_1479_Md041_pragma_with_space_then_html_h2(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 
 <h2>Not Top Level</h2>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13239,103 +12159,97 @@ def test_pragmas_issue_1479_Md041_pragma_with_space_then_html_h2() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_no_pragma_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md041_no_pragma_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```python
 def bad_func():
     pass
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_without_space_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md041_pragma_without_space_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 ```python
 def bad_func():
     pass
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md041_pragma_with_space_then_fenced_code_block() -> None:
+def test_pragmas_issue_1479_Md041_pragma_with_space_then_fenced_code_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md041 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line first-line-heading -->
 
 ```python
@@ -13343,250 +12257,223 @@ def bad_func():
     pass
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_no_pragma_then_text_with_link_first_line() -> None:
+def test_pragmas_issue_1479_Md042_no_pragma_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"""{markdown_file_path}:1:15: MD042: No empty links (no-empty-links)"""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:15: MD042: No empty links (no-empty-links)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_pragma_without_space_then_text_with_link_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md042_pragma_without_space_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-empty-links -->
 this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_pragma_with_space_then_text_with_link_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md042_pragma_with_space_then_text_with_link_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-empty-links -->
 
 this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_no_pragma_then_text_with_link_second_line() -> None:
+def test_pragmas_issue_1479_Md042_no_pragma_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"""{markdown_file_path}:2:15: MD042: No empty links (no-empty-links)"""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:15: MD042: No empty links (no-empty-links)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_pragma_without_space_then_text_with_link_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md042_pragma_without_space_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-empty-links -->
 this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md042_pragma_with_space_then_text_with_link_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md042_pragma_with_space_then_text_with_link_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md042 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the first line
 <!-- pyml disable-next-line no-empty-links -->
 
 this is not a [valid](#) link
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_atx_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_atx_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13596,33 +12483,33 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_atx_bad_match() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD043: Required heading structure [Bad heading text: Expected: This is the first heading, Actual: This is a single heading] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD043: Required heading structure [Bad heading text: Expected: This is the first heading, Actual: This is a single heading] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 # This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13632,33 +12519,30 @@ def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_bad_match() -> N
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 
 # This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13668,32 +12552,29 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_bad_match() -> None
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_setext_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_setext_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a single heading
 =========
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13703,34 +12584,34 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_setext_bad_match() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD043: Required heading structure [Bad heading text: Expected: This is the first heading, Actual: This is a single heading] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD043: Required heading structure [Bad heading text: Expected: This is the first heading, Actual: This is a single heading] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 This is a single heading
 =========
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13740,34 +12621,31 @@ This is a single heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_bad_match() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_bad_match(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 
 This is a single heading
 =========
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -13777,32 +12655,29 @@ This is a single heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_atx_extra() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_atx_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is the first heading
 # This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13814,34 +12689,34 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_atx_extra() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD043: Required heading structure [Extra heading] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD043: Required heading structure [Extra heading] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_extra() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is the first heading
 <!-- pyml disable-next-line required-headings -->
 # This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13853,34 +12728,31 @@ def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_extra() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_extra() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is the first heading
 <!-- pyml disable-next-line required-headings -->
 
 # This is a single heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13892,34 +12764,31 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_extra() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_setext_extra() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_setext_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first heading
 =================
 This is a single heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13931,36 +12800,36 @@ This is a single heading
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD043: Required heading structure [Extra heading] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD043: Required heading structure [Extra heading] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_extra() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first heading
 =================
 <!-- pyml disable-next-line required-headings -->
 This is a single heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -13972,27 +12841,24 @@ This is a single heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_extra() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_extra(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first heading
 =================
 <!-- pyml disable-next-line required-headings -->
@@ -14000,8 +12866,8 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_extra() -> None:
 This is a single heading
 ------------------------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14013,32 +12879,29 @@ This is a single heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_atx_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_atx_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# This is a single heading
 ## Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14050,34 +12913,34 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_atx_wildcard() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD043: Required heading structure [Wildcard heading match failed.] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD043: Required heading structure [Wildcard heading match failed.] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 # This is a single heading
 ## Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14089,34 +12952,31 @@ def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_wildcard() -> No
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 
 # This is a single heading
 ## Another heading
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14128,34 +12988,31 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_wildcard() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_setext_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_setext_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a single heading
 ===========
 Another heading
 -----------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14167,36 +13024,36 @@ Another heading
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: MD043: Required heading structure [Wildcard heading match failed.] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: MD043: Required heading structure [Wildcard heading match failed.] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_setext_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 This is a single heading
 ===========
 Another heading
 -----------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14208,27 +13065,24 @@ Another heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_setext_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line required-headings -->
 
 This is a single heading
@@ -14236,8 +13090,8 @@ This is a single heading
 Another heading
 -----------
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14249,27 +13103,24 @@ Another heading
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_no_pragma_then_atx_multiple_wildcard() -> None:
+def test_pragmas_issue_1479_Md043_no_pragma_then_atx_multiple_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 ## Heading 2
@@ -14280,8 +13131,8 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_atx_multiple_wildcard() -> None
 
 ### Heading 3
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14293,30 +13144,28 @@ def test_pragmas_issue_1479_Md043_no_pragma_then_atx_multiple_wildcard() -> None
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD043: Required heading structure [Multiple wildcard matching failed.] (required-headings,required-headers)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD043: Required heading structure [Multiple wildcard matching failed.] (required-headings,required-headers)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_multiple_wildcard() -> (
-    None
-):
+def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_multiple_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line required-headings -->
@@ -14328,8 +13177,8 @@ def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_multiple_wildcar
 
 ### Heading 3
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14341,29 +13190,24 @@ def test_pragmas_issue_1479_Md043_pragma_without_space_then_atx_multiple_wildcar
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_multiple_wildcard() -> (
-    None
-):
+def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_multiple_wildcard(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md043 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """# Heading 1
 
 <!-- pyml disable-next-line required-headings -->
@@ -14376,8 +13220,8 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_multiple_wildcard()
 
 ### Heading 3
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -14389,31 +13233,28 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_multiple_wildcard()
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_text_in_para_first_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_text_in_para_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a simple paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14423,35 +13264,33 @@ def test_pragmas_issue_1479_Md044_no_pragma_then_text_in_para_first_line() -> No
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:18: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:18: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_text_in_para_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_text_in_para_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is a simple paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14461,35 +13300,30 @@ This is a simple paragraph with text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_text_in_para_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_text_in_para_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is a simple paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14499,34 +13333,29 @@ This is a simple paragraph with text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_text_in_para_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_text_in_para_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is a line in a paragraph with text.
 This is another line in a paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14536,38 +13365,36 @@ This is another line in a paragraph with text.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:21: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:2:27: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:21: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:2:27: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_text_in_para_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_text_in_para_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is a line in a paragraph with text.
 <!-- pyml disable-next-line proper-names -->
 This is another line in a paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14577,29 +13404,24 @@ This is another line in a paragraph with text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_text_in_para_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_text_in_para_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is a line in a paragraph with text.
@@ -14607,8 +13429,8 @@ This is a line in a paragraph with text.
 
 This is another line in a paragraph with text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14618,31 +13440,28 @@ This is another line in a paragraph with text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_link_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_link_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14652,35 +13471,33 @@ def test_pragmas_issue_1479_Md044_no_pragma_then_link_in_first_line() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:30: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:30: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_link_in_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_link_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is an [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14690,33 +13507,30 @@ This is an [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_link_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_link_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is an [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14726,34 +13540,29 @@ This is an [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_link_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_link_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an [inline link in a paragraph](http://www.google.com) in the text.
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14763,38 +13572,36 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:30: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:2:35: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:30: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:2:35: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_link_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_link_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is an [inline link in a paragraph](http://www.google.com) in the text.
 <!-- pyml disable-next-line proper-names -->
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14804,29 +13611,24 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_link_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_link_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is an [inline link in a paragraph](http://www.google.com) in the text.
@@ -14834,8 +13636,8 @@ This is an [inline link in a paragraph](http://www.google.com) in the text.
 
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14845,31 +13647,28 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_image_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_image_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an ![inline image in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14879,35 +13678,33 @@ def test_pragmas_issue_1479_Md044_no_pragma_then_image_in_first_line() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:32: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:32: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_in_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is an ![inline image in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14917,33 +13714,30 @@ This is an ![inline image in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is an ![inline image in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14953,29 +13747,24 @@ This is an ![inline image in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_linexx() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_linexx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is an ![inline image in a paragraph](http://www.google.com) in the text.
@@ -14983,8 +13772,8 @@ This is an ![inline image in a paragraph](http://www.google.com) in the text.
 
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -14994,34 +13783,29 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_image_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_image_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an ![inline image in a paragraph](http://www.google.com) in the text.
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15031,38 +13815,36 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:32: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:2:35: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:32: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:2:35: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 This is an ![inline image in a paragraph](http://www.google.com) in the text.
 <!-- pyml disable-next-line proper-names -->
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15072,29 +13854,24 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_and_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_in_first_and_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 This is an ![inline image in a paragraph](http://www.google.com) in the text.
@@ -15102,8 +13879,8 @@ This is an ![inline image in a paragraph](http://www.google.com) in the text.
 
 This is another [inline link in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15113,32 +13890,29 @@ This is another [inline link in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_image_split_over_two_lines() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_image_split_over_two_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an ![inline image
 in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15148,36 +13922,34 @@ in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:6: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:6: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_split_over_two_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_image_split_over_two_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an ![inline image
 <!-- pyml disable-next-line proper-names -->
 in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15187,36 +13959,31 @@ in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_split_over_two_lines() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_image_split_over_two_lines(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is an ![inline image
 <!-- pyml disable-next-line proper-names -->
 
 in a paragraph](http://www.google.com) in the text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15226,32 +13993,29 @@ in a paragraph](http://www.google.com) in the text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15261,34 +14025,34 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 [lrd with a paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15298,34 +14062,31 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 [lrd with a paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15335,33 +14096,30 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_second_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a
 paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15371,37 +14129,35 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a
 <!-- pyml disable-next-line proper-names -->
 paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15411,35 +14167,32 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_second_line() -> None:
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a
 <!-- pyml disable-next-line proper-names -->
 
 paragraph]: http://www.google.com
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -15451,34 +14204,29 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line_and_in_first_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line_and_in_first_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a paragraph]: http://www.google.com "a paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15488,37 +14236,35 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:1:50: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:1:50: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line_and_in_first_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line_and_in_first_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 [lrd with a paragraph]: http://www.google.com "a paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15528,36 +14274,31 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_in_first_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_in_first_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 [lrd with a paragraph]: http://www.google.com "a paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -15569,35 +14310,30 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line_and_in_second_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_lrd_in_first_line_and_in_second_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """[lrd with a paragraph]: http://www.google.com "a
 paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15607,39 +14343,37 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:13: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line_and_in_second_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_lrd_in_first_line_and_in_second_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 [lrd with a paragraph]: http://www.google.com "a
 <!-- pyml disable-next-line proper-names -->
 paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15649,23 +14383,19 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_in_second_line_title() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_in_second_line_title(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
 
@@ -15673,7 +14403,6 @@ def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_i
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 [lrd with a paragraph]: http://www.google.com "a
@@ -15682,8 +14411,8 @@ def test_pragmas_issue_1479_Md044_pragma_with_space_then_lrd_in_first_line_and_i
 paragraph"
 LRD.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -15695,31 +14424,28 @@ LRD.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_code_span_in_first_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_code_span_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """My paragraph with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15729,36 +14455,34 @@ def test_pragmas_issue_1479_Md044_no_pragma_then_code_span_in_first_line() -> No
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:1:22: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:1:22: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_code_span_in_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_code_span_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 My paragraph with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15768,35 +14492,30 @@ My paragraph with `a paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_code_span_in_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_code_span_in_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 My paragraph with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -15808,32 +14527,29 @@ My paragraph with `a paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_code_span_in_second_line() -> None:
+def test_pragmas_issue_1479_Md044_no_pragma_then_code_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """My paragraph
 with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15843,38 +14559,36 @@ with `a paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
-{markdown_file_path}:2:9: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+{markdown_file_path}:2:9: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_code_span_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_code_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 My paragraph
 <!-- pyml disable-next-line proper-names -->
 with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15884,29 +14598,24 @@ with `a paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_code_span_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_code_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line proper-names -->
 
 My paragraph
@@ -15914,8 +14623,8 @@ My paragraph
 
 with `a paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -15927,34 +14636,29 @@ with `a paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_no_pragma_then_multilinecode_span_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_no_pragma_then_multilinecode_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """My para with `a
 paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -15964,36 +14668,34 @@ paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:1: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_without_space_then_multilinecode_span_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_without_space_then_multilinecode_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """My para with `a
 <!-- pyml disable-next-line proper-names -->
 paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--set",
@@ -16003,36 +14705,31 @@ paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md044_pragma_with_space_then_multilinecode_span_in_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md044_pragma_with_space_then_multilinecode_span_in_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md044 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """My para with `a
 <!-- pyml disable-next-line proper-names -->
 
 paragraph in a` code span.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
@@ -16044,31 +14741,28 @@ paragraph in a` code span.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_no_pragma_then_para_with_image_first_line() -> None:
+def test_pragmas_issue_1479_Md045_no_pragma_then_para_with_image_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Every image link like this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16077,35 +14771,33 @@ def test_pragmas_issue_1479_Md045_no_pragma_then_para_with_image_first_line() ->
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:28: MD045: Images should have alternate text (alt text) (no-alt-text)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:28: MD045: Images should have alternate text (alt text) (no-alt-text)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_pragma_without_space_then_para_with_image_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md045_pragma_without_space_then_para_with_image_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-alt-text -->
 Every image link like this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16114,35 +14806,30 @@ Every image link like this ![ ](image.png) should have alternate text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_pragma_with_space_then_para_with_image_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md045_pragma_with_space_then_para_with_image_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line no-alt-text -->
 
 Every image link like this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16151,32 +14838,29 @@ Every image link like this ![ ](image.png) should have alternate text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_no_pragma_then_para_with_image_second_line() -> None:
+def test_pragmas_issue_1479_Md045_no_pragma_then_para_with_image_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Every image link like
 this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16185,36 +14869,34 @@ this ![ ](image.png) should have alternate text.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:6: MD045: Images should have alternate text (alt text) (no-alt-text)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:6: MD045: Images should have alternate text (alt text) (no-alt-text)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_pragma_without_space_then_para_with_image_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md045_pragma_without_space_then_para_with_image_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Every image link like
 <!-- pyml disable-next-line no-alt-text -->
 this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16223,36 +14905,31 @@ this ![ ](image.png) should have alternate text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md045_pragma_with_space_then_para_with_image_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md045_pragma_with_space_then_para_with_image_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md045 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """Every image link like
 <!-- pyml disable-next-line no-alt-text -->
 
 this ![ ](image.png) should have alternate text.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--disable",
@@ -16261,67 +14938,60 @@ this ![ ](image.png) should have alternate text.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_no_pragma_then_fenced_and_indented_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_no_pragma_then_fenced_and_indented_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Markdown
 # fred
 ```
 
     # barney
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:5:5: MD046: Code block style [Expected: fenced; Actual: indented] (code-block-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:5:5: MD046: Code block style [Expected: fenced; Actual: indented] (code-block-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_pragma_without_space_then_fenced_and_indented_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_pragma_without_space_then_fenced_and_indented_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Markdown
 # fred
 ```
@@ -16329,37 +14999,32 @@ def test_pragmas_issue_1479_Md046_pragma_without_space_then_fenced_and_indented_
 <!-- pyml disable-next-line code-block-style -->
     # barney
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_pragma_with_space_then_fenced_and_indented_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_pragma_with_space_then_fenced_and_indented_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Markdown
 # fred
 ```
@@ -16368,75 +15033,68 @@ def test_pragmas_issue_1479_Md046_pragma_with_space_then_fenced_and_indented_cod
 
     # barney
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_no_pragma_then_indented_and_fenced_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_no_pragma_then_indented_and_fenced_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    # barney
 
 ```Markdown
 # fred
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:3:1: MD046: Code block style [Expected: indented; Actual: fenced] (code-block-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD046: Code block style [Expected: indented; Actual: fenced] (code-block-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_pragma_without_space_then_indented_and_fenced_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_pragma_without_space_then_indented_and_fenced_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    # barney
 
 <!-- pyml disable-next-line code-block-style -->
@@ -16444,37 +15102,32 @@ def test_pragmas_issue_1479_Md046_pragma_without_space_then_indented_and_fenced_
 # fred
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md046_pragma_with_space_then_indented_and_fenced_code_blocks() -> (
-    None
-):
+def test_pragmas_issue_1479_Md046_pragma_with_space_then_indented_and_fenced_code_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md046 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """    # barney
 
 <!-- pyml disable-next-line code-block-style -->
@@ -16483,133 +15136,120 @@ def test_pragmas_issue_1479_Md046_pragma_with_space_then_indented_and_fenced_cod
 # fred
 ```
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md047_no_pragma_then_text_with_no_ending_line() -> None:
+def test_pragmas_issue_1479_Md047_no_pragma_then_text_with_no_ending_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md047 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """this is the text"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:16: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:16: MD047: Each file should end with a single newline character. (single-trailing-newline)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md047_pragma_without_space_then_text_with_no_ending_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md047_pragma_without_space_then_text_with_no_ending_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md047 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line single-trailing-newline -->
 this is the text"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md047_pragma_with_space_then_text_with_no_ending_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Md047_pragma_with_space_then_text_with_no_ending_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md047 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line single-trailing-newline -->
 
 this is the text"""
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md048_no_pragma_then_two_fenced_blocks() -> None:
+def test_pragmas_issue_1479_Md048_no_pragma_then_two_fenced_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md048 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Python
 def test():
     print("test")
@@ -16620,36 +15260,36 @@ def test():
     print("test")
 ~~~
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:6:1: MD048: Code fence style [Expected: backtick; Actual: tilde] (code-fence-style)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:6:1: MD048: Code fence style [Expected: backtick; Actual: tilde] (code-fence-style)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md048_pragma_without_space_then_two_fenced_blocks() -> None:
+def test_pragmas_issue_1479_Md048_pragma_without_space_then_two_fenced_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md048 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Python
 def test():
     print("test")
@@ -16661,35 +15301,32 @@ def test():
     print("test")
 ~~~
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Md048_pragma_with_space_then_two_fenced_blocks() -> None:
+def test_pragmas_issue_1479_Md048_pragma_with_space_then_two_fenced_blocks(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Md048 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """```Python
 def test():
     print("test")
@@ -16702,39 +15339,36 @@ def test():
     print("test")
 ~~~
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "scan",
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_no_pragma_then_html_block() -> None:
+def test_pragmas_issue_1479_Pml100_no_pragma_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<noframes>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16745,33 +15379,33 @@ def test_pragmas_issue_1479_Pml100_no_pragma_then_html_block() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:1: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:1: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_without_space_then_html_block() -> None:
+def test_pragmas_issue_1479_Pml100_pragma_without_space_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line disallowed-html -->
 <noframes>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16782,33 +15416,30 @@ def test_pragmas_issue_1479_Pml100_pragma_without_space_then_html_block() -> Non
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_with_space_then_html_block() -> None:
+def test_pragmas_issue_1479_Pml100_pragma_with_space_then_html_block(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line disallowed-html -->
 
 <noframes>
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16819,31 +15450,28 @@ def test_pragmas_issue_1479_Pml100_pragma_with_space_then_html_block() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_no_pragma_then_inline_html_first_line() -> None:
+def test_pragmas_issue_1479_Pml100_no_pragma_then_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16854,35 +15482,33 @@ def test_pragmas_issue_1479_Pml100_no_pragma_then_inline_html_first_line() -> No
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:11: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:11: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_without_space_then_inline_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Pml100_pragma_without_space_then_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line disallowed-html -->
 This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16893,35 +15519,30 @@ This html <noframes> is in a text block.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_with_space_then_inline_html_first_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Pml100_pragma_with_space_then_inline_html_first_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line disallowed-html -->
 
 This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16932,32 +15553,29 @@ This html <noframes> is in a text block.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_no_pragma_then_inline_html_second_line() -> None:
+def test_pragmas_issue_1479_Pml100_no_pragma_then_inline_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first line.
 This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -16968,36 +15586,34 @@ This html <noframes> is in a text block.
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:2:11: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:2:11: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_without_space_then_inline_html_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Pml100_pragma_without_space_then_inline_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first line.
 <!-- pyml disable-next-line disallowed-html -->
 This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17008,36 +15624,31 @@ This html <noframes> is in a text block.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml100_pragma_with_space_then_inline_html_second_line() -> (
-    None
-):
+def test_pragmas_issue_1479_Pml100_pragma_with_space_then_inline_html_second_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml100 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """This is the first line.
 <!-- pyml disable-next-line disallowed-html -->
 
 This html <noframes> is in a text block.
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17048,32 +15659,29 @@ This html <noframes> is in a text block.
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_no_pragma_then_ul_li() -> None:
+def test_pragmas_issue_1479_Pml101_no_pragma_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """ * this is level 1
  * this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17084,36 +15692,36 @@ def test_pragmas_issue_1479_Pml101_no_pragma_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)
-{markdown_file_path}:2:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)
+{markdown_file_path}:2:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-anchored-indent -->
  * this is level 1
 <!-- pyml disable-next-line list-anchored-indent -->
  * this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17124,27 +15732,24 @@ def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ul_li() -> None:
+def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ul_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-anchored-indent -->
 
  * this is level 1
@@ -17152,8 +15757,8 @@ def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ul_li() -> None:
 
  * this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17164,32 +15769,29 @@ def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ul_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_no_pragma_then_ol_li() -> None:
+def test_pragmas_issue_1479_Pml101_no_pragma_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and no pragmas, and we expect the rule to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """ 1. this is level 1
  1. this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17200,36 +15802,36 @@ def test_pragmas_issue_1479_Pml101_no_pragma_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = f"""{markdown_file_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)
-{markdown_file_path}:2:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)"""
-        expected_error = ""
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)
+{markdown_file_path}:2:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and a disable-next-line pragma on the line before each one,
     and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-anchored-indent -->
  1. this is level 1
 <!-- pyml disable-next-line list-anchored-indent -->
  1. this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17240,27 +15842,24 @@ def test_pragmas_issue_1479_Pml101_pragma_without_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.gfm
-def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ol_li() -> None:
+def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ol_li(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test the case where we have Pml101 violations and a disable-next-line pragma two lines before each one a single blank line between them, and we expect the rule not to fire.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     source_markdown = """<!-- pyml disable-next-line list-anchored-indent -->
 
  1. this is level 1
@@ -17268,8 +15867,8 @@ def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ol_li() -> None:
 
  1. this is also level 1
 """
-    with create_temporary_configuration_file(
-        supplied_configuration=source_markdown, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
             "--enable-rules",
@@ -17280,14 +15879,10 @@ def test_pragmas_issue_1479_Pml101_pragma_with_space_then_ol_li() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)

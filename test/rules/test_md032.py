@@ -403,6 +403,7 @@ Lorem ipsum dolor sit amet:
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md032_scan(test: pluginRuleTest) -> None:
     """
@@ -411,6 +412,7 @@ def test_md032_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md032")
 
 
+@pytest.mark.rules
 def test_md032_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md032",

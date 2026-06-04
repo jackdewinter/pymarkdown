@@ -7,9 +7,14 @@ import runpy
 from test.patches.patch_base import PatchBase
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
 from test.utils import assert_that_exception_is_raised
-from typing import Any, cast
+from typing import Any, Tuple, cast
 
 from pymarkdown.api import PyMarkdownApi, PyMarkdownApiException
+
+
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md047", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 def get_semantic_version() -> str:
@@ -64,19 +69,15 @@ def test_api_tokenizer_init_exception() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    exception_path = os.path.abspath(
+        os.path.join("pymarkdown", "resources", "entities.json")
     )
-    exception_path = os.path.join("pymarkdown", "resources", "entities.json")
 
     # Act
-    with path_builtin_open_with_exception(
-        os.path.abspath(exception_path), "rt", OSError("blah")
-    ):
-        expected_output = """BadTokenizationError encountered while initializing tokenizer:
-Named character entity map file '{path}' was not loaded (blah).""".replace(
-            "{path}", os.path.abspath(exception_path)
-        )
+    with path_builtin_open_with_exception(exception_path, "rt", OSError("blah")):
+        expected_output = f"""BadTokenizationError encountered while initializing tokenizer:
+Named character entity map file '{exception_path}' was not loaded (blah)."""
 
         # Act & Assert
         assert_that_exception_is_raised(
@@ -131,19 +132,15 @@ def test_api_tokenizer_failure_during_file_scan() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     exception_path = os.path.abspath(
         os.path.join("pymarkdown", "resources", "entities.json")
     )
 
     # Act
     with path_builtin_open_with_exception(exception_path, "rt", IOError("bob"), True):
-        expected_output = """BadTokenizationError encountered while initializing tokenizer:
-Named character entity map file '{path}' was not loaded (bob).""".replace(
-            "{path}", exception_path
-        )
+        expected_output = f"""BadTokenizationError encountered while initializing tokenizer:
+Named character entity map file '{exception_path}' was not loaded (bob)."""
 
         # Act & Assert
         assert_that_exception_is_raised(

@@ -87,6 +87,7 @@ this is an only spaces `` codepsan
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+@pytest.mark.rules
 def test_md038_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
@@ -94,6 +95,7 @@ def test_md038_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md038")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -104,6 +106,7 @@ def test_md038_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md038_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md038",

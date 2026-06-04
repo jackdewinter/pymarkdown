@@ -60,11 +60,9 @@ scanTests = [
    * Item 2b
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:4:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)\n"
-            + "{temp_source_path}:5:4: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 3] (list-indent)\n"
-            + "{temp_source_path}:6:4: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 3] (list-indent)"
-        ),
+        scan_expected_output="""{temp_source_path}:4:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)
+{temp_source_path}:5:4: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 3] (list-indent)
+{temp_source_path}:6:4: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 3] (list-indent)""",
         fix_expected_file_contents="""* Item 1
   * Item 1a
   * Item 1b
@@ -108,10 +106,8 @@ scanTests = [
  * Item 2
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)\n"
-            + "{temp_source_path}:3:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)"
-        ),
+        scan_expected_output="""{temp_source_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)
+{temp_source_path}:3:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)""",
         fix_expected_file_contents="""* Item 1
 * Item 2
 * Item 2
@@ -261,8 +257,8 @@ scanTests = [
 >    * Item 2b
 """,
         scan_expected_return_code=1,
-        scan_expected_output="{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)\n"
-        + "{temp_source_path}:6:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)",
+        scan_expected_output="""{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
+{temp_source_path}:6:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)""",
         fix_expected_file_contents="""> * Item 1
 >   * Item 1a
 >   * Item 1b
@@ -283,10 +279,8 @@ scanTests = [
     10. Item 2b
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:5:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)\n"
-            + "{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)"
-        ),
+        scan_expected_output="""{temp_source_path}:5:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)
+{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)""",
         fix_expected_file_contents="""1. Item 1
    1. Item 1a
    10. Item 1b
@@ -307,10 +301,8 @@ scanTests = [
     10. Item 2b
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)\n"
-            + "{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)"
-        ),
+        scan_expected_output="""{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
+{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)""",
         fix_expected_file_contents="""1. Item 1
     1. Item 1a
    10. Item 1b
@@ -424,8 +416,6 @@ scanTests = [
     + Item 2a
     + Item 2b
 """,
-        scan_expected_return_code=0,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_ordered_right_unordered_x_1",
@@ -460,8 +450,6 @@ scanTests = [
      + Item 2a
      + Item 2b
 """,
-        scan_expected_return_code=0,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_unordered_ordered_left_x",
@@ -1207,6 +1195,7 @@ scanTests = [
 fixTests, clashTests = build_fix_and_clash_lists(scanTests)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_scan_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -1217,6 +1206,7 @@ def test_md005_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md005")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -1227,6 +1217,7 @@ def test_md005_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md005_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md005",

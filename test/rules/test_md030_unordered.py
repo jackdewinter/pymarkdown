@@ -484,6 +484,7 @@ another paragraph
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md030_scan(test: pluginRuleTest) -> None:
     """
@@ -492,6 +493,7 @@ def test_md030_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md030")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -502,6 +504,7 @@ def test_md030_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md030_config(test: pluginConfigErrorTest) -> None:
     """

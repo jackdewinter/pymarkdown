@@ -4,20 +4,26 @@ Module for specifying a configuration file through the API.
 
 import os
 import sys
-import tempfile
 from test.utils import (
     assert_that_exception_is_raised,
     capture_stdout,
     create_temporary_configuration_file,
     temporary_change_to_directory,
 )
-from typing import cast
+from typing import Any, Dict, Tuple, cast
+
+import py  # type: ignore[import-untyped]
 
 from pymarkdown.api import (
     PyMarkdownApi,
     PyMarkdownApiArgumentException,
     PyMarkdownApiException,
 )
+
+
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md047", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 def test_api_config_with_empty_path() -> None:
@@ -52,9 +58,7 @@ def test_api_config_with_bad_path() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     configuration_file = "not-exists"
 
     expected_output = "Specified configuration file `not-exists` does not exist."
@@ -77,9 +81,7 @@ def test_api_config_with_bad_contents() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = """hallo: 1
 bye
 """
@@ -107,9 +109,7 @@ def test_api_config_with_config_file_with_good_value() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"md999": {"other_test_value": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -158,9 +158,7 @@ def test_api_config_with_config_file_with_bad_value() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"md999": {"other_test_value": 9}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -208,10 +206,11 @@ def test_api_config_with_good_strict_and_bad_config() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    supplied_configuration: Dict[str, Any] = {
+        "mode": {"strict-config": True},
+        "log": {"file": 0},
+    }
     configuration_file = None
     expected_output = (
         "Configuration Error: The value for property 'log.file' must be of type 'str'."
@@ -238,9 +237,7 @@ def test_api_config_with_bad_strict_and_bad_config() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"mode": {"strict-config": 2}}
     expected_output = "Configuration Error: The value for property 'mode.strict-config' must be of type 'bool'."
 
@@ -265,9 +262,7 @@ def test_api_config_with_exception_during_confiuguration() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"md999": {"test_value": 10}}}
 
     expected_output = """BadPluginError encountered while configuring plugins:
@@ -309,14 +304,10 @@ def test_api_config_with_exception_during_scanning() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
-    expected_output = """BadPluginError encountered while scanning '{path}':
-(1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.""".replace(
-        "{path}", os.path.abspath(source_path)
-    )
+    expected_output = f"""BadPluginError encountered while scanning '{abs_source_path}':
+(1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action."""
 
     with create_temporary_configuration_file(
         supplied_configuration
@@ -342,31 +333,31 @@ MD999>>token:[atx(1,1):1:0:]
 """.replace("{path}", source_path.replace("\\", "\\\\"))
 
 
-def test_api_config_with_bad_contents_for_default_config() -> None:
+def test_api_config_with_bad_contents_for_default_config(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that a default configuration file with bad contents is reported as an error.
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = "this is not json"
 
     # Note that the default configuration file is determined by the current working
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            supplied_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-        ) as configuration_file:
-            # Act
-            caught_exception = None
-            try:
-                with temporary_change_to_directory(tmp_dir_path):
-                    _ = PyMarkdownApi().scan_path(source_path)
-            except PyMarkdownApiException as this_exception:
-                caught_exception = this_exception
+    with create_temporary_configuration_file(
+        supplied_configuration, file_name=".pymarkdown", directory=tmpdir
+    ) as configuration_file:
+        # Act
+        caught_exception = None
+        try:
+            with temporary_change_to_directory(tmpdir):
+
+                _ = PyMarkdownApi().scan_path(source_path)
+        except PyMarkdownApiException as this_exception:
+            caught_exception = this_exception
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
@@ -386,7 +377,9 @@ def test_api_config_with_bad_contents_for_default_config() -> None:
         )
 
 
-def test_api_config_with_bad_settings_for_default_config() -> None:
+def test_api_config_with_bad_settings_for_default_config(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that a default configuration file with bad contents is reported as an error.
 
@@ -395,10 +388,11 @@ def test_api_config_with_bad_settings_for_default_config() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    supplied_configuration: Dict[str, Any] = {
+        "mode": {"strict-config": True},
+        "log": {"file": 0},
+    }
 
     expected_output = (
         "Configuration Error: The value for property 'log.file' must be of type 'str'."
@@ -407,45 +401,46 @@ def test_api_config_with_bad_settings_for_default_config() -> None:
     # Note that the default configuration file is determined by the current working
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            supplied_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-        ):
-            # Act & Assert
-            with temporary_change_to_directory(tmp_dir_path):
-                assert_that_exception_is_raised(
-                    PyMarkdownApiException,
-                    expected_output,
-                    PyMarkdownApi().scan_path,
-                    source_path,
-                )
+    with create_temporary_configuration_file(
+        supplied_configuration, file_name=".pymarkdown", directory=tmpdir
+    ):
+        # Act & Assert
+        with temporary_change_to_directory(tmpdir):
+            assert_that_exception_is_raised(
+                PyMarkdownApiException,
+                expected_output,
+                PyMarkdownApi().scan_path,
+                source_path,
+            )
 
 
-def test_api_config_with_bad_contents_for_pyproject_toml() -> None:
+def test_api_config_with_bad_contents_for_pyproject_toml(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
     """
     Test to make sure that a pyproject.toml file with bad contents is reported as an error.
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    supplied_configuration: Dict[str, Any] = {
+        "mode": {"strict-config": True},
+        "log": {"file": 0},
+    }
 
     # Note that the default configuration file is determined by the current working
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        with create_temporary_configuration_file(
-            supplied_configuration, file_name="pyproject.toml", directory=tmp_dir_path
-        ) as configuration_file:
-            # Act
-            caught_exception = None
-            try:
-                with temporary_change_to_directory(tmp_dir_path):
-                    _ = PyMarkdownApi().scan_path(source_path)
-            except PyMarkdownApiException as this_exception:
-                caught_exception = this_exception
+    with create_temporary_configuration_file(
+        supplied_configuration, file_name="pyproject.toml", directory=tmpdir
+    ) as configuration_file:
+        # Act
+        caught_exception = None
+        try:
+            with temporary_change_to_directory(tmpdir):
+                _ = PyMarkdownApi().scan_path(source_path)
+        except PyMarkdownApiException as this_exception:
+            caught_exception = this_exception
 
     # Assert
     assert caught_exception, "Should have thrown an exception."

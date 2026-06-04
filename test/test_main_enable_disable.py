@@ -4,10 +4,17 @@ Module to provide tests related to enabling or disabling rules.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import create_temporary_configuration_file
+from typing import Tuple
 
 
-def test_markdown_with_dash_e_single_by_name() -> None:
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md047", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
+def test_markdown_with_dash_e_single_by_name(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the name of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -15,10 +22,7 @@ def test_markdown_with_dash_e_single_by_name() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "-e",
         "debug-only",
@@ -26,8 +30,7 @@ def test_markdown_with_dash_e_single_by_name() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = """MD999>>init_from_config
+    expected_results = ExpectedResults(expected_output="""MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
@@ -45,19 +48,16 @@ MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
-"""
-    expected_error = ""
+""")
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_e_single_by_id() -> None:
+def test_markdown_with_dash_e_single_by_id(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -65,10 +65,7 @@ def test_markdown_with_dash_e_single_by_id() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "-e",
         "MD999",
@@ -76,8 +73,7 @@ def test_markdown_with_dash_e_single_by_id() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = """MD999>>init_from_config
+    expected_results = ExpectedResults(expected_output="""MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
@@ -95,19 +91,18 @@ MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
-"""
-    expected_error = ""
+""")
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_enabled_by_configuration_id() -> None:
+def test_markdown_with_enabled_by_configuration_id(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we enable a rule by using the rule's id in the
     configuration, with no help from the command line.
@@ -116,10 +111,7 @@ def test_markdown_with_enabled_by_configuration_id() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"md999": {"enabled": True}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -131,8 +123,7 @@ def test_markdown_with_enabled_by_configuration_id() -> None:
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = """MD999>>init_from_config
+        expected_results = ExpectedResults(expected_output="""MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
@@ -150,19 +141,18 @@ MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
-"""
-        expected_error = ""
+""")
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_enabled_by_configuration_name() -> None:
+def test_markdown_with_enabled_by_configuration_name(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we enable a rule by using the rule's name in the
     configuration, with no help from the command line.
@@ -171,10 +161,7 @@ def test_markdown_with_enabled_by_configuration_name() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_configuration = {"plugins": {"debug-only": {"enabled": True}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -188,8 +175,7 @@ def test_markdown_with_enabled_by_configuration_name() -> None:
             source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = """MD999>>init_from_config
+        expected_results = ExpectedResults(expected_output="""MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
@@ -207,19 +193,16 @@ MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>completed_file
-"""
-        expected_error = ""
+""")
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_d_single_by_name() -> None:
+def test_markdown_with_dash_d_single_by_name(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get enable a rule if '-d' is supplied and the name of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -227,10 +210,7 @@ def test_markdown_with_dash_d_single_by_name() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "-d",
         "single-trailing-newline",
@@ -238,20 +218,16 @@ def test_markdown_with_dash_d_single_by_name() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_d_single_by_id() -> None:
+def test_markdown_with_dash_d_single_by_id(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get enable a rule if '-d' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -259,10 +235,7 @@ def test_markdown_with_dash_d_single_by_id() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "-d",
         "MD047",
@@ -270,20 +243,18 @@ def test_markdown_with_dash_d_single_by_id() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_d_and_dash_e_single_by_name() -> None:
+def test_markdown_with_dash_d_and_dash_e_single_by_name(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get disabled if a rule if '-d' is supplied
     and if 'e' is supplied, both with the name of the rule.
@@ -292,10 +263,7 @@ def test_markdown_with_dash_d_and_dash_e_single_by_name() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "-d",
         "single-trailing-newline",
@@ -305,14 +273,10 @@ def test_markdown_with_dash_d_and_dash_e_single_by_name() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)

@@ -171,10 +171,8 @@ scanTests = [
 - third
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:2:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)\n"
-            + "{temp_source_path}:3:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)"
-        ),
+        scan_expected_output="""{temp_source_path}:2:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)
+{temp_source_path}:3:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)""",
         fix_expected_file_contents="""* first
 * second
 * third
@@ -241,11 +239,9 @@ scanTests = [
      + third
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:1:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)\n"
-            + "{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)\n"
-            + "{temp_source_path}:6:6: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)"
-        ),
+        scan_expected_output="""{temp_source_path}:1:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)
+{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)
+{temp_source_path}:6:6: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: plus] (ul-style)""",
         fix_expected_file_contents="""* first
   1. second
      * third
@@ -366,6 +362,7 @@ this is a separator
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md004_scan(test: pluginRuleTest) -> None:
     """
@@ -374,6 +371,7 @@ def test_md004_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md004")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -384,6 +382,7 @@ def test_md004_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md004_config(test: pluginConfigErrorTest) -> None:
     """
@@ -392,6 +391,7 @@ def test_md004_config(test: pluginConfigErrorTest) -> None:
     execute_configuration_test(test, f"{source_path}good_list_asterisk_single_level.md")
 
 
+@pytest.mark.rules
 def test_md004_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md004",

@@ -6,35 +6,44 @@ import os
 import sys
 import tempfile
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import (
+    ARGPARSE_X,
     assert_file_is_as_expected,
     copy_to_temp_file,
     create_temporary_configuration_file,
+    create_temporary_markdown_file,
+    generate_path_to_bad_plugin,
     read_contents_of_text_file,
     write_temporary_configuration,
 )
+from typing import Tuple
 
 # pylint: disable=too-many-lines
 
-if sys.version_info < (3, 10):
-    ARGPARSE_X = "optional arguments:"
-else:
-    ARGPARSE_X = "options:"
+
+def __generate_source_path(
+    source_file_name: str, alterate_rule: str = "md047"
+) -> Tuple[str, str]:
+    source_path = os.path.join(
+        "test", "resources", "rules", alterate_rule, source_file_name
+    )
+    return source_path, os.path.abspath(source_path)
 
 
-def test_markdown_with_plugins_only() -> None:
+def test_markdown_with_plugins_only(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure "plugins" from the command line shows help
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         "plugins",
     ]
 
-    expected_return_code = 2
-    expected_output = """usage: main.py plugins [-h] {list,info} ...
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: main.py plugins [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -43,19 +52,19 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X)
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""".replace("{ARGPARSE_X}", ARGPARSE_X),
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_and_bad_path() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_and_bad_path(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error if '--add-plugin' is supplied with a bad path.
 
@@ -66,10 +75,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--add-plugin",
         "MD047",
@@ -77,23 +83,22 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while loading plugins:\n"
-        + "Plugin path 'MD047' does not exist.\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
+Plugin path 'MD047' does not exist.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file() -> None:
+def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin.
 
@@ -102,10 +107,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/plugin_two.py",
@@ -113,24 +115,23 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file() -> None:
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = """MD998>>init_from_config
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""MD998>>init_from_config
 MD998>>starting_new_file>>
 MD998>>next_line:# This is a test
 MD998>>next_line:
 MD998>>next_line:The line after this line should be blank.
 MD998>>next_line:
 MD998>>completed_file
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file_config_string() -> (
@@ -241,10 +242,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory() -> Non
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/",
@@ -252,27 +250,26 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory() -> Non
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = """MD998>>init_from_config
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""MD998>>init_from_config
 MD998>>starting_new_file>>
 MD998>>next_line:# This is a test
 MD998>>next_line:
 MD998>>next_line:The line after this line should be blank.
 MD998>>next_line:
 MD998>>completed_file
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_repeated_identifier() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_repeated_identifier(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
     specifies an already present id.
@@ -282,13 +279,8 @@ def test_markdown_with_repeated_identifier() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "duplicate_id_debug.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("duplicate_id_debug.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -296,32 +288,28 @@ def test_markdown_with_repeated_identifier() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
-Unable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
+Unable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_bad_identifier() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_bad_identifier(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
         specifies an invalid id.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_id.py")
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_id.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -329,34 +317,28 @@ def test_markdown_with_bad_identifier() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
-Unable to register plugin 'bad_id.py' with id 'debug-only' as id is not a valid id in the form 'aannn' or 'aaannn'."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
+Unable to register plugin 'bad_id.py' with id 'debug-only' as id is not a valid id in the form 'aannn' or 'aaannn'.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_repeated_name() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_repeated_name(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
         specifies an already present name.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "duplicate_name_debug.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("duplicate_name_debug.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -364,32 +346,28 @@ def test_markdown_with_repeated_name() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
-Unable to register plugin 'duplicate_name_debug.py' with name 'debug-only' as plugin 'plugin_one.py' is already registered with that name."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
+Unable to register plugin 'duplicate_name_debug.py' with name 'debug-only' as plugin 'plugin_one.py' is already registered with that name.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_bad_name() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_bad_name(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
         specifies a bad name.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_name.py")
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_name.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -397,34 +375,30 @@ def test_markdown_with_bad_name() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
-Unable to register plugin 'bad_name.py' with name 'debug.only' as name is not a valid name in the form 'an-an'."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
+Unable to register plugin 'bad_name.py' with name 'debug.only' as name is not a valid name in the form 'an-an'.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin file
         that is not really a plugin file.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "not-a-python-file.txt"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("not-a-python-file.txt")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -432,34 +406,30 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while loading plugins:\n"
-        + "Plugin file named 'not-a-python-file.txt' cannot be loaded.\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
+Plugin file named 'not-a-python-file.txt' cannot be loaded.\n""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_and_missing_class() -> None:
+def test_markdown_with_dash_dash_add_plugin_and_missing_class(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin file
         that does not specify a plugin with the same name.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join("test", "resources", "plugins", "bad", "misnamed.py")
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("misnamed.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -467,23 +437,22 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while loading plugins:\n"
-        + "Plugin file named 'misnamed.py' does not contain a class named 'Misnamed'.\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
+Plugin file named 'misnamed.py' does not contain a class named 'Misnamed'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the starting_new_file function.
@@ -493,13 +462,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file() -> None
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_starting_new_file.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -507,19 +471,18 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file() -> None
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadPluginError encountered while scanning '{abs_source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
-""".replace("{source_path}", os.path.abspath(source_path))
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alternate_output() -> (
@@ -532,12 +495,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
 
     # Arrange
     scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_starting_new_file.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -545,37 +504,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""[pse[[fse[BadPluginError encountered while scanning '{abs_source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.]]]]
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
+""",
     )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the completed_file function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_completed_file.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_completed_file.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -583,35 +536,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadPluginError encountered while scanning '{abs_source_path}':
 Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
-""".replace("{source_path}", os.path.abspath(source_path))
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_line() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_line(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_line function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -619,35 +568,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
-""".replace("{source_path}", os.path.abspath(source_path))
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_line function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -655,37 +600,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
-""".replace("{source_path}", os.path.abspath(source_path))
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace() -> (
-    None
-):
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_line function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line.py")
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
@@ -696,16 +635,16 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_error = f"""BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 Actual Line: # This is a test
 Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
-""".replace("{source_path}", os.path.abspath(source_path))
+"""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -728,22 +667,17 @@ Traceback (most recent call last):
     )
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace() -> (
-    None
-):
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_line function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line.py")
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
@@ -756,16 +690,16 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuratio
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_error = f"""BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 Actual Line: # This is a test
 Caused by: Exception:
    bad next_line
 Traceback (most recent call last):
-""".replace("{source_path}", os.path.abspath(source_path))
+"""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -788,7 +722,9 @@ Traceback (most recent call last):
     )
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_token() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_token(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_token function.
@@ -798,13 +734,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_token.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_token.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -812,24 +743,23 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""BadPluginError encountered while scanning '{abs_source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
-""".replace("{source_path}", os.path.abspath(source_path))
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace() -> (
-    None
-):
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_token function.
@@ -839,13 +769,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_token.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_token.py")
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
@@ -856,16 +781,16 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning '{source_path}':
+    expected_error = f"""BadPluginError encountered while scanning '{abs_source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
 Actual Token: [atx(1,1):1:0:]
 Caused by: Exception:
    bad next_token
 Traceback (most recent call last):
-""".replace("{source_path}", os.path.abspath(source_path))
+"""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -889,20 +814,17 @@ pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (1,1): Plugin id 'MDE
     )
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_constructor() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_constructor(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the constructor function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_constructor.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_constructor.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -910,34 +832,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while loading plugins:\n"
-        + "Plugin file named 'bad_constructor.py' threw an exception in the constructor for the class 'BadConstructor'.\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
+Plugin file named 'bad_constructor.py' threw an exception in the constructor for the class 'BadConstructor'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_details() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_details(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the details function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_details.py")
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_details.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -945,33 +863,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadDetails' had a critical failure loading the plugin details.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the details function.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_details.py")
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_details.py")
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
@@ -988,7 +904,7 @@ Traceback (most recent call last):
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -1009,20 +925,17 @@ Traceback (most recent call last):
     )
 
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail() -> None:
+def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception
         that a descirption is bad.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_string_detail_is_int.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1030,24 +943,23 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field name 'plugin_description'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configuration() -> (
-    None
-):
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception that a string detail is bad.
     Note: this version loads from configuration.
@@ -1057,13 +969,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_string_detail_is_int.py")
     supplied_configuration = {"plugins": {"additional_paths": plugin_path}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -1075,34 +982,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
             source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = """\n\nBadPluginError encountered while loading plugins:
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error="""\n\nBadPluginError encountered while loading plugins:
 Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field name 'plugin_description'.
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
+""",
         )
 
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail() -> None:
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception that a string detail is empty.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_string_detail_is_empty.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_string_detail_is_empty.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1110,34 +1013,30 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadStringDetailIsEmpty' returned an empty value for field name 'plugin_description'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception that a boolean detail is bad.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_boolean_detail_is_int.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_boolean_detail_is_int.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1145,34 +1044,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadBooleanDetailIsInt' returned an improperly typed value for field name 'plugin_enabled_by_default'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin throws an exception that an integer detail is bad.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_integer_detail_is_string.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_integer_detail_is_string.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1180,34 +1075,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadIntegerDetailIsString' returned an improperly typed value for field name 'plugin_interface_version'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_description() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_description(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin returns a bad description.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_description.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_description.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1215,34 +1106,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_description() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'BadDescription' returned an improperly typed value for field name 'plugin_description'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_empty_description() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_empty_description(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin returns an empty description.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "empty_description.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("empty_description.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1250,34 +1137,30 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_description() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin class 'EmptyDescription' returned an empty value for field name 'plugin_description'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_blank_description() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_blank_description(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin returns a blank description.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "blank_description.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("blank_description.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1285,34 +1168,30 @@ def test_markdown_with_dash_dash_add_plugin_with_blank_description() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
 Unable to register plugin 'blank_description.py' with a description string that is blank.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_semantic_version() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_semantic_version(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin returns a bad semantic version.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_semantic_version.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_semantic_version.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1320,34 +1199,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_semantic_version() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """ValueError encountered while initializing plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""ValueError encountered while initializing plugins:
 Unable to register plugin 'bad_semantic_version.py' with a version string that is not a valid semantic version.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin returns a bad interface version.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_interface_version.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_interface_version.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -1355,32 +1230,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version() -> None
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """BadPluginError encountered while loading plugins:
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while loading plugins:
 Plugin 'bad_interface_version.py' with an interface version ('-1') that is not '1', '2', or '3'.
-"""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_list_only() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure that `plugins list` lists all plugins.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1439,32 +1313,30 @@ def test_markdown_with_plugins_list_only() -> None:
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_only_all() -> None:
+def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure that `plugins list` lists all plugins, even ones
         that may not usually appear.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "--all"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1524,31 +1396,31 @@ def test_markdown_with_plugins_list_only_all() -> None:
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_after_command_line_disable_all_rules() -> None:
+def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins after disabling all rules.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["--disable-rules", "*", "plugins", "list"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1607,27 +1479,26 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules() -> No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> None:
+def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins after disabling all rules.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list"]
     supplied_configuration = {"plugins": {"selectively_enable_rules": True}}
     with create_temporary_configuration_file(
@@ -1635,8 +1506,9 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> N
     ) as configuration_file:
         supplied_arguments = ["-c", configuration_file, "plugins", "list"]
 
-        expected_return_code = 0
-        expected_output = """
+        expected_results = ExpectedResults(
+            return_code=0,
+            expected_output="""
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1695,29 +1567,26 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> N
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
-"""
-        expected_error = ""
+""",
+        )
 
         # Act
-        execute_results = scanner.invoke_main(
+        execute_results = scanner_default.invoke_main(
             arguments=supplied_arguments, suppress_first_line_heading_rule=False
         )
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_enable_one() -> (
-    None
-):
+def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_enable_one(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins after disabling all rules.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
         "*",
@@ -1727,8 +1596,9 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
         "list",
     ]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1787,31 +1657,31 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, suppress_first_line_heading_rule=False
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine() -> None:
+def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins with the specified id filter.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "md*9"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
                                 (DEFAULT)  (CURRENT)
 
@@ -1820,52 +1690,52 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine() -> None:
   md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
 
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins with the specified id filter
         for a filter that returns no values.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "this-is-not-an-used-identifier"]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = "No plugin rule identifiers matches the pattern 'this-is-not-an-used-identifier'."
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="No plugin rule identifiers matches the pattern 'this-is-not-an-used-identifier'.",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_list_and_filter_by_name_link() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_list_and_filter_by_name_link(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` lists all plugins with the specified name filter.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "*header*"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ID     NAMES                            ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
@@ -1884,100 +1754,106 @@ def test_markdown_with_plugins_list_and_filter_by_name_link() -> None:
          asis-as-header
   md043  required-headings, required-hea  True       True       0.6.1    No
          ders
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_list_and_bad_filter() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_list_and_bad_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` errors when provided an overly generic filter.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "*"]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py plugins list [-h] [--all] [list_filter]
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py plugins list [-h] [--all] [list_filter]
 main.py plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
-"""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+        expected_results=expected_results,
     )
 
 
-def test_markdown_with_plugins_info_and_bad_filter() -> None:
+def test_markdown_with_plugins_info_and_bad_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` errors when provided with a filter
         that is not a valid id or name.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "info", "abc.def"]
 
-    expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py plugins info [-h] info_filter
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_error="""usage: main.py plugins info [-h] info_filter
 main.py plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
-"""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+        expected_results=expected_results,
     )
 
 
-def test_markdown_with_plugins_info_and_not_found_filter() -> None:
+def test_markdown_with_plugins_info_and_not_found_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins list` errors when a valid id or name is not found.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "info", "md00001"]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = "Unable to find a plugin with an id or name of 'md00001'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="Unable to find a plugin with an id or name of 'md00001'.",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+        expected_results=expected_results,
     )
 
 
-def test_markdown_with_plugins_info_and_found_filter() -> None:
+def test_markdown_with_plugins_info_and_found_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins info` shows the proper information for the specified plugin.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "info", "md001"]
 
-    expected_return_code = 0
-    expected_output = """
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
   ITEM               DESCRIPTION
 
   Id                 md001
@@ -1992,62 +1868,60 @@ def test_markdown_with_plugins_info_and_found_filter() -> None:
 
   front_matter_title  string  "title"
 
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_info_and_found_filter_no_configuration() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_info_and_found_filter_no_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins info` shows the proper information for the specified plugin
         that does not have any configuration.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "info", "md023"]
 
-    expected_return_code = 0
-    expected_output = """  ITEM               DESCRIPTION
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""  ITEM               DESCRIPTION
 
   Id                 md023
   Name(s)            heading-start-left,header-start-left
   Short Description  Headings must start at the beginning of the line.
   Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
                      md023.md
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_plugins_info_and_found_filter_no_configuration_and_no_url() -> (
-    None
-):
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_plugins_info_and_found_filter_no_configuration_and_no_url(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that `plugins info` shows the proper information for the specified plugin
         that does not have any configuration or url.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "info", "md999"]
 
-    expected_return_code = 0
-    expected_output = """MD999>>init_from_config
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""MD999>>init_from_config
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 
@@ -2057,28 +1931,25 @@ MD999>>other_test_value>>1
   Name(s)            debug-only
   Short Description  Debug plugin
 
-"""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_bad_query_config() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_query_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin has an exception during query_config.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_query_config.py"
-    )
+    plugin_path = generate_path_to_bad_plugin("bad_query_config.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -2087,31 +1958,30 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_query_config() -> None:
         "mde007",
     ]
 
-    expected_return_code = 1
-    expected_output = """MDE007>>init_from_config
-MDE007>>init_from_config"""
-    expected_error = """
-Unexpected Error(BadPluginError): Plugin id 'MDE007' had a critical failure during the '__handle_argparse_subparser_info' action."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output="""MDE007>>init_from_config
+MDE007>>init_from_config""",
+        expected_error="""
+Unexpected Error(BadPluginError): Plugin id 'MDE007' had a critical failure during the '__handle_argparse_subparser_info' action.""",
     )
 
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
-def test_markdown_with_dash_dash_add_plugin_with_v2_query_config() -> None:
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_dash_add_plugin_with_v2_query_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure we get an error logged if a plugin has an old query_config.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "old_query_config.py"
-    )
+    plugin_path = plugin_path = generate_path_to_bad_plugin("old_query_config.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -2120,8 +1990,9 @@ def test_markdown_with_dash_dash_add_plugin_with_v2_query_config() -> None:
         "mde007",
     ]
 
-    expected_return_code = 0
-    expected_output = """MDE007>>init_from_config
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""MDE007>>init_from_config
 MDE007>>init_from_config
 
   ITEM                 DESCRIPTION
@@ -2131,16 +2002,14 @@ MDE007>>init_from_config
   Short Description    Test for a old query_config
   Configuration Items  something
 
-"""
-    expected_error = ""
+""",
+    )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_with_plugins_and_alternate_output() -> None:
@@ -2151,27 +2020,24 @@ def test_markdown_with_plugins_and_alternate_output() -> None:
 
     # Arrange
     scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
-    source_path = os.path.join("test", "resources", "rules", "md001") + os.sep
+    source_path, absolute_source_path = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
     supplied_arguments = [
         "scan",
-        f"{source_path}improper_atx_heading_incrementing.md",
+        source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"[pso[[psf[{os.path.abspath(source_path)}{os.sep}improper_atx_heading_incrementing.md:3:1: "
-        + "MD001: Heading levels should only increment by one level at a time. "
-        + "[Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""[pso[[psf[{absolute_source_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]""",
     )
-    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_detect_issue_report_in_fix_mode() -> None:
@@ -2181,12 +2047,8 @@ def test_markdown_detect_issue_report_in_fix_mode() -> None:
 
     # Arrange
     scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line_fix.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line_fix.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -2194,21 +2056,18 @@ def test_markdown_detect_issue_report_in_fix_mode() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""[pse[[fse[BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.]]]]
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
+""",
     )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_detect_issue_report_in_fix_mode_with_stack_trace() -> None:
@@ -2218,12 +2077,8 @@ def test_markdown_detect_issue_report_in_fix_mode_with_stack_trace() -> None:
 
     # Arrange
     scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_line_fix.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_line_fix.py")
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
@@ -2232,39 +2087,32 @@ def test_markdown_detect_issue_report_in_fix_mode_with_stack_trace() -> None:
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error=f"""[pse[[fse[BadPluginError encountered while scanning '{abs_source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 Actual Line: # This is a test
 Caused by: BadPluginError:
    Plugin MDE003(bad-next-line) reported a triggered rule while in fix mode.]]]]
-""".replace(
-        "{source_path}", os.path.abspath(source_path)
+""",
     )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_normal_token_error() -> None:
+def test_markdown_normal_token_error(scanner_default: MarkdownScanner) -> None:
     """
     Test to ensure that we can normally cause tokens to be reported.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join("test", "resources", "rules", "md047", "end_with_blank_line.md")
-    ) as temp_source_path:
-        plugin_path = os.path.join(
-            "test", "resources", "plugins", "bad", "bad_end_tokens.py"
-        )
+    source_path, _ = __generate_source_path("end_with_blank_line.md", "md047")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        plugin_path = generate_path_to_bad_plugin("bad_end_tokens.py")
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
@@ -2272,39 +2120,32 @@ def test_markdown_normal_token_error() -> None:
             temp_source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = """{path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
-{path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
-{path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)""".replace(
-            "{path}", temp_source_path
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{temp_source_path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
+{temp_source_path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
+{temp_source_path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output,
-            expected_error,
-            expected_return_code,
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_normal_token_error_not_reported_with_fix() -> None:
+def test_markdown_normal_token_error_not_reported_with_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to test a version of test_markdown_normal_token_error where fix is
     specified, hence the reporting of the rule violation should not occur.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join("test", "resources", "rules", "md047", "end_with_blank_line.md")
-    ) as temp_source_path:
-        plugin_path = os.path.join(
-            "test", "resources", "plugins", "bad", "bad_end_tokens.py"
-        )
+    source_path, _ = __generate_source_path("end_with_blank_line.md", "md047")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        plugin_path = generate_path_to_bad_plugin("bad_end_tokens.py")
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
@@ -2312,22 +2153,16 @@ def test_markdown_normal_token_error_not_reported_with_fix() -> None:
             temp_source_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output,
-            expected_error,
-            expected_return_code,
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_fixed_issue_with_debug_on() -> None:
+def test_markdown_fixed_issue_with_debug_on(scanner_default: MarkdownScanner) -> None:
     """
     Test to test
 
@@ -2335,10 +2170,8 @@ def test_markdown_fixed_issue_with_debug_on() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join("test", "resources", "rules", "md047", "end_with_no_blank_line.md")
-    ) as temp_source_path:
+    source_path, _ = __generate_source_path("end_with_no_blank_line.md", "md047")
+    with copy_to_temp_file(source_path) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
             "md009,md011,md013",
@@ -2348,7 +2181,7 @@ def test_markdown_fixed_issue_with_debug_on() -> None:
         ]
 
         expected_return_code = 3
-        expected_output = """md010-before:# This is a test:
+        expected_output = f"""md010-before:# This is a test:
 md047-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md010-before::
@@ -2363,12 +2196,12 @@ was_modified=True
 nl-ltw:The line after this line should be blank.:
 cf-ltw:\\n:
 FixLineRecord(source='completed_file', line_number=4, plugin_id='md047')
-Fixed: {path}""".replace("{path}", temp_source_path)
+Fixed: {temp_source_path}"""
         expected_error = ""
         expected_file_contents = read_contents_of_text_file(temp_source_path) + "\n"
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
@@ -2377,7 +2210,9 @@ Fixed: {path}""".replace("{path}", temp_source_path)
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
-def test_markdown_fixed_issue_line_with_debug_and_file_debug_on() -> None:
+def test_markdown_fixed_issue_line_with_debug_and_file_debug_on(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to test that file debug provides additional data.
     Note that because of temporary files, the std out comparison is
@@ -2387,10 +2222,8 @@ def test_markdown_fixed_issue_line_with_debug_and_file_debug_on() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join("test", "resources", "rules", "md047", "end_with_no_blank_line.md")
-    ) as temp_source_path:
+    source_path, _ = __generate_source_path("end_with_no_blank_line.md", "md047")
+    with copy_to_temp_file(source_path) as temp_source_path:
         supplied_arguments = [
             "--disable-rules",
             "md009,md011,md013",
@@ -2421,7 +2254,7 @@ FixLineRecord(source='completed_file', line_number=4, plugin_id='md047')"""
         expected_file_contents = initial_file_contents + "\n"
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
         assert execute_results.std_err.getvalue() == expected_error
@@ -2458,7 +2291,9 @@ FixLineRecord(source='completed_file', line_number=4, plugin_id='md047')"""
             assert middle_section[i] == split_output[i]
 
 
-def test_markdown_fixed_issue_token_with_debug_and_file_debug_on() -> None:
+def test_markdown_fixed_issue_token_with_debug_and_file_debug_on(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to test that file debug provides additional data.
     Note that because of temporary files, the std out comparison is
@@ -2468,16 +2303,10 @@ def test_markdown_fixed_issue_token_with_debug_and_file_debug_on() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join(
-            "test",
-            "resources",
-            "rules",
-            "md001",
-            "improper_atx_heading_incrementing.md",
-        )
-    ) as temp_source_path:
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
         original_file_contents = """# Heading 1
 
 ### Heading 3
@@ -2504,7 +2333,7 @@ We skipped out a 2nd level heading in this document
 """
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
         assert execute_results.std_err.getvalue() == expected_error, (
@@ -2548,26 +2377,20 @@ We skipped out a 2nd level heading in this document
         #     assert middle_section[i] == split_output[i]
 
 
-def test_markdown_plugins_wanting_to_fix_same_token() -> None:
+def test_markdown_plugins_wanting_to_fix_same_token(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_fix_atx_token_like_md001.py"
-    )
+    plugin_path = generate_path_to_bad_plugin("bad_fix_atx_token_like_md001.py")
 
-    with copy_to_temp_file(
-        os.path.join(
-            "test",
-            "resources",
-            "rules",
-            "md001",
-            "improper_atx_heading_incrementing.md",
-        )
-    ) as temp_source_path:
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
         original_file_contents = """# Heading 1
 
 ### Heading 3
@@ -2583,40 +2406,34 @@ We skipped out a 2nd level heading in this document
             temp_source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = """BadPluginFixError encountered while scanning '{path}':
-Multiple plugins (MDE003 and MD001) have requested a fix for the same field of the same token.""".replace(
-            "{path}", temp_source_path
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error=f"""BadPluginFixError encountered while scanning '{temp_source_path}':
+Multiple plugins (MDE003 and MD001) have requested a fix for the same field of the same token.""",
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_plugins_wanting_to_fix_and_replace_same_token() -> None:
+def test_markdown_plugins_wanting_to_fix_and_replace_same_token(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_fix_indented_token_like_md046.py"
-    )
+    plugin_path = generate_path_to_bad_plugin("bad_fix_indented_token_like_md046.py")
 
     original_file_contents = """~~~Markdown
 # fred
 ~~~
 """
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
+    with create_temporary_markdown_file(original_file_contents) as temp_source_path:
 
         supplied_arguments = [
             "--set",
@@ -2627,34 +2444,30 @@ def test_markdown_plugins_wanting_to_fix_and_replace_same_token() -> None:
             temp_source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = """BadPluginFixError encountered while scanning '{path}':
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error="""BadPluginFixError encountered while scanning '{path}':
 Multiple plugins (MDE003 and MD046) are in conflict about fixing the token.""".replace(
-            "{path}", temp_source_path
+                "{path}", temp_source_path
+            ),
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_plugins_wanting_to_replace_same_token() -> None:
+def test_markdown_plugins_wanting_to_replace_same_token(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure that
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test",
-        "resources",
-        "plugins",
-        "bad",
+    plugin_path = generate_path_to_bad_plugin(
         "bad_replace_indented_token_like_md046.py",
     )
 
@@ -2664,9 +2477,7 @@ def test_markdown_plugins_wanting_to_replace_same_token() -> None:
 
     # fred
 """
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
+    with create_temporary_markdown_file(original_file_contents) as temp_source_path:
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
@@ -2674,43 +2485,36 @@ def test_markdown_plugins_wanting_to_replace_same_token() -> None:
             temp_source_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = """BadPluginFixError encountered while scanning '{path}':
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error="""BadPluginFixError encountered while scanning '{path}':
 Multiple plugins (MDE003 and MD046) are in conflict about replacing the token.""".replace(
-            "{path}", temp_source_path
+                "{path}", temp_source_path
+            ),
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace() -> None:
+def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does trigger with a document with
     only Atx Headings, that when they increase, only increase by 2.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_fix_token_unsupported.py"
-    )
+    plugin_path = generate_path_to_bad_plugin("bad_fix_token_unsupported.py")
 
-    with copy_to_temp_file(
-        os.path.join(
-            "test",
-            "resources",
-            "rules",
-            "md001",
-            "improper_atx_heading_incrementing.md",
-        )
-    ) as temp_source_path:
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
         supplied_arguments = [
             "--stack-trace",
             "--add-plugin",
@@ -2721,15 +2525,15 @@ def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace() -> None:
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = """
+        expected_error = f"""
 
-BadPluginFixError encountered while scanning '{path}':
+BadPluginFixError encountered while scanning '{temp_source_path}':
 Plugin id 'MDE003's 'next_token' action requested a token adjustment to field 'hash_count' that failed.
 Traceback (most recent call last):
-""".replace("{path}", temp_source_path)
+"""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(

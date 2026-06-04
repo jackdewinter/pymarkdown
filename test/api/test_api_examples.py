@@ -1,7 +1,7 @@
 import os
 import sys
 from test.utils import assert_that_exception_is_raised
-from typing import List
+from typing import List, Tuple
 
 import pytest
 
@@ -10,6 +10,11 @@ from pymarkdown.api import (
     PyMarkdownApiException,
     PyMarkdownApiNoFilesFoundException,
 )
+
+
+def __generate_resource_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "apis", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 def test_api_api_basics_example(caplog: pytest.LogCaptureFixture) -> None:
@@ -98,9 +103,7 @@ def test_api_positive_results(
     from the API documentation.
     """
 
-    resource_path = os.path.join(
-        "test", "resources", "apis", "positive_results_sample.md"
-    )
+    resource_path, _ = __generate_resource_path("positive_results_sample.md")
 
     try:
         scan_result = PyMarkdownApi().scan_path(resource_path)
@@ -128,11 +131,12 @@ def test_api_scan_failures(
     to fire.
     """
 
-    resource_path = os.path.join("test", "resources", "apis", "scan_failures_sample.md")
+    resource_path, abs_resource_path = __generate_resource_path(
+        "scan_failures_sample.md"
+    )
 
     try:
         scan_result = PyMarkdownApi().scan_path(resource_path)
-        resource_path = os.path.abspath(resource_path)
 
         print(scan_result.scan_failures)
         print(scan_result.pragma_errors)
@@ -145,7 +149,7 @@ def test_api_scan_failures(
     assert did_complete
     assert caplog.text == ""
     captured = capsys.readouterr()
-    modified_resource_path = resource_path.replace("\\", "\\\\")
+    modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
         == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=18, rule_id='MD047', rule_name='single-trailing-newline', rule_description='Each file should end with a single newline character.', extra_error_information='')]\n[]\n"
@@ -160,13 +164,12 @@ def test_api_extra_information(
     information in its failure object.
     """
 
-    resource_path = os.path.join(
-        "test", "resources", "apis", "extra_information_sample.md"
+    resource_path, abs_resource_path = __generate_resource_path(
+        "extra_information_sample.md"
     )
 
     try:
         scan_result = PyMarkdownApi().scan_path(resource_path)
-        resource_path = os.path.abspath(resource_path)
 
         print(scan_result.scan_failures)
         print(scan_result.pragma_errors)
@@ -179,7 +182,7 @@ def test_api_extra_information(
     assert did_complete
     assert caplog.text == ""
     captured = capsys.readouterr()
-    modified_resource_path = resource_path.replace("\\", "\\\\")
+    modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
         == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]\n[]\n"
@@ -193,13 +196,12 @@ def test_api_pragma_failures(
     Test to make sure that we test a modified "sample.md" with a malformed pragma.
     """
 
-    resource_path = os.path.join(
-        "test", "resources", "apis", "pragma_failures_sample.md"
+    resource_path, abs_resource_path = __generate_resource_path(
+        "pragma_failures_sample.md"
     )
 
     try:
         scan_result = PyMarkdownApi().scan_path(resource_path)
-        resource_path = os.path.abspath(resource_path)
 
         print(scan_result.scan_failures)
         print(scan_result.pragma_errors)
@@ -212,7 +214,7 @@ def test_api_pragma_failures(
     assert did_complete
     assert caplog.text == ""
     captured = capsys.readouterr()
-    modified_resource_path = resource_path.replace("\\", "\\\\")
+    modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
         == f"""[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=4, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]

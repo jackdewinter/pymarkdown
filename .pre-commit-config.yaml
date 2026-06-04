@@ -12,7 +12,7 @@ repos:
     -   id: isort
         name: "Format: ISort"
 -   repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.12.0-2
+    rev: v3.13.1-1
     hooks:
     -   id: shfmt
         name: "Format: ShFmt"
@@ -70,7 +70,7 @@ repos:
         args: ["-j=1", "--recursive=y", "-rn", "-sn", "utils"]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.19.1
+    rev: v1.20.1
     hooks:
     -   id: mypy
         name: "Scan:   MyPy"
@@ -79,7 +79,7 @@ repos:
           "types-pyyaml", types-PyYAML, columnar]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.19.1
+    rev: v1.20.1
     hooks:
     -   id: mypy
         name: "Scan:   MyPy (test)"

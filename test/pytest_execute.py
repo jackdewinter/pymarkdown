@@ -17,6 +17,24 @@ LOGGER = logging.getLogger(__name__)
 DEFAULT_FILE_ENCODING = "utf-8"
 
 
+# pylint: disable=too-few-public-methods
+class ExpectedResults:
+    """Class to specify the results we expect from a given execution."""
+
+    def __init__(
+        self,
+        return_code: int = 0,
+        expected_output: Optional[str] = None,
+        expected_error: Optional[str] = None,
+    ) -> None:
+        self.expected_return_code = return_code
+        self.expected_output = expected_output
+        self.expected_error = expected_error
+
+
+# pylint: enable=too-few-public-methods
+
+
 class InProcessResult:
     """
     Class to provide for an encapsulation of the results of an execution.
@@ -140,10 +158,19 @@ class InProcessResult:
         error_code: int = 0,
         additional_error: Optional[List[str]] = None,
         output_parts: Optional[List[str]] = None,  # TODO Better name
+        expected_results: Optional[ExpectedResults] = None,
     ) -> None:
         """
         Assert the results are as expected in the "assert" phase.
         """
+        assert (
+            stdout is not None and stderr is not None
+        ) or expected_results is not None
+
+        if expected_results is not None:
+            stdout = expected_results.expected_output
+            stderr = expected_results.expected_error
+            error_code = expected_results.expected_return_code
 
         try:
             if stdout:

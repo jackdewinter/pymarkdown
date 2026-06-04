@@ -2,7 +2,6 @@
 Module to provide tests related to the MD046 rule.
 """
 
-import os
 from test.rules.utils import (
     calculate_fix_tests,
     execute_configuration_test,
@@ -16,8 +15,6 @@ from test.rules.utils import (
 )
 
 import pytest
-
-source_path = os.path.join("test", "resources", "rules", "md046") + os.sep
 
 configTests = [
     pluginConfigErrorTest(
@@ -350,6 +347,7 @@ ghi
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md046_scan(test: pluginRuleTest) -> None:
     """
@@ -358,6 +356,7 @@ def test_md046_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md046")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -368,6 +367,7 @@ def test_md046_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md046_config(test: pluginConfigErrorTest) -> None:
     """
@@ -380,6 +380,7 @@ def test_md046_config(test: pluginConfigErrorTest) -> None:
     )
 
 
+@pytest.mark.rules
 def test_md046_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md046",

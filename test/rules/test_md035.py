@@ -262,6 +262,7 @@ ___
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md035_scan(test: pluginRuleTest) -> None:
     """
@@ -270,6 +271,7 @@ def test_md035_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md035")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -280,6 +282,7 @@ def test_md035_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md035_config(test: pluginConfigErrorTest) -> None:
     """
@@ -288,6 +291,7 @@ def test_md035_config(test: pluginConfigErrorTest) -> None:
     execute_configuration_test(test, f"{source_path}good_consistent_dash.md")
 
 
+@pytest.mark.rules
 def test_md035_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md035",

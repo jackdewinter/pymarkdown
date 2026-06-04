@@ -8,8 +8,9 @@ from test.utils import (
     assert_that_exception_is_raised2,
     capture_stdout,
     create_temporary_configuration_file,
+    generate_path_to_bad_plugin,
 )
-from typing import cast
+from typing import Tuple, cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -17,6 +18,11 @@ from pymarkdown.api import (
     PyMarkdownApiException,
     PyMarkdownScanFailure,
 )
+
+
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md047", source_file_name)
+    return source_path, os.path.abspath(source_path)
 
 
 def test_api_plugins_add_with_empty_path() -> None:
@@ -121,9 +127,7 @@ def test_api_plugins_add_with_simple_plugin() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     plugin_path = "test/resources/plugins/plugin_two.py"
 
     # Act
@@ -158,9 +162,7 @@ def test_api_plugins_add_with_simple_plugins_by_directory() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
     plugin_path = "test/resources/plugins/"
 
     # Act
@@ -193,9 +195,7 @@ def test_api_plugins_add_with_repeated_identifier() -> None:
 
     # Arrange
     source_path = "*.md"
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "duplicate_id_debug.py"
-    )
+    plugin_path = generate_path_to_bad_plugin("duplicate_id_debug.py")
     expected_output = "ValueError encountered while initializing plugins:\nUnable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id."
 
     # Act & Assert
@@ -216,13 +216,10 @@ def test_api_plugins_add_with_bad_starting_new_file() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
-    )
-    expected_output = f"BadPluginError encountered while scanning '{os.path.abspath(source_path)}':\nPlugin id 'MDE001' had a critical failure during the 'starting_new_file' action."
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_starting_new_file.py")
+    expected_output = f"""BadPluginError encountered while scanning '{abs_source_path}':
+Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action."""
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -242,14 +239,11 @@ def test_api_plugins_add_with_bad_next_token() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_token.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_token.py")
 
-    expected_output = f"BadPluginError encountered while scanning '{os.path.abspath(source_path)}':\n(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."
+    expected_output = f"""BadPluginError encountered while scanning '{abs_source_path}':
+(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."""
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -270,17 +264,11 @@ def test_api_plugins_add_with_bad_next_token_and_stack_trace() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_next_token.py"
-    )
+    source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_next_token.py")
 
-    expected_output = """BadPluginError encountered while scanning '{path}':
-(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.""".replace(
-        "{path}", os.path.abspath(source_path)
-    )
+    expected_output = f"""BadPluginError encountered while scanning '{abs_source_path}':
+(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."""
 
     # Act & Assert
     assert_that_exception_is_raised2(
@@ -300,12 +288,8 @@ def test_api_plugins_add_with_bad_load_due_to_configuration() -> None:
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
-    plugin_path = os.path.join(
-        "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
-    )
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    plugin_path = generate_path_to_bad_plugin("bad_string_detail_is_int.py")
     supplied_configuration = {"plugins": {"additional_paths": plugin_path}}
     expected_output = """BadPluginError encountered while loading plugins:
 Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field name 'plugin_description'."""

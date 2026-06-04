@@ -53,7 +53,7 @@ class RulePml102(RulePlugin):
         if self.__container_manager.container_token_stack and token.is_paragraph:
             self.__check(context, token)
 
-        self.__container_manager.manage_container_tokens(token)
+        self.__container_manager.manage_container_tokens(token, use_new=True)
 
     def __check(self, context: PluginScanContext, token: MarkdownToken) -> None:
         if self.__container_manager.container_token_stack[-1].is_block_quote_start:
@@ -152,7 +152,12 @@ class RulePml102(RulePlugin):
                 )
                 split_ws += split_ws_adjust
             if split_ws < list_indent:
-                lnd = list_start_index + 1 + (list_adjust_value - 1)
+                lnd = (
+                    list_start_index
+                    + 1
+                    + (list_adjust_value - 1)
+                    + (paragraph_line_index - 1)
+                )
                 cnd = -(
                     split_ws + len(split_para_ws) + 1
                 )  # maybe more for higher indented levels and bqs

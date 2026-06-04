@@ -3,23 +3,15 @@ Module to provide tests for the application file scanner module.
 """
 
 import argparse
-import sys
-from test.utils import assert_that_exception_is_raised, compare_expected_to_actual
+from test.utils import (
+    ALT_EXTENSIONS_X,
+    ARGPARSE_X,
+    EXCLUSIONS_X,
+    assert_that_exception_is_raised,
+    compare_expected_to_actual,
+)
 
 from application_file_scanner import ApplicationFileScanner
-
-if sys.version_info < (3, 10):
-    ARGPARSE_X = "optional arguments:"
-else:
-    ARGPARSE_X = "options:"
-if sys.version_info < (3, 13):
-    ALT_EXTENSIONS_X = (
-        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
-    )
-    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
-else:
-    ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
-    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
 def test_application_file_scanner_args_no_changes() -> None:

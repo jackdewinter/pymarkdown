@@ -4,259 +4,217 @@ Module to provide tests related to the MD042 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
+from typing import Tuple
 
 import pytest
 
 
+def __generate_source_path(source_file_name: str) -> Tuple[str, str]:
+    source_path = os.path.join("test", "resources", "rules", "md042", source_file_name)
+    return source_path, os.path.abspath(source_path)
+
+
 @pytest.mark.rules
-def test_md042_good_non_empty_link() -> None:
+def test_md042_good_non_empty_link(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains links that have non-empty urls.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "good_non_empty_link.md"
-    )
+    source_path, _ = __generate_source_path("good_non_empty_link.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_bad_empty_link() -> None:
+def test_md042_bad_empty_link(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty urls.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "bad_empty_link.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_empty_link.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: MD042: No empty links (no-empty-links)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD042: No empty links (no-empty-links)",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_bad_whitespace_link() -> None:
+def test_md042_bad_whitespace_link(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have whitespace only urls.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "bad_whitespace_link.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_whitespace_link.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: MD042: No empty links (no-empty-links)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD042: No empty links (no-empty-links)",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_good_non_empty_fragment() -> None:
+def test_md042_good_non_empty_fragment(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains links that has a non-empty url fragment.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "good_non_empty_fragment.md"
-    )
+    source_path, _ = __generate_source_path("good_non_empty_fragment.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_bad_link_empty_fragment() -> None:
+def test_md042_bad_link_empty_fragment(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty url fragments.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "bad_link_empty_fragment.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_link_empty_fragment.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: MD042: No empty links (no-empty-links)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD042: No empty links (no-empty-links)",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_bad_link_whitespace_fragment() -> None:
+def test_md042_bad_link_whitespace_fragment(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have whitespace only url fragments.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "bad_link_whitespace_fragment.md"
+    source_path, abs_source_path = __generate_source_path(
+        "bad_link_whitespace_fragment.md"
     )
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: MD042: No empty links (no-empty-links)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD042: No empty links (no-empty-links)",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_good_non_empty_image() -> None:
+def test_md042_good_non_empty_image(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains images that have non-empty urls.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "good_non_empty_image.md"
-    )
+    source_path, _ = __generate_source_path("good_non_empty_image.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 @pytest.mark.rules
-def test_md042_bad_empty_image() -> None:
+def test_md042_bad_empty_image(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty urls.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md042", "bad_empty_image.md"
-    )
+    source_path, abs_source_path = __generate_source_path("bad_empty_image.md")
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}:2:1: MD042: No empty links (no-empty-links)"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD042: No empty links (no-empty-links)",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_md042_query_config() -> None:

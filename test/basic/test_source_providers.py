@@ -11,6 +11,11 @@ from pymarkdown.general.source_providers import (
 )
 
 
+def __generate_source_path(source_file_name: str) -> str:
+    source_path = os.path.join("test", "resources", source_file_name)
+    return source_path
+
+
 def __verify_line(expected_line: Optional[str], actual_line: Optional[str]) -> None:
     if expected_line is None:
         assert actual_line is None, (
@@ -96,9 +101,7 @@ def test_source_provider_file_empty() -> None:
     """
 
     # Arrange
-    resource_directory = os.path.join(os.getcwd(), "test", "resources")
-    input_file = os.path.join(resource_directory, "empty-file.txt")
-    source_provider = FileSourceProvider(input_file)
+    source_provider = FileSourceProvider(__generate_source_path("empty-file.txt"))
     expected_first_line = ""
     expected_second_line = None
 
@@ -117,9 +120,7 @@ def test_source_provider_file_single_line() -> None:
     """
 
     # Arrange
-    resource_directory = os.path.join(os.getcwd(), "test", "resources")
-    input_file = os.path.join(resource_directory, "single-line.txt")
-    source_provider = FileSourceProvider(input_file)
+    source_provider = FileSourceProvider(__generate_source_path("single-line.txt"))
     expected_first_line = "this is the first line"
     expected_second_line = None
 
@@ -138,9 +139,7 @@ def test_source_provider_file_two_lines() -> None:
     """
 
     # Arrange
-    resource_directory = os.path.join(os.getcwd(), "test", "resources")
-    input_file = os.path.join(resource_directory, "double-line.txt")
-    source_provider = FileSourceProvider(input_file)
+    source_provider = FileSourceProvider(__generate_source_path("double-line.txt"))
     expected_first_line = "this is the first line"
     expected_second_line = "this is the second line"
     expected_third_line = None
@@ -162,9 +161,9 @@ def test_source_provider_file_two_lines_with_blank_between() -> None:
     """
 
     # Arrange
-    resource_directory = os.path.join(os.getcwd(), "test", "resources")
-    input_file = os.path.join(resource_directory, "double-line-with-blank.txt")
-    source_provider = FileSourceProvider(input_file)
+    source_provider = FileSourceProvider(
+        __generate_source_path("double-line-with-blank.txt")
+    )
     expected_first_line = "this is the first line"
     expected_second_line = ""
     expected_third_line = "this is the second line"
@@ -189,11 +188,9 @@ def test_source_provider_file_two_lines_with_blank_between_and_trailing() -> Non
     """
 
     # Arrange
-    resource_directory = os.path.join(os.getcwd(), "test", "resources")
-    input_file = os.path.join(
-        resource_directory, "double-line-with-blank-and-trailing.txt"
+    source_provider = FileSourceProvider(
+        __generate_source_path("double-line-with-blank-and-trailing.txt")
     )
-    source_provider = FileSourceProvider(input_file)
     expected_first_line = "this is the first line"
     expected_second_line = ""
     expected_third_line = "this is the second line"

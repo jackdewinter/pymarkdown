@@ -232,11 +232,9 @@ scanTests = [
 >      * this is level 3
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:3:4: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)\n"
-            + "{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)\n"
-            + "{temp_source_path}:5:8: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)"
-        ),
+        scan_expected_output="""{temp_source_path}:3:4: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:5:8: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)""",
         fix_expected_file_contents="""This is a test
 
 > * this is level 1
@@ -253,9 +251,7 @@ scanTests = [
 >    * this is level 2
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            "{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)"
-        ),
+        scan_expected_output="{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)",
         fix_expected_file_contents="""> This is some text
 >
 > * this is level 1
@@ -681,7 +677,6 @@ scanTests = [
 > >\a
 """.replace("\a", " "),
         disable_rules="md004,md027,md023,md009",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "issue-1357-a",
@@ -702,7 +697,6 @@ scanTests = [
 11. numbered list
 """,
         disable_rules="md004,md027,md023,md009",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "issue-1357-b",
@@ -723,7 +717,6 @@ scanTests = [
 > 11. numbered list
 """,
         disable_rules="md004,md027,md023,md009",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "issue-1357-c",
@@ -744,7 +737,6 @@ scanTests = [
   > 11. numbered list
 """,
         disable_rules="md004,md027,md023,md009",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "issue-1357-d",
@@ -764,7 +756,6 @@ scanTests = [
 11. numbered list
 """,
         disable_rules="md004,md027,md023,md009,md005",
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "mix_md007_md004",
@@ -941,6 +932,7 @@ scanTests = [
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md007_scan(test: pluginRuleTest) -> None:
     """
@@ -949,6 +941,7 @@ def test_md007_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md007")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -959,6 +952,7 @@ def test_md007_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md007_config(test: pluginConfigErrorTest) -> None:
     """
@@ -967,6 +961,7 @@ def test_md007_config(test: pluginConfigErrorTest) -> None:
     execute_configuration_test(test, f"{source_path}good_list_indentation.md")
 
 
+@pytest.mark.rules
 def test_md007_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md007",

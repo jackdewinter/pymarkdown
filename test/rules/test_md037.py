@@ -120,13 +120,11 @@ this text *is* in italics
         "good_surrounding_emphasis_short_with_mixed",
         source_file_contents="""this * text _ is * in _ italics
 """,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "good_surrounding_emphasis_short_with_other_mixed",
         source_file_contents="""this _ text * is _ in * italics
 """,
-        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_leading_emphasis",
@@ -511,6 +509,7 @@ this text __is__ in bold
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md037_scan(test: pluginRuleTest) -> None:
     """
@@ -519,6 +518,7 @@ def test_md037_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md037")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -529,6 +529,7 @@ def test_md037_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md037_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md037",

@@ -585,13 +585,13 @@ def id_test_parse_fn(val: Any) -> str:
     raise AssertionError()
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", pml100Tests, ids=id_test_parse_fn)
-def test_pml100(test: Pml100Test) -> None:
+def test_pml100(test: Pml100Test, scanner_default: MarkdownScanner) -> None:
     """
     TBD
     """
     # Arrange
-    scanner = MarkdownScanner()
 
     supplied_arguments = [
         "--disable",
@@ -613,7 +613,7 @@ def test_pml100(test: Pml100Test) -> None:
         supplied_arguments = new_args + supplied_arguments
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use=test.stdin
     )
 
@@ -652,13 +652,13 @@ pml100ErrorTests = [
 ]
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize("test", pml100ErrorTests, ids=id_test_parse_fn)
-def test_pml100_errors(test: ErrorPml100Test) -> None:
+def test_pml100_errors(test: ErrorPml100Test, scanner_default: MarkdownScanner) -> None:
     """
     TBD
     """
     # Arrange
-    scanner = MarkdownScanner()
 
     supplied_arguments = [
         "--strict-config",
@@ -676,7 +676,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
         supplied_arguments = new_args + supplied_arguments
 
     # Act
-    execute_results = scanner.invoke_main(
+    execute_results = scanner_default.invoke_main(
         arguments=supplied_arguments, standard_input_to_use="something"
     )
 
@@ -688,6 +688,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
     )
 
 
+@pytest.mark.rules
 def test_pml100_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml100",

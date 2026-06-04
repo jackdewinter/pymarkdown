@@ -3,8 +3,12 @@ Module to provide tests related to the MD003 rule.
 """
 
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
-from test.utils import create_temporary_configuration_file
+from test.utils import (
+    create_temporary_configuration_file,
+    create_temporary_markdown_file,
+)
 
 import pytest
 
@@ -75,17 +79,16 @@ Heading 2
 """
 
 
-@pytest.mark.plugins
-def test_md003_bad_configuration_style() -> None:
+@pytest.mark.rules
+def test_md003_bad_configuration_style(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     style value with a string that is not in the list of acceptable values.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -96,37 +99,32 @@ def test_md003_bad_configuration_style() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = ""
-        expected_error = (
-            "BadPluginError encountered while configuring plugins:\n"
-            + "The value for property 'plugins.md003.style' is not valid: Allowable values: "
-            + "['consistent', 'atx', 'atx_closed', 'setext', 'setext_with_atx', 'setext_with_atx_closed']"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md003.style' is not valid: Allowable values: ['consistent', 'atx', 'atx_closed', 'setext', 'setext_with_atx', 'setext_with_atx_closed']""",
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = consistent (default) ---
 
 
-@pytest.mark.plugins
-def test_md003_good_consistent_headings_atx() -> None:
+@pytest.mark.rules
+def test_md003_good_consistent_headings_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains Atx Headings.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -134,34 +132,31 @@ def test_md003_good_consistent_headings_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_good_consistent_atx_with_invalid_style() -> None:
+def test_md003_good_consistent_atx_with_invalid_style(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Variation of previous test to test default if an invalid style is given.
     Because it is not one of the "known" styles, it should default to "consistent".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "not-valid"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -174,33 +169,30 @@ def test_md003_good_consistent_atx_with_invalid_style() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_good_consistent_headings_atx_closed() -> None:
+def test_md003_good_consistent_headings_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains Atx Closed Headings.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both,
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -208,33 +200,30 @@ def test_md003_good_consistent_headings_atx_closed() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_good_consistent_headings_setext() -> None:
+def test_md003_good_consistent_headings_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt Headings.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both,
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -242,24 +231,22 @@ def test_md003_good_consistent_headings_setext() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_bad_consistent_headings_setext_with_atx() -> None:
+def test_md003_bad_consistent_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for the first two levels and
@@ -267,9 +254,8 @@ def test_md003_bad_consistent_headings_setext_with_atx() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -277,25 +263,22 @@ def test_md003_bad_consistent_headings_setext_with_atx() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{markdown_file_path}:7:1: "
-            + "MD003: Heading style should be consistent throughout the document. "
-            + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_good_consistent_headings_setext_with_atx_with_allow_config() -> None:
+@pytest.mark.rules
+def test_md003_good_consistent_headings_setext_with_atx_with_allow_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for the first two levels and
@@ -305,10 +288,9 @@ def test_md003_good_consistent_headings_setext_with_atx_with_allow_config() -> N
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -322,23 +304,19 @@ def test_md003_good_consistent_headings_setext_with_atx_with_allow_config() -> N
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config() -> (
-    None
-):
+@pytest.mark.rules
+def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for the first two levels and
@@ -348,11 +326,9 @@ def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    with create_temporary_configuration_file(
+    with create_temporary_markdown_file(
         supplied_configuration=__headings_setext_with_level_2_atx,
-        file_name_suffix=".md",
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -366,29 +342,24 @@ def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.skip(reason="Duplicate coverage")
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_allow_config() -> (
-    None
-):
+def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_allow_config(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for the first two levels and
@@ -398,11 +369,9 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    with create_temporary_configuration_file(
+    with create_temporary_markdown_file(
         supplied_configuration=__headings_setext_with_level_3_then_level_2_atx,
-        file_name_suffix=".md",
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -416,28 +385,25 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:9:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:9:1: MD003: Heading style should be consistent throughout the document. [Expected: setext_with_atx; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_bad_consistent_headings_setext_with_atx_closed() -> None:
+def test_md003_bad_consistent_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for the first two levels and Atx Closed Headings
@@ -446,9 +412,8 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -456,37 +421,33 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{markdown_file_path}:7:1: "
-            + "MD003: Heading style should be consistent throughout the document. "
-            + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_bad_consistent_headings_atx_with_atx_closed() -> None:
+def test_md003_bad_consistent_headings_atx_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that starts with an atx
     heading and then has an atx closed heading, with configuration set to consistent.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_with_atx_closed,
     ) as markdown_file_path:
         supplied_arguments = [
             *only_enable_this_rule_arguments,
@@ -494,38 +455,32 @@ def test_md003_bad_consistent_headings_atx_with_atx_closed() -> None:
             markdown_file_path,
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{markdown_file_path}:3:1: "
-            + "MD003: Heading style should be consistent throughout the document. "
-            + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = atx ---
 
 
-@pytest.mark.plugins
-def test_md003_good_atx_headings_atx() -> None:
+@pytest.mark.rules
+def test_md003_good_atx_headings_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains Atx Headings for configuration set to "atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -538,20 +493,16 @@ def test_md003_good_atx_headings_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -561,17 +512,16 @@ def test_md003_good_atx_headings_atx() -> None:
         }
     }
 )
-def test_md003_bad_atx_headings_atx_closed() -> None:
+def test_md003_bad_atx_headings_atx_closed(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Closed Headings for configuration set to "atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -584,27 +534,20 @@ def test_md003_bad_atx_headings_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 # TODO
 @pytest.mark.user_properties(
     {
@@ -615,17 +558,16 @@ def test_md003_bad_atx_headings_atx_closed() -> None:
         }
     }
 )
-def test_md003_bad_atx_headings_setext() -> None:
+def test_md003_bad_atx_headings_setext(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for configuration set to "atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -638,42 +580,35 @@ def test_md003_bad_atx_headings_setext() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)""",
             )
 
-            expected_error = ""
-
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of atx setting tests."}}}
 )
-def test_md003_bad_atx_headings_setext_with_atx() -> None:
+def test_md003_bad_atx_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt_Atx Headings for configuration set to "atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -686,27 +621,20 @@ def test_md003_bad_atx_headings_setext_with_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -715,17 +643,18 @@ def test_md003_bad_atx_headings_setext_with_atx() -> None:
         }
     }
 )
-def test_md003_bad_atx_headings_setext_with_atx_closed() -> None:
+def test_md003_bad_atx_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Closed Headings for configuration set to "atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -738,45 +667,36 @@ def test_md003_bad_atx_headings_setext_with_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)""",
             )
 
-            expected_error = ""
-
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of consistent setting tests."}}}
 )
-def test_md003_bad_atx_headings_atx_with_atx_closed() -> None:
+def test_md003_bad_atx_headings_atx_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that starts with an atx
     heading and then has an atx closed heading, with configuration set to consistent.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_with_atx_closed,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -789,27 +709,22 @@ def test_md003_bad_atx_headings_atx_with_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = atx_closed ---
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -818,17 +733,16 @@ def test_md003_bad_atx_headings_atx_with_atx_closed() -> None:
         }
     }
 )
-def test_md003_bad_atxclosed_headings_atx() -> None:
+def test_md003_bad_atxclosed_headings_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Headings for configuration set to "atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -841,38 +755,32 @@ def test_md003_bad_atxclosed_headings_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: atx] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_good_atxclosed_headings_atx_closed() -> None:
+@pytest.mark.rules
+def test_md003_good_atxclosed_headings_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains Atx Closed Headings for configuration set to "atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -885,34 +793,29 @@ def test_md003_good_atxclosed_headings_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W003": {"Reason": "Part of atx_closed setting tests."}}}
 )
-def test_md003_bad_atxclosed_headings_setext() -> None:
+def test_md003_bad_atxclosed_headings_setext(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt Headings for configuration set to "atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -925,27 +828,20 @@ def test_md003_bad_atxclosed_headings_setext() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -954,17 +850,18 @@ def test_md003_bad_atxclosed_headings_setext() -> None:
         }
     }
 )
-def test_md003_bad_atxclosed_headings_setext_with_atx() -> None:
+def test_md003_bad_atxclosed_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Headings for configuration set to "atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -977,45 +874,36 @@ def test_md003_bad_atxclosed_headings_setext_with_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: atx] (heading-style,header-style)""",
             )
 
-            expected_error = ""
-
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of atx_closed setting tests."}}}
 )
-def test_md003_bad_atxclosed_headings_setext_with_atx_closed() -> None:
+def test_md003_bad_atxclosed_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Closed Headings for configuration set to "atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1028,44 +916,36 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:4:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)
+{markdown_file_path}:4:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: setext] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = setext ---
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W003": {"Reason": "Part of setext setting tests."}}}
 )
-def test_md003_bad_setext_headings_atx() -> None:
+def test_md003_bad_setext_headings_atx(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Headings for configuration set to "setext".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1078,41 +958,33 @@ def test_md003_bad_setext_headings_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W003": {"Reason": "Part of setext setting tests."}}}
 )
-def test_md003_bad_setext_headings_atx_closed() -> None:
+def test_md003_bad_setext_headings_atx_closed(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Closed Headings for configuration set to "setext".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1125,38 +997,30 @@ def test_md003_bad_setext_headings_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_good_setext_headings_setext() -> None:
+@pytest.mark.rules
+def test_md003_good_setext_headings_setext(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt Headings for configuration set to "setext".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1169,20 +1033,16 @@ def test_md003_good_setext_headings_setext() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -1191,17 +1051,18 @@ def test_md003_good_setext_headings_setext() -> None:
         }
     }
 )
-def test_md003_bad_setext_headings_setext_with_atx() -> None:
+def test_md003_bad_setext_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Headings for configuration set to "setext".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1214,24 +1075,19 @@ def test_md003_bad_setext_headings_setext_with_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {
         "DupCov": {
@@ -1240,17 +1096,18 @@ def test_md003_bad_setext_headings_setext_with_atx() -> None:
         }
     }
 )
-def test_md003_bad_setext_headings_setext_with_atx_closed() -> None:
+def test_md003_bad_setext_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Closed Headings for configuration set to "setext".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1263,38 +1120,34 @@ def test_md003_bad_setext_headings_setext_with_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = setext_with_atx ---
 
 
-@pytest.mark.plugins
-def test_md003_bad_setext_with_atx_headings_atx() -> None:
+@pytest.mark.rules
+def test_md003_bad_setext_with_atx_headings_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1307,41 +1160,35 @@ def test_md003_bad_setext_with_atx_headings_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext_with_atx; Actual: atx] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext_with_atx; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties(
     {"DupCov": {"W002": {"Reason": "Part of setext_with_atx setting tests."}}}
 )
-def test_md003_bad_setext_with_atx_headings_atx_closed() -> None:
+def test_md003_bad_setext_with_atx_headings_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Closed Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1354,42 +1201,36 @@ def test_md003_bad_setext_with_atx_headings_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 # TODO
 @pytest.mark.user_properties(
     {"DupCov": {"W003": {"Reason": "Part of setext_with_atx setting tests."}}}
 )
-def test_md003_good_setext_with_atx_headings_setext() -> None:
+def test_md003_good_setext_with_atx_headings_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1402,31 +1243,28 @@ def test_md003_good_setext_with_atx_headings_setext() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_good_setext_with_atx_headings_setext_with_atx() -> None:
+@pytest.mark.rules
+def test_md003_good_setext_with_atx_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt+Atx Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1439,33 +1277,30 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 # TODO ?
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed() -> None:
+def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Closed Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1478,38 +1313,34 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: atx; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 ## --- Style = setext_with_atx_closed ---
 
 
-@pytest.mark.plugins
-def test_md003_bad_setext_with_atx_closed_headings_atx() -> None:
+@pytest.mark.rules
+def test_md003_bad_setext_with_atx_closed_headings_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1522,39 +1353,33 @@ def test_md003_bad_setext_with_atx_closed_headings_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md003_bad_setext_with_atx_closed_headings_atx_closed() -> None:
+def test_md003_bad_setext_with_atx_closed_headings_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains Atx Closed Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_atx_closed_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_atx_closed_both
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1567,39 +1392,33 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:1:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:3:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:1:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)
+{markdown_file_path}:3:1: MD003: Heading style should be consistent throughout the document. [Expected: setext; Actual: atx_closed] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties({"DupCov": {"W002": {}, "W003": {}}})
-def test_md003_good_setext_with_atx_closed_headings_setext() -> None:
+def test_md003_good_setext_with_atx_closed_headings_setext(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_both, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_both,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1612,31 +1431,28 @@ def test_md003_good_setext_with_atx_closed_headings_setext() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx() -> None:
+@pytest.mark.rules
+def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does trigger with a document that
     only contains SetExt+Atx Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1649,36 +1465,32 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx() -> None:
                 markdown_file_path,
             ]
 
-            expected_return_code = 1
-            expected_output = (
-                f"{markdown_file_path}:7:1: "
-                + "MD003: Heading style should be consistent throughout the document. "
-                + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
+            expected_results = ExpectedResults(
+                return_code=1,
+                expected_output=f"""{markdown_file_path}:7:1: MD003: Heading style should be consistent throughout the document. [Expected: atx_closed; Actual: atx] (heading-style,header-style)""",
             )
-            expected_error = ""
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed() -> None:
+def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure this rule does not trigger with a document that
     only contains SetExt+Atx Closed Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    with create_temporary_configuration_file(
-        supplied_configuration=__headings_setext_with_atx_closed, file_name_suffix=".md"
+    with create_temporary_markdown_file(
+        supplied_configuration=__headings_setext_with_atx_closed,
     ) as markdown_file_path:
         with create_temporary_configuration_file(
             supplied_configuration
@@ -1691,20 +1503,16 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed() -> 
                 markdown_file_path,
             ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+            expected_results = ExpectedResults()
 
             # Act
-            execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 def test_md003_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md003",

@@ -12,6 +12,7 @@ from test.rules.utils import (
     pluginQueryConfigTest,
     pluginRuleTest,
 )
+from test.utils import generate_path_to_bad_plugin
 
 import pytest
 
@@ -88,9 +89,7 @@ Fixed: {temp_source_path}""",
     ),
     pluginRuleTest(
         "bad_conflicting_changes_at_end_of_file",
-        add_plugin_path=os.path.join(
-            "test", "resources", "plugins", "bad", "bad_update_last_line.py"
-        ),
+        add_plugin_path=generate_path_to_bad_plugin("bad_update_last_line.py"),
         source_file_name=f"{source_path}end_with_no_blank_line_and_spaces.md",
         source_file_contents="""# This is a test
 
@@ -134,6 +133,7 @@ a line of text
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+@pytest.mark.rules
 def test_md047_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
@@ -141,6 +141,7 @@ def test_md047_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md047")
 
 
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
@@ -151,6 +152,7 @@ def test_md047_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
+@pytest.mark.rules
 def test_md047_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md047",

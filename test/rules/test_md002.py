@@ -4,6 +4,7 @@ Module to provide tests related to the MD002 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 from test.utils import create_temporary_configuration_file
 
@@ -19,8 +20,8 @@ only_enable_this_rule_arguments = (
 )
 
 
-@pytest.mark.plugins
-def test_md002_all_samples() -> None:
+@pytest.mark.rules
+def test_md002_all_samples(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure we get the expected behavior after scanning the files in the
     test/resources/rules/md002 directory.
@@ -30,44 +31,35 @@ def test_md002_all_samples() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         *only_enable_this_rule_arguments,
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: "
-        + "MD002: First heading of the document should be a top level heading. "
-        + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
-        + f"{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: "
-        + "MD002: First heading of the document should be a top level heading. "
-        + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)
+{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.skip(reason="Duplicate coverage")
 @pytest.mark.user_properties({"DupCov": {"W003": {}}})
-def test_md002_bad_configuration_level() -> None:
+def test_md002_bad_configuration_level(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value with a string of "1".
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         "--strict-config",
         "--set",
@@ -77,31 +69,27 @@ def test_md002_bad_configuration_level() -> None:
         f"{source_path}proper_atx_heading_start.md",
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md002.level' must be of type 'int'."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md002.level' must be of type 'int'.""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md002_bad_configuration_level_value() -> None:
+@pytest.mark.rules
+def test_md002_bad_configuration_level_value(scanner_default: MarkdownScanner) -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value with an integer outside of the range.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         "--strict-config",
         "--set",
@@ -111,61 +99,54 @@ def test_md002_bad_configuration_level_value() -> None:
         f"{source_path}proper_atx_heading_start.md",
     ]
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md002.level' is not valid: Allowable values are between 1 and 6 (inclusive)."
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md002.level' is not valid: Allowable values are between 1 and 6 (inclusive).""",
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md002_good_proper_atx_heading_start() -> None:
+@pytest.mark.rules
+def test_md002_good_proper_atx_heading_start(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure the rule does not trigger with a level 1
     Atx Heading at the start of the document.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_atx_heading_start.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.skip(reason="Duplicate coverage")
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> None:
+def test_md002_bad_proper_atx_heading_start_with_alternate_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does trigger with a level 1 Atx Heading at the
     start of the document with configuration to change the level to 2.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -178,62 +159,55 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> No
             f"{source_path}proper_atx_heading_start.md",
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{source_path}proper_atx_heading_start.md:1:1: "
-            + "MD002: First heading of the document should be a top level heading. "
-            + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}proper_atx_heading_start.md:1:1: MD002: First heading of the document should be a top level heading. [Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md002_good_proper_setext_heading_start() -> None:
+@pytest.mark.rules
+def test_md002_good_proper_setext_heading_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does not trigger with a level 1 SetExt Heading at the
     start of the document.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_setext_heading_start.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
+    expected_results = ExpectedResults()
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.skip(reason="Duplicate coverage")
 @pytest.mark.user_properties({"DupCov": {"W002": {}}})
-def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() -> None:
+def test_md002_bad_proper_setext_heading_start_with_alternate_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does trigger with a level 1 SetExt Heading at the
     start of the document and configuration to change level to `2`.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -246,65 +220,55 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() ->
             f"{source_path}proper_setext_heading_start.md",
         ]
 
-        expected_return_code = 1
-        expected_output = (
-            f"{source_path}proper_setext_heading_start.md:2:1: "
-            + "MD002: First heading of the document should be a top level heading. "
-            + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}proper_setext_heading_start.md:2:1: MD002: First heading of the document should be a top level heading. [Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)""",
         )
-        expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md002_bad_improper_atx_heading_start() -> None:
+@pytest.mark.rules
+def test_md002_bad_improper_atx_heading_start(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 Atx Heading at the
     start of the document.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}improper_atx_heading_start.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: "
-        + "MD002: First heading of the document should be a top level heading. "
-        + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{os.path.abspath(source_path)}{os.sep}improper_atx_heading_start.md:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 @pytest.mark.skip(reason="Duplicate coverage")
-def test_md002_good_improper_atx_heading_start_with_alternate_configuration() -> None:
+def test_md002_good_improper_atx_heading_start_with_alternate_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does not trigger with a level 2 Atx Heading at the
     start of the document and configuration to match.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -317,21 +281,19 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration() ->
             f"{source_path}improper_atx_heading_start.md",
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
-def test_md002_bad_improper_setext_heading_start() -> None:
+@pytest.mark.rules
+def test_md002_bad_improper_setext_heading_start(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 SetExt Heading at the
     start of the document.
@@ -342,42 +304,35 @@ def test_md002_bad_improper_setext_heading_start() -> None:
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_arguments = [
         *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}improper_setext_heading_start.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        f"{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: "
-        + "MD002: First heading of the document should be a top level heading. "
-        + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{os.path.abspath(source_path)}{os.sep}improper_setext_heading_start.md:1:1: MD002: First heading of the document should be a top level heading. [Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)""",
     )
-    expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 # @pytest.mark.user_properties({"DupCov" : {"W002":{}}})
-def test_md002_good_improper_setext_heading_start_with_alternate_configuration() -> (
-    None
-):
+def test_md002_good_improper_setext_heading_start_with_alternate_configuration(
+    scanner_default: MarkdownScanner,
+) -> None:
     """
     Test to make sure the rule does not trigger with a level 2 SetExt Heading at the
     start of the document and configuration to match.
     """
 
     # Arrange
-    scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     with create_temporary_configuration_file(
         supplied_configuration
@@ -390,20 +345,16 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
             f"{source_path}improper_setext_heading_start.md",
         ]
 
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
+        expected_results = ExpectedResults()
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
+        execute_results.assert_results(expected_results=expected_results)
 
 
-@pytest.mark.plugins
+@pytest.mark.rules
 def test_md002_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md002",

@@ -60,7 +60,7 @@
         },
         {
             "name": "test.api.test_api_scan",
-            "totalTests": 31,
+            "totalTests": 32,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1268,7 +1268,7 @@
         },
         {
             "name": "test.rules.test_md022",
-            "totalTests": 60,
+            "totalTests": 59,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1540,7 +1540,7 @@
         },
         {
             "name": "test.rules.test_pml102",
-            "totalTests": 437,
+            "totalTests": 447,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
