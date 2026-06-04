@@ -3,7 +3,6 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 
 import os
-import sys
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
@@ -242,6 +241,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory() -> Non
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--add-plugin",
@@ -263,7 +263,7 @@ MD998>>completed_file
     )
 
     # Act
-    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(expected_results=expected_results)

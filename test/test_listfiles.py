@@ -6,6 +6,7 @@ import os
 import sys
 import tempfile
 from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import write_temporary_configuration
 
 if sys.version_info < (3, 10):
@@ -1074,9 +1075,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory(
     )
 
     # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_results.assert_results(expected_results=expected_results)
 
 
 def test_markdown_with_dash_l_on_md_directory_with_configure_file_exclude_list() -> (

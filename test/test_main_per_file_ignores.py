@@ -18,6 +18,7 @@ def test_markdown_per_file_ignores_baseline_string() -> None:
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"test_value": "md041"}}}
     scan_content = """## This is a doc
 
@@ -53,7 +54,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -118,6 +119,7 @@ def test_markdown_per_file_ignores_non_matching_string() -> None:
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"a*.json": "Md041"}}}
     scan_content = """## This is a doc
 
@@ -154,7 +156,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -220,6 +222,7 @@ def test_markdown_per_file_ignores_matching_single_path_single_rule_string() -> 
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"a*.md": "Md041"}}}
     scan_content = """## This is a doc
 
@@ -255,7 +258,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -324,6 +327,7 @@ def test_markdown_per_file_ignores_matching_single_path_single_rule_upper_case_s
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"a*.md": "MD041"}}}
     scan_content = """## This is a doc
 
@@ -359,7 +363,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -426,6 +430,7 @@ def test_markdown_per_file_ignores_matching_single_path_multiple_rules_string() 
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {
         "plugins": {"per-file-ignores": {"a*.md": "Md041,Md013,md047"}}
     }
@@ -459,7 +464,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -527,6 +532,7 @@ def test_markdown_per_file_ignores_value_not_string_or_string_list() -> None:
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"a*.md": 1}}}
     scan_content = """## This is a doc
 
@@ -559,22 +565,23 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
         # Assert
-        execute_results.assert_results(expected_results=expected_results)
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
-def test_markdown_per_file_ignores_value_empty_string(
-    scanner_default: MarkdownScanner,
-) -> None:
+def test_markdown_per_file_ignores_value_empty_string() -> None:
     """
     Test to make sure a per-file-ignores entry that is an empty string.
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = {"plugins": {"per-file-ignores": {"a*.md": ""}}}
     scan_content = """## This is a doc
 
@@ -607,12 +614,14 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
         # Assert
-        execute_results.assert_results(expected_results=expected_results)
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 def test_markdown_per_file_ignores_value_empty_string_list_element() -> None:
@@ -654,12 +663,14 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
         # Assert
-        execute_results.assert_results(expected_results=expected_results)
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 def test_markdown_per_file_ignores_value_only_comma() -> None:
@@ -701,12 +712,14 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
         # Assert
-        execute_results.assert_results(expected_results=expected_results)
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 def test_markdown_per_file_ignores_value_unrecognized_identifier() -> None:
@@ -750,12 +763,14 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
         # Assert
-        execute_results.assert_results(expected_results=expected_results)
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 def test_markdown_per_file_ignores_property_name_with_single_apostrophe(
@@ -1227,6 +1242,7 @@ def test_markdown_per_file_ignores_yaml_format_double_pattern_single_identifier_
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = """plugins:
   per-file-ignores:
     a*.md:
@@ -1264,7 +1280,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
@@ -1389,6 +1405,7 @@ def test_markdown_per_file_ignores_toml_format_single_pattern_single_identifier(
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     configuration_content = """[tool.pymarkdown]
 plugins.per-file-ignores."a*.md" = "md041"
 """
@@ -1425,7 +1442,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
-            execute_results = scanner_default.invoke_main(
+            execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, suppress_first_line_heading_rule=False
             )
 
