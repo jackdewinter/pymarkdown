@@ -57,14 +57,14 @@ This guide is organized as:
 ## Prerequisites
 
 Unlike our other Quick Start pages, where we try and keep things as simple as
-possible for all users, this page assumes the following:
+possible for all users, this page assumes that:
 
-- comfortable using the command line in your favorite shell and
+- you are comfortable using the command line in your favorite shell and
   understanding commands like "go to your project root directory and run this"
 - Python 3.10+ is installed and available on your `PATH`
-- knowledge of whether you need to use a **Python package manager** like Pipenv
+- you know whether you need to use a **Python package manager** like Pipenv
   to install PyMarkdown, and if you want to install it as a **development-only dependency**
-- if you plan to install PyMarkdown via Pre-Commit, basic usage and configuration
+- if you plan to install PyMarkdown via Pre-Commit, the basic usage and configuration
   of Pre-Commit
 
 ## Installation

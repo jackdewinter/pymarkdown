@@ -15,11 +15,14 @@ steps to get you started using PyMarkdown.
 
 You can read this introduction and the rest of the pages in the Quick Start series
 listed at the end of this page
-in about **20-30 minutes** and then try PyMarkdown on a real project.
+in about **20-30 minutes**.
+That should preprare you to use PyMarkdown on a your own Markdown documents. If
+not, we provide links to other documentation that will help you fill in any gaps
+that you may have!
 
 ## Where to Start
 
-> **Quick Start Guide Single Line Summary**
+> **Quick Start Guide Single Line Summary**  
 > This page provides a high-level overview of what PyMarkdown is, how it can
 > scan/lint your Markdown files; also providing a solid starting point to the
 > other Quick Start guides in the series.
@@ -30,7 +33,9 @@ Not sure where to begin?
   to see a quick overview and example usage.
 
 - I've decided to try PyMarkdown on my project &mdash; **stay** in this Quick Start
-  introduction to get PyMarkdown running on your machine.
+  introduction and follow along with the other Quick Start guides in this series
+  to
+  get PyMarkdown installed on your machine and to work through some simple examples.
 
 - I'm already using PyMarkdown and want advanced details &mdash; **jump** to the
   [main documentation](../user-guide.md) for full configuration and reference details.
@@ -49,7 +54,8 @@ We will do our best to keep these up-to-date, but we have two asks of you, the r
 1. If you see something that you believe is incorrect, please [report an issue](../usual.md).
    Please be precise with what the problem is, where you see it, and suggestions
    for improvement.
-2. If there is a topic that you believe could be covered more completely in
+2. If there is an introductory topic that you believe could be covered more completely
+   in
    a new Quick Start guide, please [report an issue](../usual.md). Our goal as
    project members is to help new users onboard and become efficient with their
    use of PyMarkdown as easily as possible.

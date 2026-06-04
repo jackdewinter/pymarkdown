@@ -226,7 +226,7 @@ you can achieve the same effect with this `--set` usage:
 
 <!-- pyml disable code-block-style-->
 ```sh
---set `log.level=INFO`
+--set 'log.level=INFO'
 ```
 <!-- pyml enable code-block-style-->
 
@@ -372,7 +372,7 @@ These items configure PyMarkdown's system‑level behavior:
 <!-- pyml disable-num-lines 3 line-length-->
 | Key | Command Line | Type | Description |
 | --- | --- | --- | --- |
-| `system.exclude_path` | [`--exclude`](./user-guide.md#-e-exclude-path_exclusions) | String | Comma separated list of relative glob paths to exclude. |
+| `system.exclude_path` | [`--exclude`](./user-guide.md#-e-exclude-path_exclusions) | String | Comma separated list or native list of relative glob paths to exclude. |
 
 #### Excluding Paths
 
@@ -399,15 +399,35 @@ request).
       }
     }
     ```
+    OR
+    ```json
+    {
+      "system": {
+        "exclude_path": ["draft_*.md","draft-*.md"]
+      }
+    }
+    ```
 === "YAML"
     ```yaml
     system:
       exclude_path: "draft_*.md,draft-*.md"
     ```
+    OR
+    ```yaml
+    system:
+      exclude_path:
+        - "draft_*.md"
+        - "draft-*.md"
+    ```
 === "TOML"
     ```toml
     [tool.pymarkdown]
     system.exclude_path = "draft_*.md,draft-*.md"
+    ```
+    OR
+    ```toml
+    [tool.pymarkdown]
+    system.exclude_path = ["draft_*.md","draft-*.md"]
     ```
 <!-- pyml enable code-block-style-->
 
@@ -422,15 +442,15 @@ level:
 | *special* | [--enable-rules,-e](./user-guide.md#enabling-and-disabling-rule-plugins)   | String    | Comma separated list of Rule Plugins to enable. |
 | *special* | [--disable-rules,-d](./user-guide.md#-enable-rules-disable-rules-rule-plugins)  | String    | Comma separated list of Rule Plugins to disable. |
 | [`plugins.selectively_enable_rules`](#selectively-enable-rule-plugins) | -- | Boolean | Specify whether to enable selective enable mode. |
-| [`per-file-plugins.ignores`](#per-file-disabling-of-rule-plugins) | -- | Nested | Specify glob paths to match, and Rule Plugins to disable if matched. |
+| [`plugins.per-file-ignores`](#per-file-disabling-of-rule-plugins) | -- | Nested | Specify glob paths to match, and Rule Plugins to disable if matched. |
 
 This item points to the Development documentation with instructions for creating
 your own plugins:
 
 <!-- pyml disable-num-lines 3 line-length-->
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| [`plugins.additional_paths`](./development.md) | --add-plugin     | String    | Path to a plugin containing a new Rule Plugins to load. |
+| -- | -- | -- | -- |
+| [`plugins.additional_paths`](./development.md) | --add-plugin | String or String List | Path to a plugin containing a new Rule Plugins to load. |
 
 These items give examples on how specific configuration items can be applied to
 Rule Plugins:
@@ -582,16 +602,39 @@ currently disabled.
         }
     }
     ```
+    OR
+    ```json
+    {
+        "plugins": {
+            "per-file-ignores": {
+                "changelog/*.md": ["MD013","MD041"]
+            }
+        }
+    }
+    ```
 === "YAML"
     ```yaml
     plugins:
       per-file-ignores:
         changelog/*.md: "MD013,MD041"
     ```
+    OR
+    ```yaml
+    plugins:
+      per-file-ignores:
+        changelog/*.md:
+          - MD013
+          - MD041
+    ```
 === "TOML"
     ```toml
     [tool.pymarkdown]
     plugins.per-file-ignores."changelog/*.md" = "MD013,MD041"
+    ```
+    OR
+    ```toml
+    [tool.pymarkdown]
+    plugins.per-file-ignores."changelog/*.md" = ["MD013","MD041"]
     ```
 <!-- pyml enable code-block-style-->
 
@@ -621,15 +664,35 @@ for both one‑off experiments and long‑term setups.
       }
     }
     ```
+    OR
+    ```json
+    {
+      "plugins": {
+        "additional_paths": ["/path/to/plugin1.py","/path/to/plugin2.py"]
+      }
+    }
+    ```
 === "YAML"
     ```yaml
     plugins:
       additional_paths: "/path/to/plugin1.py,/path/to/plugin2.py"
     ```
+    OR
+    ```yaml
+    plugins:
+      additional_paths:
+        - /path/to/plugin1.py
+        - /path/to/plugin2.py
+    ```
 === "TOML"
     ```toml
     [tool.pymarkdown]
     plugins.additional_paths = "/path/to/plugin1.py,/path/to/plugin2.py"
+    ```
+    OR
+    ```toml
+    [tool.pymarkdown]
+    plugins.additional_paths = ["/path/to/plugin1.py","/path/to/plugin2.py"]
     ```
 <!-- pyml enable code-block-style-->
 
