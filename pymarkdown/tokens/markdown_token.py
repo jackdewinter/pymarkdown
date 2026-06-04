@@ -484,6 +484,13 @@ class MarkdownToken:
         return self.token_name == self.token_name == MarkdownToken._token_table_row
 
     @property
+    def is_table_body(self) -> bool:
+        """
+        Returns whether the current token is a body from a table.
+        """
+        return self.token_name == self.token_name == MarkdownToken._token_table_body
+
+    @property
     def is_table_row_item(self) -> bool:
         """
         Returns whether the current token is a row item from a table.
