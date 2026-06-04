@@ -21,7 +21,7 @@ through Pre&#x2011;Commit.
 
 ## What You Will Learn
 
-> **Quick Start Guide Single Line Summary**
+> **Quick Start Guide Single Line Summary**  
 > This page walks you through a simple example of installing PyMarkdown locally on
 > your system or through Pre-Commit, with a checklist to follow for verifying that
 > you installed PyMarkdown properly.

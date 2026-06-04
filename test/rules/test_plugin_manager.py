@@ -3,6 +3,7 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 
 import os
+import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import (
@@ -13,6 +14,7 @@ from test.utils import (
     create_temporary_markdown_file,
     generate_path_to_bad_plugin,
     read_contents_of_text_file,
+    write_temporary_configuration,
 )
 from typing import Tuple
 
@@ -131,9 +133,106 @@ MD998>>completed_file
     execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory(
-    scanner_default: MarkdownScanner,
-) -> None:
+def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file_config_string() -> (
+    None
+):
+    """
+    Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    configuration_content = """
+plugins:
+  additional_paths: "test/resources/plugins/plugin_two.py"
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path = write_temporary_configuration(
+            configuration_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".yaml",
+        )
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD998>>init_from_config
+MD998>>starting_new_file>>
+MD998>>next_line:# This is a test
+MD998>>next_line:
+MD998>>next_line:The line after this line should be blank.
+MD998>>next_line:
+MD998>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file_config_string_list() -> (
+    None
+):
+    """
+    Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    configuration_content = """
+plugins:
+  additional_paths:
+    - "test/resources/plugins/plugin_two.py"
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path = write_temporary_configuration(
+            configuration_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".yaml",
+        )
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD998>>init_from_config
+MD998>>starting_new_file>>
+MD998>>next_line:# This is a test
+MD998>>next_line:
+MD998>>next_line:The line after this line should be blank.
+MD998>>next_line:
+MD998>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory() -> None:
     """
     Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin directory.
 
@@ -142,6 +241,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory(
     """
 
     # Arrange
+    scanner = MarkdownScanner()
     source_path, _ = __generate_source_path("end_with_blank_line.md")
     supplied_arguments = [
         "--add-plugin",
@@ -163,7 +263,7 @@ MD998>>completed_file
     )
 
     # Act
-    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(expected_results=expected_results)

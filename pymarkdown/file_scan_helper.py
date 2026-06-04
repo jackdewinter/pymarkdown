@@ -1128,19 +1128,14 @@ class FileScanHelper:
                 next_entry, full_property_name, per_file_ignores_prefix
             )
 
-            property_value = self.__properties.get_string_property(
-                full_property_name, strict_mode=True
-            )
-            property_value = (
-                property_value.strip() if property_value else property_value
-            )
-            if not property_value:
-                raise ValueError(
-                    f"Property value for `{full_property_name}` must be a non-empty, comma-separated list of rule identifiers."
+            property_values = (
+                self.__properties.get_string_list_property(
+                    full_property_name, delimiter=",", strict_mode=True
                 )
-
+                or []
+            )
             rules_to_disable_by_id: Set[str] = set()
-            for next_rule_identifier in property_value.lower().split(","):
+            for next_rule_identifier in property_values:
                 normalize_identifier = self.__plugins.get_plugin_id_from_identifier(
                     next_rule_identifier
                 )

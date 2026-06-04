@@ -3,9 +3,24 @@ Module to provide tests related to the "-l" option.
 """
 
 import os
+import sys
+import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import ALT_EXTENSIONS_X, ARGPARSE_X, EXCLUSIONS_X
+from test.utils import write_temporary_configuration
+
+if sys.version_info < (3, 10):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
+if sys.version_info < (3, 13):
+    ALT_EXTENSIONS_X = (
+        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    )
+    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
+else:
+    ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
+    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 # pylint: disable=too-many-lines
 
@@ -1061,3 +1076,97 @@ def test_markdown_with_dash_l_and_dash_r_on_directory(
 
     # Assert
     execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_l_on_md_directory_with_configure_file_exclude_list() -> (
+    None
+):
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and a configured exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude = f"simple{os.sep}simple.md"
+    configuration_content = f"""
+system:
+  exclude_path:
+    - {glob_to_exclude}
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path = write_temporary_configuration(
+            configuration_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".yaml",
+        )
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-l",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "No matching files found."
+
+        # Act
+        execute_results = scanner.invoke_main(
+            arguments=supplied_arguments, cwd=scanner.resource_directory
+        )
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclude_list() -> (
+    None
+):
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude_1 = f"simple{os.sep}simple.md"
+    glob_to_exclude_2 = f"simple{os.sep}README.md"
+    configuration_content = f"""
+system:
+  exclude_path:
+    - {glob_to_exclude_1}
+    - {glob_to_exclude_2}
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path = write_temporary_configuration(
+            configuration_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".yaml",
+        )
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-l",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "No matching files found."
+
+        # Act
+        execute_results = scanner.invoke_main(
+            arguments=supplied_arguments, cwd=scanner.resource_directory
+        )
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )

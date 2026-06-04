@@ -415,8 +415,13 @@ class PyMarkdownLint:
 
         POGGER.info("Determining files to scan.")
         paths_to_exclude: List[str] = args.path_exclusions or []
-        if config_paths := self.__properties.get_string_property("system.exclude_path"):
-            paths_to_exclude.extend(config_paths.split(","))
+        if config_paths := (
+            self.__properties.get_string_list_property(
+                "system.exclude_path", delimiter=","
+            )
+            or []
+        ):
+            paths_to_exclude.extend(config_paths)
 
         files_to_scan, did_error_scanning_files, did_only_list_files = (
             ApplicationFileScanner.determine_files_to_scan_with_args(
