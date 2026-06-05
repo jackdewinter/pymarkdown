@@ -3,9 +3,11 @@ Module to provide tests related to the MD013 rule.
 """
 
 import os
+import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
+from test.utils import write_temporary_configuration
 from typing import Tuple
 
 import pytest
@@ -1230,6 +1232,61 @@ def test_md013_bad_html_block_with_config(scanner_default: MarkdownScanner) -> N
 
     # Assert
     execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md013_issue_1604(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
+    """
+
+    # Arrange
+    markdown_content = """# Test
+
+this is a really long line which _should not_ be ignored because of the pymarkdown configuration.
+
+```sh
+# this is a really long line which _should_ be ignored because of the pymarkdown configuration.
+```
+
+## Test1
+
+| one | two | three |
+| --- | --- | --- |
+| four | five | this is a test |
+
+```sh
+# this is a really long line which _should_ be ignored because of the pymarkdown configuration.
+```
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        source_path = write_temporary_configuration(
+            markdown_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        supplied_arguments = [
+            "--set",
+            "extensions.markdown-tables.enabled=$!True",
+            "--set",
+            "plugins.MD013.code_blocks=$!False",
+            "--strict-config",
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:3:1: MD013: Line length [Expected: 80, Actual: 97] (line-length)""",
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
 
 
 def test_md013_query_config() -> None:

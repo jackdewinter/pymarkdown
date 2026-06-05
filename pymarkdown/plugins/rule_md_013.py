@@ -164,6 +164,7 @@ class RuleMd013(RulePlugin):
         """
         Event that a new line is being processed.
         """
+
         if (
             self.__leaf_token_index + 1 < len(self.__leaf_tokens)
             and self.__line_index
@@ -215,7 +216,12 @@ class RuleMd013(RulePlugin):
         Event that a new token is being processed.
         """
         _ = context
-        if token.is_blank_line or token.is_leaf:
+        if (token.is_blank_line or token.is_leaf) and not (
+            token.is_table_header_item
+            or token.is_table_row_item
+            or token.is_table_body
+            or token.is_table
+        ):
             self.__leaf_tokens.append(token)
 
 
