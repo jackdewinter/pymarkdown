@@ -5,20 +5,21 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- [Issue 1604](https://github.com/jackdewinter/pymarkdown/issues/1604)
-    - Fixed issue where not properly keeping track of table tokens with rule Md013,
-      resulting in the rule getting "stuck" on tables, ignoring anything after
-      that point in the document
 - [Issue 1605](https://github.com/jackdewinter/pymarkdown/issues/1605)
     - Add support for native file format lists in JSON, YAML, TOML
         - [`plugins.per-file-ignores`](./advanced_configuration.md#per-file-disabling-of-rule-plugins)
         - [`system.exclude_path`](./advanced_configuration.md#excluding-paths)
         - [`plugins.additional_paths`](./advanced_configuration.md#adding-rule-plugins)
+- [Issue 1609](https://github.com/jackdewinter/pymarkdown/issues/1609)
+    - Added support for `tables` and `table_line_length` for MD013:line-length
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1604](https://github.com/jackdewinter/pymarkdown/issues/1604)
+    - Fixed issue where not properly keeping track of table tokens with rule Md013,
+      resulting in the rule getting "stuck" on tables, ignoring anything after
+      that point in the document
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
