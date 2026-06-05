@@ -72,7 +72,8 @@ the `heading_line_length` configuration value specifies the line length
 for headings and `headings` configuration value specifies whether this
 rule triggers at all for headings.  Similarly, the `code_block_line_length`
 and `code_blocks` configuration values perform the same action for
-code blocks.
+code blocks and the `table_line_length` and `tables` configuration values
+perform the same action for tables.
 
 ## Fix Description
 
@@ -86,15 +87,17 @@ release.
 | `plugins.md013.` |
 | `plugins.line-length.` |
 
-<!-- pyml disable-num-lines 10 line-length-->
+<!-- pyml disable-num-lines 12 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `line_length` | `integer` | `80` | Maximum number of characters on a normal line. |
-| `heading_line_length` | `integer` | `80` | Maximum number of characters on a heading line. |
+| `code_blocks` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a code block. |
 | `code_block_line_length` | `integer` | `80` | Maximum number of characters on a code block line. |
 | `headings` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a heading. |
-| `code_blocks` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a code block. |
+| `heading_line_length` | `integer` | `80` | Maximum number of characters on a heading line. |
+| `tables` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a table. |
+| `table_line_length` | `integer` | `80` | Maximum number of characters on a table line. |
 | `stern` | `boolean` | `False` | Whether the 'stern' trigger rules are in effect. |
 | `strict` | `boolean` | `False` | Whether the 'strict' trigger rules are in effect. |
 
@@ -102,8 +105,3 @@ release.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD013](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md013---line-length).
-
-### Differences From MarkdownLint Rule
-
-The substantial difference from the original rule is that the `table` configuration
-value is not present as the PyMarkdown parser does not currently support tables.

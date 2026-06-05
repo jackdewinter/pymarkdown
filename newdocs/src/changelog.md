@@ -17,9 +17,9 @@
 ### Fixed
 
 - [Issue 1604](https://github.com/jackdewinter/pymarkdown/issues/1604)
-    - Fixed issue where not properly keeping track of table tokens with rule Md013,
-      resulting in the rule getting "stuck" on tables, ignoring anything after
-      that point in the document
+    - Fixed an issue where the rule was not properly keeping track of table tokens
+      with rule Md013, resulting in the rule getting "stuck" on tables, ignoring
+      anything after that point in the document
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
