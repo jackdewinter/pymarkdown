@@ -4,7 +4,7 @@
 import json
 import os
 from test.markdown_scanner import MarkdownScanner
-from typing import List
+from typing import Any, Dict, List
 from xml.etree import ElementTree as ET
 
 import pytest
@@ -12,7 +12,7 @@ from _pytest.config import Config
 from _pytest.main import Session
 from _pytest.python import Function
 
-user_properties_map = {}
+user_properties_map: Dict[str, Any] = {}
 
 
 def pytest_collection_modifyitems(

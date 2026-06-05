@@ -1220,7 +1220,7 @@
         },
         {
             "name": "test.rules.test_md013",
-            "totalTests": 44,
+            "totalTests": 45,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1268,7 +1268,7 @@
         },
         {
             "name": "test.rules.test_md022",
-            "totalTests": 59,
+            "totalTests": 60,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1516,7 +1516,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 60,
+            "totalTests": 62,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1564,7 +1564,7 @@
         },
         {
             "name": "test.test_listfiles",
-            "totalTests": 31,
+            "totalTests": 33,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_main_per_file_ignores",
-            "totalTests": 23,
+            "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

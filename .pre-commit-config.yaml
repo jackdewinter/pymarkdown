@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/ambv/black
-    rev: 26.3.1
+    rev: 26.5.1
     hooks:
     -   id: black
         name: "Format: Black"
@@ -70,7 +70,7 @@ repos:
         args: ["-j=1", "--recursive=y", "-rn", "-sn", "utils"]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.20.1
+    rev: v2.1.0
     hooks:
     -   id: mypy
         name: "Scan:   MyPy"
@@ -79,7 +79,7 @@ repos:
           "types-pyyaml", types-PyYAML, columnar]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.20.1
+    rev: v2.1.0
     hooks:
     -   id: mypy
         name: "Scan:   MyPy (test)"
@@ -117,7 +117,7 @@ repos:
         entry: pipenv run python utils/generate_dependencies_file.py
         pass_filenames: false
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.36
+    rev: v0.9.37
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (Old Documentation)"
@@ -129,7 +129,7 @@ repos:
         -   changelog.md
         -   ./docs
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.36
+    rev: v0.9.37
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (README.md)"
@@ -142,7 +142,7 @@ repos:
         -   scan
         -   README.md
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.36
+    rev: v0.9.37
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (New Documentation)"
