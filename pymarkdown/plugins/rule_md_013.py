@@ -31,9 +31,11 @@ class RuleMd013(RulePlugin):
         self.__line_length = 0
         self.__code_block_line_length = 0
         self.__heading_line_length = 0
+        self.__table_line_length = 0
         self.__minimum_line_length = 0
         self.__code_blocks_active = False
         self.__headings_active = False
+        self.__tables_active = False
         self.__strict_mode = False
         self.__stern_mode = False
         self.__last_line: Optional[str] = None
@@ -47,7 +49,7 @@ class RuleMd013(RulePlugin):
             plugin_id="MD013",
             plugin_enabled_by_default=True,
             plugin_description="Line length",
-            plugin_version="0.6.1",
+            plugin_version="0.6.2",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md013.md",
             plugin_configuration="line_length,heading_line_length,code_block_line_length,"
             + "code_blocks,headings,strict,stern",
@@ -83,10 +85,18 @@ class RuleMd013(RulePlugin):
                 valid_value_fn=self.__validate_minimum,
             )
         )
+        self.__table_line_length = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "table_line_length",
+                80,
+                valid_value_fn=self.__validate_minimum,
+            )
+        )
         self.__minimum_line_length = min(
             self.__line_length,
             self.__code_block_line_length,
             self.__heading_line_length,
+            self.__table_line_length,
         )
 
         self.__code_blocks_active = (
@@ -98,6 +108,12 @@ class RuleMd013(RulePlugin):
         self.__headings_active = (
             self.plugin_configuration.get_boolean_property_with_default(
                 "headings",
+                True,
+            )
+        )
+        self.__tables_active = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "tables",
                 True,
             )
         )
@@ -118,10 +134,12 @@ class RuleMd013(RulePlugin):
         """
         return [
             QueryConfigItem("line_length", self.__line_length),
-            QueryConfigItem("code_block_line_length", self.__code_block_line_length),
-            QueryConfigItem("heading_line_length", self.__heading_line_length),
             QueryConfigItem("code_blocks", self.__code_blocks_active),
+            QueryConfigItem("code_block_line_length", self.__code_block_line_length),
             QueryConfigItem("headings", self.__headings_active),
+            QueryConfigItem("heading_line_length", self.__heading_line_length),
+            QueryConfigItem("tables", self.__tables_active),
+            QueryConfigItem("table_line_length", self.__table_line_length),
             QueryConfigItem("strict", self.__strict_mode),
             QueryConfigItem("stern", self.__stern_mode),
         ]
@@ -156,6 +174,15 @@ class RuleMd013(RulePlugin):
             compare_length = (
                 self.__heading_line_length
                 if self.__headings_active
+                else RuleMd013.__maximum_line_length
+            )
+        elif (
+            self.__leaf_tokens[self.__leaf_token_index].is_table_header
+            or self.__leaf_tokens[self.__leaf_token_index].is_table_row
+        ):
+            compare_length = (
+                self.__table_line_length
+                if self.__tables_active
                 else RuleMd013.__maximum_line_length
             )
         return line_length > compare_length, compare_length

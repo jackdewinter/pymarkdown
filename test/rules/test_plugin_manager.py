@@ -1271,7 +1271,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md010   no-hard-tabs                    True       True       0.6.1    Yes
   md011   no-reversed-links               True       True       0.5.1    No
   md012   no-multiple-blanks              True       True       0.7.0    Yes
-  md013   line-length                     True       True       0.6.1    No
+  md013   line-length                     True       True       0.6.2    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.1    No
   md019   no-multiple-space-atx           True       True       0.5.1    Yes
@@ -1312,7 +1312,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md048   code-fence-style                True       True       0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
 """,
     )
 
@@ -1353,7 +1353,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md010   no-hard-tabs                    True       True       0.6.1    Yes
   md011   no-reversed-links               True       True       0.5.1    No
   md012   no-multiple-blanks              True       True       0.7.0    Yes
-  md013   line-length                     True       True       0.6.1    No
+  md013   line-length                     True       True       0.6.2    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.1    No
   md019   no-multiple-space-atx           True       True       0.5.1    Yes
@@ -1437,7 +1437,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md010   no-hard-tabs                    True       False      0.6.1    Yes
   md011   no-reversed-links               True       False      0.5.1    No
   md012   no-multiple-blanks              True       False      0.7.0    Yes
-  md013   line-length                     True       False      0.6.1    No
+  md013   line-length                     True       False      0.6.2    No
   md014   commands-show-output            True       False      0.5.0    No
   md018   no-missing-space-atx            True       False      0.5.1    No
   md019   no-multiple-space-atx           True       False      0.5.1    Yes
@@ -1525,7 +1525,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md010   no-hard-tabs                    True       False      0.6.1    Yes
   md011   no-reversed-links               True       False      0.5.1    No
   md012   no-multiple-blanks              True       False      0.7.0    Yes
-  md013   line-length                     True       False      0.6.1    No
+  md013   line-length                     True       False      0.6.2    No
   md014   commands-show-output            True       False      0.5.0    No
   md018   no-missing-space-atx            True       False      0.5.1    No
   md019   no-multiple-space-atx           True       False      0.5.1    Yes
@@ -1615,7 +1615,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md010   no-hard-tabs                    True       True       0.6.1    Yes
   md011   no-reversed-links               True       False      0.5.1    No
   md012   no-multiple-blanks              True       False      0.7.0    Yes
-  md013   line-length                     True       False      0.6.1    No
+  md013   line-length                     True       False      0.6.2    No
   md014   commands-show-output            True       False      0.5.0    No
   md018   no-missing-space-atx            True       False      0.5.1    No
   md019   no-multiple-space-atx           True       False      0.5.1    Yes

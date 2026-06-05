@@ -1235,6 +1235,177 @@ def test_md013_bad_html_block_with_config(scanner_default: MarkdownScanner) -> N
 
 
 @pytest.mark.rules
+def test_md013_good_table_line_length_not_exceeded(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
+    """
+
+    # Arrange
+    markdown_content = """the following table is less than the line length
+
+| one-two-three-four | one-two-three-four |
+| --- | --- |
+| four-five-six-seven | four-five-six-seven |
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        source_path = write_temporary_configuration(
+            markdown_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        supplied_arguments = [
+            "--set",
+            "extensions.markdown-tables.enabled=$!True",
+            "--set",
+            "plugins.md013.table_line_length=$#60",
+            "--strict-config",
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults()
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md013_bad_table_line_length_exceeded(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
+    """
+
+    # Arrange
+    markdown_content = """
+this is a long line that is longer than sixty characters to test lengths
+
+| one-two-three-four | one-two-three-four | one-two-three-four |
+| --- | --- | --- |
+| four-five-six-seven | four-five-six-seven | four-five-six-seven |
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        source_path = write_temporary_configuration(
+            markdown_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        supplied_arguments = [
+            "--set",
+            "extensions.markdown-tables.enabled=$!True",
+            "--set",
+            "plugins.md013.table_line_length=$#60",
+            "--strict-config",
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:4:1: MD013: Line length [Expected: 60, Actual: 64] (line-length)
+{source_path}:6:1: MD013: Line length [Expected: 60, Actual: 67] (line-length)""",
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md013_bad_tables_enabled(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
+    """
+
+    # Arrange
+    markdown_content = """the following table is less than the line length
+
+| one-two-three-four | one-two-three-four | one-two-three-four | one-two-three-four |
+| --- | --- | --- | --- |
+| four-five-six-seven | four-five-six-seven | four-five-six-seven | four-five-six-seven |
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        source_path = write_temporary_configuration(
+            markdown_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        supplied_arguments = [
+            "--set",
+            "extensions.markdown-tables.enabled=$!True",
+            "--set",
+            "plugins.md013.tables=$!True",
+            "--strict-config",
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:3:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:5:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)""",
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md013_good_tables_disabled(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
+    """
+
+    # Arrange
+    markdown_content = """the following table is less than the line length
+
+| one-two-three-four | one-two-three-four | one-two-three-four | one-two-three-four |
+| --- | --- | --- | --- |
+| four-five-six-seven | four-five-six-seven | four-five-six-seven | four-five-six-seven |
+"""
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        source_path = write_temporary_configuration(
+            markdown_content,
+            directory=tmp_dir_path,
+            file_name_suffix=".md",
+        )
+        supplied_arguments = [
+            "--set",
+            "extensions.markdown-tables.enabled=$!True",
+            "--set",
+            "plugins.md013.tables=$!False",
+            "--strict-config",
+            "scan",
+            source_path,
+        ]
+
+        expected_results = ExpectedResults()
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
 def test_md013_issue_1604(scanner_default: MarkdownScanner) -> None:
     """
     Test to make sure this rule does not trigger with a document that
@@ -1305,10 +1476,12 @@ def test_md013_query_config() -> None:
   CONFIGURATION ITEM      TYPE     VALUE
 
   line_length             integer  80
-  code_block_line_length  integer  80
-  heading_line_length     integer  80
   code_blocks             boolean  True
+  code_block_line_length  integer  80
   headings                boolean  True
+  heading_line_length     integer  80
+  tables                  boolean  True
+  table_line_length       integer  80
   strict                  boolean  False
   stern                   boolean  False
 """,
