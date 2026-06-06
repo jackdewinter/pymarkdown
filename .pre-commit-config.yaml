@@ -143,15 +143,15 @@ repos:
         -   README.md
 -   repo: local
     hooks:
-    -   id: x1
+    -   id: pymarkdown-new
         name: "Scan:   PyMarkdown (New Documentation)(local)"
         language: system
-        entry: ./run.sh -- --config newdocs/clean.json scan -r --exclude "draft-*.md" ./newdocs/src
+        entry: pipenv run python "main.py" --config newdocs/clean.json scan -r --exclude "draft-*.md" ./newdocs/src
         pass_filenames: false
 # -   repo: https://github.com/jackdewinter/pymarkdown
 #     rev: v0.9.37
 #     hooks:
-#     -   id: pymarkdown
+#     -   id: pymarkdown-new
 #         name: "Scan:   PyMarkdown (New Documentation)"
 #         pass_filenames: false
 #         args:

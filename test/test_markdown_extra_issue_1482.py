@@ -4,6 +4,8 @@ Extra tests.
 
 from test.utils import act_and_assert
 
+import pytest
+
 
 def test_extra_issue_1482_x() -> None:
     """
@@ -678,4 +680,102 @@ def test_extra_issue_1482_h() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
+    )
+
+
+@pytest.mark.skip
+def test_extra_issue_1482_i() -> None:
+    """
+    https://github.com/jackdewinter/pymarkdown/issues/1482
+    https://github.com/jackdewinter/pymarkdown/issues/1615
+    """
+
+    # Arrange
+    source_markdown = """# Title
+
+> - a
+>   > - b
+>   >   > - c
+>   >   >   > - d
+>   >   >   >   > - e
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):Title: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,1)::> \n> ]",
+        "[ulist(3,3):-::4:]",
+        "[para(3,5):]",
+        "[text(3,5):a:]",
+        "[end-para:::True]",
+        "[block-quote(4,5)::> \n>   > ]",
+        "[ulist(4,7):-::8:    ]",
+        "[para(4,9):]",
+        "[text(4,9):b:]",
+        "[end-para:::True]",
+        "[block-quote(5,9)::> \n>   > \n> ]",
+        "[ulist(5,11):-::12:        ]",
+        "[para(5,13):]",
+        "[text(5,13):c:]",
+        "[end-para:::True]",
+        "[block-quote(6,13)::> \n>   > \n> \n> ]",
+        "[ulist(6,15):-::16:            ]",
+        "[para(6,17):]",
+        "[text(6,17):d:]",
+        "[end-para:::True]",
+        "[block-quote(7,17)::> ]",
+        "[ulist(7,19):-::20:                ]",
+        "[para(7,21):]",
+        "[text(7,21):e:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+    ]
+    expected_gfm = """<h1>Title</h1>
+<blockquote>
+<ul>
+<li>a
+<blockquote>
+<ul>
+<li>b
+<blockquote>
+<ul>
+<li>c
+<blockquote>
+<ul>
+<li>d
+<blockquote>
+<ul>
+<li>e</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
     )
