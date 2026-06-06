@@ -96,7 +96,7 @@
         },
         "pymarkdown/file_scan_helper.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 12,
+            "too-many-arguments": 13,
             "too-many-locals": 5
         },
         "pymarkdown/general/__init__.py": {},
@@ -534,7 +534,7 @@
     "disables-by-name": {
         "too-many-instance-attributes": 30,
         "too-many-public-methods": 5,
-        "too-many-arguments": 278,
+        "too-many-arguments": 279,
         "too-few-public-methods": 39,
         "too-many-locals": 55,
         "chained-comparison": 3,
