@@ -116,6 +116,11 @@ jobs:
             ./report/coverage.xml
             ./report/coverage
 
+      - name: Import Codecov PGP key
+        run: |
+          curl -Os https://keybase.io/codecovsecurity/pgp_keys.asc
+          gpg --no-default-keyring --keyring trustedkeys.gpg --import pgp_keys.asc
+
       - name: Report Coverage
         uses: codecov/codecov-action@v6
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
