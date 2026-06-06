@@ -89,7 +89,6 @@ whitespace characters at the end of that line.
 | `plugins.md009.` |
 | `plugins.no-trailing-spaces.` |
 
-<!-- pyml disable-num-lines 6 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

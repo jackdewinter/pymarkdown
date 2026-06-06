@@ -27,6 +27,7 @@ This rule triggers when any non-code block, non-HTML block line
 contains an Inline Link that appears to have the `[]` characters and
 the `()` characters transposed:
 
+<!-- pyml disable-num-lines 3 no-reversed-links -->
 ```Markdown
 This link (is)[/transposed].
 ```

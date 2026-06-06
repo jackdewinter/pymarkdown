@@ -85,7 +85,6 @@ compelling argument to provide a fix for this rule.
 | `plugins.md033.` |
 | `plugins.no-inline-html.` |
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

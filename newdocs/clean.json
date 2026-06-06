@@ -2,7 +2,8 @@
     "plugins": {
         "line-length": {
             "enabled": true,
-            "code_block_line_length" : 160
+            "code_block_line_length" : 160,
+            "tables" : false
         },
         "ul-indent" : {
             "enabled": false
@@ -16,6 +17,9 @@
             "enabled" : true
         },
         "linter-pragmas": {
+            "enabled" : true
+        },
+        "markdown-tables": {
             "enabled" : true
         }
     }

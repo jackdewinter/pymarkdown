@@ -73,7 +73,6 @@ with the selected style type.
 | `plugins.md048.` |
 | `plugins.code-fence-style.` |
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
@@ -81,7 +80,6 @@ with the selected style type.
 
 Valid heading styles:
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Style | Description |
 | -- | -- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |

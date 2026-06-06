@@ -164,7 +164,6 @@ what text should be in that heading.
 | `plugins.first-line-heading.` |
 | `plugins.first-line-h1.` |
 
-<!-- pyml disable-num-lines 6 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

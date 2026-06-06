@@ -61,7 +61,6 @@ release.
 | `plugins.md012.` |
 | `plugins.no-multiple-blanks.` |
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

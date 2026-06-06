@@ -910,8 +910,6 @@ Before relying on
 These steps help you avoid unexpected changes in fix behavior when you move between
 PyMarkdown versions.
 
-<!-- pyml disable line-length-->
-
 | Rule ID & Link | Human-Readable Identifier | Short Description |
 | -- | -- | -- |
 | [MD001](./plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
@@ -935,8 +933,6 @@ PyMarkdown versions.
 | [MD046](./plugins/rule_md046.md#fix-description) | `code-block-style` | Code block style. |
 | [MD047](./plugins/rule_md047.md#fix-description) | `single-trailing-newline` | Each file should end with a single newline character. |
 | [MD048](./plugins/rule_md048.md#fix-description) | `code-fence-style` | Code fence style should be consistent throughout the document. |
-
-<!-- pyml enable line-length-->
 
 #### Fix Examples
 
@@ -1050,7 +1046,6 @@ the document. These are most useful when:
 
 The five specification extensions are:
 
-<!-- pyml disable-num-lines 7 line-length-->
 | Extension | GFM Link | Description |
 | --- | --- | --- |
 | [Tables](./advanced_extensions.md#markdown-tables) | [GFM](https://github.github.com/gfm/#tables-extension-) | Tables using the \| character. |
@@ -1083,7 +1078,6 @@ In broad terms:
   specific Rule Plugins over selected line ranges, without changing how the Markdown
   itself is parsed.
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Extension | Enabled By Default | Description |
 | --- | --- | --- |
 | [Front-Matter](./extensions/front-matter.md) | No | YAML Front-Matter for files. |
@@ -1293,7 +1287,7 @@ Markdown document, you can disable the corresponding Rule Plugins by id or by al
     ```sh
     # disable by Rule Plugin id
     pymarkdown -d MD012,MD013 scan examples
-    
+
     # or, disable by Rule Plugin aliases:
     pymarkdown -d no-multiple-blanks,line-length scan examples
     ```
