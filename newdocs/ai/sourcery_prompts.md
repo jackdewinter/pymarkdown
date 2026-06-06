@@ -306,3 +306,9 @@ Advanced Integration
 How We Use Pre‑Commit in our Pipelines
 Things To Watch Out For
 However, transitions between them are sometimes implicit, making it slightly harder for a skimmer to understand “why this next section exists”.
+
+
+as a developer writing the preface for a project release, rate the following paragraphs on a scale of 0-10.  Provide reasons for your scores, including concrete ssuggestions and actions on how to improve the paragraphs.
+
+````
+````
