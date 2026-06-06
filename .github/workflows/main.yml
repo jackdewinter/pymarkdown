@@ -12,7 +12,7 @@ env:
   project-name: pymarkdown
   default-python-version: 3.13
   default-pipenv-version: 2025.0.3
-  default-platform: windows-latest
+  default-platform: ubuntu-latest
 
 jobs:
 
