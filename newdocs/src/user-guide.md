@@ -1608,10 +1608,12 @@ exit code:
 
 - Use `default` if you want CI or scripts to fail when:
     - no files were scanned,
+    - asked to fix files with bad configuration,
     - Rule Failures were reported, or
     - files were fixed.
 
 - Use `minimal` if you only want CI to fail for:
+    - invalid actions requested based on current configuration
     - invalid command-line usage, or
     - internal application errors.
 
@@ -1626,6 +1628,8 @@ PyMarkdown first classifies each run into one of these outcome categories:
 - `SUCCESS` – everything looks good, no errors.
 - `NO_FILES_TO_SCAN` – the paths provided produced zero files to scan.
 - `COMMAND_LINE_ERROR` – at least one command-line argument was not valid.
+- `FIXED_NO_PLUGINS` - no files were fixed due to no plugins with `fix mode` being
+  enabled
 - `FIXED_AT_LEAST_ONE_FILE` – at least one file was fixed, changing its content.
 - `SCAN_TRIGGERED_AT_LEAST_ONCE` – at least one failure was triggered.
 - `SYSTEM_ERROR` – an application error occurred, possibly stopping the run early.

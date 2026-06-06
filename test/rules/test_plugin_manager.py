@@ -2542,3 +2542,272 @@ Traceback (most recent call last):
             expected_return_code,
             additional_error=["raise BadPluginFixError( "],
         )
+
+
+def test_markdown_plugins_no_failures_plugins_active_scan(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_no_failures_no_plugins_active_scan(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "--set",
+            "plugins.selectively_enable_rules=$!true",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_no_failures_plugins_active_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_no_failures_no_plugins_active_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "--set",
+            "plugins.selectively_enable_rules=$!true",
+            "--stack-trace",
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 6
+        expected_output = ""
+        expected_error = (
+            "Cannot fix files: No rule plugins are enabled have fix mode support."
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_failures_plugins_active_scan(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = f"{temp_source_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)"
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_failures_no_plugins_active_scan(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "--set",
+            "plugins.selectively_enable_rules=$!true",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_failures_plugins_active_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
+
+
+def test_markdown_plugins_failures_no_plugins_active_fix(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path(
+        "improper_atx_heading_incrementing.md", "md001"
+    )
+    with copy_to_temp_file(source_path) as temp_source_path:
+        supplied_arguments = [
+            "--set",
+            "plugins.selectively_enable_rules=$!true",
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 6
+        expected_output = ""
+        expected_error = (
+            "Cannot fix files: No rule plugins are enabled have fix mode support."
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output,
+            expected_error,
+            expected_return_code,
+        )
