@@ -85,7 +85,6 @@ translation from indented-to-fenced code block have their issues.
 | `plugins.md046.` |
 | `plugins.code-block-style.` |
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
@@ -93,7 +92,6 @@ translation from indented-to-fenced code block have their issues.
 
 Valid heading styles:
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Style | Description |
 | -- | -- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |

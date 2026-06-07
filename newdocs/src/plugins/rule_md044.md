@@ -93,7 +93,6 @@ configuration item.
 | `plugins.md044.` |
 | `plugins.proper-names.` |
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

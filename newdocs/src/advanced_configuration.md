@@ -295,7 +295,6 @@ the table links to more detailed documentation in the User's Guide or elsewhere.
 These items directly affect the collection of configuration values and how they
 are interpreted.
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | [(see Configuration File Types)](#configuration-file-types) | `--config {file}`           | String    | Path to the configuration file to use. |
@@ -309,7 +308,6 @@ column to jump to the detailed explanations.
 
 These items affect the logging for PyMarkdown.
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | `log.file`        | [--log-file](./user-guide.md#-log-level-with-log-file-logging) | String  | Destination file for log messages. |
@@ -369,7 +367,6 @@ see any errors that occur during initialization.
 
 These items configure PyMarkdown's system‑level behavior:
 
-<!-- pyml disable-num-lines 3 line-length-->
 | Key | Command Line | Type | Description |
 | --- | --- | --- | --- |
 | `system.exclude_path` | [`--exclude`](./user-guide.md#-e-exclude-path_exclusions) | String | Comma separated list or native list of relative glob paths to exclude. |
@@ -436,7 +433,6 @@ request).
 These items show the various ways of enabling and disabling Rule Plugins on a global
 level:
 
-<!-- pyml disable-num-lines 6 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | *special* | [--enable-rules,-e](./user-guide.md#enabling-and-disabling-rule-plugins)   | String    | Comma separated list of Rule Plugins to enable. |
@@ -447,7 +443,6 @@ level:
 This item points to the Development documentation with instructions for creating
 your own plugins:
 
-<!-- pyml disable-num-lines 3 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- | -- |
 | [`plugins.additional_paths`](./development.md) | --add-plugin | String or String List | Path to a plugin containing a new Rule Plugins to load. |
@@ -455,7 +450,6 @@ your own plugins:
 These items give examples on how specific configuration items can be applied to
 Rule Plugins:
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | [`plugins.{id}.enabled`](#specific-plugin-settings) | -- | Boolean | Specify whether the Rule Plugin is enabled. |
@@ -750,7 +744,6 @@ details.
 
 This item shows how to enable specific extensions:
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | *special* | [--enable-extensions](./user-guide.md#enabling-extensions)   | String    | Comma separated list of extensions to enable. |
@@ -819,7 +812,6 @@ also links to each extension's page.
 
 These items do not fit nicely into any other category.
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | -- | [`--continue-on-error`](./user-guide.md#-continue-on-error-error-reporting) | Boolean | Enable PyMarkdown to continue after application errors. |

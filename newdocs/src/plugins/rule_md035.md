@@ -73,7 +73,6 @@ document sets the thematic break text used throughout the document.
 | `plugins.md035.` |
 | `plugins.hr-style.` |
 
-<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

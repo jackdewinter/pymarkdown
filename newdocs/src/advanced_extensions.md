@@ -239,7 +239,7 @@ Visit www.commonmark.org/help for more information.
 
 renders as:
 
-<!-- pyml disable-num-lines 5 no-inline-html,line-length -->
+<!-- pyml disable-num-lines 1 no-inline-html,line-length -->
 <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
 
 #### Disallowed Raw HTML

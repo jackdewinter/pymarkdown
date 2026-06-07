@@ -142,8 +142,6 @@ automatically.
 The full list is also available in our [User Guide](../user-guide.md#rule-plugins-with-autofix)
 for easy reference.
 
-<!-- pyml disable line-length-->
-
 | Rule ID & Link | Human-Readable Identifier | Short Description |
 | -- | -- | -- |
 | [MD001](../plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
@@ -167,8 +165,6 @@ for easy reference.
 | [MD046](../plugins/rule_md046.md#fix-description) | `code-block-style` | Code block style. |
 | [MD047](../plugins/rule_md047.md#fix-description) | `single-trailing-newline` | Each file should end with a single newline character. |
 | [MD048](../plugins/rule_md048.md#fix-description) | `code-fence-style` | Code fence style should be consistent throughout the document. |
-
-<!-- pyml enable line-length-->
 
 This list may evolve as new Rule Plugins are added or existing Rule Plugins gain
 or lose **autofix**

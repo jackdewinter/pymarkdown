@@ -151,7 +151,6 @@ so on.
 | `plugins.md007.` |
 | `plugins.ul-indent.` |
 
-<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |

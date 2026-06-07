@@ -12,7 +12,7 @@ env:
   project-name: pymarkdown
   default-python-version: 3.13
   default-pipenv-version: 2025.0.3
-  default-platform: windows-latest
+  default-platform: ubuntu-latest
 
 jobs:
 
@@ -116,15 +116,21 @@ jobs:
             ./report/coverage.xml
             ./report/coverage
 
+      # - name: Import Codecov PGP key
+      #   if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
+      #   run: |
+      #     curl -Os https://keybase.io/codecovsecurity/pgp_keys.asc
+      #     gpg --no-default-keyring --keyring trustedkeys.gpg --import pgp_keys.asc
+
       - name: Report Coverage
         uses: codecov/codecov-action@v6
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          file: ./report/coverage.xml
+          files: ./report/coverage.xml
           name: ${{ matrix.python }} - ${{ matrix.platform }}
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
   lint:
 

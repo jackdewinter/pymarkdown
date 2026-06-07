@@ -153,6 +153,7 @@ command block is referred to as the Pragma command.
 To put this into practical terms, a valid Pragma line matches the following
 regular expression:
 
+<!-- pyml disable-num-lines 3 no-reversed-links-->
 ```regex
 ^<!--[\t\s]*pyml\s(.*)[\t\s]*-->[\t\s]*$
 ```
@@ -335,7 +336,7 @@ Consider this example:
 <!-- pyml disable MD019,line-length-->
 ##  Header with double spaces
 
-This is a simple document with a table, which is not yet supported.
+This is a simple document with a table with many columns.
 
 <!-- pyml disable line-length-->
 | Column 1  | Column 2  | Column 3  | Column 4  | Column 5  | Column 6  | Column 7  |
