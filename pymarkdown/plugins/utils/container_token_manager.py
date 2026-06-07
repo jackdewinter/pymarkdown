@@ -31,6 +31,8 @@ class ContainerTokenManager:
         self.container_token_stack = []
         self.bq_line_index = {}
         self.last_leaf_token = None
+        self.list_adjust_map = {}
+        self.bq_close_map = {}
 
     @classmethod
     def __is_simple_delta(cls, token: MarkdownToken) -> bool:

@@ -17683,7 +17683,6 @@ another list</li>
         show_debug=False,
     )
 
-
 @pytest.mark.gfm
 def test_extra_999() -> None:
     """
