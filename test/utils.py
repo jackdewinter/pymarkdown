@@ -283,6 +283,7 @@ def copy_to_temporary_file(source_path: str) -> str:
     Copy an existing markdown file to a temporary markdown file,
     to allow fo fixing the file without destroying the original.
     """
+    source_path = os.path.abspath(source_path)
     with tempfile.NamedTemporaryFile("wt", delete=False, suffix=".md") as outfile:
         temporary_file = outfile.name
 
