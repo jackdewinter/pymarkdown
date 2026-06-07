@@ -117,6 +117,7 @@ jobs:
             ./report/coverage
 
       - name: Import Codecov PGP key
+        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         run: |
           curl -Os https://keybase.io/codecovsecurity/pgp_keys.asc
           gpg --no-default-keyring --keyring trustedkeys.gpg --import pgp_keys.asc
