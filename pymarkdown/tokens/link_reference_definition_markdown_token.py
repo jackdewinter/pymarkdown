@@ -36,6 +36,9 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         link_debug: Optional[LinkReferenceInfo],
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the LinkReferenceDefinitionMarkdownToken class.
+        """
         self.__did_add_definition = did_add_definition
         self.__link_name = link_name
 

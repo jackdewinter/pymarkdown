@@ -12,6 +12,10 @@ Create a new instance of the `PyMarkdownApi` class.
         inherit_logging: If True, inherit the logging settings from the calling
             application.  If False, will use the `log_*` functions to specify the
             logging properties.
+    Attributes:
+        __inherit_logging (bool): Kept version of the `inherit_logging` parameter.
+
+    Initialize a new instance of the PyMarkdownApi class.
 
     ### Instance variables
 
@@ -613,7 +617,9 @@ Create a new instance of the `PyMarkdownApi` class.
 
     Attributes:
         reason (str): Reported reason why the action failed.
-        argument_name(str): Name of the argument that caused this exception to be raised.
+        argument_name (str): Name of the argument that caused this exception to be raised.
+
+    Initialize a new instance of the PyMarkdownApiArgumentException class.
 
     ### Ancestors (in MRO)
 
@@ -636,6 +642,8 @@ Create a new instance of the `PyMarkdownApi` class.
 
     Attributes:
         reason (str): Reported reason why the action failed.
+
+    Initialize a new instance of the PyMarkdownApiException class.
 
     ### Ancestors (in MRO)
 
@@ -664,6 +672,8 @@ Create a new instance of the `PyMarkdownApi` class.
     Attributes:
         reason (str): Reported reason why the action failed.
 
+    Initialize a new instance of the PyMarkdownApiException class.
+
     ### Ancestors (in MRO)
 
     * api.PyMarkdownApiException
@@ -679,6 +689,8 @@ Create a new instance of the `PyMarkdownApi` class.
 
     Attributes:
         reason (str): Reported reason why the action failed.
+
+    Initialize a new instance of the PyMarkdownApiException class.
 
     ### Ancestors (in MRO)
 
@@ -823,6 +835,9 @@ Create a new instance of the `PyMarkdownApi` class.
 
     `partial_equals(self, other: PyMarkdownScanFailure) ‑> bool`
     :   Decide if special fields are the same from both items.
+
+        Returns:
+            True if there is a partial match without another scan failure, False otherwise.
 
 `PyMarkdownScanPathResult(scan_failures: List[api.PyMarkdownScanFailure], pragma_errors: List[api.PyMarkdownPragmaError], critical_errors: List[str])`
 :   Result for the `scan_path` and `scan_string` functions.

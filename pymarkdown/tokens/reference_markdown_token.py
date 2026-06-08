@@ -29,6 +29,9 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         requires_end_token: bool = False,
         can_force_close: bool = True,
     ):
+        """
+        Initialize an instance of the ReferenceMarkdownToken class.
+        """
         self.simple_extra_data = extra_data
         if lhp:
             (

@@ -18,7 +18,6 @@ from pymarkdown.links.link_reference_tuple import LinkReferenceDefinitionTuple
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
 class LinkReferenceDefinitionParseHelper:
     """
     Class to helper with the parsing of link reference definitions.
@@ -26,7 +25,7 @@ class LinkReferenceDefinitionParseHelper:
 
     __lrd_start_character = "["
 
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def parse_link_reference_definition(
         parser_state: ParserState,
@@ -41,6 +40,7 @@ class LinkReferenceDefinitionParseHelper:
         Handle the parsing of what appears to be a link reference definition.
         """
 
+        _ = (remaining_line_to_parse, was_started)
         did_start = LinkReferenceDefinitionParseHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -116,7 +116,7 @@ class LinkReferenceDefinitionParseHelper:
             else (keep_going, new_index, None)
         )
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-locals,too-many-arguments
 
     @staticmethod
     def is_link_reference_definition(
@@ -125,6 +125,9 @@ class LinkReferenceDefinitionParseHelper:
         start_index: int,
         extracted_whitespace: str,
     ) -> bool:
+        """
+        Determine if we have what it takes to "probably" start a link reference definition.
+        """
         return LinkReferenceDefinitionParseHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -246,6 +249,3 @@ class LinkReferenceDefinitionParseHelper:
             POGGER.debug(">> characters left at EOL, bailing")
             return False, -1, None
         return True, new_index, ex_ws
-
-
-# pylint: enable=too-few-public-methods

@@ -31,6 +31,9 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
         tabbed_whitespace_to_add: Optional[str],
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the OrderedListStartMarkdownToken class.
+        """
         ListStartMarkdownToken.__init__(
             self,
             MarkdownToken._token_ordered_list_start,

@@ -29,6 +29,9 @@ class StartOfLineTokenParser:
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the StartOfLineTokenParser class.
+        """
         self.__last_paragraph_token: Optional[ParagraphMarkdownToken] = None
         self.__paragraph_index = -1
         self.__first_line_after_other_token = False
@@ -215,6 +218,9 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     """
 
     def __init__(self, owner: "RuleMd018") -> None:
+        """
+        Initialize an instance of the MyStartOfLineTokenParser class.
+        """
         super().__init__()
         self.__owner = owner
 
@@ -259,6 +265,9 @@ class RuleMd018(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd018 class.
+        """
         super().__init__()
         self.__token_parser = MyStartOfLineTokenParser(self)
 

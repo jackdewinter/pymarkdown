@@ -37,6 +37,9 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
         add_http_prefix: bool = False,
         add_angle_brackets: bool = True,
     ) -> None:
+        """
+        Initialize an instance of the UriAutolinkMarkdownToken class.
+        """
         self.__autolink_text = autolink_text
         self.__add_http_prefix = add_http_prefix
         self.__add_angle_brackets = add_angle_brackets

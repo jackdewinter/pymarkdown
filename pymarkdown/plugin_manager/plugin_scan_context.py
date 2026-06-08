@@ -38,6 +38,9 @@ class PluginScanContext(PluginModifyContext):
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]],
         replace_tokens_list: Optional[List[ReplaceTokensRecord]],
     ):
+        """
+        Initialize an instance of the PluginScanContext class.
+        """
         self.owning_manager, self.scan_file, self.line_number = (
             owning_manager,
             scan_file,
@@ -115,6 +118,9 @@ class PluginScanContext(PluginModifyContext):
     @property
     @override
     def is_during_line_pass(self) -> bool:
+        """
+        Get an indication of whether the linter is currently doing a line pass.
+        """
         return self.__file_output is not None
 
     @property

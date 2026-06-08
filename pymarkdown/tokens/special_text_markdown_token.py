@@ -23,6 +23,9 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
     ):
+        """
+        Initialize an instance of the SpecialTextMarkdownToken class.
+        """
         (
             self.__repeat_count,
             self.__is_active,

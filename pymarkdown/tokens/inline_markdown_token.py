@@ -29,6 +29,9 @@ class InlineMarkdownToken(MarkdownToken):
         can_force_close: bool = True,
         is_special: bool = False,
     ):
+        """
+        Initialize an instance of the InlineMarkdownToken class.
+        """
         MarkdownToken.__init__(
             self,
             token_name,

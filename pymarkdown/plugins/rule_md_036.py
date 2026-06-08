@@ -37,6 +37,9 @@ class RuleMd036(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd036 class.
+        """
         super().__init__()
         self.__punctuation: str = ""
         self.__current_state: RuleMd036States = RuleMd036States.LOOK_FOR_PARAGRAPH

@@ -23,6 +23,9 @@ class RuleMd043(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd043 class.
+        """
         super().__init__()
         # self.__show_debug = False
         self.__collected_tokens: List[MarkdownToken] = []

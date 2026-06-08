@@ -1,3 +1,7 @@
+"""
+Module to provide for a manager that tracks the currently open container blocks.
+"""
+
 from typing import Dict, List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
@@ -11,13 +15,10 @@ from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 class ContainerTokenManager:
     """
-    TBD
+    Class to provide for a manager that tracks the currently open container blocks.
     """
 
     def __init__(self) -> None:
-        """
-        TBD
-        """
         self.container_token_stack: List[MarkdownToken] = []
         self.bq_line_index: Dict[int, int] = {}
         self.last_leaf_token: Optional[MarkdownToken] = None
@@ -26,7 +27,7 @@ class ContainerTokenManager:
 
     def clear(self) -> None:
         """
-        TBD
+        Clear the token manager for new document.
         """
         self.container_token_stack = []
         self.bq_line_index = {}
@@ -113,6 +114,9 @@ class ContainerTokenManager:
         )
 
     def premanage_container_tokens(self, token: MarkdownToken) -> None:
+        """
+        Premanage the container tokens.
+        """
         if (
             self.container_token_stack
             and self.last_leaf_token
@@ -159,6 +163,9 @@ class ContainerTokenManager:
             self.__manage_leaf_tokens(token)
 
     def manage_container_tokens_list_end(self, use_new: bool) -> None:
+        """
+        Manage the container tokens at the end of a list.
+        """
         stack_count = len(self.container_token_stack)
         if use_new:
             if (

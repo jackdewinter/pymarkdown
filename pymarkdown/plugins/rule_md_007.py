@@ -26,6 +26,9 @@ class RuleMd007(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd007 class.
+        """
         super().__init__()
         self.__indent_basis = 0
         self.__start_indented = False

@@ -48,6 +48,9 @@ class StackToken:
         matching_markdown_token: Optional[MarkdownToken] = None,
         extra_data: Optional[str] = None,
     ) -> None:
+        """
+        Initialize an instance of the StackToken class.
+        """
         self.__type_name, self.__extra_data, self.__matching_markdown_token = (
             type_name,
             extra_data,
@@ -211,6 +214,9 @@ class DocumentStackToken(StackToken):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the DocumentStackToken class.
+        """
         StackToken.__init__(self, StackToken._stack_base_document)
 
 
@@ -220,6 +226,9 @@ class ParagraphStackToken(StackToken):
     """
 
     def __init__(self, matching_markdown_token: ParagraphMarkdownToken) -> None:
+        """
+        Initialize an instance of the ParagraphStackToken class.
+        """
         StackToken.__init__(
             self,
             StackToken._stack_paragraph,
@@ -233,6 +242,9 @@ class BlockQuoteStackToken(StackToken):
     """
 
     def __init__(self, matching_markdown_token: BlockQuoteMarkdownToken) -> None:
+        """
+        Initialize an instance of the BlockQuoteStackToken class.
+        """
         StackToken.__init__(
             self,
             StackToken._stack_block_quote,
@@ -246,6 +258,9 @@ class IndentedCodeBlockStackToken(StackToken):
     """
 
     def __init__(self, matching_markdown_token: IndentedCodeBlockMarkdownToken) -> None:
+        """
+        Initialize an instance of the IndentedCodeBlockStackToken class.
+        """
         StackToken.__init__(
             self,
             StackToken._stack_indented_code,
@@ -265,6 +280,9 @@ class FencedCodeBlockStackToken(StackToken):
         whitespace_start_count: int,
         matching_markdown_token: FencedCodeBlockMarkdownToken,
     ) -> None:
+        """
+        Initialize an instance of the FencedCodeBlockStackToken class.
+        """
         (
             self.__code_fence_character,
             self.__fence_character_count,
@@ -321,6 +339,9 @@ class ListStackToken(StackToken):
         start_index: int,
         matching_markdown_token: ContainerMarkdownToken,
     ) -> None:
+        """
+        Initialize an instance of the ListStackToken class.
+        """
         (
             self.__indent_level,
             self.__list_character,
@@ -416,6 +437,9 @@ class OrderedListStackToken(ListStackToken):
         start_index: int,
         matching_markdown_token: OrderedListStartMarkdownToken,
     ) -> None:
+        """
+        Initialize an instance of the OrderedListStackToken class.
+        """
         ListStackToken.__init__(
             self,
             StackToken._stack_ordered_list,
@@ -445,6 +469,9 @@ class UnorderedListStackToken(ListStackToken):
         start_index: int,
         matching_markdown_token: UnorderedListStartMarkdownToken,
     ) -> None:
+        """
+        Initialize an instance of the UnorderedListStackToken class.
+        """
         ListStackToken.__init__(
             self,
             StackToken._stack_unordered_list,
@@ -467,6 +494,9 @@ class HtmlBlockStackToken(StackToken):
     def __init__(
         self, html_block_type: str, matching_markdown_token: HtmlBlockMarkdownToken
     ) -> None:
+        """
+        Initialize an instance of the HtmlBlockStackToken class.
+        """
         self.__html_block_type = html_block_type
         extra_data = html_block_type
         StackToken.__init__(
@@ -493,6 +523,9 @@ class LinkDefinitionStackToken(StackToken):
     def __init__(
         self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
+        """
+        Initialize an instance of the LinkDefinitionStackToken class.
+        """
         (
             self.__extracted_whitespace,
             self.__start_position_marker,
@@ -598,6 +631,9 @@ class TableBlockStackToken(StackToken):
     def __init__(
         self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
+        """
+        Initialize an instance of the TableBlockStackToken class.
+        """
         self.__start_position_marker, self.__extracted_whitespace = (
             position_marker,
             extracted_whitespace,

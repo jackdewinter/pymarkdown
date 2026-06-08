@@ -31,6 +31,9 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         extracted_whitespace: str,
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the AtxHeadingMarkdownToken class.
+        """
         self.__hash_count, self.__remove_trailing_count = (
             hash_count,
             remove_trailing_count,

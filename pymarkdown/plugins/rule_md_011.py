@@ -19,6 +19,9 @@ class RuleMd011(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd011 class.
+        """
         super().__init__()
         self.__reverse_link_syntax = re.compile(r"\(.*\)\[\s*[^\^].*\s*]")
         self.__leaf_tokens: List[MarkdownToken] = []

@@ -78,6 +78,10 @@ class ContainerGrabBag:
         original_line: str,
         recurse_fn: ParseForContainerBlocksProtocol,
     ) -> None:
+        """
+        Initialize an instance of the ContainerGrabBag class.
+        """
+
         # Functions
         self.__recurse_fn = recurse_fn
 

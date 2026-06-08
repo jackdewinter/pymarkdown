@@ -26,6 +26,9 @@ class ContainerMarkdownToken(MarkdownToken):
         column_number: int = 0,
         position_marker: Optional[PositionMarker] = None,
     ) -> None:
+        """
+        Initialize an instance of the ContainerMarkdownToken class.
+        """
         MarkdownToken.__init__(
             self,
             token_name,

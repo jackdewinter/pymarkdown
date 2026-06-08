@@ -30,6 +30,9 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         rest_of_line: str,
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the ThematicBreakMarkdownToken class.
+        """
         self.__start_character = start_character
         self.__extracted_whitespace = extracted_whitespace
         self.__rest_of_line = rest_of_line

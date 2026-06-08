@@ -16,6 +16,9 @@ class ExceptionTestException(Exception):
     """
 
     def __init__(self, message: str) -> None:
+        """
+        Initialize an instance of the ExceptionTestException class.
+        """
         self.message = message
         super().__init__(self.message)
 

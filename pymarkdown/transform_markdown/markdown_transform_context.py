@@ -31,6 +31,9 @@ class MarkdownTransformContext:
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the MarkdownTransformContext class.
+        """
         self.block_stack: List[MarkdownToken] = []
         self.container_token_stack: List[MarkdownToken] = []
         self.original_container_token_stack: List[MarkdownToken] = []

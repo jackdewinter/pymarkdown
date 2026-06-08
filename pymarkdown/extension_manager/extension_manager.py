@@ -49,6 +49,9 @@ class ExtensionManager:
         self,
         presentation: MainPresentation,
     ) -> None:
+        """
+        Initialize an instance of the ExtensionManager class.
+        """
         self.__presentation = presentation
 
         self.__extension_objects: Dict[str, ParserExtension] = {}

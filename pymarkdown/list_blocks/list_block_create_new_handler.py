@@ -339,12 +339,13 @@ class ListBlockCreateNewHandler:
             container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, was_forced=True
             )
+            emit_li = False
 
         assert (
             container_level_tokens is not None
         ), "Posting some token must be the result of one of these actions."
         POGGER.debug("__post_list>>before>>$", container_level_tokens)
-        if not did_find or not emit_li:
+        if not emit_li:
             POGGER.debug("__post_list>>adding>>$", new_token)
             parser_state.token_stack.append(new_stack)
             container_level_tokens.append(new_token)

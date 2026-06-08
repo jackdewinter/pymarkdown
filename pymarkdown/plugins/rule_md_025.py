@@ -22,6 +22,9 @@ class RuleMd025(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd025 class.
+        """
         super().__init__()
         self.__have_top_level = False
         self.__front_matter_title: str = ""

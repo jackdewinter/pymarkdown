@@ -59,6 +59,9 @@ class RuleMd031(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd031 class.
+        """
         super().__init__()
         self.__trigger_in_list_items: bool = True
         self.__end_fenced_code_block_token: Optional[EndMarkdownToken] = None

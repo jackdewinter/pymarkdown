@@ -28,6 +28,9 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         extracted_whitespace: str,
         list_start_content: str,
     ) -> None:
+        """
+        Initialize an instance of the NewListItemMarkdownToken class.
+        """
         self.__indent_level, self.__extracted_whitespace, self.__list_start_content = (
             indent_level,
             extracted_whitespace,

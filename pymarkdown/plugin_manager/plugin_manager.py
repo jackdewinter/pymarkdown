@@ -56,6 +56,9 @@ class PluginManager:
         self,
         presentation: MainPresentation,
     ) -> None:
+        """
+        Initialize an instance of the PluginManager class.
+        """
         (
             self.number_of_scan_failures,
             self.number_of_pragma_failures,

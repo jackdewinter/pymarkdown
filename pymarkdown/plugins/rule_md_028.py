@@ -21,6 +21,9 @@ class RuleMd028(RulePlugin):
     __look_for_start_of_block_quote = 2
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd028 class.
+        """
         super().__init__()
         self.__current_state = 0
         self.__found_blank_lines: List[BlankLineMarkdownToken] = []

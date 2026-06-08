@@ -23,6 +23,9 @@ class ListBlockCanCloseHelper:
     def calculate_can_remove_list(
         parser_state: ParserState, current_start_index: int
     ) -> bool:
+        """
+        When creating a new list, see if it necessitates closing existing lists.
+        """
         POGGER.debug_with_visible_whitespace(
             "parser_state.token_stack>$", parser_state.token_stack
         )
@@ -92,6 +95,9 @@ class ListBlockCanCloseHelper:
         balancing_tokens: List[MarkdownToken],
         new_stack: StackToken,
     ) -> None:
+        """
+        When creating a new list, if required, close the required lists.
+        """
         assert (
             new_stack.matching_markdown_token is not None
         ), "New stack token must have a matching markdown token."

@@ -205,6 +205,7 @@ class ThematicLeafBlockProcessor:
                         inner_list_markdown_token,
                     )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_thematic_break(
         parser_state: ParserState,
@@ -291,7 +292,10 @@ class ThematicLeafBlockProcessor:
             )
         return new_tokens
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
+    # pylint: disable=too-many-arguments
     def __perform_adjusts(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -319,7 +323,7 @@ class ThematicLeafBlockProcessor:
                 block_quote_data,
             )
         else:
-            split_tab, extracted_whitespace, whitespace_prefix = (
+            split_tab, extracted_whitespace, _ = (
                 ContainerHelper.reduce_containers_if_required(
                     parser_state,
                     position_marker,
@@ -334,6 +338,9 @@ class ThematicLeafBlockProcessor:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
         return extracted_whitespace
 
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __parse_thematic_break_with_suffix(
         parser_state: ParserState,
@@ -376,3 +383,5 @@ class ThematicLeafBlockProcessor:
         POGGER.debug("start_char>>:$:<", start_char)
         POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
         POGGER.debug("token_text>>:$:<", token_text)
+
+    # pylint: enable=too-many-arguments

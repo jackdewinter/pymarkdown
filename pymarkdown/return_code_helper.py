@@ -53,6 +53,9 @@ class ExplicitScheme(SchemeDefinition):
 
     @override
     def get_scheme_mapping(self) -> Dict[ApplicationResult, int]:
+        """
+        Get the mapping to use for this scheme.
+        """
         return {
             ApplicationResult.SUCCESS: 0,
             ApplicationResult.NO_FILES_TO_SCAN: 1,
@@ -71,6 +74,9 @@ class DefaultScheme(SchemeDefinition):
 
     @override
     def get_scheme_mapping(self) -> Dict[ApplicationResult, int]:
+        """
+        Get the mapping to use for this scheme.
+        """
         return {
             ApplicationResult.SUCCESS: 0,
             ApplicationResult.NO_FILES_TO_SCAN: 1,
@@ -89,6 +95,9 @@ class MinimalScheme(SchemeDefinition):
 
     @override
     def get_scheme_mapping(self) -> Dict[ApplicationResult, int]:
+        """
+        Get the mapping to use for this scheme.
+        """
         return {
             ApplicationResult.SUCCESS: 0,
             ApplicationResult.NO_FILES_TO_SCAN: 0,

@@ -24,6 +24,9 @@ class RuleMd041(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd041 class.
+        """
         super().__init__()
         self.__start_level: int = -1
         self.__front_matter_title: str = ""

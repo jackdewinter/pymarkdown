@@ -1,3 +1,7 @@
+"""
+Module to transform a block quote from tokens to Markdown.
+"""
+
 import copy
 import logging
 from typing import List, Optional, Tuple, cast
@@ -16,6 +20,10 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class TransformBlockQuote:
+    """
+    Class to transform a block quote from tokens to Markdown.
+    """
+
     @staticmethod
     def rehydrate_block_quote(
         context: MarkdownTransformContext,
@@ -24,6 +32,9 @@ class TransformBlockQuote:
         next_token: Optional[MarkdownToken],
         transformed_data: str,
     ) -> str:
+        """
+        Rehydrate the block quote token.
+        """
         _ = (previous_token, transformed_data)
 
         current_block_token = cast(BlockQuoteMarkdownToken, current_token)
@@ -188,6 +199,9 @@ class TransformBlockQuote:
         actual_tokens: List[MarkdownToken],
         token_index: int,
     ) -> str:
+        """
+        Rehydrate the block quote end token.
+        """
         POGGER.debug(">>__rehydrate_block_quote_end")
         _ = current_token
 

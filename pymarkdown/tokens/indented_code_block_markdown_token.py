@@ -23,6 +23,9 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, extracted_whitespace: str, line_number: int, column_number: int
     ) -> None:
+        """
+        Initialize an instance of the IndentedCodeBlockMarkdownToken class.
+        """
         self.__indented_whitespace = ""
         LeafMarkdownToken.__init__(
             self,

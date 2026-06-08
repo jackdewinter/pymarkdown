@@ -44,6 +44,9 @@ class RuleMd027(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd027 class.
+        """
         super().__init__()
         self.__container_tokens: List[MarkdownToken] = []
         self.__bq_line_index: Dict[int, int] = {}

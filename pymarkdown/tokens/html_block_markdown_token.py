@@ -28,6 +28,9 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, position_marker: PositionMarker, extracted_whitespace: str
     ) -> None:
+        """
+        Initialize an instance of the HtmlBlockMarkdownToken class.
+        """
         line_number = position_marker.line_number if position_marker else -1
         column_number = (
             position_marker.index_number

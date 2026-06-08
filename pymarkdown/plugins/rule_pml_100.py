@@ -27,6 +27,9 @@ class RulePml100(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RulePml100 class.
+        """
         super().__init__()
         self.__container_manager = ContainerTokenManager()
         self.__in_block = False

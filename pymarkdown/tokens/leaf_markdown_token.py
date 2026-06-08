@@ -28,6 +28,9 @@ class LeafMarkdownToken(MarkdownToken):
         requires_end_token: bool = False,
         can_force_close: bool = True,
     ) -> None:
+        """
+        Initialize an instance of the LeafMarkdownToken class.
+        """
         self.__extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,

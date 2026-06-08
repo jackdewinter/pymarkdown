@@ -49,6 +49,9 @@ class PyMarkdownLint:
         inherit_logging: bool = False,
         string_to_scan: Optional[str] = None,
     ) -> None:
+        """
+        Initialize a new instance of the PyMarkdownLint class.
+        """
         self.__presentation = presentation or MainPresentation()
         self.__show_stack_trace = show_stack_trace
         self.__string_to_scan = string_to_scan

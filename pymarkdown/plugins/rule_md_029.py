@@ -35,6 +35,9 @@ class RuleMd029(RulePlugin):
     ]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd029 class.
+        """
         super().__init__()
         self.__style = ""
         self.__allow_extended_start_values = False

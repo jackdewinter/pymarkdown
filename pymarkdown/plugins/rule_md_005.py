@@ -70,6 +70,9 @@ class RuleMd005(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd005 class.
+        """
         super().__init__()
         self.__list_stack: List[ListStartMarkdownToken] = []
         self.__read_only_list_stack: List[ListStartMarkdownToken] = []

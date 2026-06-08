@@ -160,6 +160,7 @@ class InlineProcessor:
             )
             POGGER.debug("STACK:$", coalesced_stack)
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __process_next_coalesce_item(
         coalesced_results: List[MarkdownToken],
@@ -191,6 +192,9 @@ class InlineProcessor:
             coalesced_results, coalesced_stack, coalesce_index
         )
 
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-boolean-expressions
     @staticmethod
     def __process_next_coalesce_item_inner(
         coalesced_list: List[MarkdownToken],
@@ -250,6 +254,8 @@ class InlineProcessor:
             coalesced_list.extend(processed_tokens)
         else:
             coalesced_list.append(coalesced_results[coalesce_index])
+
+    # pylint: enable=too-many-arguments, too-many-boolean-expressions
 
     @staticmethod
     def __parse_paragraph(
@@ -345,6 +351,8 @@ class InlineProcessor:
         assert coalesced_results[
             coalesce_index
         ].is_text, "Coalesced tokens must be text."
+        _ = coalesced_list
+
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug("table_header>>$<<", text_token)
         POGGER.debug(

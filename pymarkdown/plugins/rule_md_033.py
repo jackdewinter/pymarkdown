@@ -23,6 +23,9 @@ class RuleMd033(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd033 class.
+        """
         super().__init__()
         self.__allowed_elements: List[str] = []
         self.__allow_first_image_element: bool = False

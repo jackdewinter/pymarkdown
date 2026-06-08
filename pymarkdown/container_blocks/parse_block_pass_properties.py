@@ -68,6 +68,9 @@ class ParseBlockPassProperties:
 
     @property
     def disallow_raw_html(self) -> Optional[MarkdownDisallowRawHtmlExtension]:
+        """
+        Returns whether the disallow raw ttml extension is enabled.
+        """
         return self.__disable_raw_html_extension
 
     @property
