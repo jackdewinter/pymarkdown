@@ -67,7 +67,7 @@ class TableParseHelper:
 
         xyz: List[TableRow] = []
         col_as: List[Optional[str]] = []
-        new_index = -1000
+        new_index: Optional[int] = None
 
         while start_index < len(line_to_parse):
 
@@ -86,6 +86,7 @@ class TableParseHelper:
                 if not did_parse_separators:
                     return False, -1, None
 
+        assert new_index is not None
         keep_going = is_blank_line and len(xyz) >= 2
         if keep_going:
             return TableParseHelper.__create_table_token(new_index, xyz, col_as)

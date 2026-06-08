@@ -77,7 +77,8 @@ jobs:
     defaults:
       run:
         shell: bash
-
+    permissions:
+      contents: read
     steps:
 
       - name: Checkout Repository
@@ -105,29 +106,23 @@ jobs:
           pipenv graph
 
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=80 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
+        run: pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml | tee pytest-coverage.txt
 
-      - name: Upload coverage to GitHub Code Quality
-        uses: actions/upload-code-coverage@v1
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@v1
         with:
-          file: ./report/coverage.xml
-          language: Python
-          label: code-coverage/pytest
-
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
+          
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v7
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           name: ${{ matrix.platform }} Coverage
           path: |
-            ./report/coverage.xml
-            ./report/coverage
-
-      # - name: Import Codecov PGP key
-      #   if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
-      #   run: |
-      #     curl -Os https://keybase.io/codecovsecurity/pgp_keys.asc
-      #     gpg --no-default-keyring --keyring trustedkeys.gpg --import pgp_keys.asc
+            coverage.xml
+            pytest.xml
+            pytest-coverage.txt
 
       - name: Report Coverage
         uses: codecov/codecov-action@v6
@@ -135,9 +130,28 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ./report/coverage.xml
+          files: coverage.xml
           name: ${{ matrix.python }} - ${{ matrix.platform }}
           fail_ci_if_error: false
+
+  upload-coverage:
+    needs: scenario-tests
+    if: ${{ !cancelled() && needs.scenario-tests.result == 'success' }}
+    # && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      code-quality: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.default-platform }} Coverage
+
+      - uses: actions/upload-code-coverage@v1
+        with:
+          file: ./report/coverage.xml
+          language: Python
+          label: code-coverage/pytest
 
   lint:
 
