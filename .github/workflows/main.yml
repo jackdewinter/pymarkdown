@@ -77,8 +77,10 @@ jobs:
     defaults:
       run:
         shell: bash
+
     permissions:
-      contents: read
+      contents: read        # For checkout and comparing commits
+      pull-requests: write  # For creating/updating PR comments
     steps:
 
       - name: Checkout Repository
@@ -110,6 +112,7 @@ jobs:
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@v1
+        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-coverage-path: ./pytest-coverage.txt
           junitxml-path: ./pytest.xml
