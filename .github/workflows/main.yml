@@ -107,6 +107,13 @@ jobs:
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=80 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
 
+      - name: Upload coverage to GitHub Code Quality
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: ./report/coverage.xml
+          language: Python
+          label: code-coverage/pytest
+
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v7
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
