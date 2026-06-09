@@ -120,7 +120,7 @@ jobs:
             pytest.xml
 
       - name: Report Coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
