@@ -134,7 +134,7 @@ jobs:
           pipenv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=pymarkdown test/ | tee pytest-coverage.txt
 
       - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1.1.27
+        uses: MishaKav/pytest-coverage-comment@v1.7.2
         with:
           pytest-coverage-path: ./pytest-coverage.txt
           junitxml-path: ./pytest.xml
