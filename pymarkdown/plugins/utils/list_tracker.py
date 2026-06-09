@@ -1,3 +1,7 @@
+"""
+Module to help rules keep track of lists.
+"""
+
 from typing import Dict, List, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

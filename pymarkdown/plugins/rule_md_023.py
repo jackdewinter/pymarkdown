@@ -24,6 +24,9 @@ class RuleMd023(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd023 class.
+        """
         super().__init__()
         self.__setext_start_token: Optional[SetextHeadingMarkdownToken] = None
         self.__any_leading_whitespace_detected = False

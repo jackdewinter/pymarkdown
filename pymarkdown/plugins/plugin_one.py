@@ -14,6 +14,9 @@ class PluginTestException(Exception):
     """
 
     def __init__(self, message: str) -> None:
+        """
+        Initialize an instance of the PluginTestException class.
+        """
         self.message = message
         super().__init__(self.message)
 
@@ -26,6 +29,9 @@ class PluginOne(RulePlugin):
     __valid_values = [0, 1, 2]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the PluginOne class.
+        """
         super().__init__()
         self.test_value: int = -1
         self.other_test_value: int = -1

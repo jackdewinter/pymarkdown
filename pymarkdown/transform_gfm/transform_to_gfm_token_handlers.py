@@ -28,6 +28,9 @@ class TransformToGfmTokenHandlers:
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the TransformToGfmTokenHandlers class.
+        """
         self.__start_token_handlers: Dict[str, StartHtmlTokenTransformProtocol] = {}
         self.__end_token_handlers: Dict[str, EndHtmlTokenTransformProtocol] = {}
 

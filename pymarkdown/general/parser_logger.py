@@ -15,6 +15,9 @@ class ParserLoggerException(Exception):
     """
 
     def __init__(self, message: str) -> None:
+        """
+        Initialize an instance of the ParserLoggerException class.
+        """
         self.message = message
         super().__init__(self.message)
 
@@ -35,6 +38,9 @@ class ParserLogger:
     __global_count = 0
 
     def __init__(self, my_logger: logging.Logger) -> None:
+        """
+        Initialize an instance of the ParserLogger class.
+        """
         self.__my_logger = my_logger
         root_logger = logging.getLogger()
         self.__is_info_enabled = root_logger.isEnabledFor(logging.INFO)

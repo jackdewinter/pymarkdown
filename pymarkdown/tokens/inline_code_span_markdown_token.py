@@ -34,6 +34,9 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         line_number: int,
         column_number: int,
     ) -> None:
+        """
+        Initialize an instance of the InlineCodeSpanMarkdownToken class.
+        """
         (
             self.__span_text,
             self.__extracted_start_backticks,

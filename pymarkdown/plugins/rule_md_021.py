@@ -22,6 +22,9 @@ class RuleMd021(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd021 class.
+        """
         super().__init__()
         self.__atx_heading_token: Optional[AtxHeadingMarkdownToken] = None
         self.__is_left_in_error = False

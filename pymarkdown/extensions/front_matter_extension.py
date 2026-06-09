@@ -33,6 +33,9 @@ class FrontMatterExtension(ParserExtension):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the FrontMatterExtension class.
+        """
         self.__allow_blank_lines = False
 
     def get_identifier(self) -> str:

@@ -20,6 +20,9 @@ class RulePml102(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RulePml102 class.
+        """
         super().__init__()
         self.__container_manager = ContainerTokenManager()
 

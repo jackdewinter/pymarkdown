@@ -19,6 +19,9 @@ class MarkdownDisallowRawHtmlExtension(ParserExtension):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the MarkdownDisallowRawHtmlExtension class.
+        """
         self.__disallowed_tag_names: Set[str] = set()
 
     def get_identifier(self) -> str:

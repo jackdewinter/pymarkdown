@@ -1,3 +1,7 @@
+"""
+Module to provide for an encapsulation of the end of stream element.
+"""
+
 from typing import Optional
 
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
@@ -10,6 +14,10 @@ from pymarkdown.transform_markdown.markdown_transform_context import (
 
 
 class SpecialMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of special stream elements.
+    """
+
     def __init__(
         self,
         token_name: str,
@@ -17,6 +25,9 @@ class SpecialMarkdownToken(MarkdownToken):
         line_number: int = 0,
         is_special: bool = True,
     ):
+        """
+        Initialize an instance of the SpecialMarkdownToken class.
+        """
         MarkdownToken.__init__(
             self,
             token_name,
@@ -28,17 +39,27 @@ class SpecialMarkdownToken(MarkdownToken):
 
 
 class EndOfStreamToken(SpecialMarkdownToken):
+    """
+    Class to provide for an encapsulation of the end of stream element.
+    """
+
     def __init__(self, line_number: int) -> None:
+        """
+        Initialize an instance of the EndOfStreamToken class.
+        """
         SpecialMarkdownToken.__init__(
             self, MarkdownToken._token_end_of_stream, None, line_number=line_number
         )
 
+    # pylint: disable=protected-access
     @staticmethod
     def get_markdown_token_type() -> str:
         """
         Get the type of markdown token for rehydration purposes.
         """
         return MarkdownToken._token_end_of_stream
+
+    # pylint: enable=protected-access
 
     def register_for_markdown_transform(
         self,
@@ -86,5 +107,4 @@ class EndOfStreamToken(SpecialMarkdownToken):
         transform_state: TransformState,
     ) -> str:
         _ = (transform_state, next_token)
-
         return output_html

@@ -44,6 +44,9 @@ class RuleMd037(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd037 class.
+        """
         super().__init__()
         self.__pending_fixes: List[PendingFixes] = []
         self.__block_token: Optional[MarkdownToken] = None

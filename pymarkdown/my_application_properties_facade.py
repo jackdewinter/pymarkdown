@@ -14,6 +14,9 @@ class MyApplicationPropertiesFacade:
     """
 
     def __init__(self, properties_facade: ApplicationPropertiesFacade):
+        """
+        Initialize a new instance of the MyApplicationPropertiesFacade class.
+        """
         self.__properties_facade = properties_facade
 
     def get_boolean_property_with_default(

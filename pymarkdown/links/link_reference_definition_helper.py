@@ -501,6 +501,8 @@ class LinkReferenceDefinitionHelper:
         that make it a bit more difficult to figure out if we have an actual good
         LRD in the mix somehow.  So take lines off the end while we have lines.
         """
+
+        _ = was_started
         (
             is_blank_line,
             line_to_parse,

@@ -32,6 +32,9 @@ class BadPluginError(Exception):
         actual_token: Optional[MarkdownToken] = None,
         cause: Optional[Exception] = None,
     ) -> None:
+        """
+        Initialize an instance of the BadPluginError class.
+        """
         if not formatted_message:
             if file_name:
                 formatted_message = BadPluginError.__create_file_name_message(

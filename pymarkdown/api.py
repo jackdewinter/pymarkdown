@@ -1,3 +1,4 @@
+# docvet: ignore[missing-examples, missing-cross-references]
 """
 Create a new instance of the `PyMarkdownApi` class.
 """
@@ -19,7 +20,7 @@ from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 
 # pylint: disable=too-many-instance-attributes,too-many-public-methods
-class PyMarkdownApi:
+class PyMarkdownApi:  # docvet: ignore[missing-examples]
     """
     Module to provide for an API to directly communicate with PyMarkdown instead
     of using a command line.
@@ -28,11 +29,16 @@ class PyMarkdownApi:
         inherit_logging: If True, inherit the logging settings from the calling
             application.  If False, will use the `log_*` functions to specify the
             logging properties.
+    Attributes:
+        __inherit_logging (bool): Kept version of the `inherit_logging` parameter.
     """
 
     __INTERFACE_VERSION = 1
 
     def __init__(self, inherit_logging: bool = False) -> None:
+        """
+        Initialize a new instance of the PyMarkdownApi class.
+        """
         self.__inherit_logging = inherit_logging
 
         self.__log_level = ApplicationLogging.log_level_warning
@@ -1106,7 +1112,7 @@ class PyMarkdownApi:
 
 
 @dataclass(frozen=True)
-class PyMarkdownScanFailure:
+class PyMarkdownScanFailure:  # docvet: ignore[missing-examples]
     """
     Class to contain information about a failure reported by one of the rule plugins.
 
@@ -1153,6 +1159,9 @@ class PyMarkdownScanFailure:
     def partial_equals(self, other: "PyMarkdownScanFailure") -> bool:
         """
         Decide if special fields are the same from both items.
+
+        Returns:
+            True if there is a partial match without another scan failure, False otherwise.
         """
         return (
             self.scan_file == other.scan_file
@@ -1163,7 +1172,7 @@ class PyMarkdownScanFailure:
 
 
 @dataclass(frozen=True)
-class PyMarkdownPragmaError:
+class PyMarkdownPragmaError:  # docvet: ignore[missing-examples]
     """
     Class to encapsulate the information for a pragma error.
 
@@ -1193,7 +1202,7 @@ class PyMarkdownPragmaError:
 
 
 @dataclass(frozen=True)
-class PyMarkdownScanPathResult:
+class PyMarkdownScanPathResult:  # docvet: ignore[missing-examples]
     """
     Result for the `scan_path` and `scan_string` functions.
 
@@ -1223,7 +1232,7 @@ class PyMarkdownScanPathResult:
 
 
 @dataclass(frozen=True)
-class PyMarkdownFixResult:
+class PyMarkdownFixResult:  # docvet: ignore[missing-examples]
     """
     Result for the fix_path function.
 
@@ -1248,7 +1257,7 @@ class PyMarkdownFixResult:
 
 
 @dataclass(frozen=True)
-class PyMarkdownFixStringResult:
+class PyMarkdownFixStringResult:  # docvet: ignore[missing-examples]
     """
     Result for the fix_string function.
 
@@ -1273,7 +1282,7 @@ class PyMarkdownFixStringResult:
 
 
 @dataclass(frozen=True)
-class PyMarkdownListPathResult:
+class PyMarkdownListPathResult:  # docvet: ignore[missing-examples]
     """
     Result for the list_path function.
 
@@ -1288,7 +1297,7 @@ class PyMarkdownListPathResult:
     """List of filenames that match the specifications of the requested path."""
 
 
-class PyMarkdownApiException(Exception):
+class PyMarkdownApiException(Exception):  # docvet: ignore[missing-examples]
     """
     Class to provide for an exception that is thrown by the API layer.
 
@@ -1302,6 +1311,9 @@ class PyMarkdownApiException(Exception):
     """
 
     def __init__(self, reason: str) -> None:
+        """
+        Initialize a new instance of the PyMarkdownApiException class.
+        """
         self.__reason = reason
 
     @property
@@ -1312,7 +1324,9 @@ class PyMarkdownApiException(Exception):
         return self.__reason
 
 
-class PyMarkdownApiNotSupportedException(PyMarkdownApiException):
+class PyMarkdownApiNotSupportedException(  # docvet: ignore[missing-examples]
+    PyMarkdownApiException
+):
     """
     Class to provide for an exception that a given situation is not supported.
 
@@ -1325,7 +1339,9 @@ class PyMarkdownApiNotSupportedException(PyMarkdownApiException):
     """
 
 
-class PyMarkdownApiArgumentException(PyMarkdownApiException):
+class PyMarkdownApiArgumentException(  # docvet: ignore[missing-examples]
+    PyMarkdownApiException
+):
     """
     Class to provide for an argument that an exception is not valid.
 
@@ -1336,10 +1352,13 @@ class PyMarkdownApiArgumentException(PyMarkdownApiException):
 
     Attributes:
         reason (str): Reported reason why the action failed.
-        argument_name(str): Name of the argument that caused this exception to be raised.
+        argument_name (str): Name of the argument that caused this exception to be raised.
     """
 
     def __init__(self, argument_name: str, reason: str) -> None:
+        """
+        Initialize a new instance of the PyMarkdownApiArgumentException class.
+        """
         super().__init__(reason)
         self.__argument_name = argument_name
 
@@ -1351,7 +1370,9 @@ class PyMarkdownApiArgumentException(PyMarkdownApiException):
         return self.__argument_name
 
 
-class PyMarkdownApiNoFilesFoundException(PyMarkdownApiException):
+class PyMarkdownApiNoFilesFoundException(  # docvet: ignore[missing-examples]
+    PyMarkdownApiException
+):
     """
     Class to provide for an exception that the invoked API was not able to find at least one file to process.
 
@@ -1365,12 +1386,22 @@ class PyMarkdownApiNoFilesFoundException(PyMarkdownApiException):
     """
 
 
-class _ApiPresentation(MainPresentation):
+class _ApiPresentation(MainPresentation):  # docvet: ignore[missing-examples]
     """
     Class to provide for the output of the PyMarkdown application.
+
+    Attributes:
+        pso (List[str]): Lines of system output.
+        pse (List[str]): Lines of system error.
+        pragma_errors (List[PyMarkdownPragmaError]): List of errors encountered parsing pragmas.
+        scan_failures (List[PyMarkdownScanFailure]): List of rule failures encountered during the scan.
+        files_fixed (List[str]): List of files fixed.
     """
 
     def __init__(self) -> None:
+        """
+        Initialize a new instance of the _ApiPresentation class.
+        """
         self.pso: List[str] = []
         self.pse: List[str] = []
         self.pragma_errors: List[PyMarkdownPragmaError] = []

@@ -24,6 +24,9 @@ class RuleMd009(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd009 class.
+        """
         super().__init__()
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__leaf_owner_tokens: List[Optional[MarkdownToken]] = []

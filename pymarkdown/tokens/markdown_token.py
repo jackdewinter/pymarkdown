@@ -85,6 +85,9 @@ class MarkdownToken:
         requires_end_token: bool = False,
         is_special: bool = False,
     ):
+        """
+        Initialize an instance of the MarkdownToken class.
+        """
         if position_marker:
             line_number, column_number = (
                 position_marker.line_number,
@@ -763,6 +766,9 @@ class EndMarkdownToken(MarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
     ) -> None:
+        """
+        Initialize an instance of the EndMarkdownToken class.
+        """
         assert isinstance(start_markdown_token, MarkdownToken)
         assert (
             start_markdown_token.requires_end_token

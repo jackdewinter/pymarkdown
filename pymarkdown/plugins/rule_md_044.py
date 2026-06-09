@@ -45,6 +45,9 @@ class RuleMd044(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd044 class.
+        """
         super().__init__()
         self.__proper_name_list: List[str] = []
         self.__check_in_code_blocks: bool = False

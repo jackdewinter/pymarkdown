@@ -20,6 +20,9 @@ class RuleMd034(RulePlugin):
     __valid_uri_types = ["http:", "https:", "ftp:", "ftps:"]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd034 class.
+        """
         super().__init__()
         self.__in_code_block: bool = False
         self.__in_html_block: bool = False

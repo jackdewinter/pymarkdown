@@ -36,6 +36,9 @@ class InMemorySourceProvider(SourceProvider):
     """
 
     def __init__(self, source_text: str) -> None:
+        """
+        Initialize an instance of the InMemorySourceProvider class.
+        """
         self.__next_line_tuple: List[str] = source_text.split(
             ParserHelper.newline_character, 1
         )
@@ -70,6 +73,10 @@ class FileSourceProvider(SourceProvider):
     """
 
     def __init__(self, file_to_open: str) -> None:
+        """
+        Initialize an instance of the FileSourceProvider class.
+        """
+
         with open(file_to_open, encoding="utf-8") as file_to_parse:
             file_as_lines = file_to_parse.readlines()
 

@@ -37,7 +37,7 @@ class InlineBackslashHelper:
         """
         Handle the inline case of having a backslash.
         """
-
+        _ = parser_properties
         inline_response = InlineResponse()
         (
             inline_response.new_index,

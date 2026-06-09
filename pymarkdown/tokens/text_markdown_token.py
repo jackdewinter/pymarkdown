@@ -44,6 +44,9 @@ class TextMarkdownToken(InlineMarkdownToken):
         is_special: bool = False,
         tabified_text: Optional[str] = None,
     ):
+        """
+        Initialize an instance of the TextMarkdownToken class.
+        """
         (
             self.__token_text,
             self.__extracted_whitespace,

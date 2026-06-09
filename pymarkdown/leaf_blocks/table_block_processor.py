@@ -1,3 +1,7 @@
+"""
+Module to orchestrate the work that goes along with parsing a table.
+"""
+
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.container_blocks.container_grab_bag import POGGER
@@ -15,7 +19,11 @@ from pymarkdown.tokens.stack_token import TableBlockStackToken
 
 
 class TableBlockHelper:
+    """
+    Class to orchestrate the work that goes along with parsing a table.
+    """
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def process_table_rows(
         parser_state: ParserState,
@@ -143,6 +151,8 @@ class TableBlockHelper:
             new_tokens,
         )
 
+    # pylint: enable=too-many-arguments, too-many-locals
+
     @staticmethod
     def __handle_table_rows_init(
         remaining_line_to_parse: str,
@@ -180,6 +190,7 @@ class TableBlockHelper:
             is_blank_line,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_table_rows_started(
         parser_state: ParserState,
@@ -224,6 +235,9 @@ class TableBlockHelper:
             start_index,
         )
 
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_table_rows_processing(
         parser_state: ParserState,
@@ -310,6 +324,8 @@ class TableBlockHelper:
             is_blank_line,
             line_to_parse,
         )
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __prepare_for_requeue_reset_markdown_token(
@@ -403,6 +419,7 @@ class TableBlockHelper:
         ## Different from LRD.
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __prepare_for_requeue(
         parser_state: ParserState,
@@ -435,6 +452,8 @@ class TableBlockHelper:
                 original_stack_depth,
                 original_document_depth,
             )
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __process_table_hard_failure(
@@ -530,6 +549,7 @@ class TableBlockHelper:
             parsed_table_tuple,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def handle_table_leaf_block(
         parser_state: ParserState,
@@ -543,7 +563,7 @@ class TableBlockHelper:
         requeue_line_info: Optional[RequeueLineInfo],
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
         """
-        TBD
+        Handle the processing of a table leaf block.
 
         NOTE: Since `TableBlockHelper.handle_table_leaf_block` is called
         from `ContainerBlockLeafProcessor.handle_leaf_block` after
@@ -607,3 +627,5 @@ class TableBlockHelper:
         pre_tokens.extend(new_tokens)
         POGGER.debug("handle_table_leaf_block>>pre_tokens>>$<<", pre_tokens)
         return outer_processed, requeue_line_info
+
+    # pylint: enable=too-many-arguments

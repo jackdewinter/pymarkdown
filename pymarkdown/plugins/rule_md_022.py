@@ -24,6 +24,9 @@ class RuleMd022(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd022 class.
+        """
         super().__init__()
         self.__blank_line_count = -1
         self.__did_above_line_count_match = False

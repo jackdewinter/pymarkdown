@@ -86,6 +86,9 @@ class ParserState:
         handle_blank_line_fn: HandleBlankLineProtocol,
         parse_properties: ParseBlockPassProperties,
     ) -> None:
+        """
+        Initialize an instance of the ParserState class.
+        """
         (
             self.__token_stack,
             self.__token_document,

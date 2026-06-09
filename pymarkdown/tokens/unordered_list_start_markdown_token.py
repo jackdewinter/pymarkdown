@@ -30,6 +30,9 @@ class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
         tabbed_whitespace_to_add: Optional[str],
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the UnorderedListStartMarkdownToken class.
+        """
         ListStartMarkdownToken.__init__(
             self,
             MarkdownToken._token_unordered_list_start,

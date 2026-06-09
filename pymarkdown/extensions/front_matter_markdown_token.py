@@ -34,6 +34,9 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         matter_map: Dict[str, str],
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the FrontMatterMarkdownToken class.
+        """
         self.__start_boundary_line = start_boundary_line
         self.__end_boundary_line = end_boundary_line
         self.__collected_lines = collected_lines

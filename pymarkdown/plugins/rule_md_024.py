@@ -24,6 +24,9 @@ class RuleMd024(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd024 class.
+        """
         super().__init__()
         self.__heading_text: Optional[str] = None
         self.__start_token: Optional[MarkdownToken] = None

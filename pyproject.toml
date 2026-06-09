@@ -1,0 +1,32 @@
+[tool.docvet]
+src-root = "pymarkdown"
+extend-exclude = ["test", "utils"]
+fail-on = ["coverage", "enrichment"]
+# warn-on = ["griffe", "coverage"]
+
+[tool.docvet.presence]
+min-coverage = 95.0 
+ignore-init = false
+
+[tool.docvet.freshness]
+drift-threshold = 14
+age-threshold = 60
+
+[tool.docvet.enrichment]
+require-raises = true
+require-yields = true
+require-receives = false
+require-warns = false
+require-other-parameters = false
+require-attributes = true
+require-typed-attributes = true
+require-cross-references = true
+prefer-fenced-code-blocks = true
+require-param-agreement = true
+require-deprecation-notice = true
+exclude-args-kwargs = true 
+require-examples = ["class", "dataclass"]
+scaffold-incomplete = true
+require-init-params = false
+require-return-type = false
+check-trivial-docstrings = true

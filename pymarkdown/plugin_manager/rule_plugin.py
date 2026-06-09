@@ -26,6 +26,9 @@ class RulePlugin(ABC):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RulePlugin class.
+        """
         (
             self.__is_next_token_implemented_in_plugin,
             self.__is_next_line_implemented_in_plugin,

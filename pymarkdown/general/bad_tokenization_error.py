@@ -10,4 +10,7 @@ class BadTokenizationError(Exception):
     """
 
     def __init__(self, formatted_message: str):
+        """
+        Initialize an instance of the BadTokenizationError class.
+        """
         super().__init__(formatted_message)

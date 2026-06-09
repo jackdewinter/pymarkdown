@@ -22,6 +22,9 @@ class RuleMd032(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd032 class.
+        """
         super().__init__()
         self.__last_non_end_token: Optional[MarkdownToken] = None
         self.__container_token_stack: List[MarkdownToken] = []

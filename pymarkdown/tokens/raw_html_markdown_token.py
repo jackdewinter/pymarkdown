@@ -28,6 +28,9 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
     """
 
     def __init__(self, raw_tag: str, line_number: int, column_number: int) -> None:
+        """
+        Initialize an instance of the RawHtmlMarkdownToken class.
+        """
         self.__raw_tag = raw_tag
         InlineMarkdownToken.__init__(
             self,

@@ -38,6 +38,9 @@ class TransformToGfm:
     ]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the TransformToGfm class.
+        """
         self.__token_handlers = TransformToGfmTokenHandlers()
 
     def transform(self, actual_tokens: List[MarkdownToken]) -> str:

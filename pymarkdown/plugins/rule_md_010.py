@@ -24,6 +24,9 @@ class RuleMd010(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd010 class.
+        """
         super().__init__()
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__line_index = -1

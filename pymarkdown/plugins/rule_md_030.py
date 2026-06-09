@@ -23,6 +23,9 @@ class RuleMd030(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd030 class.
+        """
         super().__init__()
         self.__ul_single: int = -1
         self.__ul_multi: int = -1

@@ -1,3 +1,7 @@
+"""
+Module to helper with the parsing of tables.
+"""
+
 from typing import List, Optional, Tuple
 
 from pymarkdown.container_blocks.container_grab_bag import POGGER
@@ -15,11 +19,18 @@ from pymarkdown.links.link_reference_definition_parse_helper import (
     LinkReferenceDefinitionParseHelper,
 )
 
+# pylint: disable=too-few-public-methods
+
 
 ## Different from LRD.
 class TableParseHelper:
+    """
+    Class to helper with the parsing of tables.
+    """
+
     __table_column_separator_character = "|"
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_table(
         parser_state: ParserState,
@@ -30,6 +41,9 @@ class TableParseHelper:
         remaining_line_to_parse: Optional[str],
         was_started: bool,
     ) -> Tuple[bool, int, Optional[TableTuple]]:
+        """
+        Handle the parsing of what appears to be a markdown table.
+        """
 
         if was_started:
             if remaining_line_to_parse is not None:
@@ -53,6 +67,7 @@ class TableParseHelper:
 
         xyz: List[TableRow] = []
         col_as: List[Optional[str]] = []
+        new_index: Optional[int] = None
 
         while start_index < len(line_to_parse):
 
@@ -71,11 +86,13 @@ class TableParseHelper:
                 if not did_parse_separators:
                     return False, -1, None
 
+        assert new_index is not None
         keep_going = is_blank_line and len(xyz) >= 2
         if keep_going:
             return TableParseHelper.__create_table_token(new_index, xyz, col_as)
-        else:
-            return keep_going, new_index, None
+        return keep_going, new_index, None
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __parse_table_1(
@@ -155,7 +172,7 @@ class TableParseHelper:
         else:
             new_index = start_index
 
-        tr_columns, trailing_whitespace, pre_h, new_index = (
+        tr_columns, trailing_whitespace, _, new_index = (
             TableParseHelper.__parse_table_3(
                 line_to_parse, column_separator_characters, new_index
             )
@@ -380,6 +397,7 @@ class TableParseHelper:
         a proper table will have a pipe character `|` at least once in every line.
         """
 
+        _ = start_index
         if parser_state.token_stack[-1].is_paragraph:
             return False
 
@@ -422,3 +440,5 @@ class TableParseHelper:
 
 
 ## Different from LRD.
+
+# pylint: enable=too-few-public-methods

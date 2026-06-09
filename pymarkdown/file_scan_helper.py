@@ -62,6 +62,9 @@ class FileScanHelper:
         handle_error: Callable[[str, Optional[Exception], bool, str], None],
         properties: ApplicationProperties,
     ):
+        """
+        Initialize a new instance of the FileScanHelper class.
+        """
         self.__tokenizer = tokenizer
         self.__plugins = plugins
         self.__presentation = presentation
