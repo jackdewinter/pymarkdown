@@ -5,6 +5,23 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.38 - 2026-06-09
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1605](https://github.com/jackdewinter/pymarkdown/issues/1605)
     - Add support for native file format lists in JSON, YAML, TOML
         - [`plugins.per-file-ignores`](./advanced_configuration.md#per-file-disabling-of-rule-plugins)
