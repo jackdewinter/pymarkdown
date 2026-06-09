@@ -152,7 +152,7 @@ jobs:
 
       - uses: actions/upload-code-coverage@v1
         with:
-          file: ./report/coverage.xml
+          file: coverage.xml
           language: Python
           label: code-coverage/pytest
 
