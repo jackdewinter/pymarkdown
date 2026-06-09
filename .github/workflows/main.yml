@@ -109,13 +109,6 @@ jobs:
 
       - name: Execute Tests
         run: pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml | tee pytest-coverage.txt
-
-      - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1
-        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
-        with:
-          pytest-coverage-path: ./pytest-coverage.txt
-          junitxml-path: ./pytest.xml
           
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v7
@@ -124,8 +117,6 @@ jobs:
           name: ${{ matrix.platform }} Coverage
           path: |
             coverage.xml
-            pytest.xml
-            pytest-coverage.txt
 
       - name: Report Coverage
         uses: codecov/codecov-action@v6
@@ -137,24 +128,35 @@ jobs:
           name: ${{ matrix.python }} - ${{ matrix.platform }}
           fail_ci_if_error: false
 
-  upload-coverage:
-    needs: scenario-tests
-    if: ${{ !cancelled() && needs.scenario-tests.result == 'success' }}
-    # && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      code-quality: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.default-platform }} Coverage
+      - name: Run tests with coverage
+        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
+        run: |
+          pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=pymarkdown tests/ | tee pytest-coverage.txt
 
-      - uses: actions/upload-code-coverage@v1
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@v1
         with:
-          file: coverage.xml
-          language: Python
-          label: code-coverage/pytest
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
+
+        # upload-coverage:
+  #   needs: scenario-tests
+  #   if: ${{ !cancelled() && needs.scenario-tests.result == 'success' }}
+  #   # && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     code-quality: write
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: ${{ env.default-platform }} Coverage
+
+  #     - uses: actions/upload-code-coverage@v1
+  #       with:
+  #         file: coverage.xml
+  #         language: Python
+  #         label: code-coverage/pytest
 
   lint:
 
