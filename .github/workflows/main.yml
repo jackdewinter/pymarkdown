@@ -133,8 +133,18 @@ jobs:
         run: |
           pipenv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=pymarkdown test/ | tee pytest-coverage.txt
 
+      - name: Archive coverage artifacts
+        uses: actions/upload-artifact@v7
+        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
+        with:
+          name: pytest-coverage-comment Coverage
+          path: |
+            coverage.xml
+            pytest-coverage.txt
+
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@v1.7.2
+        if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-coverage-path: ./pytest-coverage.txt
           junitxml-path: ./pytest.xml
