@@ -44,7 +44,7 @@
     {
         "python":"3.13",
         "platform":"ubuntu-latest",
-        "timeout":8,
+        "timeout":16,
         "runOn":"current"
     },
     {

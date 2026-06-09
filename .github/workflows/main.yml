@@ -131,7 +131,7 @@ jobs:
       - name: Rerun tests with coverage
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         run: |
-          pipenv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=pymarkdown tests/ | tee pytest-coverage.txt
+          pipenv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=pymarkdown test/ | tee pytest-coverage.txt
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@v1
