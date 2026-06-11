@@ -2,8 +2,9 @@
 Module that contains the state of transformation of TransformToGfm.
 """
 
-from typing import List, Optional
+from typing import Any, List, Optional
 
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
@@ -30,6 +31,7 @@ class TransformState:
         self.__add_leading_text: Optional[str] = None
         self.__next_token: Optional[MarkdownToken] = None
         self.__transform_stack: List[str] = []
+        self.__transform_stack_two: List[List[HtmlItems]] = []
         self.__last_token: Optional[MarkdownToken] = None
 
     @property
@@ -108,6 +110,10 @@ class TransformState:
         Stack used to keep track of scope within the generator.
         """
         return self.__transform_stack
+    
+    @property
+    def transform_stack_two(self) -> List[List[HtmlItems]]:
+        return self.__transform_stack_two
 
     @property
     def add_trailing_text(self) -> Optional[str]:

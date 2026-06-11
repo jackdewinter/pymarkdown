@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, cast
 
 from pymarkdown.extensions.extension_token_types import ExtensionTokenTypes
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.token_types import TokenTypes
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -89,6 +90,7 @@ class TransformToGfmTokenHandlers:
         actual_tokens_size: int,
         next_token: MarkdownToken,
         output_html: str,
+        output_parts : List[HtmlItems],
     ) -> str:
         """
         Apply the required tranformation for the current token.
@@ -105,7 +107,7 @@ class TransformToGfmTokenHandlers:
             start_handler_fn = self.__start_token_handlers[next_token.token_name]
             POGGER.debug("next_token>:$:<", next_token)
             POGGER.debug("output_html>:$:<", output_html)
-            output_html = start_handler_fn(output_html, next_token, transform_state)
+            output_html = start_handler_fn(output_html, output_parts, next_token, transform_state)
             POGGER.debug("output_html>:$:<", output_html)
 
         elif next_token.is_end_token:
@@ -117,7 +119,7 @@ class TransformToGfmTokenHandlers:
             end_handler_fn = self.__end_token_handlers[end_token.type_name]
             POGGER.debug("end_token>:$:<", end_token)
             POGGER.debug("output_html>:$:<", output_html)
-            output_html = end_handler_fn(output_html, end_token, transform_state)
+            output_html = end_handler_fn(output_html, output_parts, end_token, transform_state)
             POGGER.debug("output_html>:$:<", output_html)
         else:
             raise AssertionError(

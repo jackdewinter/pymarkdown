@@ -2,7 +2,7 @@
 Module to provide for a list item that can be check off.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
@@ -10,6 +10,7 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -136,14 +137,17 @@ class TaskListToken(InlineMarkdownToken):
     @staticmethod
     def __handle_pragma_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (transform_state, next_token)
 
         task_list_token = cast(TaskListToken, next_token)
+
         if task_list_token.checked_character == " ":
-            output_html += '<input type="checkbox">'
+            xx = '<input type="checkbox">'
         else:
-            output_html += '<input checked="" type="checkbox">'
-        return output_html
+            xx = '<input checked="" type="checkbox">'
+        output_parts.append(ZuluHtmlItem(xx))
+        return output_html + xx

@@ -2,9 +2,10 @@
 Module to provide for an encapsulation of the inline emphasis element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -141,6 +142,7 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_start_emphasis_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -148,7 +150,10 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
 
         emphasis_token = cast(EmphasisMarkdownToken, next_token)
         if emphasis_token.emphasis_character == "~":
+            output_parts.append(ZuluHtmlItem("<del>"))
             return f"{output_html}<del>"
+        
+        output_parts.append(ZuluHtmlItem("<em>" if emphasis_token.emphasis_length == 1 else "<strong>"))
         return "".join(
             [
                 output_html,
@@ -159,6 +164,7 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_end_emphasis_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -168,7 +174,9 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         emphasis_token = cast(EmphasisMarkdownToken, end_token.start_markdown_token)
 
         if emphasis_token.emphasis_character == "~":
+            output_parts.append(ZuluHtmlItem("</del>"))
             return f"{output_html}</del>"
+        output_parts.append(ZuluHtmlItem("</em>" if emphasis_token.emphasis_length == 1 else "</strong>"))
         return "".join(
             [
                 output_html,

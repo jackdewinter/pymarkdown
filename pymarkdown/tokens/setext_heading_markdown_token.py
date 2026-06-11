@@ -2,10 +2,11 @@
 Module to provide for an encapsulation of the setext heading element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -219,24 +220,29 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_setext_heading_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
         setext_token = cast(SetextHeadingMarkdownToken, next_token)
 
-        token_parts = [output_html]
+        token_parts : List[str] = []
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
             token_parts.append(ParserHelper.newline_character)
         token_parts.extend(
             ["<h", "1" if setext_token.heading_character == "=" else "2", ">"]
         )
         transform_state.is_in_setext_block = True
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @staticmethod
     def __handle_end_setext_heading_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -250,11 +256,13 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
             transform_state.actual_tokens[fenced_token_index],
         )
         token_parts = [
-            output_html,
             "</h",
             "1" if fenced_token.heading_character == "=" else "2",
             ">",
             ParserHelper.newline_character,
         ]
         transform_state.is_in_setext_block = False
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)

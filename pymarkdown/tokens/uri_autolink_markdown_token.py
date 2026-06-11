@@ -2,9 +2,10 @@
 Module to provide for an encapsulation of the inline uri autolink element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.inline.inline_helper import InlineHelper
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -137,6 +138,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
     def __handle_uri_autolink(
         cls,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -150,7 +152,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             add_text_signature=False,
         )
 
-        tag_text_parts = []
+        tag_text_parts : List[str]= []
         for next_character in in_tag_pretext:
             if (
                 next_character
@@ -164,9 +166,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             else:
                 tag_text_parts.append(next_character)
 
-        return "".join(
-            [
-                output_html,
+        token_parts = [
                 '<a href="',
                 "http://" if autolink_token.add_http_prefix else "",
                 "".join(tag_text_parts),
@@ -176,4 +176,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
                 ),
                 "</a>",
             ]
-        )
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

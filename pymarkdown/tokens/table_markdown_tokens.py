@@ -9,6 +9,7 @@ from typing_extensions import override
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.leaf_blocks.table_block_tuple import TableRow
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -100,6 +101,7 @@ class TableMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -112,17 +114,22 @@ class TableMarkdownToken(LeafMarkdownToken):
             and transform_state.transform_stack[-1].endswith("<li>")
         ):
             token_parts.append(ParserHelper.newline_character)
+            output_parts.append(ZuluHtmlItem(ParserHelper.newline_character))
         token_parts.extend([output_html, "<table>", ParserHelper.newline_character])
+        output_parts.append(ZuluHtmlItem(f"<table>{ParserHelper.newline_character}"))
+
         return "".join(token_parts)
 
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(ZuluHtmlItem(f"</table>{ParserHelper.newline_character}"))
         return "".join([output_html, "</table>", ParserHelper.newline_character])
 
 
@@ -314,38 +321,41 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (transform_state, next_token)
 
-        return "".join(
-            [
-                output_html,
+        token_parts =             [
                 "<thead>",
                 ParserHelper.newline_character,
                 "<tr>",
                 ParserHelper.newline_character,
             ]
-        )
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+    
 
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
-        return "".join(
-            [
-                output_html,
+        token_parts =             [
                 "</tr>",
                 ParserHelper.newline_character,
                 "</thead>",
                 ParserHelper.newline_character,
             ]
-        )
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
 
 class TableMarkdownHeaderItemToken(LeafMarkdownToken):
@@ -453,6 +463,7 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -463,6 +474,7 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
             text_to_add = f'<th align="{table_token.column_alignment}">'
         else:
             text_to_add = "<th>"
+        output_parts.append(ZuluHtmlItem(text_to_add))
         return "".join(
             [
                 output_html,
@@ -473,11 +485,13 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(ZuluHtmlItem(f"</th>{ParserHelper.newline_character}"))
         return "".join(
             [
                 output_html,
@@ -566,11 +580,13 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (transform_state, next_token)
 
+        output_parts.append(ZuluHtmlItem(f"<tbody>{ParserHelper.newline_character}"))
         return "".join(
             [
                 output_html,
@@ -582,11 +598,13 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(ZuluHtmlItem(f"</tbody>{ParserHelper.newline_character}"))
         return "".join([output_html, "</tbody>", ParserHelper.newline_character])
 
 
@@ -741,11 +759,13 @@ class TableMarkdownRowToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (transform_state, next_token)
 
+        output_parts.append(ZuluHtmlItem(f"<tr>{ParserHelper.newline_character}"))
         return "".join(
             [
                 output_html,
@@ -757,21 +777,25 @@ class TableMarkdownRowToken(LeafMarkdownToken):
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:  # sourcery skip: for-append-to-extend, for-index-underscore
         _ = (transform_state, next_token)
 
-        ff = [output_html]
+        token_parts : List[str] = []
         for _i in range(
             cast(
                 TableMarkdownRowToken,
                 cast(EndMarkdownToken, next_token).start_markdown_token,
             ).delta
         ):
-            ff.append("<td></td>\n")
-        ff.extend(("</tr>", ParserHelper.newline_character))
-        return "".join(ff)
+            token_parts.append(f"<td></td>{ParserHelper.newline_character}")
+        token_parts.extend(("</tr>", ParserHelper.newline_character))
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
 
 class TableMarkdownRowItemToken(LeafMarkdownToken):
@@ -884,6 +908,7 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -894,19 +919,19 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
             text_to_add = f'<td align="{table_token.column_alignment}">'
         else:
             text_to_add = "<td>"
-        return "".join(
-            [
-                output_html,
-                text_to_add,
-            ]
-        )
+        token_parts = [                text_to_add            ]
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
     @staticmethod
     def __handle_end_table_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(ZuluHtmlItem(f"</td>{ParserHelper.newline_character}"))
         return "".join([output_html, "</td>", ParserHelper.newline_character])

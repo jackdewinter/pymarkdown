@@ -3,11 +3,12 @@ Module to provide for an encapsulation of the html block element.
 """
 
 import logging
-from typing import Optional
+from typing import List, Optional
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -114,19 +115,21 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_html_block_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
         transform_state.is_in_html_block = True
-        token_parts = []
+        token_parts : List[str]= []
         if (
             not output_html
             and transform_state.transform_stack
             and transform_state.transform_stack[-1].endswith("<li>")
         ):
             token_parts.append(ParserHelper.newline_character)
+            output_parts.append(ZuluHtmlItem(ParserHelper.newline_character))
         else:
             previous_token = transform_state.actual_tokens[
                 transform_state.actual_token_index - 1
@@ -140,11 +143,13 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
                 or previous_token.is_list_end
             ):
                 token_parts.append(ParserHelper.newline_character)
+                output_parts.append(ZuluHtmlItem(ParserHelper.newline_character))
         return "".join(token_parts)
 
     @staticmethod
     def __handle_end_html_block_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:

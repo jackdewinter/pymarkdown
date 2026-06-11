@@ -3,12 +3,13 @@ Module to provide for an encapsulation of the inline raw html element.
 """
 
 import logging
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -112,20 +113,21 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_raw_html_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         raw_html_token = cast(RawHtmlMarkdownToken, next_token)
-        return "".join(
-            [
-                output_html,
+        token_parts =             [
                 "<",
                 ParserHelper.resolve_all_from_text(raw_html_token.raw_tag),
                 ">",
             ]
-        )
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
     @override
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:

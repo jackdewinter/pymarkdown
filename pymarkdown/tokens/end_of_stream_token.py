@@ -1,5 +1,10 @@
-from typing import Optional
+"""
+Module to provide for an encapsulation of the end of stream element.
+"""
 
+from typing import List, Optional
+
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
@@ -82,9 +87,9 @@ class EndOfStreamToken(SpecialMarkdownToken):
     @staticmethod
     def __handle_end_of_stream_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = (transform_state, next_token)
-
+        _ = (transform_state, next_token, output_parts)
         return output_html

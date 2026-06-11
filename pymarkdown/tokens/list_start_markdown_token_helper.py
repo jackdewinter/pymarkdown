@@ -1,6 +1,11 @@
-from typing import cast
+"""
+Module to provide for an encapsulation of the list start element.
+"""
+
+from typing import List, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -13,6 +18,7 @@ class ListStartMarkdownTokenHelper:
     @staticmethod
     def handle_start_list_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -41,6 +47,7 @@ class ListStartMarkdownTokenHelper:
     @staticmethod
     def handle_end_list_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:

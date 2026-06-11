@@ -2,11 +2,12 @@
 Module to provide for an encapsulation of the inline code span element.
 """
 
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -207,6 +208,7 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_inline_code_span_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -234,11 +236,9 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
                 span_index = next_bar_index + 1
             span_text = new_span_text
 
-        return "".join(
-            [
-                output_html,
-                "<code>",
+        token_parts = ["<code>",
                 ParserHelper.resolve_all_from_text(span_text),
-                "</code>",
-            ]
-        )
+                "</code>"]
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

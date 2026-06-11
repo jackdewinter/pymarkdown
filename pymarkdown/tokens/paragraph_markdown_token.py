@@ -2,13 +2,14 @@
 Module to provide for an encapsulation of the paragraph element.
 """
 
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -176,25 +177,32 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_paragraph_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
-        token_parts = [output_html]
+        token_parts : List[str]= []
         if output_html and output_html[-1] != ParserHelper.newline_character:
             token_parts.append(ParserHelper.newline_character)
         if transform_state.is_in_loose_list:
             token_parts.append("<p>")
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @staticmethod
     def __handle_end_paragraph_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
+        if transform_state.is_in_loose_list:
+            output_parts.append(ZuluHtmlItem(f"</p>{ParserHelper.newline_character}"))
         return (
             f"{output_html}</p>{ParserHelper.newline_character}"
             if transform_state.is_in_loose_list

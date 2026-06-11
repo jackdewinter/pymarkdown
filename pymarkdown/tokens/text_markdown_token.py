@@ -11,6 +11,7 @@ from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.indented_code_block_markdown_token import (
     IndentedCodeBlockMarkdownToken,
 )
@@ -522,6 +523,7 @@ class TextMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_text_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -573,6 +575,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 token_parts, text_token, adjusted_text_token
             )
 
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
         token_parts.insert(0, output_html)
         return "".join(token_parts)
 

@@ -3,7 +3,7 @@ Module to provide for an encapsulation of the block quote element.
 """
 
 import logging
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from typing_extensions import override
 
@@ -11,6 +11,7 @@ from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
@@ -205,27 +206,32 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     @staticmethod
     def __handle_start_block_quote_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        token_parts = [output_html]
+        token_parts : List[str]= []
         if output_html and output_html[-1] != ParserHelper.newline_character:
             token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = True
         token_parts.extend(["<blockquote>", ParserHelper.newline_character])
+        
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @staticmethod
     def __handle_end_block_quote_token(
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        token_parts = [output_html]
+        token_parts : List[str]= []
         if output_html[-1] != ParserHelper.newline_character:
             token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = (
@@ -235,6 +241,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             )
         )
         token_parts.extend(["</blockquote>", ParserHelper.newline_character])
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @override

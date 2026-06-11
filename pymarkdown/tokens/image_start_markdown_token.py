@@ -3,11 +3,12 @@ Module to provide for an encapsulation of the image element.
 """
 
 import logging
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
@@ -130,16 +131,15 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
     def __handle_image_token(
         cls,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         image_token = cast(ImageStartMarkdownToken, next_token)
-        return "".join(
-            [
-                output_html,
-                '<img src="',
+
+        token_parts = [                '<img src="',
                 image_token.link_uri,
                 '" alt="',
                 image_token.image_alt_text,
@@ -150,5 +150,7 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
                     else ""
                 ),
                 "/>",
-            ]
-        )
+        ]
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

@@ -3,13 +3,14 @@ Module to provide for an encapsulation of the fenced code block element.
 """
 
 import logging
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
@@ -264,11 +265,12 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
     def __handle_start_fenced_code_block_token(
         cls,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         start_fence_token = cast(FencedCodeBlockMarkdownToken, next_token)
-        token_parts = [output_html]
+        token_parts : List[str]= []
         if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
             output_html and output_html[-1] != ParserHelper.newline_character
         ):
@@ -283,12 +285,16 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
                 [' class="language-', start_fence_token.extracted_text, '"']
             )
         token_parts.append(">")
+        
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @classmethod
     def __handle_end_fenced_code_block_token(
         cls,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -320,7 +326,7 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
         )
 
-        token_parts = [output_html]
+        token_parts : List[str] = []
         if (
             not output_html.endswith(inner_tag)
             and output_html[-1] != ParserHelper.newline_character
@@ -342,6 +348,9 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             False,
         )
         token_parts.extend(["</code></pre>", ParserHelper.newline_character])
+
+        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @override

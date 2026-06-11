@@ -2,8 +2,9 @@
 Module to provide for an encapsulation of the inline email autolink element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -112,12 +113,18 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
     def __handle_email_autolink_token(
         cls,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         email_token = cast(EmailAutolinkMarkdownToken, next_token)
+        output_parts.append(ZuluHtmlItem("".join(['<a href="mailto:',
+                email_token.autolink_text,
+                '">',
+                email_token.autolink_text,
+                "</a>"])))
         return "".join(
             [
                 output_html,

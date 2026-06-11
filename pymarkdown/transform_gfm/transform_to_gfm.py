@@ -7,6 +7,7 @@ from typing import List
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_gfm.transform_to_gfm_token_handlers import (
@@ -57,6 +58,8 @@ class TransformToGfm:
             and not transform_state.is_in_fenced_code_block
         ), "Initial state must be set properly."
 
+        output_parts : List[HtmlItems] = []
+
         for next_token in transform_state.actual_tokens:
             output_html = self.__token_handlers.apply_transformation(
                 transform_state,
@@ -64,6 +67,7 @@ class TransformToGfm:
                 actual_tokens_size,
                 next_token,
                 output_html,
+                output_parts,
             )
 
             POGGER.debug("======")
@@ -75,38 +79,49 @@ class TransformToGfm:
             POGGER.debug("output_html    -->$<--", output_html)
 
             if transform_state.add_trailing_text:
-                output_html = self.__apply_trailing_text(output_html, transform_state)
+                output_html = self.__apply_trailing_text(output_html, transform_state, output_parts)
                 POGGER.debug("output_html    -->$<--", output_html)
 
             if transform_state.add_leading_text:
-                output_html = self.__apply_leading_text(output_html, transform_state)
+                output_html = self.__apply_leading_text(output_html, transform_state, output_parts)
                 POGGER.debug("output_html    -->$<--", output_html)
 
             POGGER.debug("------")
             POGGER.debug("next_token     -->$<--", next_token)
             POGGER.debug("output_html    -->$<--", output_html)
             POGGER.debug("transform_stack-->$<--", transform_state.transform_stack)
+            POGGER.debug("transform_stack_two-->$<--", transform_state.transform_stack_two)
 
             transform_state.last_token = next_token
             transform_state.actual_token_index += 1
         if output_html and output_html[-1] == ParserHelper.newline_character:
             output_html = output_html[:-1]
         POGGER.debug("output_html    -->$<--", output_html)
+
+        combined_output_parts = "".join([x.get_raw_html_text() for x in output_parts])
+        if combined_output_parts and combined_output_parts[-1] == ParserHelper.newline_character:
+            combined_output_parts = combined_output_parts[:-1]
+
+        assert output_html == combined_output_parts
+
         return output_html
 
     @classmethod
     def __apply_trailing_text(
-        cls, output_html: str, transform_state: TransformState
+        cls, output_html: str, transform_state: TransformState, abc : List[HtmlItems]
     ) -> str:
         """
         Apply any trailing text to the output.
         """
         POGGER.debug("__apply_trailing_text>:$:<", output_html)
-        stack_text = transform_state.transform_stack.pop()
-        trailing_part = [stack_text]
+
+        trailing_part = [transform_state.transform_stack.pop()]
+        stack_elements = transform_state.transform_stack_two.pop()
+
         for next_token_to_test in TransformToGfm.add_trailing_text_tokens:
             if output_html.startswith(next_token_to_test):
                 trailing_part.append(ParserHelper.newline_character)
+                stack_elements.append(ZuluHtmlItem(ParserHelper.newline_character))
                 break
 
         POGGER.debug("trailing_part>:$:<", trailing_part)
@@ -114,32 +129,46 @@ class TransformToGfm:
             "<blockquote>"
         ):
             trailing_part.append(ParserHelper.newline_character)
+            stack_elements.append(ZuluHtmlItem(ParserHelper.newline_character))
+
         trailing_part.append(output_html)
+        stack_elements.extend(abc)
+
         POGGER.debug("trailing_part>:$:<", trailing_part)
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
             trailing_part.append(ParserHelper.newline_character)
+            stack_elements.append(ZuluHtmlItem(ParserHelper.newline_character))
         assert (
             transform_state.add_trailing_text is not None
         ), "Trailing text must be defined by now."
         trailing_part.append(transform_state.add_trailing_text)
+        stack_elements.append(ZuluHtmlItem(transform_state.add_trailing_text))
+
         combined_text = "".join(trailing_part)
         POGGER.debug("__apply_trailing_text>:$:<", combined_text)
+        abc.clear()
+        abc.extend(stack_elements)
         return combined_text
 
     @classmethod
     def __apply_leading_text(
-        cls, output_html: str, transform_state: TransformState
+        cls, output_html: str, transform_state: TransformState, abc : List[HtmlItems]
     ) -> str:
         """
         Apply any leading text to the output.
         """
 
-        output_html = (
-            f"{output_html}{ParserHelper.newline_character}{transform_state.add_leading_text}"
-            if output_html and output_html[-1] != ParserHelper.newline_character
-            else f"{output_html}{transform_state.add_leading_text}"
-        )
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            abc.append(ZuluHtmlItem(ParserHelper.newline_character))
+            output_html = f"{output_html}{ParserHelper.newline_character}{transform_state.add_leading_text}"
+        else:
+            output_html = f"{output_html}{transform_state.add_leading_text}"
+            
+        assert transform_state.add_leading_text is not None
+        abc.append(ZuluHtmlItem(transform_state.add_leading_text))
         transform_state.transform_stack.append(output_html)
+        transform_state.transform_stack_two.append(abc[:])
+        abc.clear()
         return ""
 
 

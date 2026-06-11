@@ -9,6 +9,7 @@ from typing import List, Optional
 from typing_extensions import Protocol
 
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 
@@ -141,6 +142,7 @@ class StartHtmlTokenTransformProtocol(Protocol):
     def __call__(  # noqa: E704
         self,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str: ...  # pragma: no cover
@@ -158,6 +160,7 @@ class EndHtmlTokenTransformProtocol(Protocol):
     def __call__(  # noqa: E704
         self,
         output_html: str,
+        output_parts : List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str: ...  # pragma: no cover
