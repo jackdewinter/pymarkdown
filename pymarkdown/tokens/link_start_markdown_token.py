@@ -9,6 +9,7 @@ from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.tokens.html_items import HtmlCloseTagItem, HtmlItems, HtmlOpenTagItem
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
@@ -242,28 +243,50 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     @staticmethod
     def __handle_start_link_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         link_token = cast(LinkStartMarkdownToken, next_token)
-        return "".join(
-            [
-                output_html,
-                '<a href="',
-                link_token.link_uri,
-                f'" title="{link_token.link_title}' if link_token.link_title else "",
-                '">',
-            ]
+
+        attributes_map = {"href": link_token.link_uri}
+        if link_token.link_title:
+            attributes_map["title"] = link_token.link_title
+
+        output_parts.append(HtmlOpenTagItem("a", attributes_map))
+
+        return LinkStartMarkdownToken.__handle_start_link_token_old(
+            output_html, link_token
         )
 
     @staticmethod
     def __handle_end_link_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(HtmlCloseTagItem("a"))
+
+        return LinkStartMarkdownToken.__handle_end_link_token_old(output_html)
+
+    @staticmethod
+    def __handle_start_link_token_old(
+        output_html: str, link_token: "LinkStartMarkdownToken"
+    ) -> str:
+        token_parts = [
+            '<a href="',
+            link_token.link_uri,
+            f'" title="{link_token.link_title}' if link_token.link_title else "",
+            '">',
+        ]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_link_token_old(output_html: str) -> str:
         return f"{output_html}</a>"

@@ -2,9 +2,16 @@
 Module to provide for an encapsulation of the indented code block element.
 """
 
-from typing import Optional
+from typing import List, Optional
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlBlockItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -132,43 +139,95 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_indented_code_block_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        token_parts = []
+        transform_state.is_in_code_block = True
+        transform_state.is_in_fenced_code_block = False
+
         if (
-            not output_html
+            not output_parts
             and transform_state.transform_stack
             and transform_state.transform_stack[-1].endswith("<li>")
         ):
-            token_parts.append(ParserHelper.newline_character)
-        elif output_html and output_html[-1] != ParserHelper.newline_character:
-            token_parts.extend([output_html, ParserHelper.newline_character])
-        else:
-            token_parts.append(output_html)
-        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
-            True,
-            False,
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        elif (
+            output_parts
+            and not isinstance(output_parts[-1], FormatOnlyNewLineHtmlItem)
+            and not (
+                isinstance(output_parts[-1], HtmlBlockItem)
+                and output_parts[-1]
+                .get_raw_html_text()
+                .endswith(ParserHelper.newline_character)
+            )
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlOpenTagItem("pre"))
+        output_parts.append(HtmlOpenTagItem("code"))
+
+        return (
+            IndentedCodeBlockMarkdownToken.__handle_start_indented_code_block_token_old(
+                output_html, transform_state
+            )
         )
-        token_parts.append("<pre><code>")
-        return "".join(token_parts)
 
     @staticmethod
     def __handle_end_indented_code_block_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
         transform_state.is_in_code_block = False
-        return "".join(
-            [
-                output_html,
-                ParserHelper.newline_character,
-                "</code></pre>",
-                ParserHelper.newline_character,
-            ]
+
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlCloseTagItem("code"))
+        output_parts.append(HtmlCloseTagItem("pre"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return (
+            IndentedCodeBlockMarkdownToken.__handle_end_indented_code_block_token_old(
+                output_html
+            )
         )
+
+    @staticmethod
+    def __handle_start_indented_code_block_token_old(
+        output_html: str, transform_state: TransformState
+    ) -> str:
+        token_parts: List[str] = []
+        do_add = True
+        if (
+            not output_html
+            and transform_state.transform_stack
+            and transform_state.transform_stack[-1].endswith("<li>")
+        ):
+            token_parts.append(ParserHelper.newline_character)
+            do_add = False
+        elif output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.extend([ParserHelper.newline_character])
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            True,
+            False,
+        )
+        token_parts.append("<pre><code>")
+
+        if do_add:
+            token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_indented_code_block_token_old(output_html: str) -> str:
+
+        token_parts = [
+            output_html,
+            ParserHelper.newline_character,
+            "</code></pre>",
+            ParserHelper.newline_character,
+        ]
+        return "".join(token_parts)
