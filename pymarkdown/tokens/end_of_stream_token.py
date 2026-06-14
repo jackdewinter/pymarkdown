@@ -2,8 +2,6 @@
 Module to provide for an encapsulation of the end of stream element.
 """
 
-from typing import Optional
-
 from typing import List, Optional
 
 from pymarkdown.tokens.html_items import HtmlItems

@@ -5,7 +5,7 @@ Module to provide for an encapsulation of the inline email autolink element.
 from typing import List, Optional, cast
 
 from pymarkdown.tokens.html_items import (
-    AutolinkTextItem,
+    EmailAutolinkTextItem,
     HtmlCloseTagItem,
     HtmlItems,
     HtmlOpenTagItem,
@@ -132,7 +132,7 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         output_parts.append(
             HtmlOpenTagItem("a", {"href": f"mailto:{email_token.autolink_text}"})
         )
-        output_parts.append(AutolinkTextItem(email_token.autolink_text))
+        output_parts.append(EmailAutolinkTextItem(email_token.autolink_text))
         output_parts.append(HtmlCloseTagItem("a"))
 
         return cls.__handle_email_autolink_token_old(output_html, email_token)

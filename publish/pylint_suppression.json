@@ -441,7 +441,9 @@
         "pymarkdown/tokens/html_block_markdown_token.py": {
             "protected-access": 1
         },
-        "pymarkdown/tokens/html_items.py": {},
+        "pymarkdown/tokens/html_items.py": {
+            "too-few-public-methods": 14
+        },
         "pymarkdown/tokens/image_start_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1
@@ -570,7 +572,7 @@
         "too-many-instance-attributes": 30,
         "too-many-public-methods": 5,
         "too-many-arguments": 292,
-        "too-few-public-methods": 43,
+        "too-few-public-methods": 57,
         "too-many-locals": 57,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 10,

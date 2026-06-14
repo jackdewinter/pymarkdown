@@ -34,6 +34,7 @@ class ListStartMarkdownTokenHelper:
         """
         Handle the HTML transformation for the list start token.
         """
+        _ = output_parts
         list_token = cast(ListStartMarkdownToken, next_token)
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.calculate_list_looseness(
@@ -70,6 +71,7 @@ class ListStartMarkdownTokenHelper:
         """
         Handle the HTML transformation for the list end token.
         """
+        _ = output_parts
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.reset_list_looseness(
                 transform_state.actual_tokens,

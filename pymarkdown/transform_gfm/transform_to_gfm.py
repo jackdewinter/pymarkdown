@@ -7,11 +7,7 @@ from typing import List
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
-from pymarkdown.tokens.html_items import (
-    FormatOnlyNewLineHtmlItem,
-    HtmlItems,
-    ZuluHtmlItem,
-)
+from pymarkdown.tokens.html_items import FormatOnlyNewLineHtmlItem, HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_gfm.transform_to_gfm_token_handlers import (
@@ -178,7 +174,7 @@ class TransformToGfm:
         assert g == transform_state.add_leading_text
 
         if output_html and output_html[-1] != ParserHelper.newline_character:
-            abc.append(ZuluHtmlItem(ParserHelper.newline_character))
+            abc.append(FormatOnlyNewLineHtmlItem())
             output_html = f"{output_html}{ParserHelper.newline_character}{transform_state.add_leading_text}"
         else:
             output_html = f"{output_html}{transform_state.add_leading_text}"

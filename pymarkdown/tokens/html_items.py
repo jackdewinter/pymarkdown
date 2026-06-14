@@ -1,3 +1,7 @@
+"""
+Module to encapsulate the transitions from Markdown to HTML.
+"""
+
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
@@ -6,7 +10,12 @@ from typing_extensions import override
 from pymarkdown.general.parser_helper import ParserHelper
 
 
+# pylint: disable=too-few-public-methods
 class HtmlItems(ABC):
+    """
+    Base class for all of the HTML items.
+    """
+
     @abstractmethod
     def get_raw_html_text(self) -> str:
         """
@@ -14,7 +23,15 @@ class HtmlItems(ABC):
         """
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class HtmlOpenTagItem(HtmlItems):
+    """
+    Class to encapsulate an HTML Open tag, such as <a>.
+    """
+
     def __init__(self, tag_name: str, attributes: Optional[Dict[str, str]] = None):
         self.__tag_name = tag_name
         self.__attributes = attributes
@@ -29,7 +46,15 @@ class HtmlOpenTagItem(HtmlItems):
         return "".join(parts)
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class HtmlCloseTagItem(HtmlItems):
+    """
+    Class to encapsulate an HTML Close tag, such as </a>.
+    """
+
     def __init__(self, tag_name: str):
         self.__tag_name = tag_name
 
@@ -38,7 +63,15 @@ class HtmlCloseTagItem(HtmlItems):
         return f"</{self.__tag_name}>"
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class HtmlOpenCloseTagItem(HtmlItems):
+    """
+    Class to encapsulate an HTML Open/Close tag, such as <br/>.
+    """
+
     def __init__(self, tag_name: str, attributes: Optional[Dict[str, str]] = None):
         self.__tag_name = tag_name
         self.__attributes = attributes
@@ -54,13 +87,43 @@ class HtmlOpenCloseTagItem(HtmlItems):
         return "".join(parts)
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class FormatOnlyNewLineHtmlItem(HtmlItems):
+    """
+    Class to encapsulate a newline that is mostly inserted for compatability to example format.
+    """
+
     @override
     def get_raw_html_text(self) -> str:
         return ParserHelper.newline_character
 
 
-class AutolinkTextItem(HtmlItems):
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class HtmlBlockNewLineHtmlItem(HtmlItems):
+    """
+    Class to encapsulate a newline within an HTML block.
+    """
+
+    @override
+    def get_raw_html_text(self) -> str:
+        return ParserHelper.newline_character
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class EmailAutolinkTextItem(HtmlItems):
+    """
+    Class to encapsulate text content for an email autolink.
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -69,7 +132,32 @@ class AutolinkTextItem(HtmlItems):
         return self.__text_content
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class UriAutolinkTextItem(HtmlItems):
+    """
+    Class to encapsulate text content for an uri autolink.
+    """
+
+    def __init__(self, text_content: str):
+        self.__text_content = text_content
+
+    @override
+    def get_raw_html_text(self) -> str:
+        return self.__text_content
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class CodeSpanItem(HtmlItems):
+    """
+    Class to encapsulate text content for a codespan.
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -78,7 +166,15 @@ class CodeSpanItem(HtmlItems):
         return self.__text_content
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class CodeBlockItem(HtmlItems):
+    """
+    Class to encapsulate text content for a code block.
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -87,7 +183,17 @@ class CodeBlockItem(HtmlItems):
         return self.__text_content
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class HtmlBlockItem(HtmlItems):
+    """
+    Class to encapsulate text content for a html block.
+
+    Note that this content "looks" like valid HTML but may not be valid HTML.
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -96,25 +202,17 @@ class HtmlBlockItem(HtmlItems):
         return self.__text_content
 
 
-class SetExtTextItem(HtmlItems):
-    def __init__(self, text_content: str):
-        self.__text_content = text_content
-
-    @override
-    def get_raw_html_text(self) -> str:
-        return self.__text_content
+# pylint: enable=too-few-public-methods
 
 
-class NormalTextItem(HtmlItems):
-    def __init__(self, text_content: str):
-        self.__text_content = text_content
-
-    @override
-    def get_raw_html_text(self) -> str:
-        return self.__text_content
-
-
+# pylint: disable=too-few-public-methods
 class SingleRawHtmlItem(HtmlItems):
+    """
+    Class to encapsulate text content for a single HTML element.
+
+    Note that this content "looks" like valid HTML but may not be valid HTML.
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -123,7 +221,15 @@ class SingleRawHtmlItem(HtmlItems):
         return f"<{self.__text_content}>"
 
 
-class UriAutolinkTextItem(HtmlItems):
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class SetExtTextItem(HtmlItems):
+    """
+    Class to encapsulate text content for a setext heading
+    """
+
     def __init__(self, text_content: str):
         self.__text_content = text_content
 
@@ -132,16 +238,21 @@ class UriAutolinkTextItem(HtmlItems):
         return self.__text_content
 
 
-class HtmlBlockNewLineHtmlItem(HtmlItems):
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class NormalTextItem(HtmlItems):
+    """
+    Class to encapsulate text content for a normal text section.
+    """
+
+    def __init__(self, text_content: str):
+        self.__text_content = text_content
+
     @override
     def get_raw_html_text(self) -> str:
-        return ParserHelper.newline_character
+        return self.__text_content
 
 
-class ZuluHtmlItem(HtmlItems):
-    def __init__(self, raw_html_text: str):
-        self.__raw_html_text = raw_html_text
-
-    @override
-    def get_raw_html_text(self) -> str:
-        return self.__raw_html_text
+# pylint: enable=too-few-public-methods
