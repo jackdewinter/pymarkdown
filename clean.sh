@@ -264,7 +264,7 @@ execute_pre_commit() {
 	if [[ ${PUBLISH_MODE} -ne 0 ]]; then
 		PRE_COMMIT_ARGS+=("--all")
 	fi
-	if ! pipenv run pre-commit run ${PRE_COMMIT_ARGS[@]}; then
+	if ! pipenv run pre-commit run "${PRE_COMMIT_ARGS[@]}"; then
 		complete_process 1 "{Executing pre-commit hooks on Python code failed.}"
 	fi
 	echo ""
