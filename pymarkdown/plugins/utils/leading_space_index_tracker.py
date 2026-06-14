@@ -54,6 +54,9 @@ class LeadingSpaceIndexTracker:
     def nudge_list_container(
         self, token: MarkdownToken, nudge_positive: bool = True
     ) -> None:
+        """
+        Nudge the list container. Definitely a kludge, but needed occasionally.
+        """
         if nudge_positive:
             assert token.is_new_list_item
             assert (
@@ -203,7 +206,7 @@ class LeadingSpaceIndexTracker:
         self, token: MarkdownToken, alternate_index: int = -1
     ) -> int:
         """
-        Get the index of the token within the contain block quote's bleading_spaces string.
+        Get the index of the token within the container block quote's bleading_spaces string.
         """
         container_index = (
             self.get_container_stack_size() - 1
@@ -227,6 +230,9 @@ class LeadingSpaceIndexTracker:
     def get_tokens_list_leading_space_index(
         self, token: MarkdownToken, alternate_index: int = -1
     ) -> int:
+        """
+        Get the index of the token within the container list's leading_spaces string.
+        """
 
         initial_index = self.get_container_stack_size() - 1
         container_index = alternate_index

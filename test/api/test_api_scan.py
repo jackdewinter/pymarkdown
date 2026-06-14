@@ -257,7 +257,7 @@ def test_api_scan_recursive_for_directory() -> None:
 
     itemized_scan_failures = "\n".join(str(i) for i in scan_result.scan_failures)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 141
+    assert len(scan_result.scan_failures) == 142
 
     scan_failures: List[str] = []
     for i in scan_result.scan_failures:

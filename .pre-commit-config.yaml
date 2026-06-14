@@ -162,6 +162,39 @@ repos:
 #         -   --exclude
 #         -   "draft-*.md"
 #         -   ./newdocs/src
+-   repo: local
+    hooks:
+    -   id: docvet-coverage
+        name: "Scan:   DocVet - Coverage"
+        language: system
+        entry: pipenv run docvet coverage pymarkdown/**/*.py
+        pass_filenames: false
+-   repo: local
+    hooks:
+    -   id: docvet-presence-main
+        name: "Scan:   DocVet - Presence (Main Directory)"
+        language: system
+        entry: pipenv run docvet presence pymarkdown/*.py
+        pass_filenames: false
+    -   id: docvet-presence2-pymarkdown
+        name: "Scan:   DocVet - Presence (Subdirectories)"
+        language: system
+        entry: pipenv run docvet presence pymarkdown/**/*.py
+        pass_filenames: false
+-   repo: local
+    hooks:
+    -   id: docvet-enrichment
+        name: "Scan:   DocVet - Enrichment"
+        language: system
+        entry: pipenv run docvet enrichment pymarkdown/api.py
+        pass_filenames: false
+# -   repo: local
+#     hooks:
+#     -   id: docvet-freshness
+#         name: "Scan:   DocVet - Freshness"
+#         language: system
+#         entry: pipenv run docvet freshness pymarkdown/**/*.py
+#         pass_filenames: false
 -   repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.11.0
     hooks:

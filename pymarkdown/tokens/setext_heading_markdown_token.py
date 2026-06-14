@@ -37,6 +37,9 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         position_marker: PositionMarker,
         para_token: ParagraphMarkdownToken,
     ) -> None:
+        """
+        Initialize an instance of the SetextHeadingMarkdownToken class.
+        """
         (
             self.__heading_character,
             self.__heading_character_count,

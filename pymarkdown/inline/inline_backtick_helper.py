@@ -22,6 +22,7 @@ from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
+# pylint: disable=too-few-public-methods
 class InlineBacktickHelper:
     """
     Class to help with the parsing of bkactick inline elements.
@@ -412,6 +413,7 @@ class InlineBacktickHelper:
             adj_newlines = ParserHelper.count_newlines_in_text(normal_backtick_text)
         return adj_tabified_text, whitespace_to_add, did_use_para_space, adj_newlines
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __calc_adjusted_between_text_kludge(
         inline_request: InlineRequest,
@@ -440,8 +442,7 @@ class InlineBacktickHelper:
             if (
                 split_whitespace_item == "\t"
                 and not split_spaces_item
-                and index > start_line_index
-                and index <= end_line_index
+                and start_line_index < index <= end_line_index
             ):
                 newline_index = (
                     ParserHelper.find_nth_occurrence(
@@ -457,6 +458,9 @@ class InlineBacktickHelper:
                 actual_between_text = prefix + noop_part + suffix
         return actual_between_text
 
+    # pylint: enable=too-many-locals
+
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __calc_adjusted_between_text(
         adj_newlines: int,
@@ -491,6 +495,8 @@ class InlineBacktickHelper:
                 )
             )
         return actual_between_text, adj_newlines
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __calculate_backtick_between_tabified_text(
@@ -605,3 +611,6 @@ class InlineBacktickHelper:
         # d_after = split_array[_array_index][delta:]
         POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index
+
+
+# pylint: enable=too-few-public-methods

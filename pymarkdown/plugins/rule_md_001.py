@@ -24,6 +24,9 @@ class RuleMd001(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd001 class.
+        """
         super().__init__()
         self.__last_heading_count: int = 0
         self.__front_matter_title: str = ""
@@ -44,6 +47,9 @@ class RuleMd001(RulePlugin):
         )
 
     def initialize_from_config(self) -> None:
+        """
+        Event to allow the plugin to load configuration information.
+        """
         self.__front_matter_title = (
             self.plugin_configuration.get_string_property_with_default(
                 "front_matter_title", "title"

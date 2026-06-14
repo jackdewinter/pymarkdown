@@ -26,6 +26,9 @@ class LinkHelperProperties:
     did_use_angle_start: Optional[bool]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the LinkHelperProperties class.
+        """
         self.ex_label = None
         self.label_type = None
         self.did_use_angle_start = False

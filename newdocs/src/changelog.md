@@ -5,6 +5,23 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.38 - 2026-06-09
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1605](https://github.com/jackdewinter/pymarkdown/issues/1605)
     - Add support for native file format lists in JSON, YAML, TOML
         - [`plugins.per-file-ignores`](./advanced_configuration.md#per-file-disabling-of-rule-plugins)
@@ -12,6 +29,8 @@
         - [`plugins.additional_paths`](./advanced_configuration.md#adding-rule-plugins)
 - [Issue 1609](https://github.com/jackdewinter/pymarkdown/issues/1609)
     - Added support for `tables` and `table_line_length` for MD013:line-length
+- [Issue 1620](https://github.com/jackdewinter/pymarkdown/issues/1620)
+    - Added `docvet` support to scan public methods and classes for docstrings.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -24,7 +43,11 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 290](https://github.com/jackdewinter/pymarkdown/issues/290)
+    - closed as this would make the command line look clunky
+- [Issue 1078](https://github.com/jackdewinter/pymarkdown/issues/1078)
+    - examined Pml100, Pml101, and Pml102 and determined they all can
+      have fixes applied.
 
 ## Version 0.9.37 - 2026-05-03
 

@@ -20,6 +20,10 @@ from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
 
 
 class ListStartMarkdownTokenHelper:
+    """
+    Class to provide for an encapsulation of the list start element.
+    """
+
     @staticmethod
     def handle_start_list_token(
         output_html: str,
@@ -27,6 +31,9 @@ class ListStartMarkdownTokenHelper:
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
+        """
+        Handle the HTML transformation for the list start token.
+        """
         list_token = cast(ListStartMarkdownToken, next_token)
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.calculate_list_looseness(
@@ -60,8 +67,9 @@ class ListStartMarkdownTokenHelper:
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = output_parts
-
+        """
+        Handle the HTML transformation for the list end token.
+        """
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.reset_list_looseness(
                 transform_state.actual_tokens,

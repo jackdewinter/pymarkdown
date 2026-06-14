@@ -9,4 +9,7 @@ class BadPluginFixError(Exception):
     """
 
     def __init__(self, formatted_message: str):
+        """
+        Initialize an instance of the BadPluginFixError class.
+        """
         super().__init__(formatted_message)

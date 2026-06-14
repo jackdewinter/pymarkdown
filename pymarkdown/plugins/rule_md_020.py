@@ -21,6 +21,9 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     """
 
     def __init__(self, owner: "RuleMd020") -> None:
+        """
+        Initialize an instance of the MyStartOfLineTokenParser class.
+        """
         super().__init__()
         self.__owner = owner
 
@@ -56,6 +59,9 @@ class RuleMd020(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd020 class.
+        """
         super().__init__()
         self.__token_parser = MyStartOfLineTokenParser(self)
         self.__is_in_normal_atx = False

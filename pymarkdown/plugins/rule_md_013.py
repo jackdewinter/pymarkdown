@@ -24,6 +24,9 @@ class RuleMd013(RulePlugin):
     __maximum_line_length = 99999
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd013 class.
+        """
         super().__init__()
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__line_index = 0

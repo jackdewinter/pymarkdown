@@ -40,6 +40,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     def __init__(
         self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
+        """
+        Initialize an instance of the BlockQuoteMarkdownToken class.
+        """
         self.__extracted_whitespace, self.__leading_spaces, self.leading_text_index = (
             extracted_whitespace,
             "",

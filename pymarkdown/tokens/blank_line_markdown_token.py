@@ -28,6 +28,9 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
+        """
+        Initialize an instance of the BlankLineMarkdownToken class.
+        """
         line_number = position_marker.line_number if position_marker else 0
         column_number = (
             position_marker.index_number

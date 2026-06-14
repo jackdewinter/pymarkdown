@@ -34,6 +34,9 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
+        """
+        Initialize an instance of the ParagraphMarkdownToken class.
+        """
         self.__extracted_whitespace: str = extracted_whitespace
         self.__final_whitespace, self.rehydrate_index = (
             "",

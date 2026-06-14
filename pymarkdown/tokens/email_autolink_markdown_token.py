@@ -32,6 +32,9 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         column_number: int,
         add_angle_brackets: bool = True,
     ) -> None:
+        """
+        Initialize an instance of the EmailAutolinkMarkdownToken class.
+        """
         self.__autolink_text = autolink_text
         self.__add_angle_brackets = add_angle_brackets
         InlineMarkdownToken.__init__(

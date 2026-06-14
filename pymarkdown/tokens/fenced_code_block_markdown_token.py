@@ -47,6 +47,9 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         extracted_whitespace_before_info_string: str,
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the FencedCodeBlockMarkdownToken class.
+        """
         (
             self.__extracted_text,
             self.__pre_extracted_text,

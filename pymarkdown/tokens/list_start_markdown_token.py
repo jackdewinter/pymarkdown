@@ -35,6 +35,9 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         extracted_whitespace: str,
         tabbed_whitespace_to_add: Optional[str],
     ) -> None:
+        """
+        Initialize an instance of the ListStartMarkdownToken class.
+        """
         ContainerMarkdownToken.__init__(
             self,
             token_name,

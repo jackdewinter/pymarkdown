@@ -15,6 +15,9 @@ class RuleMd047(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd047 class.
+        """
         super().__init__()
         self.__last_line: Optional[str] = None
         self.__previous_last_line: Optional[str] = None

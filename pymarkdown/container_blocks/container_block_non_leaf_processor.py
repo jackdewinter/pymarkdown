@@ -28,6 +28,9 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
+# pylint: disable=too-few-public-methods
+
+
 class ContainerBlockNonLeafProcessor:
     """
     Class to provide processing for the non-leaf scenarios that may contain container blocks.
@@ -39,6 +42,10 @@ class ContainerBlockNonLeafProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
+        """
+        Handle the processing of non-leaf blocks, i.e. container blocks.
+        """
+
         # POGGER.debug("ttp>>:$:<", position_marker.text_to_parse)
         # POGGER.debug("index_number>>:$:<", position_marker.index_number)
         # POGGER.debug("index_indent>>:$:<", position_marker.index_indent)
@@ -965,3 +972,6 @@ class ContainerBlockNonLeafProcessor:
             did_process,
             new_list_index,
         )
+
+
+# pylint: enable=too-few-public-methods

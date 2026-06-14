@@ -67,6 +67,10 @@ class TaskListToken(InlineMarkdownToken):
         line_number: int,
         column_number: int,
     ) -> None:
+        """
+        Initialize an instance of the TaskListToken class.
+        """
+
         self.__checked_character = checked_character
         InlineMarkdownToken.__init__(
             self,

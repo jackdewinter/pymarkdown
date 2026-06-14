@@ -15,6 +15,8 @@ from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-few-public-methods
+
 
 class HtmlRawHelper:
     """
@@ -363,3 +365,6 @@ class HtmlRawHelper:
             )
 
         return end_name_index, extracted_whitespace
+
+
+# pylint: enable=too-few-public-methods

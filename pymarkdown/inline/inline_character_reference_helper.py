@@ -56,6 +56,7 @@ class InlineCharacterReferenceHelper:
         """
         Handle a generic character reference.
         """
+        _ = parser_properties
         inline_response = InlineResponse()
         inline_response.new_index, inline_response.new_string, source_text_size = (
             inline_request.next_index + 1,

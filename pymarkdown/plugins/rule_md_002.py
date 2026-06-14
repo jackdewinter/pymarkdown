@@ -23,6 +23,9 @@ class RuleMd002(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd002 class.
+        """
         super().__init__()
         self.__start_level = 0
         self.__have_seen_first_heading = False

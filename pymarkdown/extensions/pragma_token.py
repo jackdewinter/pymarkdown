@@ -503,6 +503,9 @@ class PragmaToken(MarkdownToken):
     pragma_alternate_suffix = "--->"
 
     def __init__(self, pragma_lines: Dict[int, str]) -> None:
+        """
+        Initialize an instance of the PragmaToken class.
+        """
         self.__pragma_lines = pragma_lines
 
         MarkdownToken.__init__(

@@ -23,6 +23,9 @@ class ConstantWrapper:
     """
 
     def __init__(self, value_to_wrap: Any) -> None:
+        """
+        Initialize an instance of the ConstantWrapper class.
+        """
         self.__wrapped_value = value_to_wrap
 
     def value(self) -> Any:

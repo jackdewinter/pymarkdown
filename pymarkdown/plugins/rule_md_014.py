@@ -20,6 +20,9 @@ class RuleMd014(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd014 class.
+        """
         super().__init__()
         self.__in_code_block = False
 

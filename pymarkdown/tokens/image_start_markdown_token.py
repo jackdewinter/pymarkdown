@@ -36,6 +36,9 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
+        """
+        Initialize an instance of the ImageStartMarkdownToken class.
+        """
         self.__image_alt_text = image_alt_text
         ReferenceMarkdownToken.__init__(
             self,

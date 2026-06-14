@@ -22,6 +22,9 @@ class RuleMd026(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd026 class.
+        """
         super().__init__()
         self.__start_token: Optional[MarkdownToken] = None
         self.__heading_text = ""

@@ -35,6 +35,9 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
+        """
+        Initialize an instance of the LinkStartMarkdownToken class.
+        """
         ReferenceMarkdownToken.__init__(
             self,
             lhp,

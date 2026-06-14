@@ -1,3 +1,7 @@
+"""
+Module to provide for a collection of table elements used when parsing a table.
+"""
+
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -6,11 +10,18 @@ from pymarkdown.general.parser_helper import ParserHelper
 
 @dataclass
 class TableColumn:
+    """
+    Class to encapsulate a table's column.
+    """
+
     text: str
     leading_whitespace: str
     trailing_whitespace: str
 
     def __init__(self, text: str, is_last: bool = False):
+        """
+        Initialize an instance of the TableColumn class.
+        """
         new_start_index, leading_whitespace = ParserHelper.collect_while_spaces(text, 0)
         assert new_start_index is not None
         assert leading_whitespace is not None
@@ -24,6 +35,10 @@ class TableColumn:
 
 @dataclass
 class TableRow:
+    """
+    Class to encapsulate a table's row.
+    """
+
     extracted_whitespace: str
     trailing_whitespace: str
     columns: List[TableColumn]

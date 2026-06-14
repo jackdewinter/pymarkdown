@@ -21,6 +21,9 @@ class RuleMd006(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd006 class.
+        """
         super().__init__()
         self.__token_stack: List[MarkdownToken] = []
 

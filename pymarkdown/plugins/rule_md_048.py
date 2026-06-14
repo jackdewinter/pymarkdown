@@ -32,6 +32,9 @@ class RuleMd048(RulePlugin):
     ]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd048 class.
+        """
         super().__init__()
         self.__style_type: str = ""
         self.__actual_style_type: str = ""

@@ -23,6 +23,9 @@ class RuleMd035(RulePlugin):
     __consistent_style = "consistent"
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd035 class.
+        """
         super().__init__()
         self.__rule_style: str = ""
         self.__actual_style: str = ""

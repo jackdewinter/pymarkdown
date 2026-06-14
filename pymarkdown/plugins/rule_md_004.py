@@ -39,6 +39,9 @@ class RuleMd004(RulePlugin):
     ]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd004 class.
+        """
         super().__init__()
         self.__style_type = ""
         self.__actual_style_type: Dict[int, str] = {}

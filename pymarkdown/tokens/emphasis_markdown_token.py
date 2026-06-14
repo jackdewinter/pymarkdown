@@ -28,6 +28,9 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
     ) -> None:
+        """
+        Initialize an instance of the EmphasisMarkdownToken class.
+        """
         self.__emphasis_length, self.__emphasis_character = (
             emphasis_length,
             emphasis_character,

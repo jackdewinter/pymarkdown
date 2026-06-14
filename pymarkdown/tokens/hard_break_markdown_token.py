@@ -27,6 +27,9 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
     """
 
     def __init__(self, line_end: str, line_number: int, column_number: int) -> None:
+        """
+        Initialize an instance of the HardBreakMarkdownToken class.
+        """
         self.__line_end = line_end
         InlineMarkdownToken.__init__(
             self,

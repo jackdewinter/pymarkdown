@@ -36,6 +36,9 @@ class TableMarkdownToken(LeafMarkdownToken):
         self,
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the TableMarkdownToken class.
+        """
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_main,
@@ -174,6 +177,9 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         separator_table_row: TableRow,
         position_marker: PositionMarker,
     ) -> None:
+        """
+        Initialize an instance of the TableMarkdownHeaderToken class.
+        """
         self.__header_row_leading_whitespace: Optional[str] = None
         self.__header_row_trailing_whitespace: Optional[str] = None
         self.__did_header_row_start_with_separator = False
@@ -419,6 +425,9 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
         line_number: int,
         column_number: int,
     ) -> None:
+        """
+        Initialize an instance of the TableMarkdownHeaderItemToken class.
+        """
         self.__leading_whitespace: str = leading_whitespace
         self.__column_alignment = column_alignment
         LeafMarkdownToken.__init__(
@@ -575,6 +584,9 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
     """
 
     def __init__(self, line_number: int, column_number: int) -> None:
+        """
+        Initialize an instance of the TableMarkdownBodyToken class.
+        """
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_table_body,
@@ -707,6 +719,9 @@ class TableMarkdownRowToken(LeafMarkdownToken):
         line_number: int,
         column_number: int,
     ) -> None:
+        """
+        Initialize an instance of the TableMarkdownRowToken class.
+        """
         self.__leading_whitespace = leading_whitespace
         self.__trailing_whitespace = trailing_whitespace
         self.__did_start_with_separator = did_start_with_separator
@@ -923,6 +938,9 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         line_number: int,
         column_number: int,
     ) -> None:
+        """
+        Initialize an instance of the TableMarkdownRowItemToken class.
+        """
         self.__leading_whitespace: str = leading_whitespace
         self.__column_alignment = column_alignment
         LeafMarkdownToken.__init__(

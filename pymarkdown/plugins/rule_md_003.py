@@ -40,6 +40,9 @@ class RuleMd003(RulePlugin):
     ]
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd003 class.
+        """
         super().__init__()
         self.__style_type: str = ""
         self.__actual_style_type: str = ""

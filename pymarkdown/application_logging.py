@@ -43,6 +43,9 @@ class ApplicationLogging:
         show_stack_trace: bool = False,
         default_log_level: str = log_level_warning,
     ):
+        """
+        Initialize a new instance of the ApplicationLogging class.
+        """
         self.__show_stack_trace = show_stack_trace
         self.__default_log_level = default_log_level
         self.__properties = application_properties

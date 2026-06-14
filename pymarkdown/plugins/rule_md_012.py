@@ -34,6 +34,9 @@ class RuleMd012(RulePlugin):
     """
 
     def __init__(self) -> None:
+        """
+        Initialize an instance of the RuleMd012 class.
+        """
         super().__init__()
         self.__blank_lines_maximum = 0
         self.__blank_line_count = 0
