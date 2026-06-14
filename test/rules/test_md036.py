@@ -374,6 +374,31 @@ def test_md036_bad_valid_emphasis_headings_in_list(
 
 
 @pytest.mark.rules
+def test_md036_good_proper_emphasis_as_list_item(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule does not trigger with a list item that
+    consists only of emphasized text.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("proper_emphasis_as_list_item.md")
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults()
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
 def test_md036_bad_valid_emphasis_headings_in_block_quote(
     scanner_default: MarkdownScanner,
 ) -> None:
