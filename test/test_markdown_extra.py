@@ -17685,6 +17685,47 @@ another list</li>
 
 
 @pytest.mark.gfm
+def test_extra_060x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
+```html
+<pre>
+<code>
+something
+</code>
+</pre>
+<code>
+```
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[fcode-block(2,1):`:3:html:::::]",
+        "[text(3,1):\a<\a&lt;\apre\a>\a&gt;\a\n\a<\a&lt;\acode\a>\a&gt;\a\nsomething\n\a<\a&lt;\a/code\a>\a&gt;\a\n\a<\a&lt;\a/pre\a>\a&gt;\a\n\a<\a&lt;\acode\a>\a&gt;\a:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<pre><code class="language-html">&lt;pre&gt;
+&lt;code&gt;
+something
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;code&gt;
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
 def test_extra_999() -> None:
     """
     Temporary test to keep coverage up while consistency checks disabled.

@@ -11,7 +11,13 @@ from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import (
+    CodeBlockItem,
+    HtmlBlockItem,
+    HtmlItems,
+    NormalTextItem,
+    SetExtTextItem,
+)
 from pymarkdown.tokens.indented_code_block_markdown_token import (
     IndentedCodeBlockMarkdownToken,
 )
@@ -523,7 +529,7 @@ class TextMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_text_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -533,58 +539,109 @@ class TextMarkdownToken(InlineMarkdownToken):
         text_token = cast(TextMarkdownToken, next_token)
         adjusted_text_token = ParserHelper.resolve_all_from_text(text_token.token_text)
 
-        token_parts: List[str] = []
         if transform_state.is_in_code_block:
-            POGGER.debug(
-                "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
+            return TextMarkdownToken.__handle_text_token_code(
+                output_html, output_parts, text_token, adjusted_text_token
             )
-            leading_space = ParserHelper.resolve_all_from_text(
-                text_token.extracted_whitespace
+        if transform_state.is_in_html_block:
+            return TextMarkdownToken.__handle_text_token_html(
+                output_html, output_parts, text_token, adjusted_text_token
             )
+        if transform_state.is_in_setext_block:
+            return TextMarkdownToken.__handle_text_token_setext(
+                output_html, output_parts, adjusted_text_token
+            )
+        return TextMarkdownToken.__handle_text_token_normal(
+            output_html, output_parts, text_token, adjusted_text_token
+        )
 
-            POGGER.debug("leading_space>:$:<", leading_space)
-            POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
-            token_parts.extend(
-                [
-                    leading_space,
-                    adjusted_text_token,
-                ]
-            )
-        elif transform_state.is_in_html_block:
-            POGGER.debug(
-                "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
-            )
-            leading_space = ParserHelper.resolve_all_from_text(
-                text_token.extracted_whitespace
-            )
+    @staticmethod
+    def __handle_text_token_code(
+        output_html: str,
+        output_parts: List[HtmlItems],
+        text_token: "TextMarkdownToken",
+        adjusted_text_token: str,
+    ) -> str:
+        token_parts: List[str] = []
+        POGGER.debug(
+            "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
+        )
+        leading_space = ParserHelper.resolve_all_from_text(
+            text_token.extracted_whitespace
+        )
 
-            POGGER.debug("leading_space>:$:<", leading_space)
-            POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
-            POGGER.debug("newline_character>:$:<", ParserHelper.newline_character)
-            token_parts.extend(
-                [
-                    leading_space,
-                    adjusted_text_token,
-                    ParserHelper.newline_character,
-                ]
-            )
-        elif transform_state.is_in_setext_block:
-            token_parts.append(adjusted_text_token)
-        else:
-            TextMarkdownToken.__handle_text_token_normal(
-                token_parts, text_token, adjusted_text_token
-            )
+        POGGER.debug("leading_space>:$:<", leading_space)
+        POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
+        token_parts.extend(
+            [
+                leading_space,
+                adjusted_text_token,
+            ]
+        )
+        if code_block_text := "".join(token_parts):
+            output_parts.append(CodeBlockItem(code_block_text))
 
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
-        token_parts.insert(0, output_html)
-        return "".join(token_parts)
+        return TextMarkdownToken.__handle_text_token_code_old(output_html, token_parts)
+
+    @staticmethod
+    def __handle_text_token_html(
+        output_html: str,
+        output_parts: List[HtmlItems],
+        text_token: "TextMarkdownToken",
+        adjusted_text_token: str,
+    ) -> str:
+        POGGER.debug(
+            "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
+        )
+        leading_space = ParserHelper.resolve_all_from_text(
+            text_token.extracted_whitespace
+        )
+
+        POGGER.debug("leading_space>:$:<", leading_space)
+        POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
+        POGGER.debug("newline_character>:$:<", ParserHelper.newline_character)
+        token_parts: List[str] = [
+            leading_space,
+            adjusted_text_token,
+            ParserHelper.newline_character,
+        ]
+        output_parts.append(HtmlBlockItem("".join(token_parts)))
+
+        return TextMarkdownToken.__handle_text_token_html_old(output_html, token_parts)
+
+    @staticmethod
+    def __handle_text_token_setext(
+        output_html: str,
+        output_parts: List[HtmlItems],
+        adjusted_text_token: str,
+    ) -> str:
+        output_parts.append(SetExtTextItem(adjusted_text_token))
+
+        return TextMarkdownToken.__handle_text_token_setext_old(
+            output_html, adjusted_text_token
+        )
 
     @staticmethod
     def __handle_text_token_normal(
-        token_parts: List[str],
+        output_html: str,
+        output_parts: List[HtmlItems],
         text_token: "TextMarkdownToken",
         adjusted_text_token: str,
-    ) -> None:
+    ) -> str:
+        normal_text_content = TextMarkdownToken.__compose_text_token_normal(
+            text_token, adjusted_text_token
+        )
+        output_parts.append(NormalTextItem(normal_text_content))
+
+        return TextMarkdownToken.__handle_text_token_normal_old(
+            output_html, normal_text_content
+        )
+
+    @staticmethod
+    def __compose_text_token_normal(
+        text_token: "TextMarkdownToken",
+        adjusted_text_token: str,
+    ) -> str:
         POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
         POGGER.debug("text_token.end_whitespace>:$:<", text_token.end_whitespace)
         if text_token.end_whitespace is not None:
@@ -632,7 +689,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 final_parts.append(arrays_to_combine[loop_index_mod][loop_index_div])
                 POGGER.debug("final_parts>:$:<", final_parts)
             adjusted_text_token = "".join(final_parts)
-        token_parts.append(adjusted_text_token)
+        return adjusted_text_token
 
     @staticmethod
     def __handle_text_token_normal_enhanced(
@@ -690,3 +747,29 @@ class TextMarkdownToken(InlineMarkdownToken):
         processed_lines.append(current_line)
 
         arrays_to_combine.append(processed_lines)
+
+    @staticmethod
+    def __handle_text_token_code_old(output_html: str, token_parts: List[str]) -> str:
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_text_token_html_old(output_html: str, token_parts: List[str]) -> str:
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_text_token_normal_old(
+        output_html: str, normal_text_content: str
+    ) -> str:
+        token_parts: List[str] = [normal_text_content]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_text_token_setext_old(
+        output_html: str, adjusted_text_token: str
+    ) -> str:
+        token_parts: List[str] = [adjusted_text_token]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

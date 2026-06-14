@@ -87,7 +87,7 @@ class EndOfStreamToken(SpecialMarkdownToken):
     @staticmethod
     def __handle_end_of_stream_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:

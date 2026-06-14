@@ -9,7 +9,12 @@ from typing_extensions import override
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
@@ -119,19 +124,37 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
     @staticmethod
     def __handle_new_list_item_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
+        transform_state.add_trailing_parts.clear()
+        transform_state.add_trailing_parts.append(HtmlCloseTagItem("li"))
+        transform_state.add_leading_parts.clear()
+        transform_state.add_leading_parts.append(HtmlOpenTagItem("li"))
+
+        if (
+            output_parts
+            and output_parts[-1].get_raw_html_text()[-1] == ">"
+            and output_parts[-1].get_raw_html_text() != "</a>"
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return NewListItemMarkdownToken.__handle_new_list_item_token_old(
+            output_html, transform_state
+        )
+
+    @staticmethod
+    def __handle_new_list_item_token_old(
+        output_html: str, transform_state: TransformState
+    ) -> str:
         transform_state.add_trailing_text, transform_state.add_leading_text = (
             "</li>",
             "<li>",
         )
-        token_parts : List[str] = []
+        token_parts: List[str] = []
         if output_html and output_html[-1] == ">" and not output_html.endswith("</a>"):
             token_parts.append(ParserHelper.newline_character)
-
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
         token_parts.insert(0, output_html)
         return "".join(token_parts)

@@ -164,8 +164,9 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_front_matter_token(
         output_html: str,
-        output_parts : List[HtmlItems],
-        next_token: MarkdownToken, transform_state: TransformState
+        output_parts: List[HtmlItems],
+        next_token: MarkdownToken,
+        transform_state: TransformState,
     ) -> str:
         """
         Handle the front matter token.  Note that it does not contribute anything

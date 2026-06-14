@@ -90,13 +90,15 @@ class TransformToGfmTokenHandlers:
         actual_tokens_size: int,
         next_token: MarkdownToken,
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
     ) -> str:
         """
         Apply the required tranformation for the current token.
         """
-        transform_state.add_trailing_text = None
-        transform_state.add_leading_text = None
+        transform_state.add_trailing_text = ""
+        transform_state.add_leading_text = ""
+        transform_state.add_leading_parts.clear()
+        transform_state.add_trailing_parts.clear()
         transform_state.next_token = None
 
         if (transform_state.actual_token_index + 1) < actual_tokens_size:
@@ -107,7 +109,9 @@ class TransformToGfmTokenHandlers:
             start_handler_fn = self.__start_token_handlers[next_token.token_name]
             POGGER.debug("next_token>:$:<", next_token)
             POGGER.debug("output_html>:$:<", output_html)
-            output_html = start_handler_fn(output_html, output_parts, next_token, transform_state)
+            output_html = start_handler_fn(
+                output_html, output_parts, next_token, transform_state
+            )
             POGGER.debug("output_html>:$:<", output_html)
 
         elif next_token.is_end_token:
@@ -119,7 +123,9 @@ class TransformToGfmTokenHandlers:
             end_handler_fn = self.__end_token_handlers[end_token.type_name]
             POGGER.debug("end_token>:$:<", end_token)
             POGGER.debug("output_html>:$:<", output_html)
-            output_html = end_handler_fn(output_html, output_parts, end_token, transform_state)
+            output_html = end_handler_fn(
+                output_html, output_parts, end_token, transform_state
+            )
             POGGER.debug("output_html>:$:<", output_html)
         else:
             raise AssertionError(

@@ -11,7 +11,13 @@ from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlBlockItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
@@ -190,6 +196,14 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
 
         return leading_text
 
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "bleading_spaces" and isinstance(field_value, str):
+            self.__leading_spaces = field_value
+            self.__compose_extra_data_field()
+            return True
+        return super()._modify_token(field_name, field_value)
+
     @staticmethod
     def register_for_html_transform(
         register_handlers: RegisterHtmlTransformHandlersProtocol,
@@ -206,53 +220,75 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     @staticmethod
     def __handle_start_block_quote_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        token_parts : List[str]= []
-        if output_html and output_html[-1] != ParserHelper.newline_character:
-            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = True
-        token_parts.extend(["<blockquote>", ParserHelper.newline_character])
-        
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
-        token_parts.insert(0, output_html)
-        return "".join(token_parts)
+
+        if (
+            output_parts
+            and not isinstance(output_parts[-1], FormatOnlyNewLineHtmlItem)
+            and not (
+                isinstance(output_parts[-1], HtmlBlockItem)
+                and output_parts[-1]
+                .get_raw_html_text()
+                .endswith(ParserHelper.newline_character)
+            )
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlOpenTagItem("blockquote"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return BlockQuoteMarkdownToken.__handle_start_block_quote_token_old(output_html)
 
     @staticmethod
     def __handle_end_block_quote_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        token_parts : List[str]= []
-        if output_html[-1] != ParserHelper.newline_character:
-            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.reset_list_looseness(
                 transform_state.actual_tokens,
                 transform_state.actual_token_index,
             )
         )
-        token_parts.extend(["</blockquote>", ParserHelper.newline_character])
 
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+        if not isinstance(output_parts[-1], FormatOnlyNewLineHtmlItem) and not (
+            isinstance(output_parts[-1], HtmlBlockItem)
+            and output_parts[-1]
+            .get_raw_html_text()
+            .endswith(ParserHelper.newline_character)
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlCloseTagItem("blockquote"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return BlockQuoteMarkdownToken.__handle_end_block_quote_token_old(output_html)
+
+    @staticmethod
+    def __handle_start_block_quote_token_old(output_html: str) -> str:
+        token_parts: List[str] = []
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(["<blockquote>", ParserHelper.newline_character])
         token_parts.insert(0, output_html)
         return "".join(token_parts)
 
-    @override
-    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
-        if field_name == "bleading_spaces" and isinstance(field_value, str):
-            self.__leading_spaces = field_value
-            self.__compose_extra_data_field()
-            return True
-        return super()._modify_token(field_name, field_value)
+    @staticmethod
+    def __handle_end_block_quote_token_old(output_html: str) -> str:
+        token_parts: List[str] = []
+        if output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(["</blockquote>", ParserHelper.newline_character])
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
 
 # pylint: enable=too-many-instance-attributes

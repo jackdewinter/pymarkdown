@@ -409,6 +409,7 @@
         "pymarkdown/tokens/html_block_markdown_token.py": {
             "protected-access": 1
         },
+        "pymarkdown/tokens/html_items.py": {},
         "pymarkdown/tokens/image_start_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1

@@ -9,7 +9,7 @@ from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import HtmlItems, SingleRawHtmlItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -54,6 +54,14 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
         Returns the text that is the raw html tag.
         """
         return self.__raw_tag
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "raw_tag" and isinstance(field_value, str):
+            self.__raw_tag = field_value
+            self._set_extra_data(field_value)
+            return True
+        return False
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
@@ -113,26 +121,33 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_raw_html_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         raw_html_token = cast(RawHtmlMarkdownToken, next_token)
-        token_parts =             [
-                "<",
-                ParserHelper.resolve_all_from_text(raw_html_token.raw_tag),
-                ">",
-            ]
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+
+        output_parts.append(
+            SingleRawHtmlItem(
+                ParserHelper.resolve_all_from_text(raw_html_token.raw_tag)
+            )
+        )
+
+        return RawHtmlMarkdownToken.__handle_raw_html_token_old(
+            output_html, raw_html_token
+        )
+
+    @staticmethod
+    def __handle_raw_html_token_old(
+        output_html: str, raw_html_token: "RawHtmlMarkdownToken"
+    ) -> str:
+        token_parts = [
+            "<",
+            ParserHelper.resolve_all_from_text(raw_html_token.raw_tag),
+            ">",
+        ]
+
         token_parts.insert(0, output_html)
         return "".join(token_parts)
-
-    @override
-    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
-        if field_name == "raw_tag" and isinstance(field_value, str):
-            self.__raw_tag = field_value
-            self._set_extra_data(field_value)
-            return True
-        return False

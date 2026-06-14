@@ -2,7 +2,7 @@
 Module that contains the state of transformation of TransformToGfm.
 """
 
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -27,8 +27,10 @@ class TransformState:
             self.__actual_tokens,
             self.__actual_token_index,
         ) = (False, False, False, False, True, actual_tokens, 0)
-        self.__add_trailing_text: Optional[str] = None
-        self.__add_leading_text: Optional[str] = None
+        self.__add_trailing_text: str = ""
+        self.__add_leading_text: str = ""
+        self.__add_leading_parts: List[HtmlItems] = []
+        self.__add_trailing_parts: List[HtmlItems] = []
         self.__next_token: Optional[MarkdownToken] = None
         self.__transform_stack: List[str] = []
         self.__transform_stack_two: List[List[HtmlItems]] = []
@@ -110,38 +112,55 @@ class TransformState:
         Stack used to keep track of scope within the generator.
         """
         return self.__transform_stack
-    
+
     @property
     def transform_stack_two(self) -> List[List[HtmlItems]]:
+        """
+        Stack used to keep track of HtmlItems scope within the generator.
+        """
         return self.__transform_stack_two
 
     @property
-    def add_trailing_text(self) -> Optional[str]:
+    def add_trailing_text(self) -> str:
         """
         Keep track of trailing text.
         """
         return self.__add_trailing_text
 
     @add_trailing_text.setter
-    def add_trailing_text(self, value: Optional[str]) -> None:
+    def add_trailing_text(self, value: str) -> None:
         """
         Set trailing text to keep track of.
         """
         self.__add_trailing_text = value
 
     @property
-    def add_leading_text(self) -> Optional[str]:
+    def add_leading_text(self) -> str:
         """
         Keep track of leading text.
         """
         return self.__add_leading_text
 
     @add_leading_text.setter
-    def add_leading_text(self, value: Optional[str]) -> None:
+    def add_leading_text(self, value: str) -> None:
         """
         Set leading text to keep track of.
         """
         self.__add_leading_text = value
+
+    @property
+    def add_leading_parts(self) -> List[HtmlItems]:
+        """
+        Keep track of leading text.
+        """
+        return self.__add_leading_parts
+
+    @property
+    def add_trailing_parts(self) -> List[HtmlItems]:
+        """
+        Keep track of leading text.
+        """
+        return self.__add_trailing_parts
 
     @property
     def next_token(self) -> Optional[MarkdownToken]:

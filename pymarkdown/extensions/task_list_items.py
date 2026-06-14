@@ -2,7 +2,7 @@
 Module to provide for a list item that can be check off.
 """
 
-from typing import List, Optional, cast
+from typing import Dict, List, Optional, cast
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
@@ -10,7 +10,7 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import HtmlItems, HtmlOpenTagItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -130,14 +130,14 @@ class TaskListToken(InlineMarkdownToken):
         """
         register_handlers(
             TaskListToken,
-            TaskListToken.__handle_pragma_token,
+            TaskListToken.__handle_task_list_token,
             None,
         )
 
     @staticmethod
-    def __handle_pragma_token(
+    def __handle_task_list_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -145,9 +145,22 @@ class TaskListToken(InlineMarkdownToken):
 
         task_list_token = cast(TaskListToken, next_token)
 
+        attributes_map: Dict[str, str] = {}
+        if task_list_token.checked_character != " ":
+            attributes_map["checked"] = ""
+        attributes_map["type"] = "checkbox"
+
+        output_parts.append(HtmlOpenTagItem("input", attributes_map))
+
+        return TaskListToken.__handle_task_list_token_old(output_html, task_list_token)
+
+    @staticmethod
+    def __handle_task_list_token_old(
+        output_html: str, task_list_token: "TaskListToken"
+    ) -> str:
         if task_list_token.checked_character == " ":
             xx = '<input type="checkbox">'
         else:
             xx = '<input checked="" type="checkbox">'
-        output_parts.append(ZuluHtmlItem(xx))
+
         return output_html + xx

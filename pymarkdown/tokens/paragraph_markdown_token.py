@@ -9,7 +9,13 @@ from typing_extensions import override
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlBlockItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -97,6 +103,14 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         self.__final_whitespace = whitespace_to_set
         self.__compose_extra_data_field()
 
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False
+
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
     ) -> None:
@@ -177,42 +191,65 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_paragraph_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
-        token_parts : List[str]= []
-        if output_html and output_html[-1] != ParserHelper.newline_character:
-            token_parts.append(ParserHelper.newline_character)
-        if transform_state.is_in_loose_list:
-            token_parts.append("<p>")
 
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
-        token_parts.insert(0, output_html)
-        return "".join(token_parts)
+        if (
+            output_parts
+            and not isinstance(output_parts[-1], FormatOnlyNewLineHtmlItem)
+            and not (
+                isinstance(output_parts[-1], HtmlBlockItem)
+                and output_parts[-1]
+                .get_raw_html_text()
+                .endswith(ParserHelper.newline_character)
+            )
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        if transform_state.is_in_loose_list:
+            output_parts.append(HtmlOpenTagItem("p"))
+
+        return ParagraphMarkdownToken.__handle_start_paragraph_token_old(
+            output_html, transform_state
+        )
 
     @staticmethod
     def __handle_end_paragraph_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
         if transform_state.is_in_loose_list:
-            output_parts.append(ZuluHtmlItem(f"</p>{ParserHelper.newline_character}"))
+            output_parts.append(HtmlCloseTagItem("p"))
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return ParagraphMarkdownToken.__handle_end_paragraph_token_old(
+            output_html, transform_state
+        )
+
+    @staticmethod
+    def __handle_start_paragraph_token_old(
+        output_html: str, transform_state: TransformState
+    ) -> str:
+        token_parts: List[str] = []
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        if transform_state.is_in_loose_list:
+            token_parts.append("<p>")
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_paragraph_token_old(
+        output_html: str, transform_state: TransformState
+    ) -> str:
         return (
             f"{output_html}</p>{ParserHelper.newline_character}"
             if transform_state.is_in_loose_list
             else output_html
         )
-
-    @override
-    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
-        if field_name == "extracted_whitespace" and isinstance(field_value, str):
-            self.__extracted_whitespace = field_value
-            self.__compose_extra_data_field()
-            return True
-        return False

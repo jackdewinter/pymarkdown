@@ -8,6 +8,7 @@ set -uo pipefail
 SCRIPT_NAME=$(basename -- "${BASH_SOURCE[0]}")
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 TEMP_FILE=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
+TEMP_FILE2=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
 
 SCRIPT_TITLE="Analyzing project cleanliness"
 
@@ -22,6 +23,9 @@ cleanup_function() {
 	# If the temp file was used, get rid of it.
 	if [ -f "${TEMP_FILE}" ]; then
 		rm "${TEMP_FILE}"
+	fi
+	if [ -f "${TEMP_FILE2}" ]; then
+		rm "${TEMP_FILE2}"
 	fi
 
 	# Restore the current directory.
@@ -86,6 +90,7 @@ show_usage() {
 	echo "  -ns,--no-sourcery       Do not run any sourcery checks."
 	echo "  -nu,--no-upgrades       Do not run checks for upgrades."
 	echo "  -nw,--no-workers        Do not use multipel workers when executing tests."
+	echo "  --no-shellcheck       	Do not run any shellcheck checks."
 	echo "  -s,--sourcery-only      Only run sourcery checks and exit."
 	echo "  --perf                  Collect standard performance metrics."
 	echo "  --perf-only             Only collect standard performance metrics."
@@ -107,6 +112,7 @@ parse_command_line() {
 	MYPY_ONLY_MODE=0
 	SOURCERY_ONLY_MODE=0
 	NO_SOURCERY_MODE=0
+	NO_SHELLCHECK_MODE=0
 	NO_UPGRADE_MODE=0
 	FORCE_RESET_MODE=0
 	RESET_PYTHON_VERSION=
@@ -133,6 +139,10 @@ parse_command_line() {
 			;;
 		-ns | --no-sourcery)
 			NO_SOURCERY_MODE=1
+			shift
+			;;
+		--no-shellcheck)
+			NO_SHELLCHECK_MODE=1
 			shift
 			;;
 		-nu | --no-upgrades)
@@ -242,12 +252,19 @@ execute_pre_commit() {
 	PRE_COMMIT_ARGS=()
 	if [[ ${MYPY_ONLY_MODE} -ne 0 ]]; then
 		PRE_COMMIT_ARGS+=("mypy")
+	elif [[ ${NO_SHELLCHECK_MODE} -ne 0 ]]; then
+		if ! pipenv run python utils/remove_precommit_hook_ids.py "${TEMP_FILE}" >"${TEMP_FILE2}" 2>&1; then
+			cat "${TEMP_FILE2}"
+			echo "Pre-commit file is not configured properly. Exitting"
+			exit 1
+		fi
+		PRE_COMMIT_ARGS+=("--config")
+		PRE_COMMIT_ARGS+=("${TEMP_FILE}")
 	fi
 	if [[ ${PUBLISH_MODE} -ne 0 ]]; then
 		PRE_COMMIT_ARGS+=("--all")
 	fi
-	echo ""
-	if ! pipenv run pre-commit run "${PRE_COMMIT_ARGS[@]}"; then
+	if ! pipenv run pre-commit run ${PRE_COMMIT_ARGS[@]}; then
 		complete_process 1 "{Executing pre-commit hooks on Python code failed.}"
 	fi
 	echo ""

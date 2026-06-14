@@ -3,14 +3,19 @@ Module to provide for an encapsulation of the fenced code block element.
 """
 
 import logging
-from typing import List, Optional, Union, cast
+from typing import Dict, List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
-from pymarkdown.tokens.html_items import HtmlItems, ZuluHtmlItem
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
@@ -248,6 +253,18 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             else ""
         )
 
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if (
+            field_name == "fence_character"
+            and isinstance(field_value, str)
+            and field_value in ["~", "`"]
+        ):
+            self.__fence_character = field_value
+            self.__compose_extra_data_field()
+            return True
+        return super()._modify_token(field_name, field_value)
+
     @staticmethod
     def register_for_html_transform(
         register_handlers: RegisterHtmlTransformHandlersProtocol,
@@ -265,12 +282,90 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
     def __handle_start_fenced_code_block_token(
         cls,
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
+        transform_state.is_in_code_block = True
+        transform_state.is_in_fenced_code_block = True
+
         start_fence_token = cast(FencedCodeBlockMarkdownToken, next_token)
-        token_parts : List[str]= []
+
+        attributes_map: Dict[str, str] = {}
+        if start_fence_token.extracted_text:
+            attributes_map["class"] = f"language-{start_fence_token.extracted_text}"
+
+        if (
+            output_parts and output_parts[-1].get_raw_html_text() in ["</ol>", "</ul>"]
+        ) or (
+            (
+                output_parts
+                and output_parts[-1].get_raw_html_text()[-1]
+                != ParserHelper.newline_character
+            )
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlOpenTagItem("pre"))
+        output_parts.append(HtmlOpenTagItem("code", attributes_map))
+
+        return cls.__handle_start_fenced_code_block_token_old(
+            output_html, transform_state, start_fence_token
+        )
+
+    @classmethod
+    def __handle_end_fenced_code_block_token(
+        cls,
+        output_html: str,
+        output_parts: List[HtmlItems],
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        transform_state.is_in_code_block = False
+        transform_state.is_in_fenced_code_block = False
+
+        # POGGER.debug(f"output_html>>:{output_html}:<<")
+        # POGGER.debug(
+        #     f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
+        # )
+
+        last_output_part_text = ""
+        if output_parts:
+            last_output_part_text = output_parts[-1].get_raw_html_text()
+
+        if (
+            not last_output_part_text.startswith("<code ")
+            and last_output_part_text != "<code>"
+            and last_output_part_text[-1] != ParserHelper.newline_character
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+            POGGER.debug("#1")
+        elif (
+            (last_output_part_text[-1] == ParserHelper.newline_character)
+            and transform_state.last_token
+            and transform_state.last_token.is_text
+        ):
+            POGGER.debug("#2:$", transform_state.last_token)
+            text_token = cast(TextMarkdownToken, transform_state.last_token)
+            end_token = cast(EndMarkdownToken, next_token)
+            if not (end_token.was_forced and text_token.token_text.endswith("\n\x03")):
+                output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        output_parts.append(HtmlCloseTagItem("code"))
+        output_parts.append(HtmlCloseTagItem("pre"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return cls.__handle_end_fenced_code_block_token_old(
+            output_html, transform_state, next_token
+        )
+
+    @classmethod
+    def __handle_start_fenced_code_block_token_old(
+        cls,
+        output_html: str,
+        transform_state: TransformState,
+        start_fence_token: "FencedCodeBlockMarkdownToken",
+    ) -> str:
+        token_parts: List[str] = []
         if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
             output_html and output_html[-1] != ParserHelper.newline_character
         ):
@@ -285,18 +380,16 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
                 [' class="language-', start_fence_token.extracted_text, '"']
             )
         token_parts.append(">")
-        
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
+
         token_parts.insert(0, output_html)
         return "".join(token_parts)
 
     @classmethod
-    def __handle_end_fenced_code_block_token(
+    def __handle_end_fenced_code_block_token_old(
         cls,
         output_html: str,
-        output_parts : List[HtmlItems],
-        next_token: MarkdownToken,
         transform_state: TransformState,
+        next_token: MarkdownToken,
     ) -> str:
         fenced_token_index = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[
@@ -319,14 +412,9 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             )
         inner_tag_parts.append(">")
         inner_tag = "".join(inner_tag_parts)
-
         POGGER.debug(f"inner_tag>>:{inner_tag}:<<")
-        POGGER.debug(f"output_html>>:{output_html}:<<")
-        POGGER.debug(
-            f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
-        )
 
-        token_parts : List[str] = []
+        token_parts: List[str] = []
         if (
             not output_html.endswith(inner_tag)
             and output_html[-1] != ParserHelper.newline_character
@@ -343,24 +431,6 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             end_token = cast(EndMarkdownToken, next_token)
             if not (end_token.was_forced and text_token.token_text.endswith("\n\x03")):
                 token_parts.append(ParserHelper.newline_character)
-        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
-            False,
-            False,
-        )
         token_parts.extend(["</code></pre>", ParserHelper.newline_character])
-
-        output_parts.append(ZuluHtmlItem("".join(token_parts)))
         token_parts.insert(0, output_html)
         return "".join(token_parts)
-
-    @override
-    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
-        if (
-            field_name == "fence_character"
-            and isinstance(field_value, str)
-            and field_value in ["~", "`"]
-        ):
-            self.__fence_character = field_value
-            self.__compose_extra_data_field()
-            return True
-        return super()._modify_token(field_name, field_value)

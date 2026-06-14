@@ -576,7 +576,7 @@ class PragmaToken(MarkdownToken):
     @staticmethod
     def __handle_pragma_token(
         output_html: str,
-        output_parts : List[HtmlItems],
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
