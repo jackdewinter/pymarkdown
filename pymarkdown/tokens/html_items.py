@@ -81,9 +81,8 @@ class HtmlOpenCloseTagItem(HtmlItems):
         parts = [f"<{self.__tag_name}"]
         if self.__attributes:
             parts.extend(f' {i}="{j}"' for i, j in self.__attributes.items())
-        if self.__tag_name.lower() in ["br", "img", "hr"]:
-            parts.append(" ")
-        parts.append("/>")
+        assert self.__tag_name.lower() in ["br", "img", "hr"]
+        parts.extend((" ", "/>"))
         return "".join(parts)
 
 

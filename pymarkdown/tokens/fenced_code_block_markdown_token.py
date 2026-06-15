@@ -331,9 +331,8 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         #     f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
         # )
 
-        last_output_part_text = ""
-        if output_parts:
-            last_output_part_text = output_parts[-1].get_raw_html_text()
+        assert output_parts
+        last_output_part_text = output_parts[-1].get_raw_html_text()
 
         if (
             not last_output_part_text.startswith("<code ")
