@@ -44,6 +44,8 @@ class RuleMd036(RulePlugin):
         self.__punctuation: str = ""
         self.__current_state: RuleMd036States = RuleMd036States.LOOK_FOR_PARAGRAPH
         self.__start_token: Optional[MarkdownToken] = None
+        self.__list_depth: int = 0
+        self.__pending_list_item_start_token: Optional[MarkdownToken] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -81,6 +83,8 @@ class RuleMd036(RulePlugin):
         """
         self.__current_state = RuleMd036States.LOOK_FOR_PARAGRAPH
         self.__start_token = None
+        self.__list_depth = 0
+        self.__pending_list_item_start_token = None
 
     def __handle_look_for_parapgraph(self, token: MarkdownToken) -> RuleMd036States:
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
@@ -120,13 +124,37 @@ class RuleMd036(RulePlugin):
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
         if token.is_paragraph_end:
             assert self.__start_token is not None
-            self.report_next_token_error(context, self.__start_token)
+            if self.__list_depth:
+                self.__pending_list_item_start_token = self.__start_token
+            else:
+                self.report_next_token_error(context, self.__start_token)
         return new_state
+
+    def __handle_pending_list_item(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        if self.__pending_list_item_start_token is None:
+            return
+        if token.is_blank_line:
+            return
+        if token.is_list_end or token.is_new_list_item or token.is_end_of_stream:
+            self.__pending_list_item_start_token = None
+            return
+        self.report_next_token_error(context, self.__pending_list_item_start_token)
+        self.__pending_list_item_start_token = None
+
+    def __update_list_depth(self, token: MarkdownToken) -> None:
+        if token.is_list_start:
+            self.__list_depth += 1
+        elif token.is_list_end:
+            self.__list_depth = max(0, self.__list_depth - 1)
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
+        self.__handle_pending_list_item(context, token)
+
         if self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH:
             new_state = self.__handle_look_for_parapgraph(token)
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_START:
@@ -140,3 +168,4 @@ class RuleMd036(RulePlugin):
             new_state = self.__handle_look_for_parapgraph_end(context, token)
 
         self.__current_state = new_state
+        self.__update_list_depth(token)
