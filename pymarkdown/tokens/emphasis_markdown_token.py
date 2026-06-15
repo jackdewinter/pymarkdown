@@ -2,9 +2,10 @@
 Module to provide for an encapsulation of the inline emphasis element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import HtmlCloseTagItem, HtmlItems, HtmlOpenTagItem
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -144,24 +145,31 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_start_emphasis_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         emphasis_token = cast(EmphasisMarkdownToken, next_token)
+
         if emphasis_token.emphasis_character == "~":
-            return f"{output_html}<del>"
-        return "".join(
-            [
-                output_html,
-                "<em>" if emphasis_token.emphasis_length == 1 else "<strong>",
-            ]
+            output_parts.append(HtmlOpenTagItem("del"))
+        else:
+            output_parts.append(
+                HtmlOpenTagItem(
+                    "em" if emphasis_token.emphasis_length == 1 else "strong"
+                )
+            )
+
+        return EmphasisMarkdownToken.__handle_start_emphasis_token_old(
+            output_html, emphasis_token
         )
 
     @staticmethod
     def __handle_end_emphasis_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -170,6 +178,37 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         end_token = cast(EndMarkdownToken, next_token)
         emphasis_token = cast(EmphasisMarkdownToken, end_token.start_markdown_token)
 
+        if emphasis_token.emphasis_character == "~":
+            output_parts.append(HtmlCloseTagItem("del"))
+        else:
+            output_parts.append(
+                HtmlCloseTagItem(
+                    "em" if emphasis_token.emphasis_length == 1 else "strong"
+                )
+            )
+
+        return EmphasisMarkdownToken.__handle_end_emphasis_token_old(
+            output_html, emphasis_token
+        )
+
+    @staticmethod
+    def __handle_start_emphasis_token_old(
+        output_html: str, emphasis_token: "EmphasisMarkdownToken"
+    ) -> str:
+        if emphasis_token.emphasis_character == "~":
+            return f"{output_html}<del>"
+
+        return "".join(
+            [
+                output_html,
+                "<em>" if emphasis_token.emphasis_length == 1 else "<strong>",
+            ]
+        )
+
+    @staticmethod
+    def __handle_end_emphasis_token_old(
+        output_html: str, emphasis_token: "EmphasisMarkdownToken"
+    ) -> str:
         if emphasis_token.emphasis_character == "~":
             return f"{output_html}</del>"
         return "".join(

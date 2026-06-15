@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Tuple, cast
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -165,12 +166,15 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
 
     @staticmethod
     def __handle_front_matter_token(
-        output_html: str, next_token: MarkdownToken, transform_state: TransformState
+        output_html: str,
+        output_parts: List[HtmlItems],
+        next_token: MarkdownToken,
+        transform_state: TransformState,
     ) -> str:
         """
         Handle the front matter token.  Note that it does not contribute anything
         at all to the HTML output.
         """
-        _ = (next_token, transform_state)
+        _ = (next_token, transform_state, output_parts)
 
         return output_html

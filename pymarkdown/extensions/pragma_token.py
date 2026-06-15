@@ -22,6 +22,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
@@ -578,9 +579,10 @@ class PragmaToken(MarkdownToken):
     @staticmethod
     def __handle_pragma_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = (transform_state, next_token)
+        _ = (transform_state, next_token, output_parts)
 
         return output_html

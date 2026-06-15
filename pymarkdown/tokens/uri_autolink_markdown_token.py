@@ -2,9 +2,15 @@
 Module to provide for an encapsulation of the inline uri autolink element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.inline.inline_helper import InlineHelper
+from pymarkdown.tokens.html_items import (
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+    UriAutolinkTextItem,
+)
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -140,6 +146,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
     def __handle_uri_autolink(
         cls,
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -153,7 +160,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             add_text_signature=False,
         )
 
-        tag_text_parts = []
+        tag_text_parts: List[str] = []
         for next_character in in_tag_pretext:
             if (
                 next_character
@@ -167,16 +174,41 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             else:
                 tag_text_parts.append(next_character)
 
-        return "".join(
-            [
-                output_html,
-                '<a href="',
-                "http://" if autolink_token.add_http_prefix else "",
-                "".join(tag_text_parts),
-                '">',
+        attributes_map = {
+            "href": ("http://" if autolink_token.add_http_prefix else "")
+            + ("".join(tag_text_parts))
+        }
+
+        output_parts.append(HtmlOpenTagItem("a", attributes_map))
+        output_parts.append(
+            UriAutolinkTextItem(
                 InlineHelper.append_text(
                     "", autolink_token.autolink_text, add_text_signature=False
-                ),
-                "</a>",
-            ]
+                )
+            )
         )
+        output_parts.append(HtmlCloseTagItem("a"))
+
+        return cls.__handle_uri_autolink_old(
+            output_html, tag_text_parts, autolink_token
+        )
+
+    @classmethod
+    def __handle_uri_autolink_old(
+        cls,
+        output_html: str,
+        tag_text_parts: List[str],
+        autolink_token: "UriAutolinkMarkdownToken",
+    ) -> str:
+        token_parts = [
+            '<a href="',
+            "http://" if autolink_token.add_http_prefix else "",
+            "".join(tag_text_parts),
+            '">',
+            InlineHelper.append_text(
+                "", autolink_token.autolink_text, add_text_signature=False
+            ),
+            "</a>",
+        ]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

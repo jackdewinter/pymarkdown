@@ -11,6 +11,7 @@ from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.links.link_reference_info import LinkReferenceInfo
 from pymarkdown.links.link_reference_titles import LinkReferenceTitles
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -323,10 +324,11 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_link_reference_definition_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = (transform_state, next_token)
+        _ = (transform_state, next_token, output_parts)
 
         return output_html
 

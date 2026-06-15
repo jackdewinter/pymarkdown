@@ -2,9 +2,15 @@
 Module to provide for an encapsulation of the list start element.
 """
 
-from typing import cast
+from typing import Dict, List, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -21,12 +27,14 @@ class ListStartMarkdownTokenHelper:
     @staticmethod
     def handle_start_list_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         """
         Handle the HTML transformation for the list start token.
         """
+        _ = output_parts
         list_token = cast(ListStartMarkdownToken, next_token)
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.calculate_list_looseness(
@@ -35,6 +43,59 @@ class ListStartMarkdownTokenHelper:
                 list_token,
             )
         )
+
+        transform_state.add_leading_parts.clear()
+        if list_token.is_ordered_list_start:
+            attributes_map: Dict[str, str] = {}
+            if int(list_token.list_start_content) != 1:
+                attributes_map["start"] = str(int(list_token.list_start_content))
+            transform_state.add_leading_parts.append(
+                HtmlOpenTagItem("ol", attributes_map)
+            )
+        else:
+            transform_state.add_leading_parts.append(HtmlOpenTagItem("ul"))
+        transform_state.add_leading_parts.append(FormatOnlyNewLineHtmlItem())
+        transform_state.add_leading_parts.append(HtmlOpenTagItem("li"))
+
+        return ListStartMarkdownTokenHelper.__handle_start_list_token_old(
+            output_html, list_token, transform_state
+        )
+
+    @staticmethod
+    def handle_end_list_token(
+        output_html: str,
+        output_parts: List[HtmlItems],
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        """
+        Handle the HTML transformation for the list end token.
+        """
+        _ = output_parts
+        transform_state.is_in_loose_list = (
+            TransformToGfmListLooseness.reset_list_looseness(
+                transform_state.actual_tokens,
+                transform_state.actual_token_index,
+            )
+        )
+
+        transform_state.add_trailing_parts.clear()
+        transform_state.add_trailing_parts.append(HtmlCloseTagItem("li"))
+        transform_state.add_trailing_parts.append(FormatOnlyNewLineHtmlItem())
+        transform_state.add_trailing_parts.append(
+            HtmlCloseTagItem("ul" if next_token.is_unordered_list_end else "ol")
+        )
+
+        return ListStartMarkdownTokenHelper.__handle_end_list_token_old(
+            output_html, next_token, transform_state
+        )
+
+    @staticmethod
+    def __handle_start_list_token_old(
+        output_html: str,
+        list_token: ListStartMarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
         if list_token.is_ordered_list_start:
             token_parts = ["<ol"]
             if int(list_token.list_start_content) != 1:
@@ -47,23 +108,13 @@ class ListStartMarkdownTokenHelper:
             transform_state.add_leading_text = "".join(
                 ["<ul>", ParserHelper.newline_character, "<li>"]
             )
+
         return output_html
 
     @staticmethod
-    def handle_end_list_token(
-        output_html: str,
-        next_token: MarkdownToken,
-        transform_state: TransformState,
+    def __handle_end_list_token_old(
+        output_html: str, next_token: MarkdownToken, transform_state: TransformState
     ) -> str:
-        """
-        Handle the HTML transformation for the list end token.
-        """
-        transform_state.is_in_loose_list = (
-            TransformToGfmListLooseness.reset_list_looseness(
-                transform_state.actual_tokens,
-                transform_state.actual_token_index,
-            )
-        )
         transform_state.add_trailing_text = "".join(
             [
                 "</li>",
