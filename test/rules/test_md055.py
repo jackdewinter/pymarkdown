@@ -149,7 +149,7 @@ ghi | jkl |
     pluginRuleTest(
         "bad_in_block_quote",
         enable_extensions="markdown-tables",
-        disable_rules=__plugin_disable_md041,
+        disable_rules="md041,md058",
         source_file_contents="""> | abc | def |
 > | --- | --- |
 > | ghi | jkl

@@ -700,6 +700,21 @@ Table pipe style.
 
 Table column count.
 
+## Rule - MD058
+
+[Full Documentation](./plugins/rule_md058.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md058`, `blanks-around-tables` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Tables should be surrounded by blank lines.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)

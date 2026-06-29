@@ -1066,6 +1066,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory(
 {rules_source_path}rule_md048.md
 {rules_source_path}rule_md055.md
 {rules_source_path}rule_md056.md
+{rules_source_path}rule_md058.md
 {rules_source_path}rule_pml100.md
 {rules_source_path}rule_pml101.md
 {source_path}writing_rule_plugins.md"""
