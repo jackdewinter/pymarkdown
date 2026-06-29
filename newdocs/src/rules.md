@@ -670,6 +670,21 @@ Each file should end with a single newline character.
 
 Code fence style should be consistent throughout the document.
 
+## Rule - MD055
+
+[Full Documentation](./plugins/rule_md055.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md055`, `table-pipe-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table pipe style.
+
 ## Rule - MD056
 
 [Full Documentation](./plugins/rule_md056.md)
