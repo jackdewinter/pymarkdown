@@ -5867,7 +5867,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -5908,7 +5908,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -5946,7 +5946,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md028,md041,md055,md056,md058",
+            "md028,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -5982,7 +5982,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -6023,7 +6023,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -6101,7 +6101,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_t
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -6143,7 +6143,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md022,md023,md041,md055,md056,md058",
+            "md022,md023,md041,md055,md056",
             "scan",
             markdown_file_path,
         ]
@@ -6184,7 +6184,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
             "--enable-extensions",
             "markdown-tables",
             "-d",
-            "md028,md041,md058",
+            "md028,md041",
             "scan",
             markdown_file_path,
         ]

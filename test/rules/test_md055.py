@@ -147,9 +147,29 @@ ghi | jkl |
 """,
     ),
     pluginRuleTest(
+        "bad_overfull_row_missing_trailing",
+        enable_extensions="markdown-tables",
+        disable_rules="md041,md056,md058",
+        source_file_contents="""| a | b |
+| --- | --- |
+| 1 | 2 | 3 | 4
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:1: MD055: Table pipe style [Expected: leading_and_trailing; Actual: leading_only; Missing trailing pipe] (table-pipe-style)",
+    ),
+    pluginRuleTest(
+        "good_overfull_row_with_trailing",
+        enable_extensions="markdown-tables",
+        disable_rules="md041,md056,md058",
+        source_file_contents="""| a | b |
+| --- | --- |
+| 1 | 2 | 3 | 4 |
+""",
+    ),
+    pluginRuleTest(
         "bad_in_block_quote",
         enable_extensions="markdown-tables",
-        disable_rules="md041,md058",
+        disable_rules=__plugin_disable_md041,
         source_file_contents="""> | abc | def |
 > | --- | --- |
 > | ghi | jkl

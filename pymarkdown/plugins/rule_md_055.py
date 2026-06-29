@@ -31,6 +31,8 @@ class RuleMd055(RulePlugin):
     ]
     # Matches a "|" cell divider that is not backslash-escaped.
     __unescaped_pipe = re.compile(r"(?<!\\)\|")
+    # Matches an unescaped trailing "|" divider (ignoring trailing whitespace).
+    __trailing_pipe = re.compile(r"(?<!\\)\|\s*$")
 
     def __init__(self) -> None:
         super().__init__()
@@ -162,9 +164,18 @@ class RuleMd055(RulePlugin):
             if start_token.is_table_header_item or start_token.is_table_row_item:
                 self.__last_item_whitespace = token.extracted_whitespace
             elif start_token.is_table_header or start_token.is_table_row:
-                trailing = bool(
-                    self.__unescaped_pipe.search(self.__last_item_whitespace)
-                )
+                # An over-full row emits item tokens only up to the header column
+                # count and folds the excess cells (including the real row
+                # terminator) into the end token's whitespace. When that is
+                # present it carries the true trailing pipe; otherwise the last
+                # emitted item's whitespace does.
+                excess = token.extracted_whitespace
+                if excess:
+                    trailing = bool(self.__trailing_pipe.search(excess))
+                else:
+                    trailing = bool(
+                        self.__unescaped_pipe.search(self.__last_item_whitespace)
+                    )
                 self.__check_row(context, self.__row_leading, trailing)
                 if start_token.is_table_header:
                     # The delimiter row is not its own token; its pipe style is

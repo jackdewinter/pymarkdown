@@ -80,3 +80,10 @@ rule has no effect unless that extension is turned on.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD058](https://github.com/DavidAnson/markdownlint/blob/main/doc/md058.md).
+
+### Differences From MarkdownLint Rule
+
+MarkdownLint treats a line containing only an HTML comment as a blank line when
+deciding whether a table is surrounded by blank lines.  This rule uses the
+parsed document structure instead, so a table separated from adjacent content
+only by an HTML-comment line is reported as not surrounded by blank lines.

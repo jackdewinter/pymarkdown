@@ -103,6 +103,24 @@ after
 > after
 """,
     ),
+    pluginRuleTest(
+        "good_in_block_quote_sole_content",
+        enable_extensions="markdown-tables",
+        disable_rules="md041",
+        source_file_contents="""> | abc | def |
+> | --- | --- |
+> | ghi | jkl |
+""",
+    ),
+    pluginRuleTest(
+        "good_in_list_item_sole_content",
+        enable_extensions="markdown-tables",
+        disable_rules="md041",
+        source_file_contents="""- | abc | def |
+  | --- | --- |
+  | ghi | jkl |
+""",
+    ),
 ]
 
 

@@ -45,24 +45,44 @@ class RuleMd058(RulePlugin):
         self.__last_row_token = None
         self.__awaiting_below = False
 
+    @staticmethod
+    def __is_clear_above(previous_token: Optional[MarkdownToken]) -> bool:
+        # The start of the file, a blank line, or the opening of a containing
+        # block quote / list item all satisfy the "blank line above" rule.
+        return (
+            previous_token is None
+            or previous_token.is_blank_line
+            or previous_token.is_block_quote_start
+            or previous_token.is_list_start
+            or previous_token.is_new_list_item
+        )
+
+    @staticmethod
+    def __is_clear_below(token: MarkdownToken) -> bool:
+        # A blank line, the end of the file, or the close of a containing block
+        # quote / list all satisfy the "blank line below" rule.
+        return (
+            token.is_blank_line
+            or token.is_end_of_stream
+            or token.is_block_quote_end
+            or token.is_list_end
+        )
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
-        # A table that just closed needs a blank line (or the end of the file)
-        # immediately after it; this token is whatever follows the table.
+        # A table that just closed needs a blank line (or the end of the file /
+        # containing block) immediately after it; this token is whatever
+        # follows the table.
         if self.__awaiting_below:
-            if not (token.is_blank_line or token.is_end_of_stream):
+            if not self.__is_clear_below(token):
                 assert self.__last_row_token is not None
                 self.report_next_token_error(context, self.__last_row_token)
             self.__awaiting_below = False
 
         if token.is_table:
-            # The table must be preceded by a blank line or the start of the file.
-            if (
-                self.__previous_token is not None
-                and not self.__previous_token.is_blank_line
-            ):
+            if not self.__is_clear_above(self.__previous_token):
                 self.report_next_token_error(context, token)
             self.__last_row_token = token
         elif token.is_table_header or token.is_table_row:

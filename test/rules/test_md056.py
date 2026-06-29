@@ -111,7 +111,7 @@ scanTests = [
     pluginRuleTest(
         "good_in_block_quote",
         enable_extensions="markdown-tables",
-        disable_rules="md041,md058",
+        disable_rules=__plugin_disable_md041,
         source_file_contents="""> | abc | def |
 > | --- | --- |
 > | bar | baz |
@@ -120,7 +120,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote",
         enable_extensions="markdown-tables",
-        disable_rules="md041,md058",
+        disable_rules=__plugin_disable_md041,
         source_file_contents="""> | abc | def |
 > | --- | --- |
 > | bar |
@@ -131,7 +131,7 @@ scanTests = [
     pluginRuleTest(
         "good_in_list",
         enable_extensions="markdown-tables",
-        disable_rules="md041,md058",
+        disable_rules=__plugin_disable_md041,
         source_file_contents="""- | abc | def |
   | --- | --- |
   | bar | baz |
