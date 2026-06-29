@@ -670,6 +670,21 @@ Each file should end with a single newline character.
 
 Code fence style should be consistent throughout the document.
 
+## Rule - MD056
+
+[Full Documentation](./plugins/rule_md056.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md056`, `table-column-count` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table column count.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)

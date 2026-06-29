@@ -1310,6 +1310,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
+  md056   table-column-count              True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1392,6 +1393,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
+  md056   table-column-count              True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
@@ -1476,6 +1478,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md056   table-column-count              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1564,6 +1567,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md056   table-column-count              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
@@ -1654,6 +1658,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md056   table-column-count              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  

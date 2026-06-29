@@ -509,6 +509,7 @@ def test_api_list_recursive_for_directory() -> None:
         "{rules}rule_md046.md",
         "{rules}rule_md047.md",
         "{rules}rule_md048.md",
+        "{rules}rule_md056.md",
         "{rules}rule_pml100.md",
         "{rules}rule_pml101.md",
         "writing_rule_plugins.md",

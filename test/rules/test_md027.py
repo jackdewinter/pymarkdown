@@ -817,6 +817,7 @@ scanTests = [
     pluginRuleTest(
         "good_in_block_quote_with_table_first_line",
         enable_extensions="markdown-tables",
+        disable_rules="md056",
         source_file_contents="""> this is text
 >
 > | abc | def |
@@ -827,6 +828,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_first_line",
         enable_extensions="markdown-tables",
+        disable_rules="md056",
         source_file_contents="""> this is text
 >
 >  | abc | def |
@@ -845,6 +847,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_second_line",
         enable_extensions="markdown-tables",
+        disable_rules="md056",
         source_file_contents="""> this is text
 >
 > | abc | def |
@@ -863,6 +866,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_first_and_second_line",
         enable_extensions="markdown-tables",
+        disable_rules="md056",
         source_file_contents="""> this is text
 >
 >  | abc | def |
@@ -882,6 +886,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_third_line",
         enable_extensions="markdown-tables",
+        disable_rules="md056",
         source_file_contents="""> this is text
 >
 > | abc | def |
