@@ -144,7 +144,7 @@ jobs:
       #       pytest.xml
 
       - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1.7.2
+        uses: MishaKav/pytest-coverage-comment@v1.10.0
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-xml-coverage-path: ./coverage.xml
