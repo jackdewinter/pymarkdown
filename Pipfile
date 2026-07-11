@@ -36,7 +36,7 @@ tomli = "==2.4.1"
 twine = "==6.2.0"
 
 [packages]
-typing-extensions = ">=4.5.0"
+typing-extensions = ">=4.15.0"
 columnar = ">=1.4.0"
 application-properties = ">=0.9.3"
 application-file-scanner = ">=0.6.4"

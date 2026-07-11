@@ -440,7 +440,7 @@ class PluginManager:
         self, scan_file: str, line_number: int, pragma_error: str
     ) -> None:
         """
-        Log the pragma failure in the appropriate format.
+        Log the pragma error in the appropriate format.
         """
         self.__presentation.print_pragma_failure(scan_file, line_number, pragma_error)
         self.number_of_pragma_failures += 1

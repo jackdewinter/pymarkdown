@@ -17,6 +17,26 @@
 
 - None
 
+## Version 0.9.39 - 2026-07-11
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1553](https://github.com/jackdewinter/pymarkdown/issues/1553)
+    - Added new documentation around how APIs are listed in the documentation.
+    - Added a completely redone document showing how to the PyMarkdownApi.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1625](https://github.com/jackdewinter/pymarkdown/issues/1625)
+    - Changed how HTML tokens are generated for testing, to make more streamlined
+
 ## Version 0.9.38 - 2026-06-09
 
 <!-- pyml disable-next-line no-duplicate-heading-->

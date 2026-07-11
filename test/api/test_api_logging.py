@@ -348,9 +348,7 @@ def test_api_logging_inheriting_logging_and_set_log_level() -> None:
     """
 
     # Arrange
-    expected_output = (
-        "Set log level functions are not supported in log-inheritance mode."
-    )
+    expected_output = "Set log level methods are not supported in log-inheritance mode."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -367,7 +365,7 @@ def test_api_logging_inheriting_logging_and_set_log_file() -> None:
     """
 
     # Arrange
-    expected_output = "Set log file function is not supported in log-inheritance mode."
+    expected_output = "Set log file method is not supported in log-inheritance mode."
 
     # Act & Assert
     assert_that_exception_is_raised(
