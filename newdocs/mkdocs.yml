@@ -48,8 +48,8 @@ nav:
     - extensions.md
     - rules.md
   - "Devloper Guide":
-    - 'api.md'
     - "API Listing": api/pymarkdownapi.md
+    - 'api.md'
     - 'development.md'
   - "Usual Project Stuff":
     - 'usual.md'
@@ -62,9 +62,17 @@ not_in_nav: |
 markdown_extensions:
   - toc:
       permalink: "#"
+  - admonition
+  - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  # - pymdownx.inlinehilite
+  # - pymdownx.snippets
 theme:
   name: material
   features:

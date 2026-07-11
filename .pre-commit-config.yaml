@@ -146,7 +146,7 @@ repos:
     -   id: pymarkdown-new
         name: "Scan:   PyMarkdown (New Documentation)(local)"
         language: system
-        entry: pipenv run python "main.py" --config newdocs/clean.json scan -r --exclude "draft-*.md" ./newdocs/src
+        entry: pipenv run python "main.py" --config newdocs/clean.json scan -r --exclude "draft-*.md" --exclude "development*.md" ./newdocs/src
         pass_filenames: false
 # -   repo: https://github.com/jackdewinter/pymarkdown
 #     rev: v0.9.37

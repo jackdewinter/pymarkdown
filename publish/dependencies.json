@@ -41,5 +41,5 @@
     "sourcery": "1.43.0",
     "tomli": "2.4.1",
     "twine": "6.2.0",
-    "typing-extensions": "4.5.0"
+    "typing-extensions": "4.15.0"
 }
