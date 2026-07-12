@@ -1,4 +1,4 @@
 mkdocstrings==1.0.4
-mkdocstrings-python==1.16.10
+mkdocstrings-python==2.0.5
 mkdocs-material==9.7.6
 pymdown-extensions==10.21.3
