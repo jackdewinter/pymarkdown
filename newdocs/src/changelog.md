@@ -10,7 +10,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1639](https://github.com/jackdewinter/pymarkdown/issues/1639)
+    - `extensions` and `plugins` commands were not case insensitive
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
