@@ -30,7 +30,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Calculate test matrix
       id: set-matrix
@@ -55,7 +55,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Calculate test matrix
       id: set-matrix
@@ -84,10 +84,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -120,7 +120,7 @@ jobs:
             pytest.xml
 
       - name: Report Coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -144,7 +144,7 @@ jobs:
       #       pytest.xml
 
       - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1.7.2
+        uses: MishaKav/pytest-coverage-comment@v1.10.0
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-xml-coverage-path: ./coverage.xml
@@ -182,10 +182,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -220,10 +220,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -257,10 +257,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ env.default-python-version }}
 
