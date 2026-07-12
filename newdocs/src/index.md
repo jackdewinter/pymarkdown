@@ -19,6 +19,11 @@ If you have decided to use PyMarkdown for your Markdown linting needs, read our
 to get started quickly and learn the core concepts of installing, configuring, and
 using PyMarkdown on your own Markdown files.
 
+If you are looking to integrate PyMarkdown into your own Python applications or
+scripts, explore our [API documentation](./api.md), which walks through the PyMarkdownApi
+with practical examples and detailed usage instructions. For a complete reference
+of all API methods and parameters, see the [API Listing](./api/pymarkdownapi.md).
+
 If you have already viewed our Quick Start guides, or simply want more information
 on PyMarkdown and its capabilities, continue reading. By using the contents located
 on the left and right sidebars, you can quickly navigate to information about advanced
