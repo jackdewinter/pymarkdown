@@ -244,7 +244,7 @@
         },
         {
             "name": "test.extensions.test_extension_manager",
-            "totalTests": 17,
+            "totalTests": 19,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1516,7 +1516,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 70,
+            "totalTests": 72,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

@@ -1700,6 +1700,34 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
     execute_results.assert_results(expected_results=expected_results)
 
 
+def test_markdown_with_plugins_list_and_filter_by_wrong_case_id(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure that `plugins list` lists all plugins with the specified id filter.
+    """
+
+    # Arrange
+    supplied_arguments = ["plugins", "list", "Md019"]
+
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
+  ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
+                                (DEFAULT)  (CURRENT)
+
+  md019  no-multiple-space-atx  True       True       0.5.1    Yes
+
+""",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence(
     scanner_default: MarkdownScanner,
 ) -> None:
@@ -1830,6 +1858,44 @@ def test_markdown_with_plugins_info_and_not_found_filter(
     expected_results = ExpectedResults(
         return_code=1,
         expected_error="Unable to find a plugin with an id or name of 'md00001'.",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_results=expected_results,
+    )
+
+
+def test_markdown_with_plugins_info_and_wrong_case_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure that `plugins list` errors when a valid id or name is not found.
+    """
+
+    # Arrange
+    supplied_arguments = ["plugins", "info", "Md001"]
+
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
+  ITEM               DESCRIPTION
+
+  Id                 md001
+  Name(s)            heading-increment,header-increment
+  Short Description  Heading levels should only increment by one level at a ti
+                     me.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md001.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  front_matter_title  string  "title"
+""",
     )
 
     # Act
