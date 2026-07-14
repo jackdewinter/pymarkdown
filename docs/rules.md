@@ -91,8 +91,5 @@ These are the rules that are currently implemented.
 - [Rule Md046 - code-block-style](/docs/rules/rule_md046.md)
 - [Rule Md047 - single-trailing-newline](/docs/rules/rule_md047.md)
 - [Rule Md048 - code-fence-style](/docs/rules/rule_md048.md)
-- [Rule Md055 - table-pipe-style](/docs/rules/rule_md055.md)
-- [Rule Md056 - table-column-count](/docs/rules/rule_md056.md)
-- [Rule Md058 - blanks-around-tables](/docs/rules/rule_md058.md)
 - [Rule Pml100 - disallowed-html](/docs/rules/rule_pml100.md)
 - [Rule Pml101 - list-anchored-indent](/docs/rules/rule_pml101.md)
