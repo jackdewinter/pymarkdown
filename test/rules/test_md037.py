@@ -21,6 +21,7 @@ scanTests = [
     pluginRuleTest(
         "good_valid_emphasis",
         source_file_name=f"{source_path}good_valid_emphasis.md",
+        disable_rules="md049,md050",
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis",

@@ -670,6 +670,36 @@ Each file should end with a single newline character.
 
 Code fence style should be consistent throughout the document.
 
+## Rule - MD049
+
+[Full Documentation](./plugins/rule_md049.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md049`, `emphasis-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Emphasis style should be consistent throughout the document.
+
+## Rule - MD050
+
+[Full Documentation](./plugins/rule_md050,md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md050`, `strong-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Strong emphasis style should be consistent throughout the document.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)

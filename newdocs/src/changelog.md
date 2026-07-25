@@ -5,7 +5,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1650](https://github.com/jackdewinter/pymarkdown/issues/1650)
+    - Rules for Md049 (consistent emphasis) and Md050 (consistent strong emphasis)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

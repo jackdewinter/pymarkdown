@@ -397,6 +397,8 @@
         "pymarkdown/plugins/rule_md_046.py": {},
         "pymarkdown/plugins/rule_md_047.py": {},
         "pymarkdown/plugins/rule_md_048.py": {},
+        "pymarkdown/plugins/rule_md_049.py": {},
+        "pymarkdown/plugins/rule_md_050.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
         "pymarkdown/plugins/rule_pml_102.py": {
