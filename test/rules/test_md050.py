@@ -99,7 +99,7 @@ This is the __another__ strong emphasis.
 """,
         set_args=[
             "plugins.md050.style=consistent",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD050: Strong style [Expected: asterisk; Actual: underscore] (strong-style)
@@ -134,7 +134,7 @@ This is the **another** strong emphasis.
 """,
         set_args=[
             "plugins.md050.style=consistent",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD050: Strong style [Expected: underscore; Actual: asterisk] (strong-style)
@@ -163,7 +163,7 @@ This is __one__ strong emphasis.
 """,
         set_args=[
             "plugins.md050.style=asterisk",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD050: Strong style [Expected: asterisk; Actual: underscore] (strong-style)
@@ -192,7 +192,7 @@ This is **one** strong emphasis.
 """,
         set_args=[
             "plugins.md050.style=underscore",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD050: Strong style [Expected: underscore; Actual: asterisk] (strong-style)

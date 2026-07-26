@@ -99,8 +99,9 @@ This is the _another_ emphasis.
 """,
         set_args=[
             "plugins.md049.style=consistent",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
+        use_strict_config=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
 """,
@@ -134,7 +135,7 @@ This is the *another* emphasis.
 """,
         set_args=[
             "plugins.md049.style=consistent",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
@@ -163,7 +164,7 @@ This is _one_ emphasis.
 """,
         set_args=[
             "plugins.md049.style=asterisk",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
@@ -192,7 +193,7 @@ This is *one* emphasis.
 """,
         set_args=[
             "plugins.md049.style=underscore",
-            "extensions.markdown-strikethrough.enabled=#!True",
+            "extensions.markdown-strikethrough.enabled=$!True",
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
