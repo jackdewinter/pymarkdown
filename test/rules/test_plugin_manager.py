@@ -2860,6 +2860,7 @@ def test_markdown_plugins_failures_no_plugins_active_fix(
             expected_return_code,
         )
 
+
 def test_markdown_with_plugins_list_and_filter_by_wrong_case_plugin_id(
     scanner_default: MarkdownScanner,
 ) -> None:
