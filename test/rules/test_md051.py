@@ -126,7 +126,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_atx_autolink",
-        source_file_contents="""# Heading <fred@outlook.com> Name
+        source_file_contents="""# Heading <http://foo.bar.baz> Target
 
 [Link](#fragment)
 """,

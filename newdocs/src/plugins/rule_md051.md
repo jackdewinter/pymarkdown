@@ -44,6 +44,20 @@ the document containing a target with that name.
 [Local Link](#heading-name)
 ````
 
+## Heading \\& Name
+
+## Heading &copy; Name
+
+## Heading *foo* Name
+
+## Heading [Google](www.google.com) Name
+
+## A <http://foo.bar.baz> target
+
+## A <http://foo.bar.baz> target
+
+## A <del>d</del> target
+
 ### Link Targets
 
 While these is no official [Github Flavored Markdown](https://github.github.com/gfm/) specification
@@ -56,7 +70,7 @@ for what consistutes a valid link target, the [GitHub heading algorithm](https:/
 ### Special Targets
 
 [Link](#top)
-[Link](#L20)
+[Link](#L89)
 [Link](#L19C5-L21C11)
 
 ### XXX
