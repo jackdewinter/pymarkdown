@@ -1710,34 +1710,6 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
     execute_results.assert_results(expected_results=expected_results)
 
 
-def test_markdown_with_plugins_list_and_filter_by_wrong_case_id(
-    scanner_default: MarkdownScanner,
-) -> None:
-    """
-    Test to make sure that `plugins list` lists all plugins with the specified id filter.
-    """
-
-    # Arrange
-    supplied_arguments = ["plugins", "list", "Md019"]
-
-    expected_results = ExpectedResults(
-        return_code=0,
-        expected_output="""
-  ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
-                                (DEFAULT)  (CURRENT)
-
-  md019  no-multiple-space-atx  True       True       0.5.1    Yes
-
-""",
-    )
-
-    # Act
-    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(expected_results=expected_results)
-
-
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence(
     scanner_default: MarkdownScanner,
 ) -> None:
@@ -2887,3 +2859,30 @@ def test_markdown_plugins_failures_no_plugins_active_fix(
             expected_error,
             expected_return_code,
         )
+
+def test_markdown_with_plugins_list_and_filter_by_wrong_case_id(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure that `plugins list` lists all plugins with the specified id filter.
+    """
+
+    # Arrange
+    supplied_arguments = ["plugins", "list", "Md019"]
+
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
+  ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
+                                (DEFAULT)  (CURRENT)
+
+  md019  no-multiple-space-atx  True       True       0.5.1    Yes
+
+""",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
