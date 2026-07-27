@@ -8,6 +8,7 @@ from typing import Dict, List, Set, cast
 import re
 import urllib
 
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import (
     PluginDetailsV2,
     PluginDetailsV3,
@@ -131,6 +132,8 @@ class RuleMd051(RulePlugin):
         """
 
         converted_heading = self.__ascii_downcase(self.__current_heading) if self.__ignore_case else self.__current_heading
+        if "\b" in converted_heading:
+            converted_heading = ParserHelper.remove_all_from_text(converted_heading)
         converted_heading = RuleMd051.__PUNCTUATION_REGEXP.sub('', converted_heading)
         converted_heading = converted_heading.replace(' ', '-')
 

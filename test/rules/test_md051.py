@@ -65,17 +65,21 @@ scanTests = [
         set_args=["plugins.md051.ignore_case=$!False"],
     ),
     pluginRuleTest(
-        "bad_atx_backslash_escape",
-        source_file_contents="""# Heading \\& Name
+        "good_atx_unicode_letters",
+        source_file_contents="""# Heading ȅǣݵ Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-%C8%85%C7%A3%DD%B5-name)
 """,
     ),
     pluginRuleTest(
-        "bad_atx_entity_reference",
+        "good_atx_backslash_escape",
+        source_file_contents="""# Heading \\& Name
+
+[Link](#heading--name)
+""",
+    ),
+    pluginRuleTest(
+        "good_atx_entity_reference",
         source_file_contents="""# Heading &copy; Name
 
 [Link](#fragment)
@@ -85,13 +89,10 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "bad_atx_code_span",
+        "good_atx_code_span",
         source_file_contents="""# Heading `foo` Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
