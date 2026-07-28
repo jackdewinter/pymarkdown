@@ -48,6 +48,8 @@ the document containing a target with that name.
 
 https://github.com/jackdewinter/pymarkdown/blob/352dd88480c58a25252ccdfb045a6bcaa81ca035/newdocs/src/plugins/rule_md051.md#heading--name
 
+## Heading &#x0041; Name
+
 ## Heading &copy; Name
 
 https://github.com/jackdewinter/pymarkdown/blob/352dd88480c58a25252ccdfb045a6bcaa81ca035/newdocs/src/plugins/rule_md051.md#heading--name-1
@@ -63,6 +65,8 @@ https://github.com/jackdewinter/pymarkdown/blob/352dd88480c58a25252ccdfb045a6bca
 ## Heading [Google](www.google.com) Name
 
 https://github.com/jackdewinter/pymarkdown/blob/352dd88480c58a25252ccdfb045a6bcaa81ca035/newdocs/src/plugins/rule_md051.md#heading-google-name
+
+## Heading <foo@bar.example.com> Name
 
 ## A <http://foo.bar.baz> target
 

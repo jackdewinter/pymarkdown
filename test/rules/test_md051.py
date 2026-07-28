@@ -57,7 +57,7 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "bad_atx_simple_with_capitals_and_config_found",
+        "good_atx_simple_with_capitals_and_config_found",
         source_file_contents="""# Heading Name
 
 [Link](#Heading-Name)
@@ -82,10 +82,7 @@ scanTests = [
         "good_atx_entity_reference",
         source_file_contents="""# Heading &copy; Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading--name)
 """,
     ),
     pluginRuleTest(
@@ -96,54 +93,47 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "bad_atx_emphasis",
+        "good_atx_emphasis",
         source_file_contents="""# Heading *foo* Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
-        "bad_atx_strikethrough_emphasis",
+        "good_atx_strikethrough_emphasis",
         source_file_contents="""# Heading ~foo~ Name
 
-[Link](#fragment)
+[Link](#heading-foo-name)
 """,
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
-""",
+        enable_extensions="markdown-strikethrough",
     ),
     pluginRuleTest(
-        "bad_atx_link",
+        "good_atx_link",
         source_file_contents="""# Heading [Google](www.google.com) Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-google-name)
 """,
     ),
     pluginRuleTest(
-        "bad_atx_autolink",
+        "good_atx_uri_autolink",
         source_file_contents="""# Heading <http://foo.bar.baz> Target
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-httpfoobarbaz-target)
 """,
     ),
     pluginRuleTest(
-        "bad_atx_raw_html",
+        "good_atx_email_autolink",
+        source_file_contents="""# Heading <foo@bar.example.com> Target
+
+[Link](#heading-foobarexamplecom-target)
+""",
+    ),
+    pluginRuleTest(
+        "good_atx_raw_html",
         disable_rules="md033",
         source_file_contents="""# Heading <del>name</del> Name
 
-[Link](#fragment)
-""",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+[Link](#heading-name-name)
 """,
     ),
     pluginRuleTest(
@@ -187,6 +177,127 @@ scanTests = [
 [Link](#bookmark)
 """,
         disable_rules="md033",
+    ),
+    pluginRuleTest(
+        "good_setext_simple_found",
+        source_file_contents="""Heading Name
+====
+
+[Link](#heading-name)
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_simple_not_found",
+        source_file_contents="""Heading Name
+====
+
+[Link](#fragment)
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD051: Link fragments should be valid. (link-fragments)
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_simple_with_capitals_not_found",
+        source_file_contents="""Heading Name
+====
+
+[Link](#Heading-Name)
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD051: Link fragments should be valid. (link-fragments)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_simple_with_capitals_and_config_found",
+        source_file_contents="""Heading Name
+====
+
+[Link](#Heading-Name)
+""",
+        set_args=["plugins.md051.ignore_case=$!False"],
+    ),
+    pluginRuleTest(
+        "good_setext_unicode_letters",
+        source_file_contents="""Heading ȅǣݵ Name
+====
+
+[Link](#heading-%C8%85%C7%A3%DD%B5-name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_backslash_escape",
+        source_file_contents="""Heading \\& Name
+====
+
+[Link](#heading--name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_entity_reference",
+        source_file_contents="""Heading &copy; Name
+====
+
+[Link](#heading--name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_code_span",
+        source_file_contents="""Heading `foo` Name
+====
+
+[Link](#heading-foo-name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_emphasis",
+        source_file_contents="""Heading *foo* Name
+====
+
+[Link](#heading-foo-name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_strikethrough_emphasis",
+        source_file_contents="""Heading ~foo~ Name
+====
+
+[Link](#heading-foo-name)
+""",
+        enable_extensions="markdown-strikethrough",
+    ),
+    pluginRuleTest(
+        "good_setext_link",
+        source_file_contents="""Heading [Google](www.google.com) Name
+====
+
+[Link](#heading-google-name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_uri_autolink",
+        source_file_contents="""Heading <http://foo.bar.baz> Target
+====
+
+[Link](#heading-httpfoobarbaz-target)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_email_autolink",
+        source_file_contents="""Heading <foo@bar.example.com> Target
+====
+
+[Link](#heading-foobarexamplecom-target)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_raw_html",
+        disable_rules="md033",
+        source_file_contents="""Heading <del>name</del> Name
+====
+
+[Link](#heading-name-name)
+""",
     ),
     pluginRuleTest(
         "good_link_fragment_top",

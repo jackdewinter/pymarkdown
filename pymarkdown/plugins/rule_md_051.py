@@ -19,6 +19,9 @@ from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.inline_code_span_markdown_token import InlineCodeSpanMarkdownToken
+from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 class RuleMd051States(Enum):
@@ -188,9 +191,31 @@ class RuleMd051(RulePlugin):
             elif token.is_text:
                 text_token = cast(TextMarkdownToken, token)
                 self.__current_heading += text_token.token_text
+            elif token.is_inline_code_span:
+                code_span_token = cast(InlineCodeSpanMarkdownToken, token)
+                self.__current_heading += code_span_token.span_text
+            elif token.is_inline_uri_autolink:
+                autolink_token = cast(UriAutolinkMarkdownToken, token)
+                self.__current_heading += autolink_token.autolink_text
+            elif token.is_inline_autolink:
+                autolink_token = cast(EmailAutolinkMarkdownToken, token)
+                self.__current_heading += autolink_token.autolink_text
         elif self.__heading_state == RuleMd051States.LOOK_FOR_SETEXT_END:
             if token.is_setext_heading_end:
+                self.__add_current_heading()
                 self.__heading_state = RuleMd051States.LOOK_FOR_LINKS_OR_HEADINGS
+            elif token.is_text:
+                text_token = cast(TextMarkdownToken, token)
+                self.__current_heading += text_token.token_text
+            elif token.is_inline_code_span:
+                code_span_token = cast(InlineCodeSpanMarkdownToken, token)
+                self.__current_heading += code_span_token.span_text
+            elif token.is_inline_uri_autolink:
+                autolink_token = cast(UriAutolinkMarkdownToken, token)
+                self.__current_heading += autolink_token.autolink_text
+            elif token.is_inline_autolink:
+                autolink_token = cast(EmailAutolinkMarkdownToken, token)
+                self.__current_heading += autolink_token.autolink_text
         elif self.__heading_state == RuleMd051States.LOOK_FOR_HTML_BLOCK_END:
             if token.is_html_block_end:
                 self.__handle_html_block()
