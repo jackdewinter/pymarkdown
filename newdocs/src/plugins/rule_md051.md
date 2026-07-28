@@ -44,7 +44,9 @@ the document containing a target with that name.
 [Local Link](#heading-name)
 ````
 
-## Heading \a Name
+## Heading \* Name
+
+## Heading \< Name
 
 ## Heading \& Name
 
