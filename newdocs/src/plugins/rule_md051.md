@@ -44,11 +44,13 @@ the document containing a target with that name.
 [Local Link](#heading-name)
 ````
 
-## Heading \\& Name
+## Heading \& Name
 
 https://github.com/jackdewinter/pymarkdown/blob/352dd88480c58a25252ccdfb045a6bcaa81ca035/newdocs/src/plugins/rule_md051.md#heading--name
 
 ## Heading &#x0041; Name
+
+https://github.com/jackdewinter/pymarkdown/blob/c2a0ad8210e12cf52261e48343d5bbcec003b858/newdocs/src/plugins/rule_md051.md#heading-a-name
 
 ## Heading &copy; Name
 
