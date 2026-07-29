@@ -4,8 +4,9 @@ Module to implement a plugin that ensures that locally aimed link fragments are 
 
 from enum import Enum
 from html.parser import HTMLParser
-from typing import Dict, List, Set, cast
+from typing import Dict, List, Optional, Set, cast
 import re
+from re import Pattern
 import urllib
 
 from pymarkdown.general.parser_helper import ParserHelper
@@ -61,12 +62,21 @@ class RuleMd051(RulePlugin):
     """
 
     __PUNCTUATION_REGEXP = re.compile(r'[^\w\- ]')
+    __html_character_escape_map = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        '"': "&quot;",
+    }
 
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd048 class.
         """
         super().__init__()
+        self.__ignore_case = True
+        self.__ignore_pattern_regex : Optional[str] = None
+        self.__compiled_ignore_pattern_regex : Optional[Pattern[str]]= None
 
     def get_details(self) -> PluginDetailsV2:
         """
@@ -89,6 +99,12 @@ class RuleMd051(RulePlugin):
         Event to allow the plugin to load configuration information.
         """
         self.__ignore_case = self.plugin_configuration.get_boolean_property_with_default(            "ignore_case",            True        )
+        self.__ignore_pattern_regex = self.plugin_configuration.get_string_property_with_default(            "ignore_pattern_regex", "")
+        if self.__ignore_pattern_regex:
+            try:
+                self.__compiled_ignore_pattern_regex = re.compile(self.__ignore_pattern_regex)
+            except re.error:
+                raise ValueError("The value for property 'plugins.md051.ignore_pattern_regex' is not a valid regular expression.")
 
     def query_config(self) -> List[QueryConfigItem]:
         """
@@ -96,6 +112,7 @@ class RuleMd051(RulePlugin):
         """
         return [
             QueryConfigItem("ignore_case", self.__ignore_case),
+            QueryConfigItem("ignore_pattern_regex", self.__ignore_pattern_regex or ""),
         ]
 
     def starting_new_file(self) -> None:
@@ -115,10 +132,16 @@ class RuleMd051(RulePlugin):
         for link_token in self.__link_tokens:
             link_text = link_token.link_uri[1:]
             if link_text != "top" and link_text not in self.__available_headings:
-                self.report_next_token_error(
-                    context, link_token, extra_error_information=None
-                )
-# ?plain=1#L14
+
+                did_match = False
+                if self.__compiled_ignore_pattern_regex is not None:
+                    did_match = self.__compiled_ignore_pattern_regex.match(link_text) is not None
+
+                if not did_match:
+                    self.report_next_token_error(
+                        context, link_token, extra_error_information=None
+                    )
+
     def __encodeURIComponent(self, s: str) -> str:
         """
         Python equivalent of JavaScript's encodeURIComponent().
@@ -129,14 +152,39 @@ class RuleMd051(RulePlugin):
     def __ascii_downcase(self, text:str) -> str:
         return ''.join(c.lower() if c.isascii() else c for c in text)
 
+    def __resolve_special_case(self, converted_heading:str) -> str:
+        """
+        Due to the way PyMarkdown encodes backslash escapes, there is a weird
+        case where replacing a backslash escape of a special html character,
+        such as `\\<` returns `\\\x08\x07` + character + `\x07` + replacement
+        + `\x07`. If resolved normally, it resolves to the replacement string,
+        instead of the punctuation characters that the filter algorithm expects.
+        Therefore, we handle it ourselves.
+        """
+        start_character_sequence = "\\\x08\x07"
+        last_index = -1
+        while start_character_sequence in converted_heading:
+            start_index = converted_heading.index(start_character_sequence)
+            assert last_index != start_index
+            last_index = start_index
+            character_after_start_index = start_index + len(start_character_sequence)
+            next_character = converted_heading[character_after_start_index]
+            assert next_character in RuleMd051.__html_character_escape_map
+            mapped_next_character_sequence = f"\x07{RuleMd051.__html_character_escape_map[next_character]}\x07"
+            end_index = character_after_start_index+1+len(mapped_next_character_sequence)
+            replacement_text = converted_heading[character_after_start_index+1:end_index]
+            assert mapped_next_character_sequence == replacement_text
+            converted_heading = converted_heading[:start_index] + converted_heading[end_index:]
+        return converted_heading
+
     def __add_current_heading(self):
         """
         https://github.com/gjtorikian/html-pipeline/blob/f13a1534cb650ba17af400d1acd3a22c28004c09/lib/html/pipeline/toc_filter.rb#L30
         """
 
         converted_heading = self.__ascii_downcase(self.__current_heading) if self.__ignore_case else self.__current_heading
-        if "\b" in converted_heading:
-            converted_heading = ParserHelper.remove_all_from_text(converted_heading)
+        converted_heading = self.__resolve_special_case(converted_heading)
+        converted_heading = ParserHelper.resolve_all_from_text(converted_heading)
         converted_heading = RuleMd051.__PUNCTUATION_REGEXP.sub('', converted_heading)
         converted_heading = converted_heading.replace(' ', '-')
 
@@ -150,8 +198,7 @@ class RuleMd051(RulePlugin):
 
     def __handle_raw_html(self, raw_token:RawHtmlMarkdownToken):
         parser = MyHTMLParser()
-        x = f"<{raw_token.extra_data}>"
-        parser.feed(x)
+        parser.feed(f"<{raw_token.extra_data}>")
         parser.close()
         for i in parser.valid_targets:
             self.__current_heading = i

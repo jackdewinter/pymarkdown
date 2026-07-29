@@ -25,6 +25,13 @@ configTests = [
         expected_error="""BadPluginError encountered while configuring plugins:
 The value for property 'plugins.md051.ignore_case' must be of type 'bool'.""",
     ),
+    pluginConfigErrorTest(
+        "invalid_ignore_pattern_regex",
+        use_strict_config=True,
+        set_args=["plugins.md051.ignore_pattern_regex=[open_not_closed"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md051.ignore_pattern_regex' is not a valid regular expression.""",
+    ),
 ]
 
 
@@ -73,16 +80,30 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_atx_backslash_escape",
-        source_file_contents="""# Heading \\& Name
+        source_file_contents='''# Heading \\* Name
 
 [Link](#heading--name)
-""",
+''',
+    ),
+    pluginRuleTest(
+        "good_atx_backslash_escape_special",
+        source_file_contents='''# Heading \\< Name
+
+[Link](#heading--name)
+''',
     ),
     pluginRuleTest(
         "good_atx_entity_reference",
         source_file_contents="""# Heading &copy; Name
 
 [Link](#heading--name)
+""",
+    ),
+    pluginRuleTest(
+        "good_atx_numeric_entity_reference",
+        source_file_contents="""## Heading &#x0041; Name
+
+[Link](#heading-a-name)
 """,
     ),
     pluginRuleTest(
@@ -227,7 +248,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_setext_backslash_escape",
-        source_file_contents="""Heading \\& Name
+        source_file_contents="""Heading \\* Name
 ====
 
 [Link](#heading--name)
@@ -239,6 +260,14 @@ scanTests = [
 ====
 
 [Link](#heading--name)
+""",
+    ),
+    pluginRuleTest(
+        "good_setext_numeric_entity_reference",
+        source_file_contents="""Heading &#x0041; Name
+====
+
+[Link](#heading-a-name)
 """,
     ),
     pluginRuleTest(
@@ -305,13 +334,28 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "good_link_fragment_specific_line",
-        source_file_contents="""[Link](#L20)
+        "bad_figure_link_not_present",
+        source_file_contents="""[Link](#figure-1)
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD051: Link fragments should be valid. (link-fragments)
 """,
     ),
     pluginRuleTest(
-        "good_link_fragment_specific_lines_and_columns",
-        source_file_contents="""[Link](#L19C5-L21C11)
+        "good_figure_link_not_present_with_config",
+        source_file_contents="""[Link](#figure-1)
+""",
+        use_strict_config=True,
+        set_args=["plugins.md051.ignore_pattern_regex=^figure"],
+    ),
+    pluginRuleTest(
+        "bad_image_link_not_present_with_config",
+        source_file_contents="""[Link](#image-1)
+""",
+        use_strict_config=True,
+        set_args=["plugins.md051.ignore_pattern_regex=^figure"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD051: Link fragments should be valid. (link-fragments)
 """,
     ),
 ]
@@ -349,10 +393,10 @@ def test_md051_query_config() -> None:
                      md051.md
 
 
-  CONFIGURATION ITEM  TYPE     VALUE
+  CONFIGURATION ITEM    TYPE     VALUE
 
-  ignore_case         boolean  True
-
+  ignore_case           boolean  True
+  ignore_pattern_regex  string   ""
 """,
     )
     execute_query_configuration_test(config_test)
