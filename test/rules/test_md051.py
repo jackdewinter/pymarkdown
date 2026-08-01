@@ -21,16 +21,16 @@ configTests = [
     pluginConfigErrorTest(
         "invalid_ignore_case_type",
         use_strict_config=True,
-        set_args=["plugins.md051.ignore_case=$#1"],
+        set_args=["plugins.md051.ignore-case=$#1"],
         expected_error="""BadPluginError encountered while configuring plugins:
-The value for property 'plugins.md051.ignore_case' must be of type 'bool'.""",
+The value for property 'plugins.md051.ignore-case' must be of type 'bool'.""",
     ),
     pluginConfigErrorTest(
         "invalid_ignore_pattern_regex",
         use_strict_config=True,
-        set_args=["plugins.md051.ignore_pattern_regex=[open_not_closed"],
+        set_args=["plugins.md051.ignore-pattern-regex=[open_not_closed"],
         expected_error="""BadPluginError encountered while configuring plugins:
-The value for property 'plugins.md051.ignore_pattern_regex' is not a valid regular expression.""",
+The value for property 'plugins.md051.ignore-pattern-regex' is not a valid regular expression.""",
     ),
 ]
 
@@ -69,7 +69,7 @@ scanTests = [
 
 [Link](#Heading-Name)
 """,
-        set_args=["plugins.md051.ignore_case=$!False"],
+        set_args=["plugins.md051.ignore-case=$!False"],
     ),
     pluginRuleTest(
         "good_atx_unicode_letters",
@@ -236,7 +236,7 @@ scanTests = [
 
 [Link](#Heading-Name)
 """,
-        set_args=["plugins.md051.ignore_case=$!False"],
+        set_args=["plugins.md051.ignore-case=$!False"],
     ),
     pluginRuleTest(
         "good_setext_unicode_letters",
@@ -356,14 +356,14 @@ scanTests = [
         source_file_contents="""[Link](#figure-1)
 """,
         use_strict_config=True,
-        set_args=["plugins.md051.ignore_pattern_regex=^figure"],
+        set_args=["plugins.md051.ignore-pattern-regex=^figure"],
     ),
     pluginRuleTest(
         "bad_image_link_not_present_with_config",
         source_file_contents="""[Link](#image-1)
 """,
         use_strict_config=True,
-        set_args=["plugins.md051.ignore_pattern_regex=^figure"],
+        set_args=["plugins.md051.ignore-pattern-regex=^figure"],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD051: Link fragments should be valid. (link-fragments)
 """,
@@ -405,8 +405,8 @@ def test_md051_query_config() -> None:
 
   CONFIGURATION ITEM    TYPE     VALUE
 
-  ignore_case           boolean  True
-  ignore_pattern_regex  string   ""
+  ignore-case           boolean  True
+  ignore-pattern-regex  string   ""
 """,
     )
     execute_query_configuration_test(config_test)

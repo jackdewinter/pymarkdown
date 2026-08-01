@@ -79,7 +79,7 @@ While section links are not part of the CommonMark specification; this rule enfo
 the historic [GitHub heading algorithm](https://github.com/gjtorikian/html-pipeline/blob/f13a1534cb650ba17af400d1acd3a22c28004c09/lib/html/pipeline/toc_filter.rb)
 to generate those fragments by:
 
-- Converting the text to lowercase (if `ignore_case` is set to `True`)
+- Converting the text to lowercase (if `ignore-case` is set to `True`)
 - Removing any punctuation characters
 - Converting any spaces to dashes
 - Append an incrementing integer (as needed for uniqueness)
@@ -128,11 +128,11 @@ link anchors underneath references images, labelling those link anchors as `figu
 `figure-2`
 and so on.
 
-The `ignore_pattern_regex` configuration item allows for a regular expression to
+The `ignore-pattern-regex` configuration item allows for a regular expression to
 be specified
 that is used to ignore any matching link fragments. For the above example with
 the `figure-`
-prefix for images, setting the `ignore_pattern_regex` configuration item value to
+prefix for images, setting the `ignore-pattern-regex` configuration item value to
 `^figure-`
 will cause this rule not to trigger for any link fragment that starts with `figure-`.
 
@@ -184,8 +184,8 @@ The reason for not being able to auto-fix this rule is certainty.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `ignore_case` | `boolean` | `True` | Whether the Rule Plugin ignores case when matching local link fragments. |
-| `ignore_pattern_regex` | `str` | `(empty string)` | If not empty, regular expression for link fragment text to ignore. |
+| `ignore-case` | `boolean` | `True` | Whether the Rule Plugin ignores case when matching local link fragments. |
+| `ignore-pattern-regex` | `str` | `(empty string)` | If not empty, regular expression for link fragment text to ignore. |
 
 ## Origination of Rule
 

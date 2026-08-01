@@ -104,7 +104,7 @@ class RuleMd051(RulePlugin):
             plugin_description="Link fragments should be valid.",
             plugin_version="0.5.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md051.md",
-            plugin_configuration="ignore_case",
+            plugin_configuration="ignore-case, ignore-pattern-regex",
             # plugin_supports_fix=True,
             # plugin_fix_level=2,
         )
@@ -115,12 +115,12 @@ class RuleMd051(RulePlugin):
         """
         self.__ignore_case = (
             self.plugin_configuration.get_boolean_property_with_default(
-                "ignore_case", True
+                "ignore-case", True
             )
         )
         self.__ignore_pattern_regex = (
             self.plugin_configuration.get_string_property_with_default(
-                "ignore_pattern_regex", ""
+                "ignore-pattern-regex", ""
             )
         )
         if self.__ignore_pattern_regex:
@@ -130,7 +130,7 @@ class RuleMd051(RulePlugin):
                 )
             except re.error as this_exception:
                 raise ValueError(
-                    "The value for property 'plugins.md051.ignore_pattern_regex' is not a valid regular expression."
+                    "The value for property 'plugins.md051.ignore-pattern-regex' is not a valid regular expression."
                 ) from this_exception
 
     def query_config(self) -> List[QueryConfigItem]:
@@ -138,8 +138,8 @@ class RuleMd051(RulePlugin):
         Query to find out the configuration that the rule is using.
         """
         return [
-            QueryConfigItem("ignore_case", self.__ignore_case),
-            QueryConfigItem("ignore_pattern_regex", self.__ignore_pattern_regex or ""),
+            QueryConfigItem("ignore-case", self.__ignore_case),
+            QueryConfigItem("ignore-pattern-regex", self.__ignore_pattern_regex or ""),
         ]
 
     def starting_new_file(self) -> None:
