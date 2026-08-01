@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD048 rule.
+Module to provide tests related to the MD051 rule.
 """
 
 import os
