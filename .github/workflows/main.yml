@@ -108,7 +108,9 @@ jobs:
           pipenv graph
 
       - name: Execute Tests
-        run: pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml
+        run: |
+          pipenv run python -c "import html; print(html.__file__)"
+          pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml
           
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v7
