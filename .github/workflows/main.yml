@@ -246,6 +246,8 @@ jobs:
       - name: Execute Tests
         run: |
           pipenv run python -c "import html; print(html.__file__)"
+          pipenv run python -c "import sys; print(sys.path)"
+          find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__"
           pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
   packaging:
