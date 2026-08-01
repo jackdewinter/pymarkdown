@@ -80,17 +80,17 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_atx_backslash_escape",
-        source_file_contents='''# Heading \\* Name
+        source_file_contents="""# Heading \\* Name
 
 [Link](#heading--name)
-''',
+""",
     ),
     pluginRuleTest(
         "good_atx_backslash_escape_special",
-        source_file_contents='''# Heading \\< Name
+        source_file_contents="""# Heading \\< Name
 
 [Link](#heading--name)
-''',
+""",
     ),
     pluginRuleTest(
         "good_atx_entity_reference",
@@ -173,7 +173,7 @@ scanTests = [
 [Link](#bookmark)
 """,
         disable_rules="md033",
-        use_debug=True
+        use_debug=True,
     ),
     pluginRuleTest(
         "good_atx_raw_html_anchor_tag_still",
@@ -326,6 +326,16 @@ scanTests = [
 ====
 
 [Link](#heading-name-name)
+""",
+    ),
+    pluginRuleTest(
+        "bad_lrd_reports_lrd_not_link_to_lrd",
+        source_file_contents="""[blah][blah]
+
+[blah]: #fred
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
 """,
     ),
     pluginRuleTest(

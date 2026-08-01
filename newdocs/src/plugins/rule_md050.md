@@ -18,8 +18,8 @@ One of the main keys to readability is to have consistent formatting applied
 throughout a group of documents.  Extending the concept even further,
 organizations may have specific rules on how documents should be authored throughout
 that organization.  It follows that both concepts may extend to specifying
-which character sequence should be used for specifying the start of an inline strong emphasis
-block in a Markdown document.
+which character sequence should be used for specifying the start of an inline strong
+emphasis block in a Markdown document.
 
 ## Examples
 
@@ -39,8 +39,8 @@ based on the first inline strong emphasis block encountered in the document.
 
 ### Correct Scenarios
 
-This rule does not trigger if the character sequence for inline strong emphasis blocks is
-consistently specified within the document:
+This rule does not trigger if the character sequence for inline strong emphasis
+blocks is consistently specified within the document:
 
 ````Markdown
 This is **one** emphasis.

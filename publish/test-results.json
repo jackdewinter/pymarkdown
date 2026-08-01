@@ -1531,6 +1531,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.rules.test_md051",
+            "totalTests": 44,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.rules.test_plugin_manager",
             "totalTests": 72,
             "failedTests": 0,

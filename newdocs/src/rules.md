@@ -687,7 +687,7 @@ Emphasis style should be consistent throughout the document.
 
 ## Rule - MD050
 
-[Full Documentation](./plugins/rule_md050,md)
+[Full Documentation](./plugins/rule_md050.md)
 
 | Property | Value |
 | --- | -- |
@@ -699,6 +699,21 @@ Emphasis style should be consistent throughout the document.
 ### Summary
 
 Strong emphasis style should be consistent throughout the document.
+
+## Rule - MD051
+
+[Full Documentation](./plugins/rule_md051.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md051`, `link-fragments` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Local link fragments should be valid.
 
 ## Rule - PML100
 
