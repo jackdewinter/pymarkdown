@@ -244,7 +244,9 @@ jobs:
           pipenv uninstall pytest-html
 
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
+        run: |
+          pipenv run python -c "import html; print(html.__file__)"
+          pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
   packaging:
 
