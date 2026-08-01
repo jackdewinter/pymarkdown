@@ -112,8 +112,9 @@ jobs:
           pwd
           pipenv run python -c "import html; print(html.__file__)"
           pipenv run python -c "import sys; print(sys.path)"
-          find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__"
-          ls -la ./pymarkdown/html
+          if ! find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__" ; then
+            echo "not found"
+          fi
           pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml
           
       - name: Archive coverage artifacts
@@ -252,8 +253,9 @@ jobs:
           pwd
           pipenv run python -c "import html; print(html.__file__)"
           pipenv run python -c "import sys; print(sys.path)"
-          find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__"
-          ls -la ./pymarkdown/html
+          if ! find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__" ; then
+            echo "not found"
+          fi
           pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
   packaging:
