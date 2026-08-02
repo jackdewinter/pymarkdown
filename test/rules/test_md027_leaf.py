@@ -316,10 +316,12 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_lrd",
         source_file_name=f"{source_path}good_block_quote_lrd.md",
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "good_block_quote_lrd_multiple",
         source_file_name=f"{source_path}good_block_quote_lrd_multiple.md",
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "bad_block_quote_lrd_multiple_one",
@@ -334,6 +336,7 @@ scanTests = [
 >
 > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -358,6 +361,7 @@ scanTests = [
 >
 > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -373,6 +377,7 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_lrd_multiple_two",
         source_file_name=f"{source_path}good_block_quote_lrd_multiple_two.md",
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "bad_block_quote_lrd_multiple_three",
@@ -387,6 +392,7 @@ scanTests = [
 >
 > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -414,6 +420,7 @@ scanTests = [
 >
 > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:6:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -431,6 +438,7 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_lrd_multiple_five",
         source_file_name=f"{source_path}good_block_quote_lrd_multiple_five.md",
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "bad_block_quote_link_multiple_extra",

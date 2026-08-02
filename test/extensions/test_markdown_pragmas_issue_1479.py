@@ -5531,7 +5531,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md041",
+            "md022,md023,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5571,7 +5571,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md031,md041",
+            "md022,md023,md031,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5607,7 +5607,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md028,md041",
+            "md028,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5642,7 +5642,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md041",
+            "md022,md023,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5682,7 +5682,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md031,md041",
+            "md022,md023,md031,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5754,7 +5754,7 @@ def test_pragmas_issue_1479_Md027_no_pragma_then_block_quote_with_space_before_l
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md041",
+            "md022,md023,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5794,7 +5794,7 @@ def test_pragmas_issue_1479_Md027_pragma_without_space_then_block_quote_with_spa
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md022,md023,md031,md041",
+            "md022,md023,md031,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -5831,7 +5831,7 @@ def test_pragmas_issue_1479_Md027_pragma_with_space_then_block_quote_with_space_
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md028,md041",
+            "md028,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -7720,7 +7720,7 @@ A code block
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md033,md041",
+            "md033,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -7761,7 +7761,7 @@ A code block
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md033,md041",
+            "md033,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -7803,7 +7803,7 @@ A code block
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "md033,md041",
+            "md033,md041,md053",
             "scan",
             markdown_file_path,
         ]
@@ -14030,6 +14030,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14067,6 +14069,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14101,6 +14105,8 @@ LRD.
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14134,6 +14140,8 @@ LRD.
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14172,6 +14180,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14241,6 +14251,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14279,6 +14291,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14314,7 +14328,7 @@ LRD.
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "Md034,md041",
+            "Md034,md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14348,6 +14362,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",
@@ -14388,6 +14404,8 @@ LRD.
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md041,md053",
             "--set",
             "plugins.md044.names=ParaGraph",
             "--strict-config",

@@ -616,7 +616,7 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_ordered_list_lrd",
         source_file_name=f"{source_path}good_block_quote_ordered_list_lrd.md",
-        use_debug=True,
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "good_list_in_block_quote_after_other_list",

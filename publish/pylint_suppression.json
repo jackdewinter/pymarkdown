@@ -402,6 +402,7 @@
         "pymarkdown/plugins/rule_md_051.py": {
             "too-many-instance-attributes": 1
         },
+        "pymarkdown/plugins/rule_md_053.py": {},
         "pymarkdown/plugins/rule_md_059.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
