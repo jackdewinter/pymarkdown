@@ -715,6 +715,21 @@ Strong emphasis style should be consistent throughout the document.
 
 Local link fragments should be valid.
 
+## Rule - MD059
+
+[Full Documentation](./plugins/rule_md059.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md059`, `descriptive-link-text` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Link text should be descriptive.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)
