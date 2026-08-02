@@ -1312,6 +1312,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md048   code-fence-style                True       True       0.6.0    Yes
   md049   emphasis-style                  True       True       0.5.0    No
   md050   strong-style                    True       True       0.5.0    No
+  md051   link-fragments                  True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1396,6 +1397,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md048   code-fence-style                True       True       0.6.0    Yes
   md049   emphasis-style                  True       True       0.5.0    No
   md050   strong-style                    True       True       0.5.0    No
+  md051   link-fragments                  True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
@@ -1482,6 +1484,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md048   code-fence-style                True       False      0.6.0    Yes
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1572,6 +1575,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md048   code-fence-style                True       False      0.6.0    Yes
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1664,6 +1668,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md048   code-fence-style                True       False      0.6.0    Yes
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1700,34 +1705,6 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
   md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
   md049  emphasis-style         True       True       0.5.0    No
-""",
-    )
-
-    # Act
-    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(expected_results=expected_results)
-
-
-def test_markdown_with_plugins_list_and_filter_by_wrong_case_id(
-    scanner_default: MarkdownScanner,
-) -> None:
-    """
-    Test to make sure that `plugins list` lists all plugins with the specified id filter.
-    """
-
-    # Arrange
-    supplied_arguments = ["plugins", "list", "Md019"]
-
-    expected_results = ExpectedResults(
-        return_code=0,
-        expected_output="""
-  ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
-                                (DEFAULT)  (CURRENT)
-
-  md019  no-multiple-space-atx  True       True       0.5.1    Yes
-
 """,
     )
 

@@ -333,7 +333,7 @@ between "success" (`0`), "something bad happened but the tool itself is fine" (`
 and "something is configured wrong or the tool failed" (`2`).
 
 The available schemes, and how to configure them, are described in
-[Return Code Scheme](#-return-code-scheme-observability) from the
+[Return Code Scheme](#--return-code-scheme-observability) from the
 [Exit Codes](#exit-codes) section
 
 ### Available Groups of Commands
@@ -610,7 +610,7 @@ of resolved files but still want to verify how PyMarkdown's path resolution and
 filtering logic behaves. Our team treats `--list-files` as the "dry run" mode of
 the scanner: it shows you what would be processed without actually running any Rule
 Plugins.
-Combined with the [`--return-code-scheme`](#-return-code-scheme-observability) options
+Combined with the [`--return-code-scheme`](#--return-code-scheme-observability) options
 from the
 [Exit Codes](#exit-codes) section, you can decide whether a `--list-files`
 "dry run"
@@ -701,7 +701,7 @@ In CI environments where Git is not available or the extra startup cost is unacc
 prefer
 multiple `--exclude` patterns instead of `--respect-gitignore`. To control how these
 situations
-affect pipeline status, adjust [`--return-code-scheme`](#-return-code-scheme-observability)
+affect pipeline status, adjust [`--return-code-scheme`](#--return-code-scheme-observability)
 from the
 [Exit Codes](#exit-codes) section; for example, the `minimal` scheme avoids
 failing

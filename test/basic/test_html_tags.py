@@ -2,7 +2,7 @@
 Tests for the functions that deal with parsing of html tags.
 """
 
-from pymarkdown.html.html_helper import HtmlHelper
+from pymarkdown.html_helpers.html_helper import HtmlHelper
 
 
 def test_empty_tag_name() -> None:

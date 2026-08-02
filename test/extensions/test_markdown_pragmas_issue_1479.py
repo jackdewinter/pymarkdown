@@ -12291,6 +12291,8 @@ def test_pragmas_issue_1479_Md042_no_pragma_then_text_with_link_first_line(
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]
@@ -12324,6 +12326,8 @@ this is not a [valid](#) link
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]
@@ -12354,6 +12358,8 @@ this is not a [valid](#) link
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]
@@ -12383,6 +12389,8 @@ this is not a [valid](#) link
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]
@@ -12417,6 +12425,8 @@ this is not a [valid](#) link
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]
@@ -12448,6 +12458,8 @@ this is not a [valid](#) link
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "--disable-rules",
+            "md051",
             "scan",
             markdown_file_path,
         ]

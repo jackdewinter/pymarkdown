@@ -8,7 +8,7 @@ from pymarkdown.container_blocks.container_grab_bag import POGGER
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.tab_helper import TabHelper
-from pymarkdown.html.html_helper import HtmlHelper
+from pymarkdown.html_helpers.html_helper import HtmlHelper
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
 from pymarkdown.leaf_blocks.table_block_tuple import TableColumn, TableRow, TableTuple
