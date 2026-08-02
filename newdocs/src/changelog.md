@@ -9,6 +9,8 @@
     - Rules for Md049 (consistent emphasis) and Md050 (consistent strong emphasis)
 - [Issue 1652](https://github.com/jackdewinter/pymarkdown/issues/1652)
     - Rule for Md051 (valid local link fragments)
+- [Issue 1656](https://github.com/jackdewinter/pymarkdown/issues/1656)
+    - Rule for Md059 (descriptive-link-text)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
