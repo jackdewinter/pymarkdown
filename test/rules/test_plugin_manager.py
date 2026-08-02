@@ -1313,6 +1313,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md049   emphasis-style                  True       True       0.5.0    No
   md050   strong-style                    True       True       0.5.0    No
   md051   link-fragments                  True       True       0.5.0    No
+  md059   descriptive-link-text           True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1398,6 +1399,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md049   emphasis-style                  True       True       0.5.0    No
   md050   strong-style                    True       True       0.5.0    No
   md051   link-fragments                  True       True       0.5.0    No
+  md059   descriptive-link-text           True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
@@ -1485,6 +1487,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1576,6 +1579,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1669,6 +1673,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md049   emphasis-style                  True       False      0.5.0    No
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1705,6 +1710,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
   md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
   md049  emphasis-style         True       True       0.5.0    No
+  md059  descriptive-link-text  True       True       0.5.0    No
 """,
     )
 

@@ -40,14 +40,14 @@ scanTests = [
         "good_atx_simple_found",
         source_file_contents="""# Heading Name
 
-[Link](#heading-name)
+[Heading Text](#heading-name)
 """,
     ),
     pluginRuleTest(
         "bad_atx_simple_not_found",
         source_file_contents="""# Heading Name
 
-[Link](#fragment)
+[Heading Text](#fragment)
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
@@ -57,7 +57,7 @@ scanTests = [
         "bad_atx_simple_with_capitals_not_found",
         source_file_contents="""# Heading Name
 
-[Link](#Heading-Name)
+[Heading Text](#Heading-Name)
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
@@ -67,7 +67,7 @@ scanTests = [
         "good_atx_simple_with_capitals_and_config_found",
         source_file_contents="""# Heading Name
 
-[Link](#Heading-Name)
+[Heading Text](#Heading-Name)
 """,
         set_args=["plugins.md051.ignore-case=$!False"],
     ),
@@ -75,56 +75,56 @@ scanTests = [
         "good_atx_unicode_letters",
         source_file_contents="""# Heading ȅǣݵ Name
 
-[Link](#heading-%C8%85%C7%A3%DD%B5-name)
+[Heading Text](#heading-%C8%85%C7%A3%DD%B5-name)
 """,
     ),
     pluginRuleTest(
         "good_atx_backslash_escape",
         source_file_contents="""# Heading \\* Name
 
-[Link](#heading--name)
+[Heading Text](#heading--name)
 """,
     ),
     pluginRuleTest(
         "good_atx_backslash_escape_special",
         source_file_contents="""# Heading \\< Name
 
-[Link](#heading--name)
+[Heading Text](#heading--name)
 """,
     ),
     pluginRuleTest(
         "good_atx_entity_reference",
         source_file_contents="""# Heading &copy; Name
 
-[Link](#heading--name)
+[Heading Text](#heading--name)
 """,
     ),
     pluginRuleTest(
         "good_atx_numeric_entity_reference",
         source_file_contents="""## Heading &#x0041; Name
 
-[Link](#heading-a-name)
+[Heading Text](#heading-a-name)
 """,
     ),
     pluginRuleTest(
         "good_atx_code_span",
         source_file_contents="""# Heading `foo` Name
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
         "good_atx_emphasis",
         source_file_contents="""# Heading *foo* Name
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
         "good_atx_strikethrough_emphasis",
         source_file_contents="""# Heading ~foo~ Name
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
         enable_extensions="markdown-strikethrough",
     ),
@@ -132,21 +132,21 @@ scanTests = [
         "good_atx_link",
         source_file_contents="""# Heading [Google](www.google.com) Name
 
-[Link](#heading-google-name)
+[Heading Text](#heading-google-name)
 """,
     ),
     pluginRuleTest(
         "good_atx_uri_autolink",
         source_file_contents="""# Heading <http://foo.bar.baz> Target
 
-[Link](#heading-httpfoobarbaz-target)
+[Heading Text](#heading-httpfoobarbaz-target)
 """,
     ),
     pluginRuleTest(
         "good_atx_email_autolink",
         source_file_contents="""# Heading <foo@bar.example.com> Target
 
-[Link](#heading-foobarexamplecom-target)
+[Heading Text](#heading-foobarexamplecom-target)
 """,
     ),
     pluginRuleTest(
@@ -154,7 +154,7 @@ scanTests = [
         disable_rules="md033",
         source_file_contents="""# Heading <del>name</del> Name
 
-[Link](#heading-name-name)
+[Heading Text](#heading-name-name)
 """,
     ),
     pluginRuleTest(
@@ -162,7 +162,7 @@ scanTests = [
         source_file_contents="""<a name="bookmark">
 </a>
 
-[Link](#bookmark)
+[Heading Text](#bookmark)
 """,
         disable_rules="md033",
     ),
@@ -170,7 +170,7 @@ scanTests = [
         "good_atx_raw_html_anchor_tag",
         source_file_contents="""This is a new <a name="bookmark">bookmark</a> anchor.
 
-[Link](#bookmark)
+[Heading Text](#bookmark)
 """,
         disable_rules="md033",
         use_debug=True,
@@ -179,7 +179,7 @@ scanTests = [
         "good_atx_raw_html_anchor_tag_still",
         source_file_contents="""<a name="bookmark"></a>
 
-[Link](#bookmark)
+[Heading Text](#bookmark)
 """,
         disable_rules="md033",
     ),
@@ -187,7 +187,7 @@ scanTests = [
         "good_atx_raw_html_tag_with_id",
         source_file_contents="""This is a <a id="bookmark"></a> new tag.
 
-[Link](#bookmark)
+[Heading Text](#bookmark)
 """,
         disable_rules="md033",
     ),
@@ -195,7 +195,7 @@ scanTests = [
         "good_atx_raw_html_tag_with_id_still",
         source_file_contents="""<a id="bookmark"></a>
 
-[Link](#bookmark)
+[Heading Text](#bookmark)
 """,
         disable_rules="md033",
     ),
@@ -204,7 +204,7 @@ scanTests = [
         source_file_contents="""Heading Name
 ====
 
-[Link](#heading-name)
+[Heading Text](#heading-name)
 """,
     ),
     pluginRuleTest(
@@ -212,7 +212,7 @@ scanTests = [
         source_file_contents="""Heading Name
 ====
 
-[Link](#fragment)
+[Heading Text](#fragment)
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:1: MD051: Link fragments should be valid. (link-fragments)
@@ -223,7 +223,7 @@ scanTests = [
         source_file_contents="""Heading Name
 ====
 
-[Link](#Heading-Name)
+[Heading Text](#Heading-Name)
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:1: MD051: Link fragments should be valid. (link-fragments)
@@ -234,7 +234,7 @@ scanTests = [
         source_file_contents="""Heading Name
 ====
 
-[Link](#Heading-Name)
+[Heading Text](#Heading-Name)
 """,
         set_args=["plugins.md051.ignore-case=$!False"],
     ),
@@ -243,7 +243,7 @@ scanTests = [
         source_file_contents="""Heading ȅǣݵ Name
 ====
 
-[Link](#heading-%C8%85%C7%A3%DD%B5-name)
+[Heading Text](#heading-%C8%85%C7%A3%DD%B5-name)
 """,
     ),
     pluginRuleTest(
@@ -251,7 +251,7 @@ scanTests = [
         source_file_contents="""Heading \\* Name
 ====
 
-[Link](#heading--name)
+[Heading Text](#heading--name)
 """,
     ),
     pluginRuleTest(
@@ -259,7 +259,7 @@ scanTests = [
         source_file_contents="""Heading &copy; Name
 ====
 
-[Link](#heading--name)
+[Heading Text](#heading--name)
 """,
     ),
     pluginRuleTest(
@@ -267,7 +267,7 @@ scanTests = [
         source_file_contents="""Heading &#x0041; Name
 ====
 
-[Link](#heading-a-name)
+[Heading Text](#heading-a-name)
 """,
     ),
     pluginRuleTest(
@@ -275,7 +275,7 @@ scanTests = [
         source_file_contents="""Heading `foo` Name
 ====
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
@@ -283,7 +283,7 @@ scanTests = [
         source_file_contents="""Heading *foo* Name
 ====
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
     ),
     pluginRuleTest(
@@ -291,7 +291,7 @@ scanTests = [
         source_file_contents="""Heading ~foo~ Name
 ====
 
-[Link](#heading-foo-name)
+[Heading Text](#heading-foo-name)
 """,
         enable_extensions="markdown-strikethrough",
     ),
@@ -300,7 +300,7 @@ scanTests = [
         source_file_contents="""Heading [Google](www.google.com) Name
 ====
 
-[Link](#heading-google-name)
+[Heading Text](#heading-google-name)
 """,
     ),
     pluginRuleTest(
@@ -308,7 +308,7 @@ scanTests = [
         source_file_contents="""Heading <http://foo.bar.baz> Target
 ====
 
-[Link](#heading-httpfoobarbaz-target)
+[Heading Text](#heading-httpfoobarbaz-target)
 """,
     ),
     pluginRuleTest(
@@ -316,7 +316,7 @@ scanTests = [
         source_file_contents="""Heading <foo@bar.example.com> Target
 ====
 
-[Link](#heading-foobarexamplecom-target)
+[Heading Text](#heading-foobarexamplecom-target)
 """,
     ),
     pluginRuleTest(
@@ -325,7 +325,7 @@ scanTests = [
         source_file_contents="""Heading <del>name</del> Name
 ====
 
-[Link](#heading-name-name)
+[Heading Text](#heading-name-name)
 """,
     ),
     pluginRuleTest(
@@ -340,12 +340,12 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_link_fragment_top",
-        source_file_contents="""[Link](#top)
+        source_file_contents="""[Heading Text](#top)
 """,
     ),
     pluginRuleTest(
         "bad_figure_link_not_present",
-        source_file_contents="""[Link](#figure-1)
+        source_file_contents="""[Heading Text](#figure-1)
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD051: Link fragments should be valid. (link-fragments)
@@ -353,14 +353,14 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_figure_link_not_present_with_config",
-        source_file_contents="""[Link](#figure-1)
+        source_file_contents="""[Heading Text](#figure-1)
 """,
         use_strict_config=True,
         set_args=["plugins.md051.ignore-pattern-regex=^figure"],
     ),
     pluginRuleTest(
         "bad_image_link_not_present_with_config",
-        source_file_contents="""[Link](#image-1)
+        source_file_contents="""[Heading Text](#image-1)
 """,
         use_strict_config=True,
         set_args=["plugins.md051.ignore-pattern-regex=^figure"],
