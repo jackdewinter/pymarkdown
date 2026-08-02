@@ -122,6 +122,7 @@ scanTests = [
  >
  > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -149,6 +150,7 @@ scanTests = [
  >
  > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -176,6 +178,7 @@ scanTests = [
 >
 > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -203,6 +206,7 @@ scanTests = [
  >
  > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:6:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -230,6 +234,7 @@ scanTests = [
  >
  > a real test
 """,
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:6:4: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,

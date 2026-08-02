@@ -78,7 +78,7 @@ The reason for not being able to auto-fix this rule is certainty.
 | Prefixes |
 | --- |
 | `plugins.md059.` |
-| `plugins.prohibited-phrases.` |
+| `plugins.descriptive-link-text.` |
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |

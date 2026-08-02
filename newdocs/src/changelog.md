@@ -11,6 +11,8 @@
     - Rule for Md051 (valid local link fragments)
 - [Issue 1656](https://github.com/jackdewinter/pymarkdown/issues/1656)
     - Rule for Md059 (descriptive-link-text)
+- [Issue 1658](https://github.com/jackdewinter/pymarkdown/issues/1658)
+    - Rule for Md053 (link-image-reference-definitions)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
