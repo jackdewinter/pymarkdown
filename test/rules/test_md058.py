@@ -113,6 +113,21 @@ after
 """,
     ),
     pluginRuleTest(
+        "good_table_after_list",
+        enable_extensions="markdown-tables",
+        source_file_contents="""# Top
+
+- first
+- second
+
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+
+after
+""",
+    ),
+    pluginRuleTest(
         "good_in_list_item_sole_content",
         enable_extensions="markdown-tables",
         disable_rules="md041",

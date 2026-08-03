@@ -90,4 +90,8 @@ class RuleMd058(RulePlugin):
         elif token.is_table_end:
             self.__awaiting_below = True
 
-        self.__previous_token = token
+        # A blank line at the end of a container is emitted before the token that
+        # closes that container, so those closing tokens are skipped over to find
+        # the token that actually precedes the table.
+        if not token.is_container_end_token:
+            self.__previous_token = token
