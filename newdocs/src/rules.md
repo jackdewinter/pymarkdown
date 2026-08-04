@@ -730,6 +730,21 @@ Local link fragments should be valid.
 
 Link and image reference definitions should be needed.
 
+## Rule - MD054
+
+[Full Documentation](./plugins/rule_md054.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md054`, `link-image-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Link and image style.
+
 ## Rule - MD059
 
 [Full Documentation](./plugins/rule_md059.md)
