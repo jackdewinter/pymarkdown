@@ -13,6 +13,8 @@
     - Rule for Md059 (descriptive-link-text)
 - [Issue 1658](https://github.com/jackdewinter/pymarkdown/issues/1658)
     - Rule for Md053 (link-image-reference-definitions)
+- [Issue 1660](https://github.com/jackdewinter/pymarkdown/issues/1660)
+    - Rule for Md054 (link-image-style)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
