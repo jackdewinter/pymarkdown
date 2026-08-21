@@ -1,7 +1,7 @@
 # Rule - PML100
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml100`, `disallowed-html` |
 | Autofix Available | Pending review |
 | Enabled By Default | No |
@@ -82,7 +82,7 @@ The fix for this rule is currently in review.
 | `plugins.disallowed-html.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `change_tag_names` | `string` | [See above list](#compatibility). | Comma-separated list of proper nouns to preserve capitalization on.** |
 

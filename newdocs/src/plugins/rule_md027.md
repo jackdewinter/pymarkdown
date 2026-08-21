@@ -1,7 +1,7 @@
 # Rule - MD027
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md027`, `no-multiple-space-blockquote` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -139,7 +139,7 @@ will not reduce the spaces, as they are used to maintain the list.
 | `plugins.no-multiple-space-blockquote.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

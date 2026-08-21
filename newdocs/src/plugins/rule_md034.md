@@ -1,7 +1,7 @@
 # Rule - MD034
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md034`, `no-bare-urls` |
 | Autofix Available | No* |
 | Enabled By Default | Yes |
@@ -101,7 +101,7 @@ on other rules, the author is the best entity to determine the link label's cont
 | `plugins.no-bare-urls.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

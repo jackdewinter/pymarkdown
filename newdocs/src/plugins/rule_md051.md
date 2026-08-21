@@ -1,7 +1,7 @@
 # Rule - MD051
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md051`, `link-fragments` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -182,7 +182,7 @@ The reason for not being able to auto-fix this rule is certainty.
 | `plugins.link-fragments.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `ignore-case` | `boolean` | `True` | Whether the Rule Plugin ignores case when matching local link fragments. |
 | `ignore-pattern-regex` | `str` | `(empty string)` | If not empty, regular expression for link fragment text to ignore. |

@@ -1,7 +1,7 @@
 # Rule - MD043
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md043`, `required-headings`, `required-headers` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -103,7 +103,7 @@ headings, determining the "proper" algorithm quickly becomes problematic.
 | `plugins.required-headers.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have.** |
 

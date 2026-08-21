@@ -168,8 +168,8 @@ and a more comprehensive example looks like:
 rendering as:
 
 | normal | right | left | center |
-| ---    | --: | :-- | :--: |
-| baz    | bim | bam | bom |
+| --- | --: | :-- | :-: |
+| baz | bim | bam | bom |
 
 #### Task List Items
 

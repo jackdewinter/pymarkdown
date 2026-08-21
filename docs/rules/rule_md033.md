@@ -65,7 +65,7 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | `plugins.no-inline-html.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable.** |
 | `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |

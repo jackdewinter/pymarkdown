@@ -1,7 +1,7 @@
 # Rule - MD038
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md038`, `no-space-in-code` |
 | Autofix Available | Yes* |
 | Enabled By Default | Yes |
@@ -83,7 +83,7 @@ rule is if the character following (or proceeding) the space character is the
 | `plugins.no-space-in-code.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

@@ -7,7 +7,7 @@ import configparser
 from typing import List
 
 
-def __handle_arguments():
+def __handle_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Analyze PyTest tests to determine if extra coverage is present."
     )

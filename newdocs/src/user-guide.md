@@ -914,7 +914,7 @@ These steps help you avoid unexpected changes in fix behavior when you move betw
 PyMarkdown versions.
 
 | Rule ID & Link | Human-Readable Identifier | Short Description |
-| -- | -- | -- |
+| --- | --- | --- |
 | [MD001](./plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
 | [MD004](./plugins/rule_md004.md#fix-description) | `ul-style` | Inconsistent Unordered List Start style. |
 | [MD005](./plugins/rule_md005.md#fix-description) | `list-indent` | Inconsistent indentation for list items at the same level. |

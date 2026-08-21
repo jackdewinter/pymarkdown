@@ -1,7 +1,7 @@
 # Rule - MD003
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md003`, `heading-style`, `header-style` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -92,7 +92,7 @@ release.
 | `plugins.header-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `consistent` | Style of headings expected in the document. |
 | `allow-setext-update` | boolean | `False` | If `style` is `consistent` and the document started off as `setext`, allow an upgrade to `setext_with_atx` if a level 3 Atx Header or higher is observed. |
@@ -100,13 +100,13 @@ release.
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |
 | `atx` | Only Atx Headings without any closing hashes are used. |
 | `atx_closed` | Only Atx Headings with closing hashes are used. |
 | `setext` | Only SetExt headings are used. |
-| `setext_with_atx` | Only SetExt headings are used for levels 1 and 2, and Atx Headings without closing hashes used for levels 3 to 6.|
-| `setext_with_atx_closed` |Only SetExt headings are used for levels 1 and 2, and Atx Headings with closing hashes are used for levels 3 to 6.|
+| `setext_with_atx` | Only SetExt headings are used for levels 1 and 2, and Atx Headings without closing hashes used for levels 3 to 6. |
+| `setext_with_atx_closed` | Only SetExt headings are used for levels 1 and 2, and Atx Headings with closing hashes are used for levels 3 to 6. |
 
 ## Origination of Rule
 

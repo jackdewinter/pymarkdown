@@ -17047,11 +17047,11 @@ def test_extra_058ca() -> None:
         "[end-table-header:::False]",
         "[table-body(3,1)]",
         "[table-row(3,3):  : :True:0]",
-        "[table-row-item(3,4):  :]",
-        "[text(3,4):abc:]",
+        "[table-row-item(3,6):  :]",
+        "[text(3,6):abc:]",
         "[end-table-row-item:  |::False]",
-        "[table-row-item(3,11): :center]",
-        "[text(3,11):def:]",
+        "[table-row-item(3,13): :center]",
+        "[text(3,13):def:]",
         "[end-table-row-item: |::False]",
         "[end-table-row:::False]",
         "[end-table-body:::False]",
@@ -17722,6 +17722,242 @@ something
         expected_gfm,
         expected_tokens,
         show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| [My\\$Google][Google] | [My\\$Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[link(3,3):full:http://google.com::::Google:My\\$Google:False::::]",
+        "[text(3,4):My\\\b$Google:]",
+        "[end-link::]",
+        "[text(3,23): | :]",
+        "[link(3,26):full:http://google.com::::Google:My\\$Google:False::::]",
+        "[text(3,27):My\\\b$Google:]",
+        "[end-link::]",
+        "[text(3,46): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <a href="http://google.com">My$Google</a> | <a href="http://google.com">My$Google</a> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![My\\$Google][Google] | ![My\\$Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::My$Google:::Google:My\\$Google:False::::]",
+        "[text(3,24): | :]",
+        "[image(3,27):full:http://google.com::My$Google:::Google:My\\$Google:False::::]",
+        "[text(3,48): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="My$Google" /> | <img src="http://google.com" alt="My$Google" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061b() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![My `copy` Google][Google] | ![My `copy` Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::My copy Google:::Google:My `copy` Google:False::::]",
+        "[text(3,30): | :]",
+        "[image(3,33):full:http://google.com::My copy Google:::Google:My `copy` Google:False::::]",
+        "[text(3,60): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="My copy Google" /> | <img src="http://google.com" alt="My copy Google" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061c() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![MyGoogle][Goo `copy` gle] | ![MyGoogle][Goo `copy` gle] |
+|N|No|
+
+[Goo `copy` gle]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::MyGoogle:::Goo `copy` gle:MyGoogle:False::::]",
+        "[text(3,30): | :]",
+        "[image(3,33):full:http://google.com::MyGoogle:::Goo `copy` gle:MyGoogle:False::::]",
+        "[text(3,60): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::goo `copy` gle:Goo `copy` gle: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="MyGoogle" /> | <img src="http://google.com" alt="MyGoogle" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061d() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """ | Character | Meaning |
+  | --- | --- |
+   | Y | Yes |
+ | N | No |
+"""
+    expected_tokens = [
+        "[table(1,2)]",
+        "[table-header(1,2): ::True:  | --- | --- |]",
+        "[table-header-item(1,4): :]",
+        "[text(1,4):Character:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,16): :]",
+        "[text(1,16):Meaning:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,1)]",
+        "[table-row(3,4):   ::True:0]",
+        "[table-row-item(3,6): :]",
+        "[text(3,6):Y:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,10): :]",
+        "[text(3,10):Yes:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[table-row(4,2): ::True:0]",
+        "[table-row-item(4,4): :]",
+        "[text(4,4):N:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(4,8): :]",
+        "[text(4,8):No:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>Character</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Y</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>N</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+        config_map=tables_config_map,
     )
 
 

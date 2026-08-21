@@ -1,7 +1,7 @@
 # Rule - MD044
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md044`, `proper-names` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -94,9 +94,9 @@ configuration item.
 | `plugins.proper-names.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `names`   | `string` | None | Comma-separated list of proper nouns to preserve capitalization on.** |
+| `names` | `string` | None | Comma-separated list of proper nouns to preserve capitalization on.** |
 | `code_blocks` | `boolean` | `True` | Search in Fenced Code Block elements and Indented Code Block elements. |
 | `code_spans` | `boolean` | `True` | Search in Inline Code Span elements. |
 

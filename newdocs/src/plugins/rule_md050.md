@@ -1,7 +1,7 @@
 # Rule - MD050
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md050`, `strong-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -64,14 +64,14 @@ The fix for this rule is currently in queue.
 | `plugins.strong-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `consistent` | Style of inline strong emphasis block characters expected in the document. |
 
 Valid styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first inline strong emphasis block in the document specifies the style for the rest of the document. |
 | `asterisk` | Only asterisks are to be used for inline strong emphasis block elements. |
 | `underscore` | Only underscores are to be used for inline strong emphasis block elements. |

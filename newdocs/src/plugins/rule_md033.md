@@ -1,7 +1,7 @@
 # Rule - MD033
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md033`, `no-inline-html` |
 | Autofix Available | No* |
 | Enabled By Default | Yes |
@@ -86,7 +86,7 @@ compelling argument to provide a fix for this rule.
 | `plugins.no-inline-html.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable.** |
 | `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |

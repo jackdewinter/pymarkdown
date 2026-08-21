@@ -86,6 +86,7 @@ show_usage() {
 	echo "Flags:"
 	echo "  -f,--force-reset <ver>  Force a reset of the virtual environment, with an optional python version to reset to."
 	echo "  -m,--mypy-only          Only run mypy checks and exit."
+	echo "  -p,--pylint-only        Only run pylint checks and exit."
 	echo "  -np,--no-publish        Do not publish project summaries if successful."
 	echo "  -ns,--no-sourcery       Do not run any sourcery checks."
 	echo "  -nu,--no-upgrades       Do not run checks for upgrades."
@@ -110,6 +111,7 @@ parse_command_line() {
 	PERFORMANCE_ONLY_MODE=0
 	DEBUG_MODE=0
 	MYPY_ONLY_MODE=0
+	PYLINT_ONLY_MODE=0
 	SOURCERY_ONLY_MODE=0
 	NO_SOURCERY_MODE=0
 	NO_SHELLCHECK_MODE=0
@@ -131,6 +133,10 @@ parse_command_line() {
 			;;
 		-m | --mypy-only)
 			MYPY_ONLY_MODE=1
+			shift
+			;;
+		-p | --pylint-only)
+			PYLINT_ONLY_MODE=1
 			shift
 			;;
 		-np | --no-publish)
@@ -197,8 +203,8 @@ parse_command_line() {
 		SOURCERY_ONLY_MODE=0
 	fi
 
-	if [[ ${SOURCERY_ONLY_MODE} -ne 0 ]] && [[ ${MYPY_ONLY_MODE} -ne 0 ]] && [[ ${PERFORMANCE_ONLY_MODE} -ne 0 ]]; then
-		echo "Options '--perf-only', '-m|--mypy-only' and '-s,--sourcery-only' conflict with each other.  Please choose one and try again."
+	if [[ ${SOURCERY_ONLY_MODE} -ne 0 ]] && [[ ${PYLINT_ONLY_MODE} -ne 0 ]] && [[ ${MYPY_ONLY_MODE} -ne 0 ]] && [[ ${PERFORMANCE_ONLY_MODE} -ne 0 ]]; then
+		echo "Options '--perf-only', '-p,--pylint-only', '-m,--mypy-only' and '-s,--sourcery-only' conflict with each other.  Please choose one and try again."
 		exit 1
 	fi
 }
@@ -252,6 +258,8 @@ execute_pre_commit() {
 	PRE_COMMIT_ARGS=()
 	if [[ ${MYPY_ONLY_MODE} -ne 0 ]]; then
 		PRE_COMMIT_ARGS+=("mypy")
+	elif [[ ${PYLINT_ONLY_MODE} -ne 0 ]]; then
+		PRE_COMMIT_ARGS+=("pylint")
 	elif [[ ${NO_SHELLCHECK_MODE} -ne 0 ]]; then
 		if ! pipenv run python utils/remove_precommit_hook_ids.py "${TEMP_FILE}" >"${TEMP_FILE2}" 2>&1; then
 			cat "${TEMP_FILE2}"

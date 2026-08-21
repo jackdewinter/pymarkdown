@@ -1,7 +1,7 @@
 # Rule - MD035
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md035`, `hr-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -74,7 +74,7 @@ document sets the thematic break text used throughout the document.
 | `plugins.hr-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | `string` | `consistent` | `consistent` for consistent, or a specific marker** |
 

@@ -1,7 +1,7 @@
 # Rule - MD005
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md005`, `list-indent` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -128,7 +128,7 @@ is applied to the Ordered List elements.
 | `plugins.list-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

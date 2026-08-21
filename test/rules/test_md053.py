@@ -116,6 +116,13 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "good_shortcut_link_and_matching_lrd_with_special",
+        source_file_contents="""[test&label]
+
+[test&label]: http://google.com
+""",
+    ),
+    pluginRuleTest(
         "bad_shortcut_link_and_no_matching_lrd",
         source_file_contents="""[another test label]
 
@@ -233,6 +240,13 @@ scanTests = [
         source_file_contents="""![test label]
 
 [test label]: /url
+""",
+    ),
+    pluginRuleTest(
+        "good_shortcut_image_and_matching_lrd_with_special",
+        source_file_contents="""![Goo&gle]
+
+[Goo&gle]: http://google.com
 """,
     ),
     pluginRuleTest(

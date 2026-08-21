@@ -1,7 +1,7 @@
 # Rule - MD024
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md024`, `no-duplicate-heading`, `no-duplicate-header` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -108,7 +108,7 @@ and made sense within the scope of the document.
 | `plugins.no-duplicate-header.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `siblings_only` | `boolean` | `False` | Whether the Rule Plugin allows the same text on sibling headings. |
 | `allow_different_nesting` | `boolean` | `False` | Whether the Rule Plugin allows the same text within different nesting hierarchies. |

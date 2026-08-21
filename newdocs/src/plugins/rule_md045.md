@@ -1,7 +1,7 @@
 # Rule - MD045
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md045`, `no-alt-text` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -67,7 +67,7 @@ providing a summary of that image that was relevant to the current document.
 | `plugins.no-alt-text.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

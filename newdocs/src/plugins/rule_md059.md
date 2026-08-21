@@ -1,7 +1,7 @@
 # Rule - MD059
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md059`, `descriptive-link-text` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -81,7 +81,7 @@ The reason for not being able to auto-fix this rule is certainty.
 | `plugins.descriptive-link-text.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `prohibited-phrases` | `str` | `"click here,here,link,more"` | Comma-separated list of phrases that are prohibited. |
 

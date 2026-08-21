@@ -1,7 +1,7 @@
 # Rule - MD032
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md032`, `blanks-around-lists` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -148,7 +148,7 @@ release.
 | `plugins.blanks-around-lists.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

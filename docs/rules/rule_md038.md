@@ -79,7 +79,7 @@ this is a `` `valid `` code span
 | `plugins.no-space-in-code.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

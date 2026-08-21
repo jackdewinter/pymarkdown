@@ -1,7 +1,7 @@
 # Rule - MD001
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md001`, `heading-increment`, `header-increment` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -115,7 +115,7 @@ The heading count (number of `#` characters) is adjusted to match what is expect
 | `plugins.header-increment.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `front_matter_title` | `string` | `title` | Name of the Front-Matter field that contains the title associated with the document. |
 

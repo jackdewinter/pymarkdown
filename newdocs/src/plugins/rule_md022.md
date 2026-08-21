@@ -1,8 +1,8 @@
 # Rule - MD022
 
 | Property | Value |
-| --- | -- |
-| Aliases | `md022`, `blanks-around-headings`, `blanks-around-headers`|
+| --- | --- |
+| Aliases | `md022`, `blanks-around-headings`, `blanks-around-headers` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
@@ -69,7 +69,7 @@ release.
 | `plugins.blanks-around-headers.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `lines_above` | `integer` | `1` | Number of lines that are expected before any heading element. |
 | `lines_below` | `integer` | `1` | Number of lines that are expected after any heading element. |

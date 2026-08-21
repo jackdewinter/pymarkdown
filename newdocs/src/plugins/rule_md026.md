@@ -1,7 +1,7 @@
 # Rule - MD026
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md026`, `no-trailing-punctuation` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -70,7 +70,7 @@ properly handles the punctuation is not possible.
 | `plugins.no-trailing-punctuation.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `punctuation` | `string` | `.,;:!。，；：！` | Punctuation characters that are considered sentence ending characters. |
 

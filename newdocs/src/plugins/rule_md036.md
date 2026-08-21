@@ -1,7 +1,7 @@
 # Rule - MD036
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md036`, `no-emphasis-as-heading`, `no-emphasis-as-header` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -75,7 +75,7 @@ that are created with emphasis, it does not attempt to fix them.
 | `plugins.no-emphasis-as-header.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `punctuation` | `string` | `.,;:!?。，；：？` | Punctuation characters that are considered sentence ending characters. |
 

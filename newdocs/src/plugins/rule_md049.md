@@ -1,7 +1,7 @@
 # Rule - MD049
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md049`, `emphasis-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -64,14 +64,14 @@ The fix for this rule is currently in queue.
 | `plugins.emphasis-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `consistent` | Style of emphasis block characters expected in the document. |
 
 Valid styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first emphasis block in the document specifies the style for the rest of the document. |
 | `asterisk` | Only asterisks are to be used for inline emphasis block elements. |
 | `underscore` | Only underscores are to be used for inline emphasis block elements. |

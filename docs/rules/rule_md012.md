@@ -55,7 +55,7 @@ this is another line
 | `plugins.no-multiple-blanks.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `maximum` | `integer` | `1` | Number of blank lines to exceed before this rule triggers |
 

@@ -1,7 +1,7 @@
 # Rule - PML101
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml101`, `list-anchored-indent` |
 | Autofix Available | Pending review |
 | Enabled By Default | No |
@@ -115,7 +115,7 @@ The fix for this rule is currently in review.
 | `plugins.list-anchored-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `indent` | `integer` | `4` | Number of spaces needed between sublists starts. |
 
