@@ -277,6 +277,7 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
                 PyMarkdownApiException,
                 expected_output,
                 PyMarkdownApi()
+                .enable_stack_trace()
                 .enable_rule_by_identifier("MD999")
                 .configuration_file_path(configuration_file)
                 .scan_path,
