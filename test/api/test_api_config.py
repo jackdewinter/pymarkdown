@@ -273,27 +273,15 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
     ) as configuration_file:
         with capture_stdout() as std_output:
             # Act
-            if sys.version_info[:2] == (3, 11):
-                caught_exception = assert_that_exception_is_raised(
-                    PyMarkdownApiException,
-                    expected_output,
-                    PyMarkdownApi()
-                    .enable_stack_trace()
-                    .enable_rule_by_identifier("MD999")
-                    .configuration_file_path(configuration_file)
-                    .scan_path,
-                    source_path,
-                )
-            else:
-                caught_exception = assert_that_exception_is_raised(
-                    PyMarkdownApiException,
-                    expected_output,
-                    PyMarkdownApi()
-                    .enable_rule_by_identifier("MD999")
-                    .configuration_file_path(configuration_file)
-                    .scan_path,
-                    source_path,
-                )
+            caught_exception = assert_that_exception_is_raised(
+                PyMarkdownApiException,
+                expected_output,
+                PyMarkdownApi()
+                .enable_rule_by_identifier("MD999")
+                .configuration_file_path(configuration_file)
+                .scan_path,
+                source_path,
+            )
 
     # Assert
     assert (
