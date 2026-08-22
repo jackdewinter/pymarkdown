@@ -1,7 +1,7 @@
 # Rule - MD028
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md028`, `no-blanks-blockquote` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -102,7 +102,7 @@ context of that line is not clear, any fix to that line would also be unclear.
 | `plugins.no-blanks-blockquote.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

@@ -63,7 +63,7 @@ Next section text.
 | `plugins.blanks-around-headers.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `lines_above` | `integer` | `1` | Number of lines that are expected before any heading element. |
 | `lines_below` | `integer` | `1` | Number of lines that are expected after any heading element. |

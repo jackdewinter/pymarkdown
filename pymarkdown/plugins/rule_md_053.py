@@ -4,6 +4,7 @@ Module to implement a plugin that ensures that any provided LRDs are required.
 
 from typing import List, Set, cast
 
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.plugin_manager.plugin_details import (
     PluginDetailsV2,
@@ -92,8 +93,11 @@ class RuleMd053(RulePlugin):
                 )
             else:
                 assert next_link_token.text_from_blocks is not None
-                link_text = LinkParseHelper.normalize_link_label(
+                original_text_from_blocks = ParserHelper.remove_all_from_text(
                     next_link_token.text_from_blocks
+                )
+                link_text = LinkParseHelper.normalize_link_label(
+                    original_text_from_blocks
                 )
             link_text_set.add(link_text)
         for next_image_token in self.__image_tokens:
@@ -104,8 +108,11 @@ class RuleMd053(RulePlugin):
                 )
             else:
                 assert next_image_token.text_from_blocks is not None
-                image_text = LinkParseHelper.normalize_link_label(
+                original_text_from_blocks = ParserHelper.remove_all_from_text(
                     next_image_token.text_from_blocks
+                )
+                image_text = LinkParseHelper.normalize_link_label(
+                    original_text_from_blocks
                 )
             link_text_set.add(image_text)
 

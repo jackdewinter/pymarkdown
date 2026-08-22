@@ -1,7 +1,7 @@
 # Rule - MD054
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md054`, `link-image-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -44,10 +44,10 @@ column **will** trigger the rule.
 
 <!-- pyml disable-num-lines 8 no-inline-html-->
 | Configuration Item Name | Example Markdown |
-| -- | -- |
+| --- | --- |
 | `autolinks` | `<https://example.com>`<br>`<someone@somewhere.com>` |
 | `inline-links` | `[link](https://example.com)`<br>`![image](https://example.com)` |
-| `full-links` | `[link][url]`<br>`![image][url]`|
+| `full-links` | `[link][url]`<br>`![image][url]` |
 | `collapsed-links` | `[url][]`<br>`![url][]` |
 | `shortcut-links` | `[url]`<br>`![url]` |
 | `inline-urls` | `[https://example.com](https://example.com)`<br>`![https://example.com](https://example.com)` |
@@ -72,7 +72,7 @@ of the link formats should be changed to if it is not enabled.
 | `plugins.link-image-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `autolinks` | `boolean` | `True` | Whether autolinks are allowed. |
 | `inline-links` | `boolean` | `True` | Whether inline links and images are allowed. |

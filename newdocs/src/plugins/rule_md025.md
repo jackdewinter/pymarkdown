@@ -1,7 +1,7 @@
 # Rule - MD025
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md025`, `single-title`, `single-h1` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -108,7 +108,7 @@ any possible fixes for this rule.
 | `plugins.single-h1.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `front_matter_title` | `string` | `title` | Name of the Front-Matter field that has the title associated with the document.** |
 | `level` | `integer` | `1` | Heading level to be considered as the top-level. |

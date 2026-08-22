@@ -1,7 +1,7 @@
 # Rule - MD012
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md012`, `no-multiple-blanks` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -62,7 +62,7 @@ release.
 | `plugins.no-multiple-blanks.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `maximum` | `integer` | `1` | Number of blank lines to exceed before this rule triggers |
 

@@ -14,7 +14,7 @@
 | `extensions.markdown-disallow-raw-html.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
 | `change_tag_names` | `string` | `` | [See Below](#configuring-tags-to-disallow) |
 

@@ -1,7 +1,7 @@
 # Rule - MD020
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md020`, `no-missing-space-closed-atx` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -89,7 +89,7 @@ indicate a heading.
 | `plugins.no-missing-space-closed-atx.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

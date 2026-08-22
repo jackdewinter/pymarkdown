@@ -1,7 +1,7 @@
 # Rule - MD010
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md010`, `no-hard-tabs` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -61,7 +61,7 @@ specification at the above link.
 | `plugins.no-hard-tabs.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `code_blocks` | `boolean` | `True` | Whether hard tabs are searched for within code blocks. |
 

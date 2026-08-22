@@ -1,7 +1,7 @@
 # Rule - MD011
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md011`, `no-reversed-links` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -66,7 +66,7 @@ release.
 | `plugins.no-reversed-links.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

@@ -1,7 +1,7 @@
 # Rule - MD007
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md007`, `ul-indent` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -152,7 +152,7 @@ so on.
 | `plugins.ul-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `indent` | `integer` | `2` | Number of spaces needed between unordered sublists starts. |
 | `start_indented` | `boolean` | `False` | Whether the first unordered list should be indented. |

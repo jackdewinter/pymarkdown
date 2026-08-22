@@ -110,7 +110,7 @@ advised to disable Rule Md007 when enabling Pml101.
 | `plugins.list-anchored-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `indent` | `integer` | `4` | Number of spaces needed between sublists starts. |
 

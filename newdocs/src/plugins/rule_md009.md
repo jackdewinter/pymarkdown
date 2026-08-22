@@ -1,7 +1,7 @@
 # Rule - MD009
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md009`, `no-trailing-spaces` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -90,7 +90,7 @@ whitespace characters at the end of that line.
 | `plugins.no-trailing-spaces.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `br_spaces` | `integer` | `2` | Specifies the exact number of spaces allowed at the end of the line. |
 | `strict` | `boolean` | `False` | Whether strict mode is enabled for the plugin. |

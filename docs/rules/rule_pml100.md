@@ -77,7 +77,7 @@ a JavaScript file, from happening.
 | `plugins.disallowed-html.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `change_tag_names` | `string` | [See above list](#compatibility). | Comma-separated list of proper nouns to preserve capitalization on.** |
 

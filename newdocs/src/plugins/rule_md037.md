@@ -1,7 +1,7 @@
 # Rule - MD037
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md037`, `no-space-in-emphasis` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -70,7 +70,7 @@ Within the block of emphasized text, any leading and trailing whitespace is remo
 | `plugins.no-space-in-emphasis.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

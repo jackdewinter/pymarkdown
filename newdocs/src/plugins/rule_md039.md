@@ -1,7 +1,7 @@
 # Rule - MD039
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md039`, `no-space-in-links` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -60,7 +60,7 @@ release.
 | `plugins.no-space-in-links.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

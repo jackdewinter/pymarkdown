@@ -1,7 +1,7 @@
 # Rule - MD042
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md042`, `no-empty-links` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -72,7 +72,7 @@ impossible.
 | `plugins.no-empty-links.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

@@ -15,6 +15,8 @@
     - Rule for Md053 (link-image-reference-definitions)
 - [Issue 1660](https://github.com/jackdewinter/pymarkdown/issues/1660)
     - Rule for Md054 (link-image-style)
+- [Issue 1669](https://github.com/jackdewinter/pymarkdown/issues/1669)
+    - Rule for Md060 (table-column-style)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

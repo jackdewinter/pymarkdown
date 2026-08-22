@@ -1,7 +1,7 @@
 # Rule - MD019
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md019`, `no-multiple-space-atx` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -61,7 +61,7 @@ a single space character.
 | `plugins.no-multiple-space-atx.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

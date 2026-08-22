@@ -1,7 +1,7 @@
 # Rule - MD013
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md013`, `line-length` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -88,7 +88,7 @@ release.
 | `plugins.line-length.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `line_length` | `integer` | `80` | Maximum number of characters on a normal line. |
 | `code_blocks` | `boolean` | `True` | Whether the Rule Plugin triggers on lines in a code block. |

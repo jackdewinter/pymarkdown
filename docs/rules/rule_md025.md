@@ -101,7 +101,7 @@ to check against for multiples.
 | `plugins.single-h1.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document.** |
 | `level` | `integer` | `1` | Heading level to be considered as the top-level. |

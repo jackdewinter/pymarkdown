@@ -1,7 +1,7 @@
 # Rule - MD014
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md014`, `commands-show-output` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -104,7 +104,7 @@ algorithm to fix instances of this rule lacks the context to be clear.
 | `plugins.commands-show-output.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

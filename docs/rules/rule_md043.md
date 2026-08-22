@@ -98,7 +98,7 @@ sequence is not followed by anything; it cannot be followed by any headings.
 | `plugins.required-headers.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have.** |
 

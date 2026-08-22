@@ -407,6 +407,10 @@
             "too-many-arguments": 1
         },
         "pymarkdown/plugins/rule_md_059.py": {},
+        "pymarkdown/plugins/rule_md_060.py": {
+            "too-many-arguments": 2,
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
         "pymarkdown/plugins/rule_pml_102.py": {
@@ -579,9 +583,9 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 31,
+        "too-many-instance-attributes": 32,
         "too-many-public-methods": 5,
-        "too-many-arguments": 293,
+        "too-many-arguments": 295,
         "too-few-public-methods": 57,
         "too-many-locals": 57,
         "chained-comparison": 3,

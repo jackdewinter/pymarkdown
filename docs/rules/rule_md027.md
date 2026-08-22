@@ -117,7 +117,7 @@ This will be changed in a future release.
 | `plugins.no-multiple-space-blockquote.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

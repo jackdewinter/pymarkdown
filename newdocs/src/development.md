@@ -503,3 +503,16 @@ themselves.
 
     def register_fix_token_request(
     def register_replace_tokens_request(
+
+
+
+
+
+
+1) Development process. A few things that tripped me up and might help the next contributor:
+
+The table rules only fire when the markdown-tables extension is enabled — the table tokens simply don't exist otherwise. Worth calling out in the dev doc that extension-dependent rules need to document and guard that dependency.
+The per-file state reset in starting_new_file wasn't obvious as the required pattern for rules that accumulate state (expected pipe style for MD055, header column count for MD056). A line like "if your rule holds state across tokens, reset it in starting_new_file" would have saved me time.
+Reconstructing table structure from the token stream (header vs delimiter vs body rows, overfull rows, escaped vs unescaped pipes) took the longest to get right. A short "how to read table/container tokens" note would help future table/container rule work.
+2) Testing. The main friction was interaction with existing rules. Turning the new rules on broke unrelated tests — the pragma tests around MD027/MD031/MD032, and MD058 against MD022/MD041/MD025 near headings — so I had to disable the new rules in those fixtures. That's expected, but slow to discover one failure at a time. A note along the lines of "when you add a rule, expect to touch sibling rule tests, and here's how to find which ones" would help. On the plus side, the scan test coverage earned its keep: I found and fixed two rule bugs during self-review that the tests caught immediately.
+

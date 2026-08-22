@@ -1317,6 +1317,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
           ns
   md054   link-image-style                True       True       0.5.0    No
   md059   descriptive-link-text           True       True       0.5.0    No
+  md060   table-column-style              True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1406,6 +1407,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
           ns
   md054   link-image-style                True       True       0.5.0    No
   md059   descriptive-link-text           True       True       0.5.0    No
+  md060   table-column-style              True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
@@ -1497,6 +1499,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
           ns
   md054   link-image-style                True       False      0.5.0    No
   md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1592,6 +1595,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
           ns
   md054   link-image-style                True       False      0.5.0    No
   md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1689,6 +1693,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
           ns
   md054   link-image-style                True       False      0.5.0    No
   md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No

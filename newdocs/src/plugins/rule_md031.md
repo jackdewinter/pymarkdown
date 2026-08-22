@@ -1,7 +1,7 @@
 # Rule - MD031
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md031`, `blanks-around-fences` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -99,7 +99,7 @@ release.
 | `plugins.blanks-around-fences.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `list_items` | `boolean` | `True` | Whether this Rule Plugin triggers directly within a list item. |
 

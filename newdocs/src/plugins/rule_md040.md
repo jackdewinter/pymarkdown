@@ -1,7 +1,7 @@
 # Rule - MD040
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md040`, `fenced-code-language` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -59,7 +59,7 @@ the author's insight to properly classify the content's language.
 | `plugins.fenced-code-language.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

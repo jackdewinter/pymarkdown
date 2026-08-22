@@ -102,7 +102,7 @@ both occurences of the heading text `Features` occurs in a level
 | `plugins.no-duplicate-header.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `siblings_only` | `boolean` | `False` | Whether the plugin rule allows the same text on sibling headings. |
 | `allow_different_nesting` | `boolean` | `False` | Whether the plugin rule allows the same text within different nesting hierarchies. |

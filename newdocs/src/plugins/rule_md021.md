@@ -1,7 +1,7 @@
 # Rule - MD021
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md021`, `no-multiple-space-closed-atx` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -71,7 +71,7 @@ a single space character.
 | `plugins.no-multiple-space-closed-atx.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

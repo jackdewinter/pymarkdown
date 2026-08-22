@@ -125,7 +125,7 @@ PyMarkdown releases, you should always check the current interface version at ru
 ## CLI vs. API: Key Differences
 
 | Feature | PyMarkdown CLI | PyMarkdownApi |
-| :--- | :--- | :--- |
+| :-- | :-- | :-- |
 | **Primary Output** | Text printed to `stdout` or `stderr`. | Structured Python objects (e.g., `PyMarkdownScanPathResult`). |
 | **Error Handling** | Uses exit codes (0 for success, 1+ for issues). | Raises `PyMarkdownApiException` for critical errors; returns lists for Rule Failures. |
 | **Pre-Scan Validation** | Limited; scans and reports in one pass. | Allows pre-scan validation (e.g., checking `list_result.matching_files` before scanning). |
@@ -262,7 +262,7 @@ The methods `list_path`, `scan_path`, and `fix_path` all share the same path dis
 logic. Use these parameters to control which files are processed:
 
 | Discovery&nbsp;Parameter&nbsp;Name | Type | Description |
-| :--- | :--- | :--- |
+| :-- | :-- | :-- |
 | `path_to_scan` | `str` | The root path to scan (file or directory). |
 | `recurse_if_directory` | `bool` | If `True`, scans subdirectories recursively. |
 | `alternate_extensions` | `str` | Comma-separated list of extensions (e.g., `".md,.qmd"`). Replaces default `.md`. |
@@ -406,7 +406,7 @@ The following table summarizes the recommended logging configurations based on
 your use case:
 
 | Use Case | Configuration |
-| :--- | :--- |
+| :-- | :-- |
 | **Standalone Script** | `PyMarkdownApi(inherit_logging=False).log_to_file("my_app.log")` |
 | **Library / Application** | `PyMarkdownApi(inherit_logging=True)` |
 
@@ -761,7 +761,7 @@ method returns a [`PyMarkdownScanPathResult`](./api/pymarkdownapi.md#pymarkdown.
 object. Its primary attributes, mapped to CLI equivalents, are:
 
 | ScanPathResult Attribute | Type | CLI Equivalent | Description |
-| :--- | :--- | :--- | :--- |
+| :-- | :-- | :-- | :-- |
 | `scan_failures` | `List[PyMarkdown ScanFailure]` | Formatted failure lines in stdout/stderr | Standard Rule Failures (e.g., `MD041`). |
 | `pragma_errors` | `List[PyMarkdown PragmaError]` | Pragma warning/error lines | Invalidly formatted [Pragmas](./advanced_plugins.md#suppressing-rule-failures-pragmas). |
 | `critical_errors` | `List[str]` | Critical error messages (stderr) | System-level errors (e.g., file not found, encoding issues). |

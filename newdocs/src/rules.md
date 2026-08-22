@@ -5,7 +5,7 @@
 [Full Documentation](./plugins/rule_md001.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md001`, `heading-increment`, `header-increment` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -20,7 +20,7 @@ Heading levels should only increment by one level at a time.
 [Full Documentation](./plugins/rule_md002.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md002`, `first-heading-h1`, `first-header-h1` |
 | Autofix Available | No |
 | Enabled By Default | No |
@@ -40,7 +40,7 @@ First heading of the document should be a top-level heading.
 [Full Documentation](./plugins/rule_md003.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md003`, `heading-style`, `header-style` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -55,7 +55,7 @@ Heading style should be consistent throughout the document.
 [Full Documentation](./plugins/rule_md004.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md004`, `ul-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -70,7 +70,7 @@ Inconsistent Unordered List Start style.
 [Full Documentation](./plugins/rule_md005.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md005`, `list-indent` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -85,7 +85,7 @@ Inconsistent indentation for list items at the same level.
 [Full Documentation](./plugins/rule_md006.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md006`, `ul-start-left` |
 | Autofix Available | Yes |
 | Enabled By Default | No |
@@ -105,7 +105,7 @@ Consider starting bulleted lists at the beginning of the line.
 [Full Documentation](./plugins/rule_md007.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md007`, `ul-indent` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -120,7 +120,7 @@ Unordered list indentation.
 [Full Documentation](./plugins/rule_md009.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md009`, `no-trailing-spaces` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -135,7 +135,7 @@ Trailing spaces.
 [Full Documentation](./plugins/rule_md010.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md010`, `no-hard-tabs` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -150,7 +150,7 @@ Hard tabs.
 [Full Documentation](./plugins/rule_md011.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md011`, `no-reversed-links` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -165,7 +165,7 @@ Reversed link syntax.
 [Full Documentation](./plugins/rule_md012.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md012`, `no-multiple-blanks` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -180,7 +180,7 @@ Multiple consecutive blank lines.
 [Full Documentation](./plugins/rule_md013.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md013`, `line-length` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -195,7 +195,7 @@ Line length.
 [Full Documentation](./plugins/rule_md014.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md014`, `commands-show-output` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -210,7 +210,7 @@ Dollar signs used before commands without showing output.
 [Full Documentation](./plugins/rule_md018.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md018`, `no-missing-space-atx` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -225,7 +225,7 @@ No space present after the hash character on a possible Atx Heading.
 [Full Documentation](./plugins/rule_md019.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md019`, `no-multiple-space-atx` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -240,7 +240,7 @@ Multiple spaces are present after hash character on Atx Heading.
 [Full Documentation](./plugins/rule_md020.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md020`, `no-missing-space-closed-atx` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -255,7 +255,7 @@ No space present inside of the hashes on a possible Atx Closed Heading.
 [Full Documentation](./plugins/rule_md021.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md021`, `no-multiple-space-closed-atx` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -270,8 +270,8 @@ Multiple spaces are present inside hash characters on Atx Closed Heading.
 [Full Documentation](./plugins/rule_md022.md)
 
 | Property | Value |
-| --- | -- |
-| Aliases | `md022`, `blanks-around-headings`, `blanks-around-headers`|
+| --- | --- |
+| Aliases | `md022`, `blanks-around-headings`, `blanks-around-headers` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
@@ -285,7 +285,7 @@ Headings should be surrounded by blank lines.
 [Full Documentation](./plugins/rule_md023.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md023`, `heading-start-left`, `header-start-left` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -300,7 +300,7 @@ Headings must start at the beginning of the line.
 [Full Documentation](./plugins/rule_md024.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md024`, `no-duplicate-heading`, `no-duplicate-header` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -315,7 +315,7 @@ Multiple headings cannot contain the same content.
 [Full Documentation](./plugins/rule_md025.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md025`, `single-title`, `single-h1` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -330,7 +330,7 @@ Multiple top-level headings in the same document.
 [Full Documentation](./plugins/rule_md026.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md026`, `no-trailing-punctuation` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -345,7 +345,7 @@ Trailing punctuation present in heading text.
 [Full Documentation](./plugins/rule_md027.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md027`, `no-multiple-space-blockquote` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -360,7 +360,7 @@ Multiple spaces after blockquote symbol.
 [Full Documentation](./plugins/rule_md028.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md028`, `no-blanks-blockquote` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -375,7 +375,7 @@ Blank line inside blockquote.
 [Full Documentation](./plugins/rule_md029.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md029`, `ol-prefix` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -390,7 +390,7 @@ Ordered list item prefix.
 [Full Documentation](./plugins/rule_md030.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md030`, `list-marker-space` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -405,7 +405,7 @@ Spaces after list markers.
 [Full Documentation](./plugins/rule_md031.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md031`, `blanks-around-fences` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -420,7 +420,7 @@ Fenced code blocks should be surrounded by blank lines.
 [Full Documentation](./plugins/rule_md032.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md032`, `blanks-around-lists` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -435,7 +435,7 @@ List blocks should be surrounded by blank lines.
 [Full Documentation](./plugins/rule_md033.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md033`, `no-inline-html` |
 | Autofix Available | No* |
 | Enabled By Default | Yes |
@@ -450,7 +450,7 @@ Inline HTML.
 [Full Documentation](./plugins/rule_md034.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md034`, `no-bare-urls` |
 | Autofix Available | No* |
 | Enabled By Default | Yes |
@@ -465,7 +465,7 @@ Bare URL used.
 [Full Documentation](./plugins/rule_md035.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md035`, `hr-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -480,7 +480,7 @@ Horizontal rule style.
 [Full Documentation](./plugins/rule_md036.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md036`, `no-emphasis-as-heading`, `no-emphasis-as-header` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -495,7 +495,7 @@ Emphasis possibly used instead of a heading element.
 [Full Documentation](./plugins/rule_md037.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md037`, `no-space-in-emphasis` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -510,7 +510,7 @@ Spaces inside emphasis markers.
 [Full Documentation](./plugins/rule_md038.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md038`, `no-space-in-code` |
 | Autofix Available | Yes* |
 | Enabled By Default | Yes |
@@ -525,7 +525,7 @@ Spaces inside code span elements.
 [Full Documentation](./plugins/rule_md039.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md039`, `no-space-in-links` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -540,7 +540,7 @@ Spaces inside link text.
 [Full Documentation](./plugins/rule_md040.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md040`, `fenced-code-language` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -555,7 +555,7 @@ Fenced code blocks should have a language specified.
 [Full Documentation](./plugins/rule_md041.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md041`, `first-line-heading`, `first-line-h1` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -570,7 +570,7 @@ First line in file should be a top-level heading.
 [Full Documentation](./plugins/rule_md042.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md042`, `no-empty-links` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -585,7 +585,7 @@ No empty links.
 [Full Documentation](./plugins/rule_md043.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md043`, `required-headings`, `required-headers` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -600,7 +600,7 @@ Required heading structure.
 [Full Documentation](./plugins/rule_md044.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md044`, `proper-names` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -615,7 +615,7 @@ Proper names should have the correct capitalization.
 [Full Documentation](./plugins/rule_md045.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md045`, `no-alt-text` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -630,7 +630,7 @@ Images should have alternate text (alt text).
 [Full Documentation](./plugins/rule_md046.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md046`, `code-block-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -645,7 +645,7 @@ Code block style.
 [Full Documentation](./plugins/rule_md047.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md047`, `single-trailing-newline` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -660,7 +660,7 @@ Each file should end with a single newline character.
 [Full Documentation](./plugins/rule_md048.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md048`, `code-fence-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -675,7 +675,7 @@ Code fence style should be consistent throughout the document.
 [Full Documentation](./plugins/rule_md049.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md049`, `emphasis-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -690,7 +690,7 @@ Emphasis style should be consistent throughout the document.
 [Full Documentation](./plugins/rule_md050.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md050`, `strong-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -705,7 +705,7 @@ Strong emphasis style should be consistent throughout the document.
 [Full Documentation](./plugins/rule_md051.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md051`, `link-fragments` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -720,7 +720,7 @@ Local link fragments should be valid.
 [Full Documentation](./plugins/rule_md053.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md053`, `link-image-reference-definitions` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -735,7 +735,7 @@ Link and image reference definitions should be needed.
 [Full Documentation](./plugins/rule_md054.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md054`, `link-image-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -750,7 +750,7 @@ Link and image style.
 [Full Documentation](./plugins/rule_md059.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md059`, `descriptive-link-text` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -760,12 +760,27 @@ Link and image style.
 
 Link text should be descriptive.
 
+## Rule - MD060
+
+[Full Documentation](./plugins/rule_md060.md)
+
+| Property | Value |
+| --- | --- |
+| Aliases | `md060`, `table-column-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table column style.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml100`, `disallowed-html` |
 | Autofix Available | Pending review |
 | Enabled By Default | No |
@@ -780,7 +795,7 @@ Disallowed HTML elements.
 [Full Documentation](./plugins/rule_pml101.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml101`, `list-anchored-indent` |
 | Autofix Available | Pending review |
 | Enabled By Default | No |
@@ -795,7 +810,7 @@ Anchored list indentation.
 [Full Documentation](./plugins/rule_pml102.md)
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml102`, `disallow-lazy-list-indentation` |
 | Autofix Available | In Queue |
 | Enabled By Default | No |

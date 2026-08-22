@@ -1,7 +1,7 @@
 # Rule - MD002
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md002`, `first-heading-h1`, `first-header-h1` |
 | Autofix Available | No |
 | Enabled By Default | No |
@@ -80,7 +80,7 @@ The reason for not being able to auto-fix this rule is its deprecation in favor 
 | `plugins.first-header-h1.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the Rule Plugin is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
 

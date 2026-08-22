@@ -1,7 +1,7 @@
 # Rule - MD023
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md023`, `heading-start-left`, `header-start-left` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -80,7 +80,7 @@ a SetExt Heading element are removed.
 | `plugins.header-start-left.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

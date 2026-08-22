@@ -1,7 +1,7 @@
 # Rule - MD004
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md004`, `ul-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -98,14 +98,14 @@ list start.
 | `plugins.ul-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `consistent` | Style for Unordered List Starts in the document. |
 
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first Unordered List Start in the document specifies the style for the rest of the document. |
 | `asterisk` | Only Unordered List Starts with asterisks are used. |
 | `dash` | Only Unordered List Starts with dashes are used. |

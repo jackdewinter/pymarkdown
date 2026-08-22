@@ -1,7 +1,7 @@
 # Rule - MD029
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md029`, `ol-prefix` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -140,7 +140,7 @@ changing that second item's list start to `2`.
 | `plugins.ol-prefix.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
 | `allow_extended_start_values` | `boolean` | `False` | Using the `ordered` style, allows for any integer to start the list. |
@@ -148,7 +148,7 @@ changing that second item's list start to `2`.
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `one_or_ordered` | Either of the `one` or `ordered` styles below. |
 | `one` | All Ordered List Items must start with `1`. |
 | `ordered` | Starting with `0` or `1`, each List Item must be one greater than its predecessor. |

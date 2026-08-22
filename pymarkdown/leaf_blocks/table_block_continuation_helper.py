@@ -288,8 +288,10 @@ class TableBlockContinuationHelper:
         )
         new_tokens.append(start_row_token)
 
-        column_number = base_column_number + int(
-            next_table_row.did_start_with_separator
+        column_number = (
+            base_column_number
+            + len(next_table_row.extracted_whitespace)
+            + int(next_table_row.did_start_with_separator)
         )
 
         for next_column_index, next_column in enumerate(abc):

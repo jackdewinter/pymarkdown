@@ -1,7 +1,7 @@
 # Rule - MD047
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md047`, `single-trailing-newline` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
@@ -82,7 +82,7 @@ end of the document.
 | `plugins.single-trailing-newline.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

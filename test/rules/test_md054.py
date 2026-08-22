@@ -268,7 +268,7 @@ scanTests = [
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md054_scan(test: pluginRuleTest) -> None:
     """
-    Execute a parameterized scan test for plugin md001.
+    Execute a parameterized scan test for plugin md054.
     """
     execute_scan_test(test, "md054")
 
@@ -277,7 +277,7 @@ def test_md054_scan(test: pluginRuleTest) -> None:
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md054_config(test: pluginConfigErrorTest) -> None:
     """
-    Execute a parameterized fix test for plugin md001.
+    Execute a parameterized fix test for plugin md054.
     """
     execute_configuration_test(test, f"{source_path}bad_fenced_backticks_and_tildes.md")
 

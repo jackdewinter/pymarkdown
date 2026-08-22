@@ -14,7 +14,7 @@
 | `extensions.markdown-task-list-items.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
 
 ## Summary

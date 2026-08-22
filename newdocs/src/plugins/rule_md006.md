@@ -1,7 +1,7 @@
 # Rule - MD006
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md006`, `ul-start-left` |
 | Autofix Available | Yes |
 | Enabled By Default | No |
@@ -89,7 +89,7 @@ created to more clearly handle this issue.
 | `plugins.ul-start-left.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule

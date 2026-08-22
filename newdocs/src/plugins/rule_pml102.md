@@ -1,7 +1,7 @@
 # Rule - PML102
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `pml102`, `disallow-lazy-list-indentation` |
 | Autofix Available | In Queue |
 | Enabled By Default | No |
@@ -113,7 +113,7 @@ The fix for this rule is currently in queue.
 | `plugins.disallow-lazy-list-indentation.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 ## Origination of Rule
