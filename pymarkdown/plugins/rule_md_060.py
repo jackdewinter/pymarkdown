@@ -6,9 +6,14 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional, cast, override
+from typing import Dict, List, Optional, cast
 
 from wcwidth import wcswidth
+
+try:
+    from typing import override  # Python 3.12+
+except ImportError:
+    from typing_extensions import override  # Older versions
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import (
