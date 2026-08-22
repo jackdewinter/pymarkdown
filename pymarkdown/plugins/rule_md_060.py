@@ -10,9 +10,9 @@ from typing import Dict, List, Optional, cast
 
 from wcwidth import wcswidth
 
-try:    # Python 3.12+
+try:  # Python 3.12+
     from typing import override  # pragma: no cover
-except ImportError: # Older versions
+except ImportError:  # Older versions
     from typing_extensions import override  # pragma: no cover
 
 from pymarkdown.general.parser_helper import ParserHelper
