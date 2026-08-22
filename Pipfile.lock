@@ -810,11 +810,12 @@
         },
         "gitpython": {
             "hashes": [
-                "sha256:80da2d12504d52e1f998772dc5baf6e553f8d2fcfe1fcc226c9d9a2ee3372dcc",
-                "sha256:d352abe2908d07355014abdd21ddf798c2a961469239afec4962e9da884858f9"
+                "sha256:621416df10ef3fd0e19fabf9172ddeed0fa704d353d04f194eec56a625a95b22",
+                "sha256:d331e722577f0fd7fc1f857419b3ecc07af66282b933d2a4d95f84a042fdd50f"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==3.1.50"
+            "version": "==3.1.58"
         },
         "griffelib": {
             "hashes": [
