@@ -35,9 +35,8 @@ jobs:
     - name: Calculate test matrix
       id: set-matrix
       run: |
-        branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
-        echo "Branch Name: $branchName"
-        matrix=$(jq --arg branchName "$branchName" 'map(. | select((.runOn==$branchName) or (.runOn=="current")) )' .github/workflows/matrix_includes.json)
+        echo "Branch Name: ${GITHUB_REF_NAME}"
+        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$branchName) or (.runOn=="current")) )' .github/workflows/matrix_includes.json)
         echo "Matrix: $matrix"
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
@@ -60,9 +59,8 @@ jobs:
     - name: Calculate test matrix
       id: set-matrix
       run: |
-        branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
-        echo "Branch Name: $branchName"
-        matrix=$(jq --arg branchName "$branchName" 'map(. | select((.runOn==$branchName) or (.runOn=="previous")) )' .github/workflows/matrix_includes.json)
+        echo "Branch Name: ${GITHUB_REF_NAME}"
+        matrix=$(jq --arg branchName "${GITHUB_REF_NAME}" 'map(. | select((.runOn==$branchName) or (.runOn=="previous")) )' .github/workflows/matrix_includes.json)
         echo "Matrix: $matrix"
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
