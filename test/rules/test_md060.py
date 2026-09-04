@@ -2936,6 +2936,27 @@ Character | Meaning |
 {temp_source_path}:5:4: MD060: Table column style. [Style: aligned Expected-Leading: True Actual-Leading: False] (table-column-style)
 """,
     ),
+    pluginRuleTest(
+        "bad_tight_with_aligned",
+        source_file_contents="""
+| Character | Meaning | French | Spanish |
+| --------- | :------ | -----: | :-----: |
+|Y|Yes|Oui|Si|
+|N|No|Non|No|
+""",
+        set_args=["plugins.md060.style=tight","plugins.md060.aligned_delimiter=$!True"],
+        enable_extensions="markdown-tables",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:2: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:12: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:14: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:22: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:24: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:31: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:33: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+{temp_source_path}:2:41: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
+""",
+    ),
 ]
 
 

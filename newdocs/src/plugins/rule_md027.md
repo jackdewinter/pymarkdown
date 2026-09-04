@@ -8,38 +8,63 @@
 
 ## Summary
 
-Multiple spaces after blockquote symbol.
+Do not use multiple spaces after the blockquote symbol.
 
 ## Reasoning
 
 ### Consistency
 
-One of the main keys to readability is to have consistent formatting applied
-throughout a group of documents.  Extending the concept even further,
-organizations may have specific rules on how documents should be authored throughout
-that organization.  It follows that both concepts may extend to specifying
-that only zero or one space characters can follow the block quote character
-(`>`).
+Consistent formatting improves readability across documents. This rule ensures that only zero or one space follows the blockquote symbol (`>`), helping maintain a uniform appearance.
 
 ## Examples
 
-As the space character is not normally visible, each occurrence of
-the text `{space}` in the following example stands for a single
-space character.
-
 ### Failure Scenarios
 
-This rule triggers when the start of any line in a block quote has more than
-one space character:
+This rule triggers when multiple spaces follow a blockquote symbol.
 
 ```Markdown
 >  This is text
 ```
 
-The exceptions for triggering this rule are detailed in the following section
-on Correct Scenarios.  One that bears special mention is the Link Reference Definition
-element.  A Link Reference Definition element that has extra spaces in the non-Label
-and non-Title parts of the element will trigger this rule:
+> **Explanation**: This example violates the rule because there are two space characters after the blockquote symbol `>` on the first line. The rule requires zero or one space after the blockquote symbol.
+
+Unlike the previous example, this case shows a blank line within a blockquote where extra spaces precede a pipe character used for visibility:
+
+```Markdown
+>  |
+```
+
+> **Explanation**: This example violates the rule because there are two spaces after the blockquote symbol `>`. The pipe character `|` is not part of the Markdown syntax but is included for visibility. The rule triggers because the extra spaces are not justified by any exempt element.
+
+Unlike the previous examples, this case shows a list item inside a blockquote with extra spaces after the blockquote symbol:
+
+```Markdown
+>  - This is a list item
+```
+
+> **Explanation**: This example violates the rule because there are two spaces after the blockquote symbol `>`. The extra space before the list marker `-` is not justified by any exempt element, and the rule requires zero or one space after the blockquote symbol.
+
+Unlike the previous example, this case demonstrates Setext headings with extra spaces after the blockquote symbol:
+
+```Markdown
+>   this is one Setext
+> =====
+
+> this is another Setext
+>   =====
+```
+
+> **Explanation**: This example violates the rule because the first and fifth lines have extra spaces after the blockquote symbol `>`. The Setext heading underline lines (lines 1 and 5) also trigger the rule because extra spaces are present after `>`, even though they are part of a Setext heading.
+
+Unlike the previous example, this case shows a thematic break with extra spaces after the blockquote symbol:
+
+```Markdown
+>  ----
+```
+
+> **Explanation**: This example violates the rule because there are two spaces after the blockquote symbol `>`. The thematic break line triggers the rule because the extra spaces are not justified by any exempt element.
+
+Unlike the previous example, this case shows a Link Reference Definition element with extra spaces in the non-Label and non-Title parts of the element:
 
 ```Markdown
 >  [lab
@@ -49,10 +74,17 @@ and non-Title parts of the element will trigger this rule:
 >  le"
 ```
 
-The above example will trigger the rule three times.  Once for the first line,
-once for the third line, and once for the fourth line.  Because the Link Label
-part and the Link Title part of the element may require that extra space to be
-present, they are excluded from the trigger conditions for this rule.
+> **Explanation**: This example violates the rule on lines 1, 3, and 4 because each has two spaces after the blockquote symbol. The Link Label part (`el]:`) and Link Title part (`"tit`) are excluded from the rule because they require the extra space for proper formatting, but the other lines do not have this exception and thus trigger the rule.
+
+Unlike the previous example, this case shows a Fenced Code Block where the content inside is safe, but the opening and closing lines still trigger the rule due to extra spaces after the blockquote symbol:
+
+````Markdown
+>  ```Python
+>  a = a + 1
+>  ```
+````
+
+> **Explanation**: This example triggers because the start and end lines of the Fenced Code Block are not immune to triggering, even though the content inside is exempt.
 
 ### Correct Scenarios
 
@@ -64,47 +96,33 @@ zero or one space characters:
 >This is still text.
 ```
 
-This rule does not trigger on any text inside of a Fenced Code Block element,
-any text inside of an Indented Code Block element, or any text inside of a HTML
-Block element. Like the reasons for excluding certain parts of the Link Reference
-Definition element from triggering this rule (see last section), the text in
-these areas have special meaning which may include the presence of any
-space characters.  Note that while an entire Indented Code Block element
-will not trigger this rule:
+> **Explanation**: This example satisfies the rule because the first line has exactly one space after the blockquote symbol, and the second line has zero spaces. Both are within the allowed range of zero or one spaces.
+
+Unlike the previous example, this case shows text inside an Indented Code Block element:
 
 ```Markdown
 >     indented code block
 ```
 
-and an entire HTML Block element will not trigger this rule:
+> **Explanation**: This example satisfies the rule because the extra spaces after the blockquote symbol are part of an Indented Code Block (four or more spaces), which is exempt from the rule. The spaces are required for the code block syntax, not a formatting error.
+
+Unlike the previous example showing an Indented Code Block, this case demonstrates an entire HTML Block element:
 
 ```Markdown
 >  <!-- some comment -->
 ```
 
-only the *inside* parts of a Fenced Code Block element will trigger
-this rule:
+> **Explanation**: This example satisfies the rule because the content is part of an HTML Block element (an HTML comment). The rule does not apply to HTML Block elements, so the extra space after the blockquote symbol is ignored.
+
+Unlike the previous example, this case shows a Fenced Code Block where the start and end lines have proper indentation, even if the FCB contents are indented extra.
 
 ````Markdown
->  ```Python
+> ```Python
 >   a = a + 1
->  ```
+> ```
 ````
 
-For the Fenced Code Block element example, the extra spaces for the
-first line (opening the Fenced Code Block element) and the last line
-(closing the Fenced Code Block element) will trigger this rule, while
-the second line (inside the Fenced Code Block element) will not trigger
-this rule.
-
-### Future
-
-For reasons like the ones already expressed above, the
-Link element and the Raw HTML element should not trigger this rule.
-Currently, these two elements are not treated any differently than
-any of the other text within a Paragraph element.
-
-This is slated to be changed in a future release.
+> **Explanation**: Start and end of code block adhere to indentation, and anything within the block has its indentation controlled by the FCB, meaning it does not trigger.
 
 ## Fix Description
 
@@ -150,12 +168,12 @@ This rule is largely inspired by the MarkdownLint rule
 ### Differences From MarkdownLint Rule
 
 The most obvious difference between implementations is in the treatment of extra
-spaces on Blank Lines within a Block Quote element.  A frequent
-victim of cut-and-paste accidents, it is not unusual to have a
-Blank Line that is followed by extra whitespace characters:
+spaces on Blank Lines within a Block Quote element.  Blank Lines within block quotes often contain extra whitespace due to editing errors:
+
+To improve visibility in the following example, the pipe character (`|`) marks line endings for visibility and is not evaluated by the rule.
 
 ```Markdown
->{space}{space}
+>  |
 ```
 
 That example will trigger with this rule, but not with the original
@@ -172,10 +190,10 @@ Block element.
 Also, as explained in the [above section](#failure-scenarios), only
 certain parts of the Link Reference Definition are scanned by this
 rule.  Like the Fenced Code Block element, this is a change from the
-original rule which triggers on any part of a Link Referenced Definition
+original rule which triggers on any part of a Link Reference Definition
 element.
 
 Finally, the original rule does not trigger on the final line or
-heading line for a SetExt Heading element or on the Thematic Break
+heading line for a Setext Heading element or on the Thematic Break
 element.  This implementation triggers when extra spaces are present in
 either element.

@@ -14,11 +14,7 @@ Multiple headings cannot contain the same content.
 
 ### Correctness
 
-While not common to the default installation of most parsers, a common extension
-to those parsers is to generate an `id` attribute for the heading element and/or
-an anchor tag based on the content of the heading element.  Therefore, having
-two or more headings with the same text may confuse those generators, producing
-non-unique results for those anchors.
+Many Markdown parsers generate `id` attributes or anchor tags based on heading content. Having multiple headings with the same text produces non-unique anchors, which can break navigation and cause accessibility issues for readers relying on those links.
 
 ## Examples
 
@@ -32,6 +28,28 @@ This rule triggers when there are multiple headings that have the same text:
 ## Heading Text
 ```
 
+> **Explanation**: This example fails because both headings contain the exact same text (`Heading Text`), which violates the rule that prohibits multiple headings with identical content. This could cause issues with parsers that generate unique IDs or anchor tags based on heading content.
+
+Unlike the previous example which showed headings at different nesting levels, this case demonstrates duplicate headings that are direct siblings at the same level:
+
+```Markdown
+## Heading Text
+
+## Heading Text
+```
+
+> **Explanation**: This example fails because both headings are sibling elements at the same nesting level (`##`) with identical text, which violates the rule that prohibits duplicate heading content among siblings.
+
+Building on the previous sibling example, this scenario shows that leading whitespace in a heading does not make it distinct from another heading without leading whitespace:
+
+```Markdown
+  ## Heading Text
+
+## Heading Text
+```
+
+> **Explanation**: This example fails because the rule ignores leading whitespace when comparing heading content. Both headings are considered to have the same text (`Heading Text`), violating the duplicate heading prohibition.
+
 ### Correct Scenarios
 
 This rule does not trigger when each heading has distinct text:
@@ -41,8 +59,9 @@ This rule does not trigger when each heading has distinct text:
 
 ## Heading 2
 ```
+> **Explanation**: This example passes because each heading has distinct text (`Heading 1` and `Heading 2`), satisfying the rule requirement that all headings must have unique content.
 
-A strict comparison is performed, so even an extra space character:
+Unlike the previous example where headings were clearly different, this case shows that even a single extra space character makes headings distinct under strict comparison:
 
 ```Markdown
 # Heading  Text
@@ -50,7 +69,9 @@ A strict comparison is performed, so even an extra space character:
 ## Heading Text
 ```
 
-or a change in capitalization is enough to avoid this rule triggering:
+> **Explanation**: This example passes because the strict comparison detects that `Heading  Text` (with two spaces) differs from `Heading Text` (with one space), making them unique despite appearing similar visually.
+
+Building on the prior example, this case demonstrates that capitalization changes alone are sufficient to differentiate headings:
 
 ```Markdown
 # Heading TEXT
@@ -58,12 +79,9 @@ or a change in capitalization is enough to avoid this rule triggering:
 ## Heading Text
 ```
 
-### Siblings
+> **Explanation**: This example passes because the strict comparison treats `Heading TEXT` and `Heading Text` as different strings due to the capitalization difference, satisfying the uniqueness requirement.
 
-In certain Markdown documents, such as `changelog.md` files, non-sibling
-headings may purposefully have the same text.  As this is the desired
-behavior, the `siblings_only` or `allow_different_nesting` configuration value
-can be set to `True` to allow this Markdown document to not trigger this rule:
+Unlike the earlier examples involving simple uniqueness, this scenario involves non-sibling headings that share text within different nesting hierarchies, which is allowed when `siblings_only` or `allow_different_nesting` is enabled:
 
 ```Markdown
 # Change log
@@ -77,21 +95,11 @@ can be set to `True` to allow this Markdown document to not trigger this rule:
 ### Features
 ```
 
-Continuing the use of the family analogy, the way to view a sibling
-relationship is as follows.  If the same heading occurs at the same
-level, it is considered a *twin* heading.  This mirrors a real-life
-twin that has the same parents, in this case the heading before
-the twin headings.  And while it might more properly be called
-a *cousin* heading, a *sibling* heading is a heading with the same
-name at the same depth in the heading hierarchy.
-
-Using the change log example above, this relationship is true as
-both occurrences of the heading text `Features` occurs in a level
-3 heading under a level 2 heading.
+> **Explanation**: This example passes when the siblings_only configuration is set to True because the "Features" headings are not siblings (they are under different parent headings), so they are allowed to have the same text. This is useful for documents like changelogs where repeated section names are intentional and desired.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is context. Using any of the
+Auto-fixing this rule is not feasible due to contextual considerations. Using any of the
 above trigger examples, it is simple to determine when this rule should be triggered.
 It would be relatively easy to devise an algorithm that would perform some action
 (such as appending an increasing number to the end of the heading text) to make each

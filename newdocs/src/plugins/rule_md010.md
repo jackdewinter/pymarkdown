@@ -8,49 +8,58 @@
 
 ## Summary
 
-Hard tabs.
+Disallow hard tabs in Markdown files.
 
 ## Reasoning
 
-## Consistency
+### Consistency
 
-The primary reason for enabling this rule is to force Markdown writers to be
-explicit about their intent with the document.  As different editors and different
-parsers may treat tab characters differently, the interpretation of a tab character's
-effect on a line depends on what editor or parser is used to interpret the Markdown
-text. By enabling this rule, the Markdown writer is forced to explicitly state their
-intentions for document indentation without any perceived ambiguity.
+Different editors and parsers interpret tab characters inconsistently, leading to unpredictable rendering. This rule requires spaces instead of tabs to ensure uniform appearance.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when any line of the document has a hard tab character.
-A simple example is:
+This rule triggers when a line contains a hard tab character.
 
 ```Markdown
-{tab}Indented Code Block
+→Indented Code Block
 ```
 
-where the sequence `{tab}` is replaced with an actual tab character.  If multiple
-tab characters are present, each occurrence of a tab character will trigger this
-rule independently.
+> **Explanation**: This line begins with a hard tab character (shown as `→`) instead of spaces. MD010 requires all indentation to use spaces for consistent rendering. The `→` symbol visually represents the tab character (`\t`, Unicode U+0009).
+
+Unlike the previous example, this case includes hard tab characters both at the beginning of the line and within the content.
+
+```Markdown
+→Indented→Code→Block
+```
+
+> **Explanation**: This line fails MD010 because it contains hard tab characters (shown as `→`) for both leading indentation and within the text. The rule requires all tabs to be replaced with spaces to ensure consistent rendering across different parsers and editors.
+
+Unlike the previous examples, this case contains a hard tab character only within the inline text, with no leading indentation.
+
+```Markdown
+Some text→with a tab
+```
+
+> **Explanation**: This line fails MD010 because it contains a hard tab character (shown as `→`) within the inline content. Even though there is no leading indentation tab, any tab character anywhere in the document triggers this rule. The rule requires all tabs to be replaced with spaces to ensure consistent rendering.
 
 ### Correct Scenarios
 
-To correct the above example, simply enforce the required indentation using space
-characters:
+This rule does not trigger when indentation is performed using space characters.
 
 ```Markdown
     Indented Code Block
 ```
 
+> **Explanation**: This line passes MD010 because it uses four space characters for indentation rather than a hard tab. Since no tab characters are present, the rule is satisfied.
+
 ## Fix Description
 
 Except for within code blocks, any tab characters will be replaced with the appropriate
-count of space characters.  Note that tab characters within Markdown documents are
+count of space characters. Note that tab characters within Markdown documents are
 treated as [Tab Stops](https://github.github.com/gfm/#tabs) and not blindly replaced
-with 4 space characters per tab character.  For more clarity, please read the
+with 4 space characters per tab character. For more clarity, please read the
 specification at the above link.
 
 ## Configuration

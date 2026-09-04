@@ -8,97 +8,46 @@
 
 ## Summary
 
-Ordered list item prefix.
+Ordered list item prefixes must be consistent.
 
 ## Reasoning
 
 ### Readability
 
-Writing the Ordered List Item prefix using a consistent form enhances the readability
-of the document by supplying a pattern that the reader can follow without much thought.
-This pattern can also be set to take advantage of the strengths and weaknesses of
-the Markdown parser, ensuring that it creates the correct HTML output.
+Consistent ordered list item prefixes create a predictable pattern that enhances readability. They also ensure that lists render correctly across different Markdown parsers and tools.
 
 ## Examples
 
 ### Failure Scenarios
 
-By default, this rule uses the `one_or_ordered` configuration.  This triggers when
-an Ordered List Item element does not start with the number `0` or `1` or if any
-subsequent List Item elements are not in a numerically increasing order.
+This rule triggers when an ordered list item prefix is not `1` or `0` (depending on configuration) or does not follow the expected order.
 
-````Markdown
+```Markdown
 2. second item
 3. third item
-````
+```
 
-````Markdown
+> **Explanation**: This list starts with `2`, which is not the allowed start value (`0` or `1`) for the default `one_or_ordered` style. Therefore, the rule triggers.
+
+Unlike the previous example, this list starts with `1` but the subsequent item skips a number.
+
+```Markdown
 1. first item
 3. third item
-````
+```
 
-````Markdown
+> **Explanation**: The list starts with `1`, which is valid. However, the next item is `3`, skipping `2`. This violates the `ordered` style requirement where each item must increment by one.
+
+Unlike the previous example, this list starts with an invalid number and does not increment correctly.
+
+```Markdown
 3. first item
 3. second item
-````
+```
 
-### Correct Scenarios
+> **Explanation**: The list starts with `3`, which is invalid. Additionally, the second item is also `3`, failing to increment from the previous item.
 
-This rule does not trigger if all Ordered List Item elements
-start with `1`:
-
-````Markdown
-1. First Line
-1. Second Line
-````
-
-or if the first item starts with `0` or `1` and steadily increasing by
-one:
-
-````Markdown
-1. First Item
-2. Second Item
-3. Third Item
-````
-
-Instead of the default `one_or_ordered` configuration, the `one` configuration
-will trigger if any Ordered List Item element does not start with `1` and the
-`zero` configuration will trigger instead if not a `0`.
-
-Note that enabling the `allow_extended_start_values` configuration allows any
-non-negative integer to start an `ordered` list. If the default `one_or_ordered`
-configuration is in effect, any other integer other than `0` or `1` will force
-the `ordered` configuration to be chosen.  Therefore, given the above failure
-scenario:
-
-````Markdown
-2. second item
-3. third item
-````
-
-and enabling the configuration `allow_extended_start_values` will cause this
-scenario to become a correct scenario.
-
-### Clarifications
-
-The determination of whether the `one` part or the `ordered` part of the configuration
-is used for the `one_or_ordered` configuration is done on a list-by-list basis.
-Therefore, the following Markdown will not cause the rule to be triggered:
-
-````Markdown
-1. First Line
-1. Second Line
-
-text to break up lists
-
-1. First Item
-2. Second Item
-3. Third Item
-````
-
-as there are two lists, each with their own distinct style.
-
-This is also true of nested lists, but with a twist.  Given the following:
+Unlike the previous examples, this scenario demonstrates nested ordered lists, where each inner list starts a new evaluation of the rule based on the configured style.
 
 ```Markdown
 2. first
@@ -111,11 +60,62 @@ This is also true of nested lists, but with a twist.  Given the following:
    2. second-third
 ```
 
-this rule triggers on lines 1, 4, and 8.  It triggers on line 1 because the list
-starts with `2`, line 4 because that inner list's style is `one` and line 8 because
-that inner list's style is `ordered`.  Note that as a Commonmark compatible parser,
-PyMarkdown will only accept an inner list that starts with a `1` to keep alignment
-with Commonmark.
+> **Explanation**: Assuming the default `one_or_ordered` style, the rule triggers on multiple lines. Line 1 triggers because the outer list starts with `2` instead of `1` or `0`. Line 4 triggers because the first inner list uses the `one` style (items should all be `1`), but the third item is `2`. Line 8 triggers because the second inner list uses the `ordered` style (items should increment), but the third item is `2` instead of `3`. This highlights that nested lists are evaluated independently according to the rule's style criteria.
+
+### Correct Scenarios
+
+This rule does not trigger when all ordered list items start with `1`, which is one of the allowed styles (`one`).
+
+```Markdown
+1. First Line
+1. Second Line
+```
+
+> **Explanation**: All items start with `1`, satisfying the `one` style component of the default `one_or_ordered` configuration or an explicitly configured style of `one`.
+
+Unlike the previous example, this list starts with `1` and increments steadily, satisfying the `ordered` style.
+
+```Markdown
+1. First Item
+2. Second Item
+3. Third Item
+```
+
+> **Explanation**: The list starts with `1` and each subsequent item increments by one, satisfying the `ordered` style component of the default `one_or_ordered` style or an explicitly configured style of `ordered`.
+
+Unlike the previous example, this list uses the `zero` style, where all items start with `0`.
+
+```Markdown
+0. First Item
+0. Second Item
+0. Third Item
+```
+
+> **Explanation**: All items start with `0`, satisfying the `zero` style configuration. This is a valid alternative to `one` or `ordered` styles.
+
+Unlike the previous example, this scenario demonstrates that enabling the `allow_extended_start_values` configuration allows non-standard start values when using the `ordered` style.
+
+```Markdown
+2. second item
+3. third item
+```
+
+> **Explanation**: With `allow_extended_start_values` enabled, the `ordered` style permits starting with `2`. The subsequent item `3` correctly increments from `2`, satisfying the `ordered` criteria.
+
+Unlike the previous example, this scenario shows two separate lists where each can independently satisfy one of the different styles in the `one_or_ordered` style (`one` vs `ordered`) because the style determination resets for each list.
+
+```Markdown
+1. First Line
+1. Second Line
+
+text to break up lists
+
+1. First Item
+2. Second Item
+3. Third Item
+```
+
+> **Explanation**: The first list uses the `one` style (all items start with `1`). The second list uses the `ordered` style (starts with `1` and increments). Since the lists are separated by text, the style reset allows both patterns to exist without triggering the rule.
 
 ## Fix Description
 
@@ -142,10 +142,10 @@ changing that second item's list start to `2`.
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
+| `style` | `string` | `one_or_ordered` | Style for Ordered List Starts in the document. |
 | `allow_extended_start_values` | `boolean` | `False` | Using the `ordered` style, allows for any integer to start the list. |
 
-Valid heading styles:
+Valid styles:
 
 | Style | Description |
 | --- | --- |

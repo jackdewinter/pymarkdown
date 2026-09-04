@@ -8,28 +8,19 @@
 
 ## Summary
 
-Dollar signs used before commands without showing output.
+Require output lines in code blocks prefixed with `$`.
 
 ## Reasoning
 
-### Portability/Readability
+### Readability
 
-The primary reason for enabling this rule is that code blocks with
-bash-style script text are visibly more readable when the `$` indicator for
-a new script line is removed.  The exception to this rule is when the
-script text includes both the input and the output for the script.
-
-If at least one line without the leading indicator is present in the code block,
-this rule will not fire.  This is in consideration of the real-world observations
-that while a group of commands may not output any data, the likelihood of that occurring
-decreases with the number of commands provided.
+Terminal simulations should distinguish between commands and output to aid reader comprehension. When every line starts with $, it falsely implies a command was issued with no visible result; requiring at least one non-prefixed line ensures output is shown or prompts are removed entirely, improving clarity.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers if every line within a Code Block element begins with
-the `$` indicator, after any leading space characters have been removed.
+This rule triggers when every line within a code block begins with the `$` indicator.
 
 ````Markdown
 ```shell
@@ -38,11 +29,22 @@ $ cat /my/dir/file
 ```
 ````
 
+> **Explanation**: This example fails because both lines start with `$`, and there are no lines without the `$` indicator to suggest command output. The rule requires that at least one line in the code block does not start with `$` to indicate output is present or commands are not prefixed.
+
+Unlike the first example, this case includes leading spaces before the `$` indicator on each line.
+
+````Markdown
+```shell
+  $ ls /my/dir
+  $ cat /my/dir/file
+```
+````
+
+> **Explanation**: This example fails because every line starts with `$` after optional leading whitespace. The rule considers leading spaces before the `$` indicator, and since all lines begin with `$` (ignoring leading spaces), there are no lines without the `$` indicator to suggest command output. The rule requires that at least one line in the code block does not start with `$` to indicate output is present or commands are not prefixed.
+
 ### Correct Scenarios
 
-There are two ways in which to correct the above example.  If the writer
-intends to show only the script input commands, then the example can be
-corrected by removing the leading `$` indicator from each line.
+This rule does not trigger when the leading `$` indicators are removed from all lines in a code block containing only script input.
 
 ````Markdown
 ```shell
@@ -51,14 +53,9 @@ cat /my/dir/file
 ```
 ````
 
-Note that while technically only one leading `$` needs to be removed to
-prevent this rule from triggering, which leaves some of the commands
-with the leading character and some without.  It is recommended that
-all leading `$` characters are removed.
+> **Explanation**: This example passes because none of the lines start with the `$` indicator. By removing the prefixes, the code block represents plain commands without implying a terminal session context, satisfying the rule's requirement for visibility.
 
-However, if the writer's intent is to show both script input and
-script output, the other alternative is to include the output of each
-line following the line that generated the output:
+Unlike the previous example, this case includes command output lines that do not start with `$`, demonstrating a terminal session context.
 
 ````Markdown
 ```shell
@@ -69,10 +66,12 @@ $ cat /my/dir/file
 ```
 ````
 
+> **Explanation**: This example passes because not every line starts with `$`. The lines `file` and `file2` represent command output, satisfying the rule's exception that allows `$` prefixes when output is also shown. This distinguishes it from the first correct scenario where all prefixes were removed.
+
 ## Fix Description
 
 The reason for not being able to auto-fix this rule is context.  A developer can
-be reasonably be expected to look at this sample:
+reasonably be expected to look at this sample:
 
 ````Markdown
 ```shell
@@ -91,7 +90,7 @@ $ cat /my/dir/file
 ```
 ````
 
-and make a reasonable guess that the output for both samples are from Linux systems
+and make a reasonable guess that the output for both samples is from Linux systems
 and that the second line of the second sample should not start with a `$` character.
 While the algorithm for detecting when to trigger this rule is clear, a similar
 algorithm to fix instances of this rule lacks the context to be clear.

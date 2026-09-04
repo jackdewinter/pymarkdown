@@ -40,7 +40,7 @@ This rule does not trigger when there is a valid top-level heading:
 or:
 
 ```Markdown
-This is a SetExt H1 heading
+This is a Setext H1 heading
 ===
 ```
 
@@ -167,7 +167,7 @@ what text should be in that heading.
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
+| `level` | `integer` | `1` | Level that is expected from the first heading (Atx or Setext) in the document. |
 | `front_matter_title` | `string` | `title` | Name of the Front-Matter field that has the title associated with the document.** |
 | `invisible_tags` | `string` | `link` | Comma separated string of HTML tag names to be considered as invisible. |
 

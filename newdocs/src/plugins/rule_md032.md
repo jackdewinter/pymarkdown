@@ -14,131 +14,126 @@ List blocks should be surrounded by blank lines.
 
 ### Readability
 
-By separating
-List elements from the other elements in a document, their
-existence in the document is highlighted.  In addition, some parsers
-may not properly recognize the List elements without the extra
-blank lines on both sides.
+Separating list elements from surrounding content highlights their structure and improves readability. Additionally, blank lines ensure that parsers consistently recognize list boundaries.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when the List element is either not
-prefaced with Blank Lines:
+This rule triggers when a list is not prefaced by a blank line, causing it to be adjacent to preceding text.
 
-````Markdown
+```Markdown
 This is text.
 + a list
-````
+```
 
-or followed by Blank Lines:
+> **Explanation**: The list item `+ a list` immediately follows the paragraph `This is text.` without an intervening blank line. This violates the rule requirement that list blocks must be surrounded by blank lines to ensure distinct separation and proper parser recognition.
 
-````Markdown
+Unlike the previous example, this case shows a list that is not followed by a blank line, appearing directly before a non-text block element.
+
+```Markdown
 1. a list
 # This is any non-text block
-````
+```
+
+> **Explanation**: The list item `1. a list` is immediately followed by a heading `# This is any non-text block` without an intervening blank line. The rule requires a blank line after the list to separate it from subsequent block elements.
+
+Unlike the previous examples which involved text or headings adjacent to lists, this case shows a list immediately following a heading without an intervening blank line.
+
+```Markdown
+## Some Heading
++ some list
+```
+
+> **Explanation**: The list item `+ some list` immediately follows the heading `## Some Heading` without an intervening blank line. The rule requires a blank line after block elements (including headings) before a list begins to ensure proper separation and parser recognition.
 
 ### Correct Scenarios
 
-This rule does not trigger when there is a single
-Blank Line both before and after the List element:
+This rule does not trigger when a list is properly surrounded by blank lines on both sides.
 
-````Markdown
+```Markdown
 This is text and a blank line.
 
 + a list
 
 This is a blank line and some text.
-````
+```
 
-This rule will also not trigger if the List element is at the
-very start or the very end of the document.  
+> **Explanation**: The list item `+ a list` is separated from the preceding paragraph and the following paragraph by single blank lines. This satisfies the rule's requirement for lists to be surrounded by blank lines.
 
-In addition, this rule will not trigger if a List element
-is found directly within the scope of another List element. If
-a List element is found directly within the scope of a Block
-Quote element, then this rule behaves normally.
+Unlike the previous example which showed separated lists, this scenario demonstrates that lists at the very beginning or end of a document, or lists nested within other lists, do not require surrounding blank lines in the same way.
 
-#### Additional Scenarios - Paragraphs and Indented Code Blocks
+```Markdown
++ a list at the start
 
-Due to the [GitHub Flavored Markdown](https://github.github.com/gfm/) specification's
-there are three scenarios that appear to be failures of this rule, but are not.
-In all of these scenarios, if the text on line four is not meant to be part of the
-list, an inserted blank line will properly convey that intent to most parsers.
+text
+```
 
-The first scenario is the text:
+> **Explanation**: The list is at the start of the document, so no preceding blank line is possible or required. The rule does not trigger for this valid structural position.
 
-````Markdown
+Unlike lists at the document start, this scenario shows a list nested within another list.
+
+```Markdown
+- nested list
+  - item inside
+```
+
+> **Explanation**: The nested list is part of the parent list structure, so the blank line requirement applies to the parent list block as a whole, not internal nesting. The rule does not trigger for this valid structural position.
+
+Unlike standard lists, this scenario shows a list directly within a block quote element.
+
+```Markdown
+> + a list in a quote
+```
+
+> **Explanation**: A list inside a block quote is contained within the quote element. The blank line requirement applies to the block quote as a whole, not to the internal list. Since the list is properly contained, the rule does not trigger.
+
+Unlike previous structural examples, this scenario involves "Lazy Continuation Lines" as defined in the GFM specification.
+
+```Markdown
 This is text and a blank line.
 
 + a list
 This is some text.
-````
+```
 
-Because of the specification's use of [Lazy Continuation Lines](https://github.github.com/gfm/#example-268),
-the fourth line in the above example is considered a "lazy" continuation of
-the list started on line three. Essentially, the list has a single list item
-with the text `a list This is some text.`.  
+> **Explanation**: Due to Lazy Continuation Lines, the fourth line (`This is some text.`) is parsed as part of the list item started on line three. Since it is part of the same list item, no blank line is required between them. The rule does not trigger because the list block is effectively followed by nothing (end of document or next block) after the continuation is resolved.
 
-The second scenario is following a list with an indented code block:
+Unlike lazy continuation text, this scenario demonstrates that indented text following a list item may be parsed as a continuation of the list item rather than an indented code block.
 
-````Markdown
+```Markdown
 This is text and a blank line.
 
 + a list
     This is some text.
-````
+```
 
-While there may be the writer's intent to follow the list with an indented code
-block, most parsers will clearly see line four as a continuation of the list
-started on line three, but with two extrace spaces of indentation.
+> **Explanation**: Parsers often interpret the indented text on line four as a continuation of the list item on line three, potentially with extra indentation. Because it is treated as part of the list item, the rule does not trigger for a missing blank line after the list.
 
-#### Additional Scenarios - Multiline Leaf Elements
+Unlike simple continuations, this scenario shows a list followed by a link reference definition with a blank line, which is clearly separate.
 
-Finally, the third scenario is any list that is followed by a multiline leaf element,
-such as the link reference definition element, the setext Headings element, or the
-table element. As noted in the first two scenarios, having plain text that does
-not explicitly start a new container block or leaf block usually causes the parsers
-to assume that the plain text is part of the list itself.  In that situation, most
-parsers explicitly check to see if that new line is part of a list continuation
-or if a new element has been specified.
-
-In the case of multiline elements, it is difficult to determine from a single line
-whether a given multiline element is valid.  While the following example:
-
-````Markdown
+```Markdown
 + a list
 
 [lrd]:
 /url
-````
+```
 
-is clearly a list element followed by a link reference definition (due to the newline
-between the two), the following example creates doubt as to the correct parsing
-of the example:
+> **Explanation**: This is a list element followed by a link reference definition with a blank line between them. The list is properly terminated by the blank line, so the rule does not trigger.
 
-````Markdown
+Unlike the previous example with a blank line, this scenario shows a list immediately followed by a link reference definition without a blank line, which parsers may treat as ambiguous or part of the list.
+
+```Markdown
 + a list
 [lrd]:
 /url
-````
+```
 
-To properly parse this, our parser and other parsers would need to mark their position
-and state, parse the possible link reference definition, restoring the marked position
-and state if the parsing failed.  As the majority of parsers do not perform that
-extra level of care, our parser follows that majority and assumes that lines two
-and three are part of the list started on line one.
-
-It therefore follows that if our parser treats that scenario as a continuation of
-the list item, this rule sees a single list item with nothing after it.  Therefore,
-the rule does not trigger in this scenario and reduces to be in the same set as
-the first scenario in the previous section.
+> **Explanation**: Without a blank line, the parser may treat the link reference definition as part of the list item due to parsing ambiguity. Because the lines are grouped into a single list item, there is no separate block element after the list, so the rule does not trigger.
 
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/819).
 
 ## Configuration
 

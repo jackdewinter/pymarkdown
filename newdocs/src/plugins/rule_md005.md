@@ -8,25 +8,19 @@
 
 ## Summary
 
-Inconsistent indentation for list items at the same level.
+Use consistent indentation for list items at the same level.
 
 ## Reasoning
 
 ### Readability
 
-Parsing engines do not usually have problems with inconsistent
-starting indentation for list elements, but a human reader of the same list elements
-may encounter difficulty with shifting list element starting positions.  By enforcing
-the list items within a list element to start at a predictable location, the human
-reader should be able to read the document with less difficulty.
+Inconsistent indentation in lists doesn't affect parsing engines, but it makes source documents harder for humans to scan. Enforcing consistent indentation ensures list structure is visually clear and predictable.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when there is a misalignment with the list indentation for the
-list items within a list.  An Unordered List element is the easiest failure to see
-as the indentation either matches up or not:
+This rule triggers when list items at the same level have inconsistent indentation, such as an unordered list item that is indented more than its siblings.
 
 ```Markdown
 * Item 1
@@ -34,21 +28,18 @@ as the indentation either matches up or not:
  * Misaligned item
 ```
 
-A failure for this rule for Ordered List elements is a bit more nuanced as this
-rule supports both left aligned and right aligned lists.  That means that either
-the first character must match the indentation of the list or the list delimiter
-character (`.` or `)`) must match.  Therefore:
+> **Explanation**: The third item is indented by one space more than the first two items. This violates the rule because all items at the same nesting level should start at the same horizontal position.
+
+Unlike the previous unordered list example, this ordered list fails because the second item's indentation does not align with the first item's start or delimiter.
 
 ```Markdown
 1. First item
  2. Second Item
 ```
 
-fails because neither the first character's indentation nor the delimiter
-character's indentation matches.
+> **Explanation**: The first item starts at column 0. The second item starts at column 1, which misaligns both the text content and the delimiter (`.`) relative to the first item. This violates the rule's requirement for consistent indentation or alignment.
 
-A slightly more nuanced failure scenario involved the combining of multiple
-types of alignment within Ordered Sublists.  For example:
+Unlike the previous single-list examples, this scenario involves sublists with mixed alignment styles, causing a violation when the overall list alignment is inconsistent.
 
 ```Markdown
 1. Item 1
@@ -59,16 +50,11 @@ types of alignment within Ordered Sublists.  For example:
    10. Item 2b
 ```
 
-triggers this rule as the sublist within `Item 1` is left aligned while the
-sublist within `Item 2` is right aligned.  Therefore, the alignment of the list
-is determined by the `Item 1` list and the `Item 2a` list item is out of
-alignment.
+> **Explanation**: The sublist under `Item 1` is left-aligned (delimiter `1.` and `10.` align), while the sublist under `Item 2` is right-aligned (`1.` is indented more than `10.`). The rule enforces consistent alignment across the entire list structure, so this mixture triggers the failure.
 
 ### Correct Scenarios
 
-This rule does not trigger under two groups of scenarios.  The first
-is when every Unordered List element starts at a consistent indentation, regardless
-of whether they are lists or sublists:
+This rule does not trigger when all unordered list items at the same level share consistent indentation, including proper indentation for nested sublists.
 
 ```Markdown
 * Item 1
@@ -77,8 +63,9 @@ of whether they are lists or sublists:
   * Item 2a
 ```
 
-The second group deals with Ordered List elements and supports both left alignment
-and right alignment.  This means that either of these two formats are acceptable:
+> **Explanation**: All top-level items (`Item 1`, `Item 2`) start at column 0. All nested items (`Item 1a`, `Item 2a`) are indented consistently by 2 spaces. This satisfies the rule's requirement for uniform indentation at each nesting level.
+
+Unlike unordered lists, this ordered list example shows left-aligned items where the delimiter characters are vertically aligned.
 
 ```Markdown
 1. Item
@@ -86,7 +73,9 @@ and right alignment.  This means that either of these two formats are acceptable
 100. Item
 ```
 
-or
+> **Explanation**: The delimiter characters (`1.`, `10.`, `100.`) are left-aligned at column 0. This is a valid format supported by the rule for ordered lists.
+
+Unlike the previous left-aligned example, this ordered list shows right-aligned items where the end of the delimiter characters is vertically aligned.
 
 ```Markdown
   1. Item
@@ -94,9 +83,9 @@ or
 100. Item
 ```
 
-Note that in the right alignment format, having an Ordered List item that
-starts with more than 4 characters is impossible without switching
-alignment.
+> **Explanation**: The delimiter characters are right-aligned, meaning the periods (`.`) are in the same column. This is also a valid format supported by the rule for ordered lists.
+
+Unlike the previous right-aligned example, this case demonstrates how excessive indentation can cause an ordered list to be interpreted as an indented code block, which is not subject to this rule.
 
 ```Markdown
     1. Item
@@ -106,19 +95,15 @@ alignment.
 10000. Item
 ```
 
-In this case, the Ordered List starts with the intended first list item having
-4 spaces at before the text sequence `1.`. This makes it an Indented Code Block
-instead of the start of an Ordered List.
+> **Explanation**: The first item is indented by 4 spaces, which Markdown parsers interpret as an indented code block rather than an ordered list. Since this is not a list, the rule does not apply. This is an edge case that does not trigger the rule because the content is not recognized as a list.
 
 ## Fix Description
 
-When list starts are encountered, they are collected until the list ends.  Once
-that occurs, the rule determines whether any ordered list starts are eligible to
-be considered as a right aligned Ordered List.
-
-If not a right aligned Ordered List, all new list item elements in that list are
-aligned to start at the same location as that base list.  Otherwise, the right alignment
-is applied to the Ordered List elements.
+The autofix collects all list items within a contiguous list block. For ordered lists,
+it determines whether right-alignment is intended. If so, it aligns the delimiters
+to the right. Otherwise, it aligns all items at the same nesting level to start at
+the same column as the first item. This ensures consistent indentation across the
+entire list structure.
 
 ## Configuration
 
@@ -129,7 +114,7 @@ is applied to the Ordered List elements.
 
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
+| `enabled` | `boolean` | `True` | Determines if this rule is active. |
 
 ## Origination of Rule
 
@@ -138,8 +123,6 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The original rule did not make any distinctions between alignment outside
-of the specific list that it was examining.  As such, it was possible to
-have a list containing sublists that mixed left aligned lists with right
-aligned lists.  This rule resets its notion of the proper alignment for
+The original rule did not consider alignment consistency across sublists within a parent list. As such, it was possible to
+have a list containing sublists that mixed left-aligned lists with right-aligned lists. This rule resets its notion of the proper alignment for
 Ordered Lists when the base List element is closed.

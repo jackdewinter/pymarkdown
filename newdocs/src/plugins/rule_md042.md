@@ -14,13 +14,7 @@ No empty links.
 
 ### Correctness
 
-Both normal links and image links present a URI that decides what they
-link to.  If the URI that they refer to is not present, then link is going
-against its very nature.
-
-In addition, during the creation of documents, authors may often leave the
-links blank to remind themselves to find and insert the correct URI later in the
-creative process.  This rule also helps enforce that practice.
+Links require a valid URI to function. Empty URIs break navigation and may indicate unfinished documentation. This rule ensures all links contain non-whitespace content, improving document reliability and accessibility for readers who rely on functional navigation.
 
 ## Examples
 
@@ -29,38 +23,50 @@ creative process.  This rule also helps enforce that practice.
 This rule triggers when the link is empty and has no characters or only
 whitespace characters:
 
-````Markdown
+```Markdown
 [empty link]()
-````
+```
 
-This rule also triggers on URI fragments that are also similarly empty:
+> **Explanation**: This link fails because the URI part `()` is completely empty, containing no characters or whitespace. The rule requires at least one non-whitespace character in the URI.
+
+Unlike the previous example with a fully empty URI, this shows that URIs containing only a hash (`#`) are also treated as empty, applying to both regular links and image links:
 
 ```Markdown
-![empty fragment](#)
+[empty fragment link](#)
+![empty fragment image](#)
 ```
+
+> **Explanation**: Both links fail because the URI fragment `#` contains no text after the hash. The rule requires non-whitespace content in the URI, even for fragments, and applies equally to standard links and image links.
+
+Unlike the previous examples which had empty or hash-only URIs, this scenario demonstrates a URI containing only whitespace characters, which the rule also treats as empty:
+
+```Markdown
+[link with spaces](   )
+```
+
+> **Explanation**: This link fails because the URI contains only whitespace characters (spaces). The rule requires at least one non-whitespace character in the URI to be considered valid.
 
 ### Correct Scenarios
 
-This rule does not trigger if any non-whitespace text is present within
-the URI part of the link:
+This rule does not trigger when any non-whitespace text is present within the URI part of the link:
 
-````Markdown
+```Markdown
 [link](a)
-````
+```
 
-Note that the link is not checked to see if it is validly formed or
-present, just that at least one non-whitespace character is present.
+> **Explanation**: This link passes because the URI contains the character `a`, which is non-whitespace. The rule only checks for the presence of at least one non-whitespace character, not the validity of the URL.
 
-Similarly, this rule does not trigger if any non-whitespace text is
-present after the leading hash character (`#`) for the URI:
+Unlike the previous example which had a simple URI, this scenario demonstrates a fragment link with text after the hash character:
 
 ```Markdown
 ![fragment](#in-same-document)
 ```
 
+> **Explanation**: This image link passes because the URI contains `#in-same-document`, which has non-whitespace text (`in-same-document`) after the hash. This satisfies the rule's requirement for content in the URI.
+
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is context.  Without context
+The reason for not being able to auto-fix this rule is context. Without context
 provided by the author, adding the proper link destination to the link is almost
 impossible.
 
@@ -83,7 +89,7 @@ This rule is largely inspired by the MarkdownLint rule
 ### Differences From MarkdownLint Rule
 
 The difference between this rule and the original rule is that the original
-rule only fired on links, not image links.  As the only difference between
+rule only fired on links, not image links. As the only difference between
 a link:
 
 ```Markdown

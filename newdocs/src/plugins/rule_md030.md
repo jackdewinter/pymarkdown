@@ -8,52 +8,63 @@
 
 ## Summary
 
-Spaces after list markers.
+Ensure consistent spacing after list markers.
 
 ## Reasoning
 
 ### Consistency
 
-Some older parsers do not manage varying number of spaces after
-the list markers well.
+Some older parsers do not handle varying numbers of spaces after list markers well. Consistent spacing also improves visual alignment and readability for human readers.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when a List Item element is not followed by 1 space
-character before the text starts:
+This rule triggers when a list marker is followed by more than the configured number of spaces before the text begins, with the default being 1 space.
 
 ````Markdown
 1.  first item
 ````
 
+> **Explanation**: This ordered list item has two spaces after the `1.` marker. By default, `ol_single` is set to `1`, so only one space is expected. The extra space violates the rule.
+
+Unlike the previous example, this case uses an unordered list marker with multiple trailing spaces.
+
 ````Markdown
 +  first item
 ````
 
+> **Explanation**: This unordered list item has two spaces after the `+` marker. By default, `ul_single` is set to `1`, so only one space is expected. The extra space violates the rule.
+
+Unlike the previous single-line examples, this case demonstrates a multi-paragraph unordered list item where the spacing after the list marker exceeds the configured `ul_multi` value.
+
+```Markdown
++ first item
+
+   second paragraph
+```
+
+> **Explanation**: This unordered list item spans multiple paragraphs. By default, `ul_multi` is set to `2`, meaning **two spaces** are expected after the list marker for multi-line items. The second paragraph here has **three spaces**, exceeding the configured value. This violates the rule.
+
 ### Correct Scenarios
 
-This rule does not trigger if all List Item elements are followed by
-1 space before any text starts:
+This rule does not trigger when all list items have the configured number of spaces after the marker, with the default being 1 space.
 
-````Markdown
+```Markdown
 1. first item
-````
+```
 
-````Markdown
+> **Explanation**: This ordered list item has exactly one space after the `1.` marker, matching the default `ol_single` value of `1`. The rule is satisfied.
+
+Unlike the previous example, this case uses an unordered list marker with the correct spacing.
+
+```Markdown
 + first item
-````
+```
 
-The `ol_single` and `ol_multi` configuration values specify the number of space
-characters before text for Ordered List elements, and the `ul_single` and `ul_multi`
-configuration values specify the number of space characters before text for
-Unordered List elements.
-For this rule, a `single` List Item is one that does not contain two or
-more paragraphs and a `double` List Item is one that does contain two or more paragraphs.
+> **Explanation**: This unordered list item has exactly one space after the `+` marker, matching the default `ul_single` value of `1`. The rule is satisfied.
 
-Therefore, setting `ul_single` to 2 and `ul_multi` to 1 will cause this list not
-to trigger this rule:
+Unlike the previous simple examples, this scenario demonstrates a nested unordered list with mixed single-line and multi-line items, where configuration values `ul_single` and `ul_multi` control the expected spacing differently.
 
 ```Markdown
 + first item
@@ -63,11 +74,13 @@ to trigger this rule:
      inner item
 ```
 
+> **Explanation**: This nested list uses `ul_single` = `1` for simple items (e.g., `first item`, `second item`) and `ul_multi` = `2` for multi-paragraph items (e.g., the nested `inner item` with a blank line). Each item respects the configured spacing for its type, so the rule is not triggered.
+
 ## Fix Description
 
-When fixed, the number of spaces between a list start and the following text are
+When fixed, the number of spaces between a list start and the following text is
 set to the configured amount of spacing.  By default, this means ordered and unordered
-list start sequences will be set to have 1 space before the text.
+list markers will be set to have 1 space before the text.
 
 ## Configuration
 
@@ -79,10 +92,10 @@ list start sequences will be set to have 1 space before the text.
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `ul_single` | integer | `1` | Spaces after an Unordered List Item and any following text for a single line item. |
-| `ol_single` | integer | `1` | Spaces after an Ordered List Item and any following text for a single line item. |
-| `ul_multi` | integer | `1` | Spaces after an Unordered List Item and any following text for a multiple line item. |
-| `ol_multi` | integer | `1` | Spaces after an Ordered List Item and any following text for a multiple line item. |
+| `ul_single` | `integer` | `1` | Spaces after an Unordered List Item and any following text for a single line item. |
+| `ol_single` | `integer` | `1` | Spaces after an Ordered List Item and any following text for a single line item. |
+| `ul_multi` | `integer` | `1` | Spaces after an Unordered List Item and any following text for a multiple line item. |
+| `ol_multi` | `integer` | `1` | Spaces after an Ordered List Item and any following text for a multiple line item. |
 
 ## Origination of Rule
 

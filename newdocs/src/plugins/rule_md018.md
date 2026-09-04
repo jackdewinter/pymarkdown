@@ -8,103 +8,103 @@
 
 ## Summary
 
-No space present after the hash character on a possible Atx Heading.
+Ensure at least one space exists between hash marks and text in Atx Open Headings.
 
 ## Reasoning
 
 ### Correctness
 
-In most cases, one or more hash characters (`#`) followed by text is
-likely to indicate an Atx Heading, with the space between the
-hash characters and the text being omitted.  The triggering of this rule
-allows the document author to decide whether the omission of
-the space was accidental.
+In most Markdown parsers, hash characters (`#`) followed immediately by text (without a space) are still interpreted as Atx Headings. This rule alerts authors when the required space after the hash character(s) is missing, helping them determine whether the omission was accidental.
+
+**Scope Boundary**: This rule checks open-style headings only. [Rule MD020](./rule_md020.md) checks closed-style headings. A heading is "closed" if it ends with one or more hash characters (e.g., `# Heading #`).
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when a sequence of characters occurs at the start of a line in
-a paragraph after between 0 and 3 leading spaces are removed.  After those leading
-spaces are removed, this rule then looks for between 1 and 6 hash characters (`#`)
-followed by at least one non-space character.
+This rule triggers when a line starts with 1-6 hash characters followed immediately by non-space text, indicating a missing space in an Atx Heading.
 
 ```Markdown
 #Heading 1
 ```
 
-This rule triggers under these circumstances even if the text is at the start
-of its own line within a block quote:
+> **Explanation**: The line `#Heading 1` starts with a single `#` followed immediately by `Heading` without a space. This violates the requirement for a space after the hash character(s) in an Atx Heading.
+
+Unlike the previous example, this case shows the rule triggering inside a block quote, ensuring the rule checks headings within nested block structures.
 
 ```Markdown
 > #Heading 1
 ```
 
-or an ordered or unordered list:
+> **Explanation**: Even though the heading is inside a block quote (`>`), the content `#Heading 1` still lacks the required space after the `#`. The rule applies to headings in block quotes as well.
+
+Unlike the previous example, this case shows the rule triggering inside a list item, ensuring the rule checks headings within list structures.
 
 ```Markdown
 - #Heading 1
   ##Heading2
 ```
 
+> **Explanation**: The lines `#Heading 1` and `##Heading2` are inside a list item. Despite the indentation and list context, the hash characters are immediately followed by text without a space. The rule applies to headings within list items, just as it does for block quotes.
+
 ### Correct Scenarios
 
-This rule does not trigger in five distinct scenarios.  The simplest scenario
-where this rule does not fire is when there is correctly at least one
-space character between the last hash character (`#`) and the first
-non-space character:
+This rule does not trigger when there is at least one space character between the last hash character and the first non-space character, satisfying the Atx Heading syntax.
 
 ```Markdown
 # Heading 1
 ```
 
-Assuming that there is no space character between the hash character and
-the first non-space character, the next most common scenario where this rule
-does not trigger is if that sequence is not in a Paragraph element.  This often
-occurs when the text is inside of another element that looks like a Paragraph
-element, such as the text inside of a SetExt Heading element:
+> **Explanation**: The line `# Heading 1` includes a space between `#` and `Heading`, conforming to the correct Atx Heading format. Thus, the rule does not fire.
+
+Unlike the previous example, this case shows text that looks like a heading but is part of a Setext Heading, where the hash characters are not interpreted as Atx delimiters.
 
 ```Markdown
 #Heading 1
 ----
 ```
 
-Within a Paragraph element, this rule does not trigger if there are more
-than 3 space characters at the start of the line (making it an
-Indented Code Block):
+> **Explanation**: Here, `#Heading 1` is the title of a Setext Heading (indicated by the `----` below). Since the parser identifies this as a Setext element, the Atx heading rule does not apply to the hash characters.
+
+This scenario differs by showing that lines with more than 3 leading spaces are treated as Indented Code Blocks, not headings, so the rule ignores them.
 
 ```Markdown
     #Heading 1
 ```
 
-or if the text would not be a valid Atx Heading element due to excess hash characters:
+> **Explanation**: The four leading spaces convert the line into an Indented Code Block. Atx Heading parsing does not apply to code blocks, so the missing space is ignored.
+
+This case shows that more than 6 hash characters at the start of a line prevent Atx Heading parsing, as valid Atx Headings allow only 1-6 hashes.
 
 ```Markdown
 #######Heading 7
 ```
 
-or due to no text following the hash characters:
+> **Explanation**: Seven hash characters exceed the maximum allowed for an Atx Heading. Therefore, this is not parsed as a heading, and the rule does not trigger.
+
+This scenario shows that if there is no text following the hash characters, it is not considered a heading with missing space, but potentially an empty heading or invalid syntax.
 
 ```Markdown
 ##
 ```
 
-Another scenario in which this rule does not trigger is when the line
-holding the otherwise eligible text has any inline elements
-within that same line.
+> **Explanation**: The line contains only hash characters with no following text. Since there is no "heading text" to have a space before, the specific "missing space" violation does not apply.
+
+Unlike the previous cases, this example includes inline elements (emphasis), which prevents the line from being parsed as a simple Atx Heading.
 
 ```Markdown
 #Heading *1*
 ```
 
-While this line would be a valid Atx Heading element if the proper spacing
-was present, the presence of the inline Emphasis element prevents it from
-triggering.  
+> **Explanation**: The presence of inline emphasis (`*1*`) within the line prevents it from being recognized as a standard Atx Heading. The rule only targets straightforward missing-space headings.
 
-Finally, this rule will not trigger if the Atx Heading element has closing
-hash characters, such as `#Heading1#`.  The rule for effectively managing Atx
-Heading Close elements is
-[Rule md020](./rule_md020.md).
+This final scenario shows that headings with closing hash characters are handled by a different rule (MD020), so MD018 does not trigger for missing spaces when closing hashes are present.
+
+```Markdown
+#Heading1#
+```
+
+> **Explanation**: The line `#Heading1#` contains a closing hash character. The management of possible closed-style Atx headings is covered by [Rule MD020](./rule_md020.md). This rule does not trigger here because the handlking of possible closed-style Atx headings falls outside its scope.
 
 ## Fix Description
 
@@ -150,9 +150,9 @@ As most of the parsers we researched support Atx Heading elements within
 Block Quote elements and List elements, it just made sense to our team to add this.
 
 The next change was that the original rule triggered if the possibly
-eligible text occurred within a SetExt Heading element. This did not make
-sense as the presence of the SetExt Heading specifiers after the text
-present an intention to have that text be part of a SetExt Heading element,
+eligible text occurred within a Setext Heading element. This did not make
+sense as the presence of the Setext Heading specifiers after the text
+present an intention to have that text be part of a Setext Heading element,
 not an Atx Heading element.
 
 Finally, the last change was that the original rule triggered regardless of

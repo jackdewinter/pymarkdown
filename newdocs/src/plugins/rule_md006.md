@@ -8,26 +8,21 @@
 
 ## Deprecation
 
-This rule has been deprecated in favor of [Rule Md007](./rule_md007.md).
+This rule has been deprecated in favor of [Rule MD007](./rule_md007.md).
 
 ## Summary
 
-Consider starting bulleted lists at the beginning of the line.
+Ensure unordered lists start at the beginning of the line.
 
 ## Reasoning
 
 ### Consistency
 
-The primary reason for enabling this rule is to force any Unordered List
-to start at the beginning of the line.  While there are ancillary scenarios
-that this rule can help, the focus is to allow for predictability
-in how Unordered List elements are constructed.
-
-When creating lists with an editor, it is common to use the Tab key to create
-lists that are properly indented.  If an Unordered List element does not start
-at the beginning of the line, using the Tab key can cause the number of
-spaces inserted to not be an even number.  As the normal indent for an Unordered
-List element is 2, this may cause issues with other parts of the list.
+Unordered lists should start at the beginning of the line to ensure
+predictable document structure and consistent rendering across
+Markdown parsers. Proper alignment helps readers quickly identify
+list boundaries and improves accessibility for screen readers that
+rely on consistent indentation patterns.
 
 ## Examples
 
@@ -41,9 +36,10 @@ beginning of the line:
  * Item 2
 ```
 
-A more practical example is when an Unordered List element is supposed to
-be created as a child of an Ordered List element, but lacks the correct
-indentation:
+> **Explanation**: The list above is indented by one space, which violates the
+> requirement that unordered list markers begin at column 0.
+
+Unlike the previous example of a simple root-level indent, this case involves an unordered list intended as a child of an ordered list but lacking the correct indentation:
 
 ```Markdown
 1. Ordered List
@@ -51,13 +47,36 @@ indentation:
   - Item 2
 ```
 
-In this case, an Ordered List element will be created with one item,
-followed by an Unordered List element with two items.  Enabling this
-rule will help prevent circumstances like this.
+> **Explanation**: The unordered list markers are indented by two spaces, placing them inside the ordered list item rather than at column 0. This violates the requirement that unordered list markers begin at the start of the line.
+
+Unlike the previous example involving list nesting, this case shows an unordered list indented within a blockquote:
+
+```Markdown
+> Quoted text
+> * Item 1
+> * Item 2
+```
+
+> **Explanation**: The unordered list markers inside the blockquote are not
+> at the start of the line within the blockquote context, causing the rule
+> to trigger.
+
+Unlike the previous example, this case involves a nested unordered list where the parent marker is indented:
+
+
+```Markdown
+  * Parent Item
+    * Child Item 1
+    * Child Item 2
+```
+
+> **Explanation**: The parent unordered list marker is indented by two spaces.
+> Even though the child items are properly indented relative to the parent,
+> the parent itself does not start at column 0, which violates the rule.
 
 ### Correct Scenarios
 
-This rule will not trigger if every top-level item for an Unordered List
+This rule does not trigger when every top-level item for an Unordered List
 element starts at the beginning of each line.
 
 ```Markdown
@@ -65,8 +84,9 @@ element starts at the beginning of each line.
 * Item 2
 ```
 
-Note that having items that span multiple lines is also acceptable if the next Unordered
-List element starts at the beginning of the line.
+> **Explanation**: The list markers begin at column 0, satisfying the rule.
+
+Unlike the previous example, this list contains multi-line items, but the next list marker still starts at column 0:
 
 ```Markdown
 * Item 1
@@ -75,11 +95,16 @@ List element starts at the beginning of the line.
 * Item 2
 ```
 
+> **Explanation**: Even though list content spans multiple lines, the next list marker starts at column 0, which is valid.
+
 ## Fix Description
 
-The containers will be altered so that they start at the beginning of "the line".
-As that definition was not clearly understood [Rule MD007](./rule_md007.md) was
-created to more clearly handle this issue.
+The autofix removes leading whitespace from unordered list markers so that
+they begin at column 0 (the start of the line).
+
+Note: Because the definition of "start of the line" was ambiguous in nested
+contexts, this rule has been deprecated in favor of [Rule MD007](./rule_md007.md),
+which provides more precise indentation control for lists.
 
 ## Configuration
 
@@ -90,7 +115,7 @@ created to more clearly handle this issue.
 
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `enabled` | `boolean` | `False` | Whether the Rule Plugin is enabled. |
+| `enabled` | `boolean` | `False` | Determines if this rule is active. |
 
 ## Origination of Rule
 
@@ -100,5 +125,5 @@ This rule is largely inspired by the MarkdownLint rule
 ### Differences From MarkdownLint Rule
 
 It is not clear how this rule, which is disabled by default, differs from
-Rule Md007.  To make sure this rule is well-rounded, it has been changed
+Rule MD007. To make sure this rule is well-rounded, it has been changed
 to work with nested list blocks and block quotes.

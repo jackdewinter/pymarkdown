@@ -8,35 +8,29 @@
 
 ## Summary
 
-Multiple top-level headings in the same document.
+Use only one top-level heading per document.
 
 ## Reasoning
 
 ### Correctness
 
-While not accepted as the document title in some parsers, the
-majority of the parsers consider the top-level heading or
-Heading 1 element to be the title of the document.  It follows
-that a document cannot have more than one title and allowing
-multiple Heading 1 elements would force the parser to choose
-which element was the title.
+Most Markdown parsers treat the first Heading 1 element as the document title. Allowing multiple Heading 1 elements creates ambiguity regarding which heading serves as the official title, harming document structure and accessibility.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule is triggered when more than one top-level heading is
-found in the same document:
+This rule triggers when multiple top-level headings exist in the same document, violating the principle that a document should have only one title.
 
-````Markdown
+```Markdown
 # Top Level
 
 # Another Top Level
-````
+```
 
-This rule does not perceive any difference between Atx Heading elements
-and SetExt Heading elements, so the following document will also trigger
-the rule:
+> **Explanation**: This example fails because it contains two Heading 1 elements (`# Top Level` and `# Another Top Level`). The rule requires only one top-level heading per document to serve as the document title.
+
+Unlike the first example, this case uses a mix of Atx and Setext heading styles for the top-level headings.
 
 ```Markdown
 # Top Level
@@ -45,11 +39,11 @@ Another Top Level
 ===
 ```
 
-In addition, if
-[front-matter parsing](../extensions/front-matter.md)
-is enabled and a normal top-level heading is parsed, then this rule will trigger:
+> **Explanation**: This example fails because the rule treats both Atx headings (`# Top Level`) and Setext headings (`Another Top Level` with `===`) as top-level headings. Having both violates the single-title requirement.
 
-```text
+Unlike the previous examples, this case combines [front-matter parsing](../extensions/front-matter.md) with a top-level heading, which also triggers the rule when Front-Matter doesn't provide a title.
+
+```Markdown
 ---
 title: this is a title
 ---
@@ -57,25 +51,23 @@ title: this is a title
 # Top Level
 ```
 
+> **Explanation**: This example fails because even though Front-Matter is present, it contains a top-level heading (`# Top Level`) in addition to the title in Front-Matter. The rule counts this as multiple titles.
+
 ### Correct Scenarios
 
-This rule does not trigger if there is only one top-level heading in
-the entire document, including any parsed Front-Matter:
+This rule does not trigger when the document contains only a single top-level heading, satisfying the single-title requirement.
 
-````Markdown
+```Markdown
 # Top Level
 
 ## Used To Be Another Top Level
-````
+```
 
-If Front-Matter parsing is enabled and a Front-Matter section is present, the
-`front_matter_title` configuration item specifies the key in the
-Front-Matter's data map that is considered the title.  If that key is
-present in the document's Front-Matter, then all headings in the
-document must be level 2 or below.  For example, if the configuration
-item is set to `subject`, then this example is valid:
+> **Explanation**: This example passes because there is only one Heading 1 element (`# Top Level`). The second heading is level 2 (`##`), which is acceptable.
 
-```text
+Unlike the previous example, this case uses [front-matter parsing](../extensions/front-matter.md) with a configured `front_matter_title` field of `subject`, allowing all document headings to be level 2 or below.
+
+```Markdown
 ---
 subject: This is a title
 ---
@@ -83,21 +75,18 @@ subject: This is a title
 ## Used To Be Another Top Level
 ```
 
-In certain situations, it is necessary to override the heading level
-to check for multiple top-level elements.  In these situations, the
-`level` configuration value can be set to specify the heading level
-to check against for multiple top-level elements with.
+> **Explanation**: This example passes because the `front_matter_title` configuration is set to `subject`, and the Front-Matter contains `subject: This is a title`. Since the title is provided in Front-Matter, all headings in the document are level 2 or below, satisfying the rule.
 
 ## Fix Description
 
-The reasons for not being able to auto-fix this rule are context and cascading fixes.
-On the context front, while there is precedence only the first top level heading
-of a document should be honored, we do not currently consider it to be a solid enough
-precedent to base a fix on.  In addition, cascading fixes can cause a problem with
-the multiple of the top-level heading.  If those offending headings are changed to
+This rule cannot be auto-fixed due to context dependency and cascading effects.
+Although some parsers default to honoring only the first top-level heading, this behavior is not universal enough to justify an automatic fix.
+On the context front, while there is precedent that only the first top-level heading of a document should be honored, we do not currently consider it to be a solid enough precedent to base a fix on.
+Additionally, changing multiple top-level headings to level 2 could require recursive adjustments to nested headings, creating unpredictable cascading changes.
+If those offending headings are changed to
 a level 2 heading, should any other headings within those headings be similarly
-increased?  The ambiguities of both reasons were enough for our team to not consider
-any possible fixes for this rule.
+increased?
+Due to these ambiguities, no automatic fix is provided.
 
 ## Configuration
 
@@ -124,8 +113,4 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The difference between this rule and the original rule is that the
-original rule specified a regular expression used to look for the
-specific element within a raw Front-Matter element.  By default, this
-was `"^\s*"?title"?\s*[:=]"`.  To support simplicity, this rule
-simply looks for the value of the Front-Matter key `title` by default.
+Unlike the original MarkdownLint rule, which used a regular expression to identify title fields in Front-Matter, this rule simply looks for the value of the Front-Matter key `title` by default.

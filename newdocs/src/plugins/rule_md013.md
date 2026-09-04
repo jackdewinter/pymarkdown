@@ -3,82 +3,124 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md013`, `line-length` |
-| Autofix Available | Yes |
+| Autofix Available | Pending |
 | Enabled By Default | Yes |
 
 ## Summary
 
-Line length.
+This rule enforces a maximum line length to improve document readability.
 
 ## Reasoning
 
-### Readability/Consistency
+### Readability
 
-For every user, there is a specific number of columns that can be displayed
-on their screen before the user feels that data on their screen becomes unreadable.
-To provide consistency across application or organizations, a specific maximum
-line length may be put in place to establish an expectation of console window
-and editor window width.  That established line length, used across a set of documents,
-helps to promote a consistent line length, setting expectations in the reader's mind
-that improve the readability of those documents.
+Lines that are too long force readers to scroll horizontally or wrap text unpredictably, reducing readability. Enforcing a maximum line length ensures documents render consistently across different editors, terminals, and screen sizes, improving accessibility for all readers.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers if the length of any line exceeds a given character count.
-Assuming that the configuration values are set to a maximum line length of
-50 characters, the following example will trigger this rule:
+This rule triggers when the length of any line exceeds the configured maximum character count.
 
 ```Markdown
-This is a sample line that is a total of 60 characters long.
+This is a real sample line that's a grand total of 81 wonderful characters long.
 ```
+
+> **Explanation**: The line above contains 81 characters, which exceeds the default maximum line length of 80 characters. This violates the rule's requirement to keep lines within the specified limit.
+
+Unlike the previous example, this case demonstrates the rule triggering under the `strict` configuration, where even lines slightly over the limit with no break points are flagged.
+
+```Markdown
+This is a real sample line that's a grand total of 81-wonderful-characters-long.
+```
+
+> **Explanation**: Although this line is 81 characters long and has no whitespace after the 80-character limit, the `strict` mode (if enabled) does not allow lines to extend past the maximum length regardless of break points. Therefore, this line violates the strict line length constraint.
+
+Unlike the previous examples, this case demonstrates a code block containing a line that exceeds the configured `code_block_line_length`, even though the line is syntactically valid code.
+
+````Markdown
+Some text before the code block.
+
+```
+This is a line inside a code block that is exactly eighty-five characters long here.
+```
+
+More text after the code block.
+````
+
+> **Explanation**: The line inside the fenced code block is 85 characters long, which exceeds the default `code_block_line_length` of 80. By default, MD013 checks code blocks unless `code_blocks` is set to `False`. This violates the rule's requirement to keep code block lines within the specified limit.
+
+Unlike the previous examples, this case demonstrates a heading line that exceeds the configured `heading_line_length`.
+
+```Markdown
+# This is a heading that is way too long and exceeds eighty characters in total length here.
+```
+
+> **Explanation**: The heading line is over 80 characters long, which exceeds the default `heading_line_length` of 80. By default, MD013 checks headings unless `headings` is set to `False`. This violates the rule's requirement to keep heading lines within the specified limit.
+
+Unlike the previous examples, this case demonstrates a table containing a line that exceeds the configured `table_line_length`.
+
+```Markdown
+| Column One | Column Two | Column Three | Column Four | Column Five |
+| ---------- | ---------- | ------------ | ----------- | ----------- |
+| cell data that is very long and exceeds eighty characters in the table row | short | short | short | short |
+```
+
+> **Explanation**: The second row of the table is over 80 characters long, which exceeds the default `table_line_length` of 80. By default, MD013 checks tables unless `tables` is set to `False`. This violates the rule's requirement to keep table lines within the specified limit.
 
 ### Correct Scenarios
 
-This rule does not trigger if the length of any line is less than or
-equal to a given character count. If the configuration values
-are set to a maximum line length of 50 characters, the following
-example will not trigger this rule:
+This rule does not trigger when all lines are within the configured maximum character count.
 
 ```Markdown
-This is a sample line  that is 50 characters long.
+This is a longish line that is 50 characters long.
 ```
 
-#### Long Last Words
+> **Explanation**: The line above is 50 characters long, which is within the default maximum line length of 80 characters. Therefore, the rule does not trigger.
 
-To allow for longer, continuous constructs, such as URLs, a check
-is performed to see if there is any whitespace beyond the specified
-character count.  If there are no whitespace characters, then this
-rule will not trigger.  An example of this is:
+Unlike the previous example, this case has no whitespace beyond the character limit, relying on a continuous string.
 
 ```Markdown
-This is a sample line that is a total of 60-characters-long.
+This is a real sample line that's a grand total of 81-wonderful-characters-long.
 ```
 
-where the boundary is at the second `c` character in `60-characters-long`.
+> **Explanation**: Although this line is 81 characters long, there are no whitespace characters after the configured limit. By default, MD013 allows lines to continue if there's no whitespace to break at, unless strict or stern modes are enabled. This is a correct scenario under default settings.
 
-If this is not the desired behavior, there are two options.  The first option,
-the `strict` configuration value, forces this rule to trigger if any character
-is present past the specified line length. The `stern` configuration is another
-option, allowing lines without any spaces past the specified line length
-while triggering on lines that are too long.
+Unlike the previous examples, this case demonstrates a code block containing a long line, but with `code_blocks` disabled so the rule does not trigger.
 
-#### Special Elements
+````Markdown
+Some text before the code block.
 
-For line lengths, two types of elements stick out as
-needing special attention: headings and code blocks.  To that extent,
-the `heading_line_length` configuration value specifies the line length
-for headings and `headings` configuration value specifies whether this
-rule triggers at all for headings.  Similarly, the `code_block_line_length`
-and `code_blocks` configuration values perform the same action for
-code blocks and the `table_line_length` and `tables` configuration values
-perform the same action for tables.
+```
+This is a line inside a code block that is exactly eighty-five characters long here.
+```
+
+More text after the code block.
+````
+
+> **Explanation**: The line inside the fenced code block is 85 characters long, which exceeds the default `code_block_line_length` of 80. However, when `code_blocks` is set to `False`, the rule skips checking lines inside code blocks entirely. Therefore, this does not violate the rule.
+
+Unlike the previous examples, this case demonstrates a long heading line, but with `headings` disabled so the rule does not trigger.
+
+```Markdown
+# This is a heading that is way too long and exceeds eighty characters in total length here.
+```
+
+> **Explanation**: The heading line is over 80 characters long, which exceeds the default `heading_line_length` of 80. However, when `headings` is set to `False`, the rule skips checking heading lines entirely. Therefore, this does not violate the rule.
+
+Unlike the previous examples, this case demonstrates a table containing a long line, but with `tables` disabled so the rule does not trigger.
+
+```Markdown
+| Column One | Column Two | Column Three | Column Four | Column Five |
+| ---------- | ---------- | ------------ | ----------- | ----------- |
+| cell data that is very long and exceeds eighty characters in the table row | short | short | short | short |
+```
+
+> **Explanation**: The second row of the table is over 80 characters long, which exceeds the default `table_line_length` of 80. However, when `tables` is set to `False`, the rule skips checking table lines entirely. Therefore, this does not violate the rule.
 
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/811).
 
 ## Configuration
 

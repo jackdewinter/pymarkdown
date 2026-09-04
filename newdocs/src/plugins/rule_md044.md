@@ -14,11 +14,7 @@ Proper names should have the correct capitalization.
 
 ### Consistency
 
-Quite often, when writing groups of documents, there are certain proper nouns
-that have specific capitalization.  A good example of this is the proper
-[PyMarkdown](https://github.com/jackdewinter/pymarkdown).  It very specifically
-has the `P` and `M` characters capitalized.  This rule allows for that
-capitalization to be enforced.
+Proper nouns often have specific capitalization requirements (e.g., `PyMarkdown`, not `pymarkdown` or `PYMARKDOWN`). Enforcing consistent capitalization improves document professionalism and readability by ensuring brand names and technical terms are presented uniformly across all content.
 
 ## Examples
 
@@ -26,26 +22,24 @@ capitalization to be enforced.
 
 This rule triggers when this rule finds any standalone instance of a
 word specified in the `names` configuration value that does not have
-a correct capitalization.  Assuming `names` is set to `ParaGraph`, then
+a correct capitalization. Assuming `names` is set to `ParaGraph`, then
 the following example will trigger this rule:
 
-````Markdown
+```Markdown
 this is a paragraph.
-````
+```
 
-There are also special rules for how this rule triggers on links and
-images.  For inline links and inline images, this rule triggers on
-matching text in the link label and the link title, but not the link URI:
+> **Explanation**: The word "paragraph" appears in the text, but the configuration `names` expects "ParaGraph". Since "paragraph" does not match the required capitalization "ParaGraph", the rule triggers.
 
-````Markdown
+Unlike the previous example with standalone text, this rule also triggers on matching text in inline link labels and link titles, but not the link URI:
+
+```Markdown
 this is a [paragraph](/paragraph "a paragraph item") link.
-````
+```
 
-The rule triggers on that example for the first occurrence of
-paragraph (link label) and the last occurrence (link title).
+> **Explanation**: The word "paragraph" appears in the link label and the link title. The configuration `names` expects "ParaGraph". Since "paragraph" does not match the required capitalization "ParaGraph" in the label and title, the rule triggers. Note that the URI `/paragraph` is ignored as per rule criteria.
 
-For every other type of link and image, this rule triggers on
-any occurrence in the link label.
+Unlike the inline link scenario, for reference-style links and images, this rule triggers on any occurrence in the link label.
 
 ```Markdown
 ![collapsed
@@ -56,30 +50,28 @@ link
 paragraph]: /url "a paragraph title"
 ```
 
-Since any link title is physically
-associated with the Link Reference Definition, any occurrence found
-in the link title triggers this rule.
+> **Explanation**: The word "paragraph" appears in the image label and the link reference label. The configuration `names` expects "ParaGraph". Since "paragraph" does not match the required capitalization "ParaGraph" in these labels, the rule triggers.
 
 ### Correct Scenarios
 
-This rule does not trigger if it cannot find any of the words present
-in the `names` configuration value.  This rule also does not trigger
-if any of those words are found but are correctly capitalized.
-Assuming `names` is set to `ParaGraph`, then the following example will not
-trigger this rule:
+This rule does not trigger when the proper name appears with the correct capitalization as specified in the `names` configuration. Assuming `names` is set to `ParaGraph`, then the following example will not trigger this rule:
 
-````Markdown
+```Markdown
 this is a ParaGraph.
-````
+```
+
+> **Explanation**: The word "ParaGraph" appears in the text. The configuration `names` expects "ParaGraph". Since the capitalization matches exactly, the rule does not trigger.
 
 In addition, this rule does not trigger if the found text is not an
-isolated word within the text.  For example, even if `names` is set to
+isolated word within the text. For example, even if `names` is set to
 `ParaGraph`, the following lines of text will not trigger this rule:
 
-````Markdown
+```Markdown
 this is a paragraphing
 this is a reparagraph
-````
+```
+
+> **Explanation**: The string "ParaGraph" is configured as a proper name. However, in this example, "paragraph" is part of the larger words "paragraphing" and "reparagraph". Since the rule only triggers on standalone instances of the word, and these are not standalone instances, the rule does not trigger.
 
 ## Fix Description
 
@@ -102,7 +94,7 @@ configuration item.
 
 ** The comma-separated list of items is a string with a format of `{item},...,{item}`.
 Any leading or trailing space characters surrounding the `{item}` are trimmed during
-processing.  Any empty `{item}` value left after this trimming has been applied
+processing. Any empty `{item}` value left after this trimming has been applied
 will generate a configuration error.
 
 ## Origination of Rule

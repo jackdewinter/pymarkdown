@@ -8,61 +8,146 @@
 
 ## Summary
 
-Link and image style.
+Keep the style of links and images consistent within a Markdown document.
 
 ## Reasoning
 
 ### Consistency
 
-Whether it is within a single document or across multiple documents in a repository,
-the style of those documents matter. Depending on you team
-
-Consistent formatting makes it easier to understand a document. Autolinks are concise,
-but appear as URLs which can be long and confusing. Inline links and images can
-include descriptive text, but take up more space in Markdown form. Reference links
-and images can be easier to read and manipulate in Markdown form, but require a
-separate link reference definition.
+Consistent link and image styles make a document easier to read and maintain.
+Restricting a document to a chosen subset of the six supported styles
+(autolink, inline link, full reference, collapsed reference, shortcut
+reference, and inline URL) reduces stylistic drift across a repository and
+helps readers recognize the same construct the same way.
 
 ## Examples
 
-### Scenarios
+### Failure Scenarios
 
-This rule triggers whenever a link type is turned off and that link or image type
-is encountered in the document. By default, all link types are enabled, and it is
-only through configuration that they can be turned off. Normally, we would present
-a section on failed scenarios and correct scenarios, outlining what Markdown
-triggers each rule and what an acceptable form of that Markdown is.
+This rule triggers when an autolink (e.g., `<https://example.com>`) is used in a location where the `autolinks` configuration value is set to `False`.
 
-However,
-since the only difference is configuration, we will present this table instead.
-As noted above, without any configuration changes, each of the configuration items
-listed below defaults to `True`, and the Markdown specified in the "Example Markdown"
-column **will not** trigger the rule.  However, if the configuration item's value
-is
-changed to `False`, the Markdown specified in the "Example Markdown"
-column **will** trigger the rule.
+```Markdown
+<https://example.com>
+```
 
-<!-- pyml disable-num-lines 8 no-inline-html-->
-| Configuration Item Name | Example Markdown |
-| --- | --- |
-| `autolinks` | `<https://example.com>`<br>`<someone@somewhere.com>` |
-| `inline-links` | `[link](https://example.com)`<br>`![image](https://example.com)` |
-| `full-links` | `[link][url]`<br>`![image][url]` |
-| `collapsed-links` | `[url][]`<br>`![url][]` |
-| `shortcut-links` | `[url]`<br>`![url]` |
-| `inline-urls` | `[https://example.com](https://example.com)`<br>`![https://example.com](https://example.com)` |
+> **Explanation**: The example uses an autolink. If the `autolinks` configuration
+> value is set to `False`, this autolink violates the rule because that style is
+> disabled.
 
-For experienced users of Markdown, the only scenario above that needs explaining
-is the `inline-urls` example. As a shortcut when writing documents, some users will
-use this as a "to-do" item, setting the link label and link url to the same value
-to remind them to come up with a decent name for the link. This explicitly checks
-for the link text and the link URL to have the same value, without any link title
-being present.
+Unlike the previous example, this case uses an inline link and is triggered only when `inline-links` is set to `False`.
+
+```Markdown
+[link](https://example.com)
+```
+
+> **Explanation**: The example uses an inline link. If the `inline-links` configuration value is set to `False`, this inline link violates the rule because the style is no longer permitted.
+
+Unlike the previous example, this case uses a full reference link and is triggered only when `full-links` is set to `False`.
+
+```Markdown
+[link][url]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a full reference link (`[link][url]` with a corresponding `[url]:` definition). If the `full-links` configuration value is set to `False`, this full reference link violates the rule because that style is disabled.
+
+Unlike the two preceding examples, this case uses a collapsed reference link and is triggered only when `collapsed-links` is set to `False`.
+
+```Markdown
+[url][]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a collapsed reference link (`[url][]`). If the `collapsed-links` configuration value is set to `False`, this collapsed reference link violates the rule because that style is disabled.
+
+Unlike the preceding reference-link example, this case uses a shortcut reference link and is triggered only when `shortcut-links` is set to `False`.
+
+```Markdown
+[url]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a shortcut reference link (`[url]`). If the `shortcut-links` configuration value is set to `False`, this shortcut reference link violates the rule because that style is disabled.
+
+Unlike the previous reference-link example, this case uses an inline link whose label
+and URL are identical and is triggered only when `inline-urls` is set to `False`.
+
+```Markdown
+[https://example.com](https://example.com)
+```
+
+> **Explanation**: The example uses an inline link whose label and URL are identical. If the `inline-urls` configuration value is set to `False`, this self-referencing inline link violates the rule because that style is disabled.
+
+### Correct Scenarios
+
+This rule does not trigger when an autolink (e.g., `<https://example.com>`) is used in a location where the `autolinks` configuration value remains `True`.
+
+```Markdown
+<https://example.com>
+```
+
+> **Explanation**: The example uses an autolink. With the default configuration for `autolinks` set to `True`, autolinks are permitted, so the rule does not trigger on this construct.
+
+Unlike the previous autolink example, this case uses an inline link and satisfies the rule as long as `inline-links` has not been disabled.
+
+```Markdown
+[link](https://example.com)
+```
+
+> **Explanation**: The example uses an inline link. With the default configuration for `inline-links` set to `True`, inline links are permitted, so the rule does not trigger on this construct.
+
+Unlike the preceding inline-link example, this case uses a full reference link and satisfies the rule as long as `full-links` has not been disabled.
+
+```Markdown
+[link][url]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a full reference link with a matching link reference definition. With the default configuration of `full-links` set to `True`, full reference links are permitted, so the rule does not trigger.
+
+Unlike the preceding full reference link, this case uses a collapsed reference link and satisfies the rule as long as `collapsed-links` has not been disabled.
+
+```Markdown
+[url][]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a collapsed reference link. With the default configuration for `collapsed-links` set to `True`, collapsed reference links are permitted, so the rule does not trigger.
+
+Unlike the preceding collapsed reference link, this case uses a shortcut reference link and satisfies the rule as long as `shortcut-links` has not been disabled.
+
+```Markdown
+[url]
+
+[url]: https://example.com
+```
+
+> **Explanation**: The example uses a shortcut reference link. With the default configuration of `shortcut-links` set to `True`, shortcut reference links are permitted, so the rule does not trigger.
+
+Unlike the preceding shortcut reference link, this case uses an inline link whose
+label and URL are identical and satisfies the rule as long as `inline-urls` has not
+been disabled.
+
+```Markdown
+[https://example.com](https://example.com)
+```
+
+> **Explanation**: The example uses an inline link whose label and URL are identical.
+> With the default configuration for `inline-urls` set to `True`, this style is
+> permitted, so the rule does not trigger.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is that it is unclear what one
-of the link formats should be changed to if it is not enabled.
+The tool cannot autofix this, because a non-permitted link or image could be
+rewritten into any of the other enabled styles (autolink, full reference,
+collapsed reference, shortcut reference, or inline URL). Choosing one
+replacement without author intent could change the meaning or emphasis of the
+document.
 
 ## Configuration
 
@@ -79,7 +164,7 @@ of the link formats should be changed to if it is not enabled.
 | `full-links` | `boolean` | `True` | Whether full links and images are allowed. |
 | `collapsed-links` | `boolean` | `True` | Whether collapsed links and images are allowed. |
 | `shortcut-links` | `boolean` | `True` | Whether shortcut links and images are allowed. |
-| `inline-urls` | `boolean` | `True` | Whether inline URL for links and image are allowed. |
+| `inline-urls` | `boolean` | `True` | Whether inline URLs for links and images are allowed. |
 
 ## Origination of Rule
 

@@ -14,65 +14,67 @@ Each file should end with a single newline character.
 
 ### Consistency
 
-Various parsers and operating system calls have trouble with files that
-do not end with at least one newline character.
-It is common on any POSIX operating systems to mandate that each text file
-be ended with a single newline character.  To make the Markdown
-documents compatible with these various systems, it just makes sense to
-end documents with a newline character.
+Various parsers and operating systems expect text files to end with a single newline character. POSIX systems, in particular, mandate this convention. Ending Markdown documents with a single newline ensures compatibility across these systems.
 
 ## Examples
 
-As the space character is not normally visible, each occurrence of
-the text `{space}` in the following example stands for a single
-space character.
+> **Note on Invisible Characters**: In the following examples, invisible characters are represented visually to aid understanding:
+>
+> - `↵` represents a newline character (`\n`).
+> - `⎵` represents a space character.
+> - `⇥` represents a tab character.
 
 ### Failure Scenarios
 
-This rule triggers when the document does not end with a single
-newline character.
+This rule triggers when the document does not end with a single newline character.
 
 ```Markdown
-# Heading
-
+# Heading↵
+↵
 This file ends without a newline.
 ```
 
-This includes triggering on a final line that has a newline
-character followed by one or more whitespace characters.  To
-properly illustrate this, the space characters at the end of the
-following example have been replaced with the string `{space}`
-to make those space characters visible.
+> **Explanation**: The file ends immediately after the period in "newline." with no newline character (`↵`) following. The rule requires exactly one newline as the final character in the file, ensuring POSIX compatibility.
+
+Unlike the previous example, this case ends with a newline but includes additional blank lines (multiple newlines) at the end of the file.
 
 ```Markdown
-# Heading
-
-This file ends with a newline and two space characters.
-{space}{space}  
+# Heading↵
+↵
+This file ends with multiple newlines.↵
+↵
+↵
 ```
+
+> **Explanation**: The file ends with three newline characters (`↵↵↵`). The rule requires **exactly one** newline character as the final character. Extra trailing newlines constitute a failure because the file does not end with a *single* newline.
+
+Unlike the previous example, this case includes a newline character but is followed by trailing whitespace.
+
+```Markdown
+# Heading↵
+↵
+This file ends with a newline followed by two spaces.↵
+⎵⎵
+```
+
+> **Explanation**: Although a newline character (`↵`) exists, it is followed by two space characters (`⎵`). The rule requires the newline to be the **final** character in the file. Any trailing whitespace after the newline causes a failure.
 
 ### Correct Scenarios
 
-This rule does not trigger when the document does end with a single
-newline character.
+This rule does not trigger when the document ends with a single newline character.
 
 ```Markdown
-# Heading
-
-This file ends with a newline.
-
+# Heading↵
+↵
+This file ends with a single trailing newline.↵
+↵
 ```
 
-In most editors, if the current file ends with a single newline character,
-it will appear to be a line with nothing on it.  The difficulty with using
-this as the visual indicator is that most editors do not display a document
-ending in a newline character any differently than a document ending with
-a newline characters and one or more whitespace characters.
+> **Explanation**: The file ends with exactly one newline character after the last line of content (`newline.`). No trailing whitespace follows the newline, satisfying the rule's requirement.
 
 ## Fix Description
 
-If the document does not end with a blank line, a blank line is added to the
-end of the document.
+If the document does not end with a single newline character, a newline character is added to the end of the document.
 
 ## Configuration
 
