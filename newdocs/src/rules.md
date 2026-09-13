@@ -785,6 +785,21 @@ Link text must be descriptive.
 
 Ensure table columns adhere to a consistent formatting style.
 
+## Rule - MD060
+
+[Full Documentation](./plugins/rule_md060.md)
+
+| Property | Value |
+| --- | --- |
+| Aliases | `md060`, `table-column-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table column style.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)
