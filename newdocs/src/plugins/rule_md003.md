@@ -8,38 +8,73 @@
 
 ## Summary
 
-Heading style should be consistent throughout the document.
+Use consistent heading styles throughout the document.
 
 ## Reasoning
 
 ### Readability
 
-One of the main keys to readability is to have consistent formatting applied
-throughout a group of documents.  Extending the concept even further,
-organizations often have specific rules on how documents should be authored throughout
-that organization.  It follows that both concepts may extend to specifying
-which elements are used to specify headings in a Markdown document.
+Inconsistent heading styles make a document harder for human readers and assistive-technology
+users to scan and navigate; a single, consistent heading style keeps the structure
+visually and programmatically predictable.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when more than one heading style is used within a given document:
+This rule triggers when a document mixes more than one heading style under the default
+`consistent` style — for example, combining `atx`, `atx_closed`, and `setext` headings
+in the same document.
 
 ```Markdown
 ## Atx Heading Without Closing Hashes
 
 ## Atx Heading With Closing Hashes ##
 
-SetExt Heading
-===============
+Setext Heading
+==============
 ```
+
+> **Explanation**: The first heading is an ATX heading without closing hashes, establishing
+> the `atx` style. The second heading uses closing hashes (`atx_closed`), and the
+> third is a Setext heading. Both deviate from the established `atx` style, triggering
+> the rule.
+
+Unlike the preceding scenario, which relied on the default `consistent` style, this
+scenario explicitly configures `style` to `atx_closed`. Any heading that does not
+use closing hashes (including Setext headings) fails the rule.
+
+```Markdown
+# ATX With No Closing Characters
+
+Any Setext
+----------
+```
+
+> **Explanation**: The configuration specifies `atx_closed`. The first heading
+> (`# ATX With No Closing Characters`) lacks closing hashes, and the second heading
+> (`Any Setext`) is a Setext heading. Both violate the `atx_closed` requirement,
+> triggering the rule.
+
+Unlike the previous scenario that required `atx_closed`, this scenario explicitly
+configures `style` to `atx` (no closing hashes). Any heading that uses closing hashes
+or is a Setext heading triggers a failure.
+
+```Markdown
+## ATX Closed Heading ##
+
+Setext Heading
+==============
+```
+
+> **Explanation**: The configuration specifies `atx` (no closing hashes). The second
+> heading uses closing hashes (`atx_closed`), and the third is a Setext heading.
+> Both deviate from the strict `atx` style, triggering the rule.
 
 ### Correct Scenarios
 
-This rule does not trigger when a consistent heading style is used within
-the document.  The default style `consistent` decides the heading style upon
-encountering the first heading element in the document.  In this example:
+This rule does not trigger when a consistent heading style is used throughout the
+document under the default `consistent` style.
 
 ```Markdown
 # ATX style H1
@@ -47,16 +82,49 @@ encountering the first heading element in the document.  In this example:
 ## ATX style H2
 ```
 
-the heading style that would be decided on is `atx`.
+> **Explanation**: Both headings use ATX style without closing hashes. Since the
+> default `consistent` style is used, the first heading establishes `atx` as the
+> expected style, and the second heading conforms to it, so the rule does not trigger.
 
-Configuration may be used to specify a specific heading style to be used within
-the document.  This is extremely useful for the `setext` style, which is limited
-by Markdown to only 2 levels.  The `setext_with_atx` and `setext_with_atx_closed`
-styles can be used to specify that for levels 3 and higher, the `atx` and
-`atx_closed` styles are specified.
+Unlike the previous scenario, where the default `consistent` style determined
+`atx` from the first heading, this scenario explicitly configures
+`atx_closed`. All headings in the document use closing hashes, so the
+rule does not trigger.
 
-If the `style` value is `setext_with_atx`, then this example will not trigger
-the rule:
+```Markdown
+# ATX style H1 #
+
+## ATX style H2 ##
+```
+
+> **Explanation**: The configuration specifies `atx_closed`. Both headings include
+> closing hashes. Therefore, both satisfy the configured style, and the rule does
+> not trigger.
+
+Unlike the previous uniform `atx_closed` scenario, this scenario uses the hybrid
+`setext_with_atx` style: levels 1–2 are Setext and level 3+ is ATX without closing
+hashes. The code block itself shows both halves of the hybrid style.
+
+```Markdown
+Setext style H1
+===============
+
+Setext style H2
+---------------
+
+### ATX style H3
+
+#### ATX style H4
+```
+
+> **Explanation**: Levels 1 and 2 are Setext headings and levels 3–4 are ATX headings
+> without closing hashes, which is exactly what `setext_with_atx` requires. Because
+> every heading matches its level's mandated style, the rule does not trigger.
+
+Unlike the previous `setext_with_atx` scenario, this scenario uses the default
+`consistent` style together with `allow-setext-update` set to `True`. A level-3
+ATX heading in an otherwise Setext document triggers the auto-upgrade to `setext_with_atx`,
+so the rule does not trigger.
 
 ```Markdown
 Setext style H1
@@ -68,20 +136,15 @@ Setext style H2
 ### ATX style H3
 ```
 
-#### Allowing Auto-Detection of `setext_with_atx`
-
-Using the default style of `consistent` to auto-detect the `setext_with_atx` style
-is problematic, as it appears first as the `setext` style.  The `allow-setext-update`
-configuration value was added to address this issue.  If this configuration setting
-is enabled with the previous example, the rule will still detect the `setext` style
-based on the first SetExt Heading element.  However, when a level 3 (or higher)
-Atx Heading element is encountered and this configuration setting is enabled, it
-will switch to the `setext_with_atx` style.
+> **Explanation**: Under plain `consistent`, the first heading would lock the document
+> into `setext`, and the level-3 ATX heading would violate that style. With `allow-setext-update`
+> set to `True`, the style auto-upgrades to `setext_with_atx` as soon as a level-3+
+> ATX heading is seen. Because the ATX heading here is at level 3 (an ATX-mandated
+> level under `setext_with_atx`), the rule does not trigger.
 
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/807).
 
 ## Configuration
 
@@ -93,23 +156,29 @@ release.
 
 | Value Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `style` | string (see below) | `consistent` | Style of headings expected in the document. |
-| `allow-setext-update` | boolean | `False` | If `style` is `consistent` and the document started off as `setext`, allow an upgrade to `setext_with_atx` if a level 3 Atx Header or higher is observed. |
+| `enabled` | `boolean` | `True` | Determines if this rule is active. |
+| `style` | `string` | `consistent` | The heading style expected in the document. |
+| `allow-setext-update` | `boolean` | `False` | Auto-upgrades `consistent` style from `setext` to `setext_with_atx` if a level 3+ ATX heading is found in an otherwise Setext-style document. |
 
-Valid heading styles:
+### Valid Styles
 
-| Style | Description |
+| Style Name | Description |
 | --- | --- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |
 | `atx` | Only Atx Headings without any closing hashes are used. |
 | `atx_closed` | Only Atx Headings with closing hashes are used. |
-| `setext` | Only SetExt headings are used. |
-| `setext_with_atx` | Only SetExt headings are used for levels 1 and 2, and Atx Headings without closing hashes used for levels 3 to 6. |
-| `setext_with_atx_closed` | Only SetExt headings are used for levels 1 and 2, and Atx Headings with closing hashes are used for levels 3 to 6. |
+| `setext` | Only Setext headings are used. |
+| `setext_with_atx` | Only Setext headings are used for levels 1 and 2, and Atx Headings without closing hashes are used for levels 3 to 6. |
+| `setext_with_atx_closed` | Only Setext headings are used for levels 1 and 2, and Atx Headings with closing hashes are used for levels 3 to 6. |
 
 ## Origination of Rule
 
 This rule is largely inspired by the MarkdownLint rule
 [MD003](https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md003---heading-style).
-The `allow-setext-update` configuration value was added due to a [user request](https://github.com/jackdewinter/pymarkdown/issues/154).
+
+### Differences From MarkdownLint Rule
+
+The `allow-setext-update` configuration value was added due to a
+[user request](https://github.com/jackdewinter/pymarkdown/issues/154) and is not
+present in the upstream MarkdownLint rule. Otherwise, the rule's behavior and supported
+styles are equivalent to the MarkdownLint rule.
