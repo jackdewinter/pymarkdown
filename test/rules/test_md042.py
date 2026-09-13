@@ -101,6 +101,8 @@ def test_md042_good_non_empty_fragment(scanner_default: MarkdownScanner) -> None
     # Arrange
     source_path, _ = __generate_source_path("good_non_empty_fragment.md")
     supplied_arguments = [
+        "--disable-rules",
+        "md051",
         "scan",
         source_path,
     ]
@@ -124,6 +126,8 @@ def test_md042_bad_link_empty_fragment(scanner_default: MarkdownScanner) -> None
     # Arrange
     source_path, abs_source_path = __generate_source_path("bad_link_empty_fragment.md")
     supplied_arguments = [
+        "--disable-rules",
+        "md051",
         "scan",
         source_path,
     ]
@@ -152,6 +156,8 @@ def test_md042_bad_link_whitespace_fragment(scanner_default: MarkdownScanner) ->
         "bad_link_whitespace_fragment.md"
     )
     supplied_arguments = [
+        "--disable-rules",
+        "md051",
         "scan",
         source_path,
     ]

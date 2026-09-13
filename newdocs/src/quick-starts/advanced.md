@@ -356,4 +356,4 @@ For a full reference of commands and options:
 - Start with the [User Guide](../user-guide.md), especially:
     - [Scanning options](../user-guide.md#basic-scanning)
     - [Fixing options](../user-guide.md#basic-fixing)
-    - [Configuration basics](../user-guide.md#basic-configuration)
+    - [Configuration basics](../user-guide.md#rule-plugins)

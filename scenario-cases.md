@@ -41,7 +41,7 @@ Sh space hard break
 ## Series A
 
 | t | s | x | y | z |
-| -- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | Ab | starts with a backslash escape | `\\\\this is a fun day` | test_paragraph_series_a_b |
 | Abh| starts with a backslash hard line break | `\\\n` | test_paragraph_series_a_bh |
 | Ash| starts with spaces hard line break | `\a\a\a\n---` | test_paragraph_series_a_sh |

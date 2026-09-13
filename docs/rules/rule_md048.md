@@ -72,14 +72,14 @@ value of `backtick` or `consistent` will not cause this rule to trigger.
 | `plugins.code-fence-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `consistent` | Style of fenced code block fence characters expected in the document. |
 
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |
 | `backtick` | Only backticks are to be used for Fenced Code Block elements. |
 | `indented` | Only tildes are to be used for Fenced Code Block elements. |

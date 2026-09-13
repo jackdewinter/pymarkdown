@@ -30,7 +30,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Calculate test matrix
       id: set-matrix
@@ -55,7 +55,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Calculate test matrix
       id: set-matrix
@@ -84,10 +84,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -108,7 +108,14 @@ jobs:
           pipenv graph
 
       - name: Execute Tests
-        run: pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml
+        run: |
+          pwd
+          pipenv run python -c "import html; print(html.__file__)"
+          pipenv run python -c "import sys; print(sys.path)"
+          # if ! find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__" ; then
+          #   echo "not found"
+          # fi
+          pipenv run pytest --junitxml=pytest.xml --cov --cov-branch --cov-report xml:coverage.xml
           
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v7
@@ -120,7 +127,7 @@ jobs:
             pytest.xml
 
       - name: Report Coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -144,7 +151,7 @@ jobs:
       #       pytest.xml
 
       - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1.7.2
+        uses: MishaKav/pytest-coverage-comment@v1.12.2
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-xml-coverage-path: ./coverage.xml
@@ -182,10 +189,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -220,10 +227,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -242,7 +249,14 @@ jobs:
           pipenv uninstall pytest-html
 
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
+        run: |
+          pwd
+          pipenv run python -c "import html; print(html.__file__)"
+          pipenv run python -c "import sys; print(sys.path)"
+          # if ! find . -name "html.py" -o -name "html" -type d | grep -v ".venv" | grep -v "__pycache__" ; then
+          #   echo "not found"
+          # fi
+          pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
   packaging:
 
@@ -257,10 +271,10 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.default-python-version }}
 

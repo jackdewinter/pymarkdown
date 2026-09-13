@@ -206,7 +206,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_full_image_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_full_image_multi.md",
         source_file_contents='#Heading 1 with no blank lines#![my\nimage][foo\nbar]##Heading 2 with no blank lines##\n #![my image][foo bar]\n  ###Heading 3 with no blank lines##\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
-        disable_rules="md033",
+        disable_rules="md033,md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,
@@ -215,7 +215,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_shortcut_image_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_shortcut_image_multi.md",
         source_file_contents='#Heading 1 with no blank lines#![foo\nbar]##Heading 2 with no blank lines##\n #![foo bar]\n  ###Heading 3 with no blank lines###\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
-        disable_rules="md033",
+        disable_rules="md033,md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,
@@ -224,7 +224,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_collapsed_image_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_collapsed_image_multi.md",
         source_file_contents='#Heading 1 with no blank lines#![foo\nbar][]##Heading 2 with no blank lines##\n #![foo bar][]\n  ###Heading 3 with no blank lines###\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
-        disable_rules="md033",
+        disable_rules="md033,md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,
@@ -241,6 +241,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_full_link_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_full_link_multi.md",
         source_file_contents='#Heading 1 with no blank lines#[my\nimage][foo\nbar]##Heading 2 with no blank lines##\n [my image][foo bar]\n  ###Heading 3 with no blank lines##\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,
@@ -249,6 +250,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_separated_shortcut_link_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_shortcut_link_multi.md",
         source_file_contents='#Heading 1 with no blank lines#[foo\nbar]##Heading 2 with no blank lines##\n [foo bar]\n  ###Heading 3 with no blank lines###\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,
@@ -257,6 +259,7 @@ scanTests = [
         "bad_multiple_within_paragraph_separated_collapsed_link_multi",
         source_file_name=f"{source_path}multiple_within_paragraph_separated_collapsed_link_multi.md",
         source_file_contents='#Heading 1 with no blank lines#[foo\nbar][]##Heading 2 with no blank lines##\n [foo bar][]\n  ###Heading 3 with no blank lines###\n\n[FOO\nBAR]: train.jpg "train & tracks"\n[FOO BAR]: train.jpg "train & tracks"\n',
+        disable_rules="md053",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:3: MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)
 """,

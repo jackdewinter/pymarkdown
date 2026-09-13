@@ -21,6 +21,7 @@ scanTests = [
     pluginRuleTest(
         "good_valid_emphasis",
         source_file_name=f"{source_path}good_valid_emphasis.md",
+        disable_rules="md049,md050",
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis",
@@ -357,6 +358,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_surround",
         source_file_contents="""abc * [link](/url) * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:1:19: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
@@ -368,6 +370,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_surround_extra",
         source_file_contents="""abc *  [link](/url)  * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:1:21: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
@@ -379,6 +382,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_before_fix",
         source_file_contents="""abc * [link](/url)* ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 """,
@@ -389,6 +393,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_after_fix",
         source_file_contents="""abc *[link](/url) * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:18: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 """,

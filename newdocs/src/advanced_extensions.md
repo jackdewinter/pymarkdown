@@ -168,8 +168,8 @@ and a more comprehensive example looks like:
 rendering as:
 
 | normal | right | left | center |
-| ---    | --: | :-- | :--: |
-| baz    | bim | bam | bom |
+| --- | --: | :-- | :-: |
+| baz | bim | bam | bom |
 
 #### Task List Items
 
@@ -338,7 +338,7 @@ conceptually look like:
 Without this extension enabled, the same text is interpreted as:
 
 - line 1: thematic break token
-- lines 2-5: SetExt heading token
+- lines 2-5: Setext heading token
 - line 6: blank line token
 - line 7: ATX heading token + text token
 

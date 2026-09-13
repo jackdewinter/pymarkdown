@@ -80,7 +80,7 @@ a newline characters and one or more whitespace characters.
 | `plugins.single-trailing-newline.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

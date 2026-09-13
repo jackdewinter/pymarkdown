@@ -468,15 +468,33 @@ class MarkdownToken:
         """
         Returns whether the current token is a header item from a table.
         """
-        return self.token_name == self.token_name == MarkdownToken._token_table_header
+        return self.token_name == MarkdownToken._token_table_header
 
     @property
     def is_table_header_item(self) -> bool:
         """
         Returns whether the current token is a header item from a table.
         """
+        return self.token_name == MarkdownToken._token_table_header_item
+
+    @property
+    def is_table_header_item_end(self) -> bool:
+        """
+        Returns whether the current token is a header item from a table.
+        """
         return (
-            self.token_name == self.token_name == MarkdownToken._token_table_header_item
+            self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_table_header_item
+        )
+
+    @property
+    def is_table_header_end(self) -> bool:
+        """
+        Returns whether the current token is a paragraph end element.
+        """
+        return (
+            self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_table_header
         )
 
     @property
@@ -484,21 +502,41 @@ class MarkdownToken:
         """
         Returns whether the current token is a row item from a table.
         """
-        return self.token_name == self.token_name == MarkdownToken._token_table_row
+        return self.token_name == MarkdownToken._token_table_row
+
+    @property
+    def is_table_row_end(self) -> bool:
+        """
+        Returns whether the current token is a row item from a table.
+        """
+        return (
+            self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_table_row
+        )
 
     @property
     def is_table_body(self) -> bool:
         """
         Returns whether the current token is a body from a table.
         """
-        return self.token_name == self.token_name == MarkdownToken._token_table_body
+        return self.token_name == MarkdownToken._token_table_body
 
     @property
     def is_table_row_item(self) -> bool:
         """
         Returns whether the current token is a row item from a table.
         """
-        return self.token_name == self.token_name == MarkdownToken._token_table_row_item
+        return self.token_name == MarkdownToken._token_table_row_item
+
+    @property
+    def is_table_row_item_end(self) -> bool:
+        """
+        Returns whether the current token is a row item from a table.
+        """
+        return (
+            self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_table_row_item
+        )
 
     @property
     def is_code_block(self) -> bool:

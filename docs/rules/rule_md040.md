@@ -55,7 +55,7 @@ def func(arg1, arg2):
 | `plugins.fenced-code-language.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

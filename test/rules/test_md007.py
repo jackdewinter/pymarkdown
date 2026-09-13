@@ -370,6 +370,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_list_in_block_quote_after_link_reference_definition",
+        disable_rules="md053",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_link_reference_definition.md",
         source_file_contents="""> [link]: /url
 >

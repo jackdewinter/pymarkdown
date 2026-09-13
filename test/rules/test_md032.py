@@ -318,7 +318,7 @@ This is any non-text block
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)""",
-        disable_rules="md022",
+        disable_rules="md022,md053",
     ),
     pluginRuleTest(
         "issue-1426-g-a",

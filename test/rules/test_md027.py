@@ -616,7 +616,7 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_ordered_list_lrd",
         source_file_name=f"{source_path}good_block_quote_ordered_list_lrd.md",
-        use_debug=True,
+        disable_rules="md053",
     ),
     pluginRuleTest(
         "good_list_in_block_quote_after_other_list",
@@ -824,6 +824,7 @@ scanTests = [
 > | --- | --- |
 > a real test
 """,
+        disable_rules="md060",
     ),
     pluginRuleTest(
         "bad_in_block_quote_with_table_first_line",
@@ -835,6 +836,7 @@ scanTests = [
 > | --- | --- |
 > a real test
 """,
+        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text
@@ -854,6 +856,7 @@ scanTests = [
 >  | --- | --- |
 > a real test
 """,
+        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text
@@ -873,6 +876,7 @@ scanTests = [
 >  | --- | --- |
 > a real test
 """,
+        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 {temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
@@ -894,6 +898,7 @@ scanTests = [
 >  | abc | def |
 > a real test
 """,
+        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text

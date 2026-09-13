@@ -56,7 +56,7 @@ characters:
 | `plugins.no-hard-tabs.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `code_blocks` | `boolean` | `True` | Whether hard tabs are searched for within code blocks. |
 

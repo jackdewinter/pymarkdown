@@ -8,7 +8,7 @@ violations.
 ## Glob Support
 
 | Command Line | Description |
-| -- | -- |
+| --- | --- |
 | `scan *-id.md` | Scan files that end with `-id.md`. |
 | `scan ?-id.md` | Scan files that start with a single character followed by `-id.md`. |
 | `scan */*-id.md` | In any direct subdirectory of the current directory, scan files ending with `-id.md`. |
@@ -39,7 +39,7 @@ to prevent the scanning of non-Markdown files.
 ## Recursing Directories
 
 | Command Line | Description |
-| -- | -- |
+| --- | --- |
 | `scan -r` or `scan --recurse` | List found files without scanning. |
 
 By default, when one of the provided paths specifies a directory,
@@ -94,7 +94,7 @@ except for the first file, `rule_md001.md`, and the last file,
 ## Test It Out
 
 | Command Line | Description |
-| -- | -- |
+| --- | --- |
 | `scan -l` or `scan --list-files` | List found files without scanning. |
 
 If you believe that a file should be included in the scanning

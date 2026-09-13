@@ -257,7 +257,7 @@ def test_api_scan_recursive_for_directory() -> None:
 
     itemized_scan_failures = "\n".join(str(i) for i in scan_result.scan_failures)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 142
+    assert len(scan_result.scan_failures) == 270
 
     scan_failures: List[str] = []
     for i in scan_result.scan_failures:
@@ -469,11 +469,11 @@ The line after this line should be blank.
 """
 
     # Act
-    scan_result = PyMarkdownApi().fix_string(string_to_scan)
+    fix_result = PyMarkdownApi().fix_string(string_to_scan)
 
     # Assert
-    assert not scan_result.was_fixed
-    assert string_to_scan == scan_result.fixed_file
+    assert not fix_result.was_fixed
+    assert string_to_scan == fix_result.fixed_file
 
 
 def test_api_fix_string_simple_small_fix() -> None:
@@ -491,11 +491,11 @@ The line after this line should be blank.
 """
 
     # Act
-    scan_result = PyMarkdownApi().fix_string(string_to_scan)
+    fix_result = PyMarkdownApi().fix_string(string_to_scan)
 
     # Assert
-    assert scan_result.was_fixed
-    assert expected_string == scan_result.fixed_file
+    assert fix_result.was_fixed
+    assert expected_string == fix_result.fixed_file
 
 
 def test_api_fix_path_no_files(tmpdir: py._path.local.LocalPath) -> None:

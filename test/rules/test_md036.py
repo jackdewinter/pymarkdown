@@ -105,6 +105,8 @@ def test_md036_good_proper_emphasis_with_link(scanner_default: MarkdownScanner) 
     # Arrange
     source_path, _ = __generate_source_path("proper_emphasis_with_link.md")
     supplied_arguments = [
+        "--disable-rules",
+        "md059",
         "scan",
         source_path,
     ]
@@ -130,6 +132,8 @@ def test_md036_good_proper_emphasis_with_text_then_link(
     # Arrange
     source_path, _ = __generate_source_path("proper_emphasis_with_text_then_link.md")
     supplied_arguments = [
+        "--disable-rules",
+        "md059",
         "scan",
         source_path,
     ]
@@ -157,6 +161,8 @@ def test_md036_good_proper_emphasis_with_text_then_link_then_text(
         "proper_emphasis_with_text_then_link_then_text.md",
     )
     supplied_arguments: List[str] = [
+        "--disable-rules",
+        "md059",
         "scan",
         source_path,
     ]

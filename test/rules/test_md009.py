@@ -58,6 +58,10 @@ scanTests = [
     pluginRuleTest(
         "good_paragraph_no_extra",
         source_file_name=f"{source_path}good_paragraph_no_extra.md",
+        source_file_contents="""this is some text
+there is nothing wrong
+with this text.
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "two_paragraphs_list_item_empty_line_no_spaces",
@@ -74,11 +78,23 @@ this is another paragraph
     ),
     pluginRuleTest(
         "good_indented_code_block_with_extra",
+        source_file_contents="""    indented\a
+    code\a
+    block
+""".replace("\a", " "),
         source_file_name=f"{source_path}good_indented_code_block_with_extra.md",
     ),
     pluginRuleTest(
         "good_fenced_code_block_with_extra",
         source_file_name=f"{source_path}good_fenced_code_block_with_extra.md",
+        source_file_contents="""```Python
+this\a
+is\a
+a\a
+code\a
+block\a
+```
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "unordered_list_item_empty_line_no_spaces",

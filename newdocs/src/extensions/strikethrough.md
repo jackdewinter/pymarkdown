@@ -14,7 +14,7 @@
 | `extensions.markdown-strikethrough.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
 
 ## Summary

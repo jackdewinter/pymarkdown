@@ -12,7 +12,7 @@ from pymarkdown.container_blocks.parse_block_pass_properties import (
 )
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
-from pymarkdown.html.html_raw_helper import HtmlRawHelper
+from pymarkdown.html_helpers.html_raw_helper import HtmlRawHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken

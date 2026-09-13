@@ -495,6 +495,8 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi(
         "multiple_within_paragraph_separated_full_image_multi.md",
     )
     supplied_arguments: List[str] = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]
@@ -527,6 +529,8 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi(
         "multiple_within_paragraph_separated_shortcut_image_multi.md",
     )
     supplied_arguments = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]
@@ -559,6 +563,8 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi(
         "multiple_within_paragraph_separated_collapsed_image_multi.md",
     )
     supplied_arguments = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]
@@ -623,6 +629,8 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi(
         "multiple_within_paragraph_separated_full_link_multi.md",
     )
     supplied_arguments = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]
@@ -655,6 +663,8 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi(
         "multiple_within_paragraph_separated_shortcut_link_multi.md",
     )
     supplied_arguments = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]
@@ -687,6 +697,8 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi(
         "multiple_within_paragraph_separated_collapsed_link_multi.md",
     )
     supplied_arguments = [
+        "-d",
+        "md041,md053",
         "scan",
         source_path,
     ]

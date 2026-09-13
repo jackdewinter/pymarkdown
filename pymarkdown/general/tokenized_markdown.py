@@ -26,7 +26,7 @@ from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.requeue_line_info import RequeueLineInfo
 from pymarkdown.general.source_providers import InMemorySourceProvider, SourceProvider
-from pymarkdown.html.html_helper import HtmlHelper
+from pymarkdown.html_helpers.html_helper import HtmlHelper
 from pymarkdown.inline.inline_character_reference_helper import (
     InlineCharacterReferenceHelper,
 )

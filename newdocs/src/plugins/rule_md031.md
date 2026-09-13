@@ -1,7 +1,7 @@
 # Rule - MD031
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md031`, `blanks-around-fences` |
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
@@ -14,18 +14,16 @@ Fenced code blocks should be surrounded by blank lines.
 
 ### Readability
 
-By separating
-Fenced Code Block elements from the other elements in a document, their
-existence in the document is highlighted.  In addition, a select few parsers
-may not properly recognize the Fenced Code Block without the extra
-blank lines on both sides.
+By separating fenced code blocks from surrounding content, their presence in a document
+is more easily visible to human readers. Additionally, some Markdown parsers require
+blank lines before and after fenced code blocks to properly recognize them.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when the Fenced Code Block element is either not
-prefaced with Blank Lines:
+This rule triggers when the Fenced Code Block element is not prefaced with a blank
+line.
 
 ````Markdown
 This is text.
@@ -36,7 +34,12 @@ A code block
 This is a blank line and some text.
 ````
 
-or followed by Blank Lines:
+> **Explanation**: The Fenced Code Block immediately follows "This is text." without
+> an intervening blank line. The rule requires a blank line before any Fenced Code
+> Block to ensure readability and parser compatibility.
+
+Unlike the previous example, this case shows a Fenced Code Block not followed by
+a blank line.
 
 ````Markdown
 This is text and a blank line.
@@ -47,49 +50,113 @@ A code block
 This is some text.
 ````
 
+> **Explanation**: The Fenced Code Block is immediately followed by "This is some
+> text." without an intervening blank line. The rule requires a blank line after
+> any Fenced Code Block to ensure readability and parser compatibility.
+
 ### Correct Scenarios
 
-This rule does not trigger when there is a single
-Blank Line both before and after the Fenced Code Block
-element:
+This rule does not trigger when there is a single blank line both before and after
+the Fenced Code Block element.
 
 ````Markdown
-This is text and a blank line.
+This is some text.
 
 ```block
 A code block
 ```
 
-This is a blank line and some text.
+This is some text.
 ````
 
-This rule will also not trigger if the Fenced Code Block element
-is at the very start or the very end of the document.  In addition,
-if the Fenced Code Block element is either the first element or
-last element within a Block Quote element or a List Item element,
-the check for a Blank Line in that direction extends beyond the
-border of the container element.
+> **Explanation**: This rule does not trigger because the Fenced Code Block is properly
+> surrounded by blank lines, satisfying the requirement for readability and parser
+> compatibility.
 
-#### Within List Items
+Unlike the previous example, this case shows a Fenced Code Block at the very start
+of the document, where there is no preceding content to separate it from.
 
-Within a single List Item, there may be a need to create a List Item
-that is [loose](https://github.github.com/gfm/#loose).  If this is
-required, the `list_items` configuration value can be set to `False`.
-With that configuration value set, this rule will not trigger for
-lack of whitespace around Fenced Code Blocks, such as:
+````Markdown
+```block
+A code block
+```
+
+This is some text.
+````
+
+> **Explanation**: This rule does not trigger because the Fenced Code Block appears
+> at the very beginning of the document. With no preceding content, a blank line
+> before the block is not required; a blank line after the block separates it from
+> the following text.
+
+Unlike the previous example, this case shows a Fenced Code Block at the very end
+of the document.
+
+````Markdown
+This is some text.
+
+```block
+A code block
+```
+````
+
+> **Explanation**: This rule does not trigger because the Fenced Code Block is at
+> the end of the document. There is no following content, so a blank line after
+> the code block is not required. A blank line precedes the code block, separating
+> it from the preceding text.
+
+Unlike the previous examples, this case shows a Fenced Code Block nested within
+a blockquote.
+
+````Markdown
+> ```block
+> A code block
+> ```
+>
+> This is some text.
+````
+
+> **Explanation**: This rule does not trigger because the Fenced Code Block is within
+> a blockquote. The blank lines before and after the code block (within the blockquote
+> context) satisfy the requirement for separation. The rule evaluates content within
+> blockquotes independently.
+
+Unlike the previous example which used a blockquote, this case shows a Fenced Code
+Block nested within a list item.
+
+````Markdown
++ ```block
+  A code block
+  ```
+
+  This is some text.
+````
+
+> **Explanation**: This rule does not trigger because the Fenced Code Block within
+> the list item is separated from both the preceding and following list content.
+> The blank line preceding the opening fence and the blank line following the closing
+> fence provide the required separation within the list-item context.
+
+Unlike the previous example, this case shows a [loose list item](https://github.github.com/gfm/#loose)
+evaluated with the `list_items` configuration set to `False`, disabling the rule
+within list items.
 
 ````Markdown
 - This is an item
+
   ```block
   A code block
   ```
   Still the same item, and loose.
 ````
 
+> **Explanation**: This rule does not trigger because the `list_items` configuration
+> is set to `False`. When this option is disabled, blank lines around Fenced Code
+> Blocks inside list items are not required, so this layout is acceptable.
+
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/818).
 
 ## Configuration
 
@@ -99,7 +166,7 @@ release.
 | `plugins.blanks-around-fences.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `list_items` | `boolean` | `True` | Whether this Rule Plugin triggers directly within a list item. |
 

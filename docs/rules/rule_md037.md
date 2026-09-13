@@ -55,7 +55,7 @@ this is **some** bold text
 | `plugins.no-space-in-emphasis.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

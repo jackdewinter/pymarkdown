@@ -232,7 +232,9 @@ class PluginManager:
     ) -> ApplicationResult:
         list_re = (
             re.compile(
-                "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
+                "^"
+                + args.list_filter.lower().replace("*", ".*").replace("?", ".")
+                + "$"
             )
             if args.list_filter
             else None
@@ -301,7 +303,7 @@ class PluginManager:
     ) -> ApplicationResult:
         matching_plugins: List[FoundPlugin] = list(
             filter(
-                lambda x: args.info_filter in x.plugin_identifiers,
+                lambda x: args.info_filter.lower() in x.plugin_identifiers,
                 self.__registered_plugins,
             )
         )
@@ -440,7 +442,7 @@ class PluginManager:
         self, scan_file: str, line_number: int, pragma_error: str
     ) -> None:
         """
-        Log the pragma failure in the appropriate format.
+        Log the pragma error in the appropriate format.
         """
         self.__presentation.print_pragma_failure(scan_file, line_number, pragma_error)
         self.number_of_pragma_failures += 1

@@ -88,7 +88,7 @@ that has the Blank Line.
 | `plugins.no-trailing-spaces.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `br_spaces` | `integer` | `2` | Specifies the exact number of spaces allowed at the end of the line. |
 | `strict` | `boolean` | `False` | Whether strict mode is enabled for the plugin. |

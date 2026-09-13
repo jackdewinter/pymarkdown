@@ -71,7 +71,7 @@ is made, so that the following example will not trigger this rule:
 | `plugins.hr-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | `string` | `consistent` | `consistent` for consistent, or a specific marker** |
 

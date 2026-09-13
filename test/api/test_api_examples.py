@@ -83,7 +83,7 @@ def test_api_exceptions_example_good_directory_markdown_files(
     Test to make sure that if there is a valid directory to scan, just no markdown files.
     """
 
-    source_path = os.path.join(".", "newdocs", "src")
+    source_path = os.path.join(".", "newdocs", "src", "quick-starts")
     try:
         PyMarkdownApi().scan_path(source_path)
         did_complete = True

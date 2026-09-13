@@ -573,6 +573,32 @@ pml100Tests = [
         "This is a <noframes/> example.",
         "stdin:1:11: PML100: Disallowed HTML [Tag Name: noframes] (disallowed-html)",
     ),
+    Pml100Test(
+        "HTML with character entity 1",
+        ["enabled=$!True"],
+        """&lt;script src=./foo.js>
+  <!-- some script stuff -->
+</script>
+
+&lt;script/>
+""",
+        "",
+        "",
+        0,
+    ),
+    Pml100Test(
+        "HTML with character entity 2",
+        ["enabled=$!True"],
+        """`&lt;`script src=./foo.js>
+  <!-- some script stuff -->
+</script>
+
+`&lt;`script/>
+""",
+        "",
+        "",
+        0,
+    ),
 ]
 
 

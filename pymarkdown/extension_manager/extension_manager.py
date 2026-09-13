@@ -246,7 +246,9 @@ class ExtensionManager:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
-                "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
+                "^"
+                + args.list_filter.lower().replace("*", ".*").replace("?", ".")
+                + "$"
             )
 
         names, show_rows = list(self.__extension_details.keys()), []
@@ -294,13 +296,13 @@ class ExtensionManager:
     def __handle_argparse_subparser_info(
         self, args: argparse.Namespace
     ) -> ApplicationResult:
-        if args.info_filter not in self.__extension_details:
+        if args.info_filter.lower() not in self.__extension_details:
             self.__presentation.print_system_error(
                 f"Unable to find an extension with an id of '{args.info_filter}'."
             )
             return ApplicationResult.NO_FILES_TO_SCAN
 
-        found_extension = self.__extension_details[args.info_filter]
+        found_extension = self.__extension_details[args.info_filter.lower()]
         show_rows: List[List[str]] = [
             ["Id", found_extension.extension_id],
             ["Name", found_extension.extension_name],

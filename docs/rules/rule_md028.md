@@ -90,7 +90,7 @@ This is its own paragraph.
 | `plugins.no-blanks-blockquote.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

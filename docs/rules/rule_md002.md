@@ -79,7 +79,7 @@ document will not trigger this rule:
 | `plugins.first-header-h1.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
 

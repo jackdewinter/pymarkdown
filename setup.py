@@ -52,7 +52,7 @@ PACKAGE_MODULES = [
     "pymarkdown.extension_manager",
     "pymarkdown.extensions",
     "pymarkdown.general",
-    "pymarkdown.html",
+    "pymarkdown.html_helpers",
     "pymarkdown.inline",
     "pymarkdown.leaf_blocks",
     "pymarkdown.links",

@@ -1,25 +1,21 @@
 # Rule - MD048
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md048`, `code-fence-style` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
 
-Code fence style should be consistent throughout the document.
+Enforce a consistent code fence style throughout the document.
 
 ## Reasoning
 
 ### Readability
 
-One of the main keys to readability is to have consistent formatting applied
-throughout a group of documents.  Extending the concept even further,
-organizations may have specific rules on how documents should be authored throughout
-that organization.  It follows that both concepts may extend to specifying
-which element should be used for specifying the fence character for fenced
-code blocks in a Markdown document.
+Consistent fence characters improve readability and enable organizations to enforce
+uniform code block formatting standards across documents.
 
 ## Examples
 
@@ -36,15 +32,47 @@ a=b
 ~~~Python
 a=b
 ~~~
+
+```Python
+c=3
+```
 ````
 
-With default configuration settings, the `consistent` style is used.  This
-style sets the current configuration type to either `tilde` or `backticks`
-based on the first fenced code block encountered in the document.
+> **Explanation**: The document uses backticks (`` ``` ``) for the first and third
+> code blocks, but tildes (`~~~`) for the second code block. This violates the rule
+> because the fence style is not consistent throughout the document under the default
+> consistent style — the first Fenced Code Block (backticks) sets the expectation,
+> and the second block (tildes) breaks it.
+
+Unlike the previous example, this scenario demonstrates a failure when the `style`
+configuration is set to `backtick`, but tildes are used.
+
+````Markdown
+~~~Python
+a=b
+~~~
+````
+
+> **Explanation**: The code block uses tildes (`~~~`) as fence characters. This
+> violates the rule because the configuration specifies that only backticks
+> (`` ``` ``) should be used when `style` is set to `backtick`.
+
+Unlike the previous example, this scenario demonstrates a failure when the `style`
+configuration is set to `tilde`, but backticks are used.
+
+````Markdown
+```Python
+a=b
+```
+````
+
+> **Explanation**: The code block uses backticks (`` ``` ``) as fence characters.
+> This violates the rule because the configuration specifies that only tildes (`~~~`)
+> should be used when `style` is set to `tilde`.
 
 ### Correct Scenarios
 
-This rule does not trigger if the fence character for Fenced Code Blocks is
+This rule does not trigger when the fence character for Fenced Code Blocks is
 consistently specified within the document:
 
 ````Markdown
@@ -57,14 +85,33 @@ b=c
 ```
 ````
 
-Note that setting the `style` configuration value explicitly to `tilde`
-will cause the above Markdown document to trigger this rule, while a
-value of `backtick` or `consistent` will not cause this rule to trigger.
+> **Explanation**: Both code blocks use backticks (`` ``` ``) as fence characters.
+> This satisfies the rule because the fence style is consistent throughout the document.
+
+Unlike the previous example, this case demonstrates consistent use of tildes (`~`)
+as fence characters.
+
+````Markdown
+~~~Python
+a=b
+~~~
+
+~~~Python
+b=c
+~~~
+````
+
+> **Explanation**: Both code blocks use tildes (`~~~`) as fence characters. This
+> satisfies the rule because the fence style is consistent throughout the document,
+> and tildes are also explicitly permitted under the `tilde` style.
 
 ## Fix Description
 
-All Fenced Code Block characters will be set to a singular character, consistent
-with the selected style type.
+Fenced code blocks will be fixed to use a single fence character style, as determined
+by the `style` configuration. If `style` is `consistent`, all fences will match
+the first fence encountered in the document. If `style` is `backtick`, all fences
+will be converted to backticks (`` ``` ``). If `style` is `tilde`, all fences will
+be converted to tildes (`` ~~~ ``).
 
 ## Configuration
 
@@ -74,17 +121,17 @@ with the selected style type.
 | `plugins.code-fence-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
-| `style` | string (see below) | `consistent` | Style of fenced code block fence characters expected in the document. |
+| `style` | `string` | `consistent` | Style of fenced code block fence characters expected in the document. |
 
-Valid heading styles:
+### Valid Styles
 
-| Style | Description |
-| -- | -- |
-| `consistent` | The first heading in the document specifies the style for the rest of the document. |
+| Style Name | Description |
+| --- | --- |
+| `consistent` | The first Fenced Code Block specifies the style for the rest of the document. |
 | `backtick` | Only backticks are to be used for Fenced Code Block elements. |
-| `indented` | Only tildes are to be used for Fenced Code Block elements. |
+| `tilde` | Only tildes are to be used for Fenced Code Block elements. |
 
 ## Origination of Rule
 

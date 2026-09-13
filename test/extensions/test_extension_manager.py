@@ -211,6 +211,45 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
             os.remove(configuration_file)
 
 
+def test_markdown_with_extensions_list_and_filter_by_bad_case_id(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list. With id with bad case.
+    """
+
+    # Arrange
+    supplied_configuration = {"extensions": {"front-matter": {"enabled": False}}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "extensions",
+            "list",
+            "Front-Matter",
+        ]
+
+        expected_results = ExpectedResults(expected_output="""
+  ID            NAME                   ENABLED    ENABLED    VERSION
+                                       (DEFAULT)  (CURRENT)
+
+  front-matter  Front Matter Metadata  False      False      0.5.0
+
+""")
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
 def test_markdown_with_extensions_error_during_configuration(
     scanner_default: MarkdownScanner,
 ) -> None:
@@ -523,6 +562,35 @@ def test_markdown_with_extensions_info_and_found_filter(
 
     # Arrange
     supplied_arguments = ["extensions", "info", "front-matter"]
+
+    expected_results = ExpectedResults(
+        expected_output="""  ITEM               DESCRIPTION
+
+  Id                 front-matter
+  Name               Front Matter Metadata
+  Short Description  Allows metadata to be parsed from document front matter.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/extensions/fr
+                     ont-matter/
+"""
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_extensions_info_and_mixed_case_found_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the command line interface to extensions
+    info presents information when a valid id is supplied, even if it has the wrong case.
+    """
+
+    # Arrange
+    supplied_arguments = ["extensions", "info", "Front-Matter"]
 
     expected_results = ExpectedResults(
         expected_output="""  ITEM               DESCRIPTION
