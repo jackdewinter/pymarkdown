@@ -124,7 +124,7 @@ Fixed: {temp_source_path}""",
         source_file_contents="""This is a code block
 
 ```text
-code	block
+code\tblock
 ```
 """,
         scan_expected_return_code=1,

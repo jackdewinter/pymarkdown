@@ -14,61 +14,93 @@ No empty links.
 
 ### Correctness
 
-Links require a valid URI to function. Empty URIs break navigation and may indicate unfinished documentation. This rule ensures all links contain non-whitespace content, improving document reliability and accessibility for readers who rely on functional navigation.
+Empty URIs produce broken links that fail navigation for readers, including screen-reader
+users who rely on functional link targets.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when the link is empty and has no characters or only
-whitespace characters:
+This rule triggers when the URI part of the link is empty or contains only whitespace
+characters:
 
 ```Markdown
 [empty link]()
+![empty image]()
 ```
 
-> **Explanation**: This link fails because the URI part `()` is completely empty, containing no characters or whitespace. The rule requires at least one non-whitespace character in the URI.
+> **Explanation**: Both elements fail because the URI part `()` is completely empty
+> — it contains no characters at all. The rule requires at least one non-whitespace
+> character in the URI, and this applies equally to standard links and image links.
 
-Unlike the previous example with a fully empty URI, this shows that URIs containing only a hash (`#`) are also treated as empty, applying to both regular links and image links:
+Unlike the previous example with a fully empty URI, this shows that URIs containing
+only a hash (`#`) are also treated as empty, applying to both regular links and
+image links:
 
 ```Markdown
 [empty fragment link](#)
 ![empty fragment image](#)
 ```
 
-> **Explanation**: Both links fail because the URI fragment `#` contains no text after the hash. The rule requires non-whitespace content in the URI, even for fragments, and applies equally to standard links and image links.
+> **Explanation**: Both links fail because the URI fragment `#` contains no text
+> after the hash. The rule requires non-whitespace content in the URI, even for
+> fragments, and applies equally to standard links and image links.
 
-Unlike the previous examples which had empty or hash-only URIs, this scenario demonstrates a URI containing only whitespace characters, which the rule also treats as empty:
+Unlike the previous examples which had empty or hash-only URIs, this scenario demonstrates
+a URI containing only whitespace characters, which the rule also treats as empty:
 
 ```Markdown
 [link with spaces](   )
 ```
 
-> **Explanation**: This link fails because the URI contains only whitespace characters (spaces). The rule requires at least one non-whitespace character in the URI to be considered valid.
+> **Explanation**: This link fails because the URI contains only whitespace characters
+> (three spaces). The rule requires at least one non-whitespace character in the
+URI to be considered valid.
 
 ### Correct Scenarios
 
-This rule does not trigger when any non-whitespace text is present within the URI part of the link:
+This rule does not trigger when any non-whitespace text is present within the URI
+part of the link:
 
 ```Markdown
 [link](a)
+![image](image.png)
 ```
 
-> **Explanation**: This link passes because the URI contains the character `a`, which is non-whitespace. The rule only checks for the presence of at least one non-whitespace character, not the validity of the URL.
+> **Explanation**: Both elements pass because each URI (`a` and `image.png`) contains
+> non-whitespace content. The rule only checks for the presence of at least one
+> non-whitespace character, not the validity of the URL, and this applies equally
+> to standard links and image links.
 
-Unlike the previous example which had a simple URI, this scenario demonstrates a fragment link with text after the hash character:
+Unlike the previous example which had a simple URI, this scenario demonstrates a
+fragment link with text after the hash character:
 
 ```Markdown
-![fragment](#in-same-document)
+[fragment](#in-same-document)
 ```
 
-> **Explanation**: This image link passes because the URI contains `#in-same-document`, which has non-whitespace text (`in-same-document`) after the hash. This satisfies the rule's requirement for content in the URI.
+> **Explanation**: This link passes because the URI contains `#in-same-document`,
+> which has non-whitespace text (`in-same-document`) after the hash. This satisfies
+> the rule's requirement for content in the URI.
+
+Unlike the previous example which used a relative path, this scenario shows an absolute
+external URL, the other common real-world destination:
+
+```Markdown
+[Python documentation](https://docs.python.org/3/)
+![Python logo](https://www.python.org/static/img/python-logo.png)
+```
+
+> **Explanation**: Both elements pass because their URIs contain non-whitespace
+> content (full `https://` URLs). The rule does not validate the URL — it only requires
+> that the URI is not empty or whitespace-only — so any syntactically non-empty
+> destination satisfies it.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is context. Without context
-provided by the author, adding the proper link destination to the link is almost
-impossible.
+An empty link does not indicate a single correct destination. Without additional
+context from the author, choosing an appropriate replacement target is not
+reliably possible, so this rule is not auto-fixable.
 
 ## Configuration
 

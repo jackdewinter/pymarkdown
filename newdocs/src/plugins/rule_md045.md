@@ -8,13 +8,15 @@
 
 ## Summary
 
-Images should have alternate text (alt text).
+Provide alternate text for every image.
 
 ## Reasoning
 
 ### Accessibility
 
-The `alt` attribute of an image is used by screen readers to provide an audio description of the image to people with visual impairments. Without meaningful alt text, these users cannot understand the content or purpose of the image.
+The `alt` attribute of an image is used by screen readers to provide an audio description
+of the image to people with visual impairments. Without meaningful alt text, these
+users cannot understand the content or purpose of the image.
 
 Note that for the shortcut and collapsed types of image links, it is impossible
 to create an example that triggers this rule. For more information,
@@ -31,25 +33,58 @@ identify the image, the whitespace characters compared against are the set
 of Unicode whitespace characters.
 
 ```Markdown
-[](/url)
+![](/url)
 
 ![][link]
 
 [link]: /url "a title"
 ```
 
-> **Explanation**: The above examples show image links where the alternate text (alt text) is either completely empty (`[](/url)`) or referenced via a link definition that provides no alt text (`![][link]`). In both cases, the `alt` attribute in the resulting HTML will be empty, violating the rule that images must have descriptive alt text for accessibility.
+> **Explanation**: The above examples show image links where the alternate text
+> (alt text) is either completely empty (`[](/url)`) or referenced via a link definition
+> that provides no alt text (`![][link]`). In both cases, the `alt` attribute in
+> the resulting HTML will be empty, violating the rule that images must have descriptive
+> alt text for accessibility.
 
-Unlike the first example, this case shows two link labels containing only whitespace characters before the link reference.
+Unlike the first example, this case shows two link labels containing only whitespace
+characters before the link reference.
 
 ```Markdown
-[  ][link]
+![  ][link]
 
-[
+![
 ][link]
 ```
 
-> **Explanation**: The alt text consists only of whitespace characters. Since the rule requires at least one non-whitespace character for meaningful alt text, this example fails the accessibility criterion. Screen readers may interpret this as empty alt text, failing to convey the image's purpose to users with visual impairments.
+> **Explanation**: The alt text consists only of whitespace characters. Since the
+> rule requires at least one non-whitespace character for meaningful alt text, this
+> example fails the accessibility criterion. Screen readers may interpret this as
+> empty alt text, failing to convey the image's purpose to users with visual impairments.
+
+Unlike the previous scenario, which used a reference-style link label, this case
+shows an inline image whose alt text consists only of a single space character.
+
+```Markdown
+![ ](image.png)
+```
+
+> **Explanation**: The alt text between the brackets is a single space. Because
+> the rule treats any label containing only Unicode whitespace as empty, this image
+> is reported as having no alternate text, violating the accessibility criterion.
+
+Unlike the previous scenario, which used a regular space, this case uses a non-breaking
+space (`\u00a0`) as the alt text, demonstrating that the rule considers the full
+set of Unicode whitespace characters rather than only the ASCII space.
+
+```Markdown
+![ ](image.png)
+```
+
+> **Explanation**: The single character between the brackets is a Unicode non-breaking
+> space (`\u00a0`), which is invisible on most displays. The rule's whitespace check
+> covers all Unicode whitespace characters, so this label is still treated as empty
+> and the rule triggers. This confirms that authors cannot bypass the rule by substituting
+> a non-standard whitespace character.
 
 ### Correct Scenarios
 
@@ -60,9 +95,13 @@ at least one non-whitespace character:
 ![link](/url)
 ```
 
-> **Explanation**: This example demonstrates an image link with valid alternate text (`link`). Since the alt text contains non-whitespace characters, it satisfies the rule's requirement for descriptive image text, ensuring that screen readers can convey meaningful information to users with visual impairments.
+> **Explanation**: This example demonstrates an image link with valid alternate
+> text (`link`). Since the alt text contains non-whitespace characters, it satisfies
+> the rule's requirement for descriptive image text, ensuring that screen readers
+> can convey meaningful information to users with visual impairments.
 
-Unlike the previous minimal example, this scenario demonstrates real-world descriptive alt text for common images, showing how meaningful descriptions enhance accessibility.
+Unlike the previous minimal example, this scenario demonstrates real-world descriptive
+alt text for common images, showing how meaningful descriptions enhance accessibility.
 
 ```Markdown
 ![A cat sitting on a mat.](/cat.jpg)
@@ -70,9 +109,14 @@ Unlike the previous minimal example, this scenario demonstrates real-world descr
 ![Cover of the book "C++ & Python Examples".](/book-examples.jpg)
 ```
 
-> **Explanation**: These examples demonstrate proper alt text that provides meaningful descriptions of the images. The alt text clearly identifies the content ("A cat sitting on a mat" and "Cover of the book..."), enabling screen readers to convey specific information to users with visual impairments. This satisfies the rule's requirement for descriptive, non-empty alt text.
+> **Explanation**: These examples demonstrate proper alt text that provides meaningful
+> descriptions of the images. The alt text clearly identifies the content ("A cat
+> sitting on a mat" and "Cover of the book..."), enabling screen readers to convey
+> specific information to users with visual impairments. This satisfies the rule's
+> requirement for descriptive, non-empty alt text.
 
-Unlike the previous descriptive examples, this scenario demonstrates a valid reference-style image link with meaningful alt text.
+Unlike the previous descriptive examples, this scenario demonstrates a valid reference-style
+image link with meaningful alt text.
 
 ```Markdown
 ![A diagram of the system architecture.][arch-diagram]
@@ -80,15 +124,17 @@ Unlike the previous descriptive examples, this scenario demonstrates a valid ref
 [arch-diagram]: /images/arch.png
 ```
 
-> **Explanation**: This example shows a reference-style image link with descriptive alt text ("A diagram of the system architecture."). The alt text is non-empty and meaningful, satisfying the rule. This mirrors the failure case for reference images, demonstrating the correct usage.
+> **Explanation**: This example shows a reference-style image link with descriptive
+> alt text ("A diagram of the system architecture."). The alt text is non-empty
+> and meaningful, satisfying the rule. This mirrors the failure case for reference
+> images, demonstrating the correct usage.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is context. While it is easy
-to detect that no alternate text has been provided for an image, the summarization of
-the intended content of the link exceeds the scope of the project's context.
-Any generated context would require scanning the destination link and
-providing a summary of that image that was relevant to the current document.
+Auto-fix is not possible because meaningful alt text requires understanding the
+image's content and context, which exceeds the scope of an in-document linter. Generating
+alt text would require fetching and summarizing the destination image, which is
+outside this project's scope.
 
 ## Configuration
 

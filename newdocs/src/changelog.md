@@ -23,12 +23,19 @@
 
 - [Issue 1639](https://github.com/jackdewinter/pymarkdown/issues/1639)
     - `extensions` and `plugins` commands were not case insensitive
+- [Issue 1684](https://github.com/jackdewinter/pymarkdown/issues/1684)
+    - Rule Plugin MD011 was not handling tables properly.
+- [Issue 1685](https://github.com/jackdewinter/pymarkdown/issues/1685)
+    - Rule Plugin MD011 was not reporting reversed links properly on lines that
+      have more than one link/reverse-link.
+- [Issue 1686](https://github.com/jackdewinter/pymarkdown/issues/1686)
+    - Rule Plugin MD011 was not reporting multiple failures on the same line
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1681](https://github.com/jackdewinter/pymarkdown/issues/1681)
-    - Updated Rule Plugins docs
+    - Extensive updating of Rule Plugins docs
 
 ## Version 0.9.39 - 2026-07-11
 

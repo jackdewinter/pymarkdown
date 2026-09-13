@@ -14,13 +14,16 @@ Headings should be surrounded by blank lines.
 
 ### Readability
 
-Blank lines around headings improve readability by visually separating headings from surrounding content, making document structure clearer for readers.
+Blank lines around headings give both human readers and assistive-technology users
+(e.g., screen readers) a clear visual and structural cue where one section ends
+and the next begins.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when a heading is immediately followed by text without a required blank line, or immediately preceded by text without a required blank line.
+This rule triggers when a heading is immediately followed by text without a required
+blank line, or immediately preceded by text without a required blank line.
 
 ```Markdown
 Section text.
@@ -28,7 +31,24 @@ Section text.
 Section text.
 ```
 
-> **Explanation**: The heading `## Heading 2` is directly preceded by `"Section text."` without a blank line in between, and directly followed by `"Section text."` without a blank line after. The rule requires blank lines around headings for readability and consistent parsing.
+> **Explanation**: The heading `## Heading 2` is directly preceded by
+> `"Section text."` without a blank line in between, and directly followed
+> by `"Section text."` without a blank line after. The rule requires blank lines
+> around headings for readability and consistent parsing.
+
+Unlike the previous example, this case has a blank line above the heading but not
+below it, still violating the rule.
+
+```Markdown
+Section text.
+
+## Heading 2
+Section text.
+```
+
+> **Explanation**: The heading `## Heading 2` has a blank line above it, but no
+> blank line between it and the following `Section text.`. Because `lines_below`
+> defaults to `1`, the missing blank line below the heading violates the rule.
 
 ### Correct Scenarios
 
@@ -36,13 +56,18 @@ This rule does not trigger when headings are properly surrounded by blank lines.
 
 ```Markdown
 Section text.
+
 ## Heading 2
+
 Section text.
 ```
 
-> **Explanation**: The heading `## Heading 2` is correctly surrounded by blank lines on both sides. There is a blank line before the heading and a blank line after the heading, satisfying the rule's requirements.
+> **Explanation**: The heading `## Heading 2` is correctly surrounded by blank lines
+> on both sides. There is a blank line before the heading and a blank line after
+> the heading, satisfying the rule's requirements.
 
-Unlike the previous example, this case shows a heading at the beginning of the document with no preceding content.
+Unlike the previous example, this case shows a heading at the beginning of the document
+with no preceding content.
 
 ```Markdown
 # Heading 1
@@ -50,9 +75,12 @@ Unlike the previous example, this case shows a heading at the beginning of the d
 Section text.
 ```
 
-> **Explanation**: The heading `# Heading 1` is at the start of the document, so there is no preceding text that needs a blank line before it. There is a blank line after the heading before `Section text.`, which satisfies the rule.
+> **Explanation**: The heading `# Heading 1` is at the start of the document, so
+> there is no preceding text that needs a blank line before it. There is a blank
+> line after the heading before `Section text.`, which satisfies the rule.
 
-Unlike the previous example, this case shows multiple headings where the last heading is at the end of the document with no following content.
+Unlike the previous example, this case shows multiple headings where the last heading
+is at the end of the document with no following content.
 
 ```Markdown
 # Heading 1
@@ -62,7 +90,22 @@ Section text.
 ## Heading 2
 ```
 
-> **Explanation**: The heading `## Heading 2` is at the end of the document, so there is no following text that needs a blank line after it.
+> **Explanation**: The heading `## Heading 2` is at the end of the document, so
+> there is no following text that needs a blank line after it.
+
+Unlike the previous examples, this case shows a heading with no blank line above
+it, which is valid when `lines_above` is configured to `0`.
+
+```Markdown
+Section text.
+## Heading 2
+
+Section text.
+```
+
+> **Explanation**: With `lines_above` set to `0`, the rule does not require a blank
+> line before the heading. The blank line after the heading satisfies `lines_below`,
+> so the example passes.
 
 ## Fix Description
 
@@ -94,10 +137,10 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The differences between this rule and the inspiring rule are largely
-cosmetic.  In scenarios where the heading is part of a Block Quote or
+The differences between this rule and the original rule are largely
+cosmetic. In scenarios where the heading is part of a Block Quote or
 a List, the column number was changed to reflect the start of the
-heading element itself, not the start of the line.  In addition, the
+heading element itself, not the start of the line. In addition, the
 original rule did not correctly assess a handful of boundary scenarios with
 Thematic Break elements and HTML Block elements before and after the
 heading elements.

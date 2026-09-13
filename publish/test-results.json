@@ -1204,7 +1204,7 @@
         },
         {
             "name": "test.rules.test_md011",
-            "totalTests": 6,
+            "totalTests": 11,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1564,7 +1564,7 @@
         },
         {
             "name": "test.rules.test_md060",
-            "totalTests": 173,
+            "totalTests": 174,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1580,7 +1580,7 @@
         },
         {
             "name": "test.rules.test_pml100",
-            "totalTests": 60,
+            "totalTests": 62,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

@@ -8,36 +8,59 @@
 
 ## Summary
 
-Headings must start at the beginning of the line.
+Start every heading at the beginning of the line.
 
 ## Reasoning
 
 ### Correctness
 
-Headings with leading whitespace may be misrendered as plain text by some Markdown parsers, breaking the document outline and confusing human readers and accessibility tools that rely on proper heading hierarchy.
+Leading whitespace before a heading marker makes the same heading render
+differently across parsers, breaking the document outline and confusing
+human readers and accessibility tools that rely on a predictable heading
+hierarchy.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when one or more whitespace characters precedes the Heading element, including the title line of a Setext heading, the underline of a Setext heading, or both.
+This rule triggers when one or more whitespace characters precede an Atx heading
+marker.
 
 ```Markdown
-  # This is a bad heading
-
-  This is also a bad heading
-  ==========================
-
-This is also a bad heading
-  ==========================
-
-  This is also a bad heading
-==========================
+  # This heading has leading whitespace
 ```
 
-> **Explanation**: This example fails because leading whitespace is present on the Atx heading marker, the Setext heading title, and the Setext heading underline. The rule requires headings to start at the beginning of the line without any leading spaces.
+> **Explanation**: This example fails because the Atx heading marker (`#`) is preceded
+> by two leading spaces. The rule requires headings to start at the very beginning
+> of the line with no leading whitespace.
 
-Unlike the previous examples which show leading spaces on the first line or underline, this scenario shows leading spaces on an intermediate line of a multi-line Setext heading title.
+Unlike the previous Atx heading example, this scenario shows leading whitespace
+on both lines of a Setext heading title.
+
+```Markdown
+  This heading has leading whitespace
+  ===================================
+```
+
+> **Explanation**: This example fails because the Setext heading title line is preceded
+> by leading spaces. The rule requires that the heading content start at the beginning
+> of the line.
+
+Unlike the previous examples which show leading whitespace on both lines, this scenario
+shows leading whitespace on the Setext underline.
+
+```Markdown
+This heading has leading whitespace
+  ===================================
+```
+
+> **Explanation**: This example fails because the Setext underline (`===`) is preceded
+> by leading spaces. The rule requires the underline to start at the beginning of
+> the line.
+
+Unlike the previous examples which demonstrate single-line Setext headings, this
+scenario shows leading whitespace on an intermediate line of a multi-line Setext
+heading title.
 
 ```Markdown
 This
@@ -50,47 +73,88 @@ for
 ==========================
 ```
 
-> **Explanation**: This example fails because the Setext heading title spans multiple lines, and one of those lines ("  this line") has leading whitespace. The rule requires that *every* line of the heading content (and the underline) starts at the beginning of the line.
+> **Explanation**: This example fails because one line of the multi-line Setext
+> heading title containing "this line" has leading whitespace. The rule requires
+> that *every* line of the heading content start at the beginning of the line.
 
-Unlike the previous examples which demonstrate headings at the document root level, this scenario shows a heading with leading whitespace nested inside a block quote.
-
-```Markdown
->  # This is a bad heading
-```
-
-> **Explanation**: This example fails because the Atx heading marker (`#`) is preceded by leading whitespace even though it is inside a block quote. The rule requires that headings start at the beginning of the line regardless of nesting context.
-
-Unlike the previous examples which demonstrate headings at the document root level or inside block quotes, this scenario shows a heading with leading whitespace nested inside a list item.
+Unlike the previous examples which demonstrate headings at the document root level,
+this scenario shows a heading with leading whitespace nested inside a block quote.
 
 ```Markdown
-+  # This is a bad heading
+>  # This heading has leading whitespace
 ```
 
-> **Explanation**: This example fails because the Atx heading marker (`#`) is preceded by leading whitespace even though it is inside a list item. The rule requires that headings start at the beginning of the line regardless of nesting context.
+> **Explanation**: This example fails because the Atx heading marker (`#`) is preceded
+> by leading whitespace even though it is inside a block quote. The rule requires
+> that headings start at the beginning of the line regardless of nesting context.
+
+Unlike the previous examples which demonstrate headings at the document root level
+or inside block quotes, this scenario shows a heading with leading whitespace nested
+inside a list item.
+
+```Markdown
++  # This heading has leading whitespace
+```
+
+> **Explanation**: This example fails because the Atx heading marker (`#`) is preceded
+> by leading whitespace even though it is inside a list item. The rule requires
+> that headings start at the beginning of the line regardless of nesting context.
 
 ### Correct Scenarios
 
-This rule does not trigger when there are no whitespace characters preceding the Atx heading.
+This rule does not trigger when there are no whitespace characters preceding the
+Atx heading.
 
 ```Markdown
 # This is a good heading
 ```
 
-> **Explanation**: This example passes because the Atx heading element starts at the very beginning of the line with no leading whitespace.
+> **Explanation**: This example passes because the Atx heading element starts at
+> the very beginning of the line with no leading whitespace.
 
-Unlike the previous Atx heading example, this scenario demonstrates a Setext heading that correctly starts at the beginning of the line with no leading whitespace.
+Unlike the previous Atx heading example, this scenario demonstrates a Setext
+heading that starts at the beginning of the line with no leading whitespace.
 
 ```Markdown
 This is also a good heading
 ==========================
 ```
 
-> **Explanation**: This example passes because the Setext heading element starts at the very beginning of the line with no leading whitespace.
+> **Explanation**: This example passes because the Setext heading element starts
+> at the very beginning of the line with no leading whitespace.
+
+Unlike the previous examples which demonstrate headings at the document root
+level, this scenario shows an Atx heading inside a block quote with no leading
+whitespace after the block-quote marker.
+
+```Markdown
+> # This is a good heading
+```
+
+> **Explanation**: This example passes because the Atx heading marker (`#`) follows
+> the block-quote marker (`>`) and its single space character with no additional
+> leading whitespace, so the heading content starts at the beginning of the line
+> relative to the block-quote context.
+
+Unlike the previous examples which demonstrate headings at the document root level
+or inside block quotes, this scenario shows an Atx heading inside a list item with
+no leading whitespace after the list-item marker.
+
+```Markdown
++ # This is a good heading
+```
+
+> **Explanation**: This example passes because the Atx heading marker (`#`) follows
+> the list-item marker (`+`) and its single space character with no additional leading
+> whitespace, so the heading content starts at the beginning of the line relative
+> to the list-item context.
 
 ## Fix Description
 
-Any leading spaces at the start of an Atx Heading element or within any part of
-a Setext Heading element are removed.
+The autofix removes any leading whitespace that appears before the `#`
+marker of an Atx heading, before the title text of a Setext heading, or
+before the `===` / `---` boundary line of a Setext heading, so that every
+part of the heading starts at the beginning of the line.
 
 ## Configuration
 
@@ -120,11 +184,11 @@ When a failure scenario for the original rule was present in a
 Block Quote element, the original rule would trigger correctly.
 However, when the same spacing was provided for a List element,
 the original rule would not trigger. In addition, the original
-rule would not trigger if there was any leading space on multiple
-line Setext Heading elements after the first line or on the
+rule would not trigger if there was any leading space on multi-line Setext heading
+elements after the first line or on the
 boundary line (`===` or `---`) itself.
 
-In addition, because multiple line Setext Headings were not
+In addition, because multi-line Setext Headings were not
 considered properly in the original rule, any failure scenarios
 only reported a problem with the first line of the Setext Heading
 text. To make this more general and to avoid having multiple

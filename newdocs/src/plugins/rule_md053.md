@@ -8,24 +8,32 @@
 
 ## Summary
 
-Link and image reference definitions should be needed.
+Link and image reference definitions should be needed by at least one link or image
+in the document, and each label should be defined only once.
 
 ## Reasoning
 
 ### Readability
 
-Link reference definitions allow documents to keep links organized in one place. However, two situations can arise that affect readability:
+Link reference definitions allow documents to keep links organized in one place.
+Unused definitions add clutter that a reader has to mentally filter out.
 
-- **Unused definitions**: A definition exists but is never referenced, creating clutter.
-- **Duplicate definitions**: Multiple definitions share the same label (case-insensitive), causing confusion about which URL is intended.
+### Consistency
 
-> **Note**: Labels are compared after Unicode case-folding, stripping leading/trailing whitespace, and collapsing internal whitespace. For example, `some-link`, `Some-Link`, and `some   link` are treated as identical.
+When multiple definitions share the same label (case-insensitive), it becomes ambiguous
+which URL is intended. Enforcing a single definition per label keeps the meaning
+of a reference consistent throughout the document.
+
+> **Note**: Labels are compared after Unicode case-folding, stripping leading/trailing
+> whitespace, and collapsing internal whitespace. For example, `some-link`,
+> `Some-Link`, and `some   link` are treated as identical.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers when a link reference definition is defined but not used anywhere in the document.
+This rule triggers when a link reference definition is defined but not used anywhere
+in the document.
 
 ```Markdown
 Go to [this link][some-link].
@@ -34,9 +42,12 @@ Go to [this link][some-link].
 [some-other-link]: /url
 ```
 
-> **Explanation**: The definition `[some-other-link]` is present but never referenced by any link or image in the document. This violates the rule because link reference definitions should be needed.
+> **Explanation**: The definition `[some-other-link]` is present but never referenced
+> by any link or image in the document. This violates the rule because link reference
+> definitions should be needed.
 
-Unlike the previous example, this case uses a link reference label that is defined multiple times.
+Unlike the previous example, this case uses a link reference label that is defined
+multiple times.
 
 ```Markdown
 Go to [this link][some-link].
@@ -45,11 +56,45 @@ Go to [this link][some-link].
 [Some-Link]: /other-url
 ```
 
-> **Explanation**: The label `some-link` (case-insensitive match to `Some-Link`) is defined twice. According to the GFM spec, the first definition takes precedence, rendering the second definition unused and redundant, which violates the rule.
+> **Explanation**: The label `some-link` is defined twice — once as `[some-link]`
+> and once as `[Some-Link]`. Because labels are compared case-insensitively, these
+> are the same label. Per GFM, the first definition takes precedence, so the second
+> definition (`[Some-Link]`) is never used and is redundant, which violates the
+> rule.
+
+Unlike the previous example, this case leaves an image reference definition unused.
+
+```Markdown
+Here is a logo: ![logo][logo-label].
+
+[logo-label]: /logo.png
+[unused-image]: /other.png
+```
+
+> **Explanation**: The definition `[unused-image]` is never referenced by any image
+> or link. The rule applies to both link and image reference definitions, so this
+> unused image definition violates the rule.
+
+Unlike the previous examples, this case leaves an image reference definition duplicated
+with a different label casing.
+
+```Markdown
+Here is a logo: ![logo][logo-label].
+
+[logo-label]: /logo.png
+[Logo-Label]: /other.png
+```
+
+> **Explanation**: The label `logo-label` is defined twice — once as `[logo-label]`
+> and once as `[Logo-Label]`. Because labels are compared case-insensitively, these
+> are the same label. Per GFM, the first definition takes precedence, so the second
+> definition (`[Logo-Label]`) is never used and is redundant, which violates the
+> rule.
 
 ### Correct Scenarios
 
-This rule does not trigger when all link reference definitions are used and have unique labels.
+This rule does not trigger when all link reference definitions are used and have
+unique labels.
 
 ```Markdown
 Go to [this link][some-link].
@@ -59,19 +104,45 @@ Show ![this image][some-other-link].
 [some-other-link]: /image-url
 ```
 
-> **Explanation**: Both `[some-link]` and `[some-other-link]` are defined exactly once and referenced in the document. This satisfies the rule requirement that definitions must be needed and unique.
+> **Explanation**: Both `[some-link]` and `[some-other-link]` are defined exactly
+> once and referenced in the document. This satisfies the rule requirement that
+> definitions must be needed and unique.
 
-Unlike the previous example, this case uses link reference definitions with labels that are configured to be ignored, effectively acting as comments.
+Unlike the previous example, this case uses link reference definitions with labels
+that are configured to be ignored, effectively acting as comments.
 
 ```Markdown
 [//]: /u (This behaves like a comment)
 ```
 
-> **Explanation**: The definition `[//]` is present but never referenced by any link or image. However, because `//` is included in the `ignored-definitions` configuration item (default value `"//"`), this definition is excluded from triggering the rule. This satisfies the rule by being an explicitly allowed exception.
+> **Explanation**: The definition `[//]` is present but never referenced by any
+> link or image. However, because `//` is included in the `ignored-definitions`
+> configuration item (default value `"//"`), this definition is excluded from triggering
+> the rule. This satisfies the rule by being an explicitly allowed exception.
+
+Unlike the previous examples, this case uses a label that is referenced with different
+casing, which is valid under GFM case-insensitive matching.
+
+```Markdown
+Go to [this link][some-link].
+
+[Some-Link]: /url
+```
+
+> **Explanation**: The label `Some-Link` in the definition matches the reference
+> `[some-link]` case-insensitively (per GFM), so the definition is considered used.
+> Because the definition is used and the label is unique (no second definition exists),
+> the rule does not trigger.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is certainty. Removing unused definitions is generally safe, but determining whether a duplicate definition should be removed or merged requires understanding the author's intent. Additionally, some definitions may be intentionally ignored (via `ignored-definitions`), and auto-removal could delete definitions that the user considers valid comments or placeholders. Therefore, manual review is required to ensure no intended definitions are incorrectly removed.
+The reason for not being able to auto-fix this rule is certainty. Removing unused
+definitions is generally safe, but determining whether a duplicate definition should
+be removed or merged requires understanding the author's intent. Additionally, some
+definitions may be intentionally ignored (via `ignored-definitions`), and auto-removal
+could delete definitions that the user considers valid comments or placeholders.
+Therefore, manual review is required to ensure no intended definitions are incorrectly
+removed.
 
 ## Configuration
 

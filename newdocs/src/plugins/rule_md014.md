@@ -8,13 +8,16 @@
 
 ## Summary
 
-Require output lines in code blocks prefixed with `$`.
+Require that at least one line in a code block is not prefixed with `$`, indicating
+that command output is visible.
 
 ## Reasoning
 
 ### Readability
 
-Terminal simulations should distinguish between commands and output to aid reader comprehension. When every line starts with $, it falsely implies a command was issued with no visible result; requiring at least one non-prefixed line ensures output is shown or prompts are removed entirely, improving clarity.
+Readers of terminal simulations in fenced code blocks rely on the `$` prompt to
+distinguish commands from output. When every line is prefixed with `$`, output becomes
+invisible, making it impossible to tell what a command produced.
 
 ## Examples
 
@@ -29,9 +32,13 @@ $ cat /my/dir/file
 ```
 ````
 
-> **Explanation**: This example fails because both lines start with `$`, and there are no lines without the `$` indicator to suggest command output. The rule requires that at least one line in the code block does not start with `$` to indicate output is present or commands are not prefixed.
+> **Explanation**: This example fails because both lines start with `$`, and there
+> are no lines without the `$` indicator to suggest command output. The rule requires
+> that at least one line in the code block does not start with `$` to indicate that
+> the block contains command output.
 
-Unlike the first example, this case includes leading spaces before the `$` indicator on each line.
+Unlike the first example, this case includes leading spaces before the `$` indicator
+on each line.
 
 ````Markdown
 ```shell
@@ -40,11 +47,16 @@ Unlike the first example, this case includes leading spaces before the `$` indic
 ```
 ````
 
-> **Explanation**: This example fails because every line starts with `$` after optional leading whitespace. The rule considers leading spaces before the `$` indicator, and since all lines begin with `$` (ignoring leading spaces), there are no lines without the `$` indicator to suggest command output. The rule requires that at least one line in the code block does not start with `$` to indicate output is present or commands are not prefixed.
+> **Explanation**: This example fails because every line begins with `$` after optional
+> leading whitespace. The rule ignores leading whitespace before `$`, so the presence
+> of two leading spaces does not exempt the line. Because no line is free of a leading
+> `$`, the rule's requirement — that at least one line in the block does not start
+> with `$` — is not satisfied.
 
 ### Correct Scenarios
 
-This rule does not trigger when the leading `$` indicators are removed from all lines in a code block containing only script input.
+This rule does not trigger when the leading `$` indicators are removed from all
+lines in a code block containing only script input.
 
 ````Markdown
 ```shell
@@ -53,9 +65,11 @@ cat /my/dir/file
 ```
 ````
 
-> **Explanation**: This example passes because none of the lines start with the `$` indicator. By removing the prefixes, the code block represents plain commands without implying a terminal session context, satisfying the rule's requirement for visibility.
+> **Explanation**: This example passes because no line begins with the `$` indicator,
+> so the rule's trigger condition (every line prefixed with `$`) is not met.
 
-Unlike the previous example, this case includes command output lines that do not start with `$`, demonstrating a terminal session context.
+Unlike the previous example, this case includes command output lines that do not
+start with `$`, demonstrating a terminal session context.
 
 ````Markdown
 ```shell
@@ -66,11 +80,14 @@ $ cat /my/dir/file
 ```
 ````
 
-> **Explanation**: This example passes because not every line starts with `$`. The lines `file` and `file2` represent command output, satisfying the rule's exception that allows `$` prefixes when output is also shown. This distinguishes it from the first correct scenario where all prefixes were removed.
+> **Explanation**: This example passes because not every line starts with `$`. The
+> lines `file` and `file2` represent command output, satisfying the rule's exception
+> that allows `$` prefixes when output is also shown. This distinguishes it from
+> the first correct scenario where all prefixes were removed.
 
 ## Fix Description
 
-The reason for not being able to auto-fix this rule is context.  A developer can
+The reason for not being able to auto-fix this rule is context. A developer can
 reasonably be expected to look at this sample:
 
 ````Markdown
@@ -113,7 +130,8 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The only difference is that when this rule is triggered by MarkdownLint, it is triggered
-for every line in the code block, instead of just the first line in the code block.
-Because this rule only triggers if every line starts with a dollar sign
-character (`$`), it made more sense to only fire this rule once.
+The only difference is that when this rule is triggered by MarkdownLint,
+it is triggered for every line in the code block, instead of just the
+first line in the code block. Because this rule only triggers if every
+line starts with a dollar-sign character (`$`), the implementation
+reports the violation only once per code block.

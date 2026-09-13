@@ -24,7 +24,8 @@ helps readers recognize the same construct the same way.
 
 ### Failure Scenarios
 
-This rule triggers when an autolink (e.g., `<https://example.com>`) is used in a location where the `autolinks` configuration value is set to `False`.
+This rule triggers when an autolink (e.g., `<https://example.com>`) is used in a
+location where the `autolinks` configuration value is set to `False`.
 
 ```Markdown
 <https://example.com>
@@ -34,15 +35,19 @@ This rule triggers when an autolink (e.g., `<https://example.com>`) is used in a
 > value is set to `False`, this autolink violates the rule because that style is
 > disabled.
 
-Unlike the previous example, this case uses an inline link and is triggered only when `inline-links` is set to `False`.
+Unlike the previous example, this case uses an inline link and is triggered only
+when `inline-links` is set to `False`.
 
 ```Markdown
 [link](https://example.com)
 ```
 
-> **Explanation**: The example uses an inline link. If the `inline-links` configuration value is set to `False`, this inline link violates the rule because the style is no longer permitted.
+> **Explanation**: The example uses an inline link. If the `inline-links` configuration
+> value is set to `False`, this inline link violates the rule because the style
+> is no longer permitted.
 
-Unlike the previous example, this case uses a full reference link and is triggered only when `full-links` is set to `False`.
+Unlike the previous example, this case uses a full reference link and is triggered
+only when `full-links` is set to `False`.
 
 ```Markdown
 [link][url]
@@ -50,9 +55,13 @@ Unlike the previous example, this case uses a full reference link and is trigger
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a full reference link (`[link][url]` with a corresponding `[url]:` definition). If the `full-links` configuration value is set to `False`, this full reference link violates the rule because that style is disabled.
+> **Explanation**: The example uses a full reference link (`[link][url]` with a
+> corresponding `[url]:` definition). If the `full-links` configuration value is
+> set to `False`, this full reference link violates the rule because that style
+> is disabled.
 
-Unlike the two preceding examples, this case uses a collapsed reference link and is triggered only when `collapsed-links` is set to `False`.
+Unlike the two preceding examples, this case uses a collapsed reference link and
+is triggered only when `collapsed-links` is set to `False`.
 
 ```Markdown
 [url][]
@@ -60,9 +69,12 @@ Unlike the two preceding examples, this case uses a collapsed reference link and
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a collapsed reference link (`[url][]`). If the `collapsed-links` configuration value is set to `False`, this collapsed reference link violates the rule because that style is disabled.
+> **Explanation**: The example uses a collapsed reference link (`[url][]`). If the
+> `collapsed-links` configuration value is set to `False`, this collapsed reference
+> link violates the rule because that style is disabled.
 
-Unlike the preceding reference-link example, this case uses a shortcut reference link and is triggered only when `shortcut-links` is set to `False`.
+Unlike the preceding reference-link example, this case uses a shortcut reference
+link and is triggered only when `shortcut-links` is set to `False`.
 
 ```Markdown
 [url]
@@ -70,36 +82,47 @@ Unlike the preceding reference-link example, this case uses a shortcut reference
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a shortcut reference link (`[url]`). If the `shortcut-links` configuration value is set to `False`, this shortcut reference link violates the rule because that style is disabled.
+> **Explanation**: The example uses a shortcut reference link (`[url]`). If the
+> `shortcut-links` configuration value is set to `False`, this shortcut reference
+> link violates the rule because that style is disabled.
 
-Unlike the previous reference-link example, this case uses an inline link whose label
-and URL are identical and is triggered only when `inline-urls` is set to `False`.
+Unlike the previous reference-link example, this case uses an inline link whose
+label and URL are identical and is triggered only when `inline-urls` is set to `False`.
 
 ```Markdown
 [https://example.com](https://example.com)
 ```
 
-> **Explanation**: The example uses an inline link whose label and URL are identical. If the `inline-urls` configuration value is set to `False`, this self-referencing inline link violates the rule because that style is disabled.
+> **Explanation**: The example uses an inline link whose label and URL are identical
+> If the `inline-urls` configuration value is set to `False`, this self-referencing
+> inline link violates the rule because that style is disabled.
 
 ### Correct Scenarios
 
-This rule does not trigger when an autolink (e.g., `<https://example.com>`) is used in a location where the `autolinks` configuration value remains `True`.
+This rule does not trigger when an autolink (e.g., `<https://example.com>`) is used
+in a location where the `autolinks` configuration value remains `True`.
 
 ```Markdown
 <https://example.com>
 ```
 
-> **Explanation**: The example uses an autolink. With the default configuration for `autolinks` set to `True`, autolinks are permitted, so the rule does not trigger on this construct.
+> **Explanation**: The example uses an autolink. With the default configuration
+> for `autolinks` set to `True`, autolinks are permitted, so the rule does not trigger
+> on this construct.
 
-Unlike the previous autolink example, this case uses an inline link and satisfies the rule as long as `inline-links` has not been disabled.
+Unlike the previous autolink example, this case uses an inline link and satisfies
+the rule as long as `inline-links` has not been disabled.
 
 ```Markdown
 [link](https://example.com)
 ```
 
-> **Explanation**: The example uses an inline link. With the default configuration for `inline-links` set to `True`, inline links are permitted, so the rule does not trigger on this construct.
+> **Explanation**: The example uses an inline link. With the default configuration
+> for `inline-links` set to `True`, inline links are permitted, so the rule does
+> not trigger on this construct.
 
-Unlike the preceding inline-link example, this case uses a full reference link and satisfies the rule as long as `full-links` has not been disabled.
+Unlike the preceding inline-link example, this case uses a full reference link and
+satisfies the rule as long as `full-links` has not been disabled.
 
 ```Markdown
 [link][url]
@@ -107,9 +130,12 @@ Unlike the preceding inline-link example, this case uses a full reference link a
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a full reference link with a matching link reference definition. With the default configuration of `full-links` set to `True`, full reference links are permitted, so the rule does not trigger.
+> **Explanation**: The example uses a full reference link with a matching link reference
+> definition. With the default configuration of `full-links` set to `True`, full
+> reference links are permitted, so the rule does not trigger.
 
-Unlike the preceding full reference link, this case uses a collapsed reference link and satisfies the rule as long as `collapsed-links` has not been disabled.
+Unlike the preceding full reference link, this case uses a collapsed reference link
+and satisfies the rule as long as `collapsed-links` has not been disabled.
 
 ```Markdown
 [url][]
@@ -117,9 +143,12 @@ Unlike the preceding full reference link, this case uses a collapsed reference l
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a collapsed reference link. With the default configuration for `collapsed-links` set to `True`, collapsed reference links are permitted, so the rule does not trigger.
+> **Explanation**: The example uses a collapsed reference link. With the default
+> configuration for `collapsed-links` set to `True`, collapsed reference links are
+> permitted, so the rule does not trigger.
 
-Unlike the preceding collapsed reference link, this case uses a shortcut reference link and satisfies the rule as long as `shortcut-links` has not been disabled.
+Unlike the preceding collapsed reference link, this case uses a shortcut reference
+ink and satisfies the rule as long as `shortcut-links` has not been disabled.
 
 ```Markdown
 [url]
@@ -127,7 +156,9 @@ Unlike the preceding collapsed reference link, this case uses a shortcut referen
 [url]: https://example.com
 ```
 
-> **Explanation**: The example uses a shortcut reference link. With the default configuration of `shortcut-links` set to `True`, shortcut reference links are permitted, so the rule does not trigger.
+> **Explanation**: The example uses a shortcut reference link. With the default
+> configuration of `shortcut-links` set to `True`, shortcut reference links are
+permitted, so the rule does not trigger.
 
 Unlike the preceding shortcut reference link, this case uses an inline link whose
 label and URL are identical and satisfies the rule as long as `inline-urls` has not
@@ -144,10 +175,10 @@ been disabled.
 ## Fix Description
 
 The tool cannot autofix this, because a non-permitted link or image could be
-rewritten into any of the other enabled styles (autolink, full reference,
-collapsed reference, shortcut reference, or inline URL). Choosing one
-replacement without author intent could change the meaning or emphasis of the
-document.
+rewritten into any of the other enabled styles (autolink, inline link, full
+reference, collapsed reference, shortcut reference, or inline URL). Choosing
+one replacement without author intent could change the meaning or emphasis of
+the document.
 
 ## Configuration
 

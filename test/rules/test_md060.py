@@ -2944,7 +2944,10 @@ Character | Meaning |
 |Y|Yes|Oui|Si|
 |N|No|Non|No|
 """,
-        set_args=["plugins.md060.style=tight","plugins.md060.aligned_delimiter=$!True"],
+        set_args=[
+            "plugins.md060.style=tight",
+            "plugins.md060.aligned_delimiter=$!True",
+        ],
         enable_extensions="markdown-tables",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:2: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)

@@ -23,7 +23,7 @@ class RuleMd011(RulePlugin):
         Initialize an instance of the RuleMd011 class.
         """
         super().__init__()
-        self.__reverse_link_syntax = re.compile(r"\(.*\)\[\s*[^\^].*\s*]")
+        self.__reverse_link_syntax = re.compile(r"\([^()]*\)\[\s*(?!\^)[^\]\s]*\s*\]")
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__line_index = 0
         self.__leaf_token_index = 0
@@ -72,7 +72,8 @@ class RuleMd011(RulePlugin):
             and "(" in line
             and "[" in line
         ):
-            if regex_search := self.__reverse_link_syntax.search(line):
+            start_index = 0
+            while regex_search := self.__reverse_link_syntax.search(line):
                 regex_span = regex_search.span()
                 extra_error_information = line[regex_span[0] : regex_span[1]]
                 override_is_error_token_prefaced_by_blank_line = (
@@ -80,10 +81,13 @@ class RuleMd011(RulePlugin):
                 )
                 self.report_next_line_error(
                     context,
-                    regex_span[0] + 1,
+                    regex_span[0] + 1 + start_index,
                     extra_error_information=extra_error_information,
                     override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
                 )
+
+                start_index += regex_span[1]
+                line = line[regex_span[1] :]
 
         self.__line_index += 1
         self.__last_line = line.strip(" \t")
@@ -95,5 +99,10 @@ class RuleMd011(RulePlugin):
         Event that a new token is being processed.
         """
         _ = context
-        if token.is_blank_line or token.is_leaf:
+        if (token.is_blank_line or token.is_leaf) and not (
+            token.is_table_header_item
+            or token.is_table_row_item
+            or token.is_table_body
+            or token.is_table
+        ):
             self.__leaf_tokens.append(token)
