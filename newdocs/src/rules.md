@@ -785,6 +785,51 @@ Link text must be descriptive.
 
 Ensure table columns adhere to a consistent formatting style.
 
+## Rule - MD055
+
+[Full Documentation](./plugins/rule_md055.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md055`, `table-pipe-style` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table pipe style.
+
+## Rule - MD056
+
+[Full Documentation](./plugins/rule_md056.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md056`, `table-column-count` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Table column count.
+
+## Rule - MD058
+
+[Full Documentation](./plugins/rule_md058.md)
+
+| Property | Value |
+| --- | -- |
+| Aliases | `md058`, `blanks-around-tables` |
+| Autofix Available | No |
+| Enabled By Default | Yes |
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Summary
+
+Tables should be surrounded by blank lines.
+
 ## Rule - PML100
 
 [Full Documentation](./plugins/rule_pml100.md)
