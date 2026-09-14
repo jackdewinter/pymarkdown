@@ -66,7 +66,9 @@ None
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1612](https://github.com/jackdewinter/pymarkdown/issues/1612)
+    - Fixed rule Md036 to not report standalone emphasized list items as
+      headings.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
