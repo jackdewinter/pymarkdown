@@ -362,7 +362,6 @@ class TokenizedMarkdown:
             requeue_line_info,
         )
 
-    # pylint: disable=too-many-arguments
     def __main_pass_did_not_start_close(
         self,
         parser_state: ParserState,
@@ -410,8 +409,6 @@ class TokenizedMarkdown:
         POGGER.debug("<<<<$", self.__tokenized_document)
 
         return tokens_from_line, requeue_line_info
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __main_pass_keep_on_going(
@@ -794,6 +791,7 @@ class TokenizedMarkdown:
     ) -> Tuple[bool, List[MarkdownToken], Optional[RequeueLineInfo]]:
         POGGER.debug("cob->process_table>>stopping table")
         empty_position_marker = PositionMarker(-1, 0, "")
+        POGGER.debug("process_table_rows<--__close_open_blocks_table")
         (
             outer_processed,
             did_complete_table,
@@ -1119,6 +1117,9 @@ class TokenizedMarkdown:
             unmod = parser_state.original_line_to_parse
             assert unmod is not None
             empty_position_marker = PositionMarker(-1, 0, "")
+            POGGER.debug(
+                "process_table_rows<--__handle_blank_line_token_stack_multiline_block"
+            )
             (
                 _,
                 _,

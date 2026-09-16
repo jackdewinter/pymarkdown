@@ -47,6 +47,8 @@ class TableBlockHelper:
         POGGER.debug(">>remaining_line_to_parse>:$:<", remaining_line_to_parse)
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         POGGER.debug(">>start_index>:$:<", start_index)
+        POGGER.debug(">>original_stack_depth>:$:<", original_stack_depth)
+        POGGER.debug(">>original_document_depth>:$:<", original_document_depth)
 
         (
             line_to_parse,
@@ -79,6 +81,8 @@ class TableBlockHelper:
             start_index,
         )
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
+        POGGER.debug(">>original_stack_depth>:$:<", original_stack_depth)
+        POGGER.debug(">>original_document_depth>:$:<", original_document_depth)
         line_to_parse_size = len(line_to_parse)
 
         (
@@ -202,6 +206,9 @@ class TableBlockHelper:
     ) -> Tuple[bool, Optional[TableBlockStackToken], int, int, str, str, int]:
         table_stack_token: Optional[TableBlockStackToken] = None
 
+        POGGER.debug(">>original_stack_depth>:$:<", original_stack_depth)
+        POGGER.debug(">>original_document_depth>:$:<", original_document_depth)
+
         if was_started := parser_state.token_stack[-1].was_table_block_started:
             table_stack_token = cast(TableBlockStackToken, parser_state.token_stack[-1])
             assert (
@@ -225,6 +232,10 @@ class TableBlockHelper:
             ) = ParserHelper.extract_ascii_whitespace_verified(line_to_parse, 0)
 
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
+
+        POGGER.debug(">>original_stack_depth>:$:<", original_stack_depth)
+        POGGER.debug(">>original_document_depth>:$:<", original_document_depth)
+
         return (
             was_started,
             table_stack_token,
@@ -387,6 +398,8 @@ class TableBlockHelper:
             ">>table_stack_token>>copy_of_token_stack:$:",
             table_stack_token.copy_of_token_stack,
         )
+        last_removed_token = None
+        did_second_removal = False
         if len(parser_state.token_stack) >= original_stack_depth:
             while (
                 len(parser_state.token_stack) > original_stack_depth
@@ -394,10 +407,14 @@ class TableBlockHelper:
                 and not parser_state.token_stack[-1].is_block_quote
                 ## Different from LRD.
             ):
+                last_removed_token = parser_state.token_stack[
+                    -1
+                ].matching_markdown_token
                 del parser_state.token_stack[-1]
         else:
             while len(parser_state.token_stack):
                 del parser_state.token_stack[-1]
+            did_second_removal = True
             assert (
                 table_stack_token.copy_of_token_stack is not None
             ), "Token must be defined by now."
@@ -411,11 +428,16 @@ class TableBlockHelper:
             len(parser_state.token_document),
         )
         POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
-        while (
-            len(parser_state.token_document) > original_document_depth
-            and not parser_state.token_document[-1].is_block_quote_start
-        ):
-            del parser_state.token_document[-1]
+        if did_second_removal or last_removed_token is not None:
+            while (
+                len(parser_state.token_document) > original_document_depth
+                and not parser_state.token_document[-1].is_block_quote_start
+                # and not parser_state.token_document[-1].is_list_start
+            ):
+                this_removed_token = parser_state.token_document[-1]
+                del parser_state.token_document[-1]
+                if not did_second_removal and this_removed_token == last_removed_token:
+                    break
         ## Different from LRD.
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
@@ -589,6 +611,8 @@ class TableBlockHelper:
             assert (
                 parser_state.original_line_to_parse is not None
             ), "Original line must be defined by now."
+
+            POGGER.debug("process_table_rows<--handle_table_leaf_block")
             (
                 outer_processed,
                 _,  # did_complete_table,

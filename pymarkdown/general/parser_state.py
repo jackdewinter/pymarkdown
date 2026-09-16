@@ -5,6 +5,7 @@ Module to provide for an encapsulation of the high level state of the parser.
 from __future__ import annotations
 
 import copy
+import logging
 from typing import List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
@@ -12,6 +13,7 @@ from typing_extensions import Protocol
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.requeue_line_info import RequeueLineInfo
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
@@ -23,6 +25,8 @@ from pymarkdown.tokens.stack_token import (
     StackToken,
     TableBlockStackToken,
 )
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-few-public-methods
@@ -77,7 +81,6 @@ class ParserState:
     Class to provide for an encapsulation of the high level state of the parser.
     """
 
-    # pylint: disable=too-many-arguments
     def __init__(
         self,
         token_stack: List[StackToken],
@@ -115,8 +118,6 @@ class ParserState:
         self.copy_of_token_stack: List[StackToken] = []
         self.block_copy: List[Optional[MarkdownToken]] = []
         self.parse_properties = parse_properties
-
-    # pylint: enable=too-many-arguments
 
     @property
     def token_stack(self) -> List[StackToken]:
@@ -405,6 +406,15 @@ class ParserState:
             len(self.token_stack),
             len(self.token_document),
             False,
+        )
+
+        POGGER.debug(f"self.token_stack = {self.token_stack}")
+        POGGER.debug(
+            f"parser_state.original_stack_depth = {self.__original_stack_depth}"
+        )
+        POGGER.debug(f"self.token_document = {self.token_document}")
+        POGGER.debug(
+            f"parser_state.original_document_depth, = {self.__original_document_depth}"
         )
 
         last_stack_index = self.find_last_block_quote_on_stack()
