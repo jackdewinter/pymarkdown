@@ -1,7 +1,7 @@
 # Rule - MD055
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md055`, `table-pipe-style` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -55,14 +55,14 @@ pipe style:
 | `plugins.table-pipe-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `style` | `string` | `consistent` | Required leading/trailing pipe style. |
 
 The allowable values for the `style` value are:
 
 | Value | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first table row sets the expected style for the rest of the document. |
 | `leading_and_trailing` | Each row must have both a leading and a trailing pipe. |
 | `leading_only` | Each row must have a leading pipe but no trailing pipe. |

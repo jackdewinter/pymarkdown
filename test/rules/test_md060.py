@@ -325,6 +325,7 @@ N | No |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_title_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""Character | Meaning |
 | --- | --- |
 | Y | Yes |
@@ -352,6 +353,7 @@ N | No |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_separator_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""| Character | Meaning |
 --- | --- |
 | Y | Yes |
@@ -379,6 +381,7 @@ N | No |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_row_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""| Character | Meaning |
 | --- | --- |
 Y | Yes |
@@ -430,6 +433,7 @@ Y | Yes |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_title_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""| Character | Meaning
 | --- | --- |
 | Y | Yes |
@@ -457,6 +461,7 @@ Y | Yes |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_separator_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""| Character | Meaning |
 | --- | ---
 | Y | Yes |
@@ -484,6 +489,7 @@ Y | Yes |
     ),
     pluginRuleTest(
         "bad_explicit_tight_column_style_with_compact_styled_table_row_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""| Character | Meaning |
 | --- | --- |
 | Y | Yes
@@ -2062,6 +2068,7 @@ N|No|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_title_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""Character|Meaning|
 |---|---|
 |Y|Yes|
@@ -2089,6 +2096,7 @@ N|No|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_separator_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""|Character|Meaning|
 ---|---|
 |Y|Yes|
@@ -2116,6 +2124,7 @@ N|No|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_row_no_starting_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""|Character|Meaning|
 |---|---|
 Y|Yes|
@@ -2167,6 +2176,7 @@ Y|Yes|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_title_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""|Character|Meaning
 |---|---|
 |Y|Yes|
@@ -2194,6 +2204,7 @@ Y|Yes|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_separator_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""|Character|Meaning|
 |---|---
 |Y|Yes|
@@ -2221,6 +2232,7 @@ Y|Yes|
     ),
     pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_styled_table_row_no_ending_bar",
+        disable_rules="md055,md056,md058",
         source_file_contents="""|Character|Meaning|
 |---|---|
 |Y|Yes
@@ -2323,6 +2335,7 @@ Y|Yes|
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_missing_leading",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 | Character | Meaning |
   --------- | ------- |
@@ -2354,6 +2367,7 @@ N           | No      |
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_missing_leading_with_ws",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 | Character | Meaning |
   --------- | ------- |
@@ -2370,6 +2384,7 @@ N           | No      |
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_extra_leading",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 Character | Meaning |
 | ------- | ------- |
@@ -2402,6 +2417,7 @@ Character | Meaning |
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_missing_ending",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 | Character | Meaning |
 | --------- | -------
@@ -2418,6 +2434,7 @@ Character | Meaning |
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_extra_ending",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 | Character | Meaning
 | --------- | ------- |
@@ -2586,6 +2603,7 @@ Character | Meaning |
     ),
     pluginRuleTest(
         "bad_bq_explicit_aligned_column_style_missing_leading",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 > | Character | Meaning |
 > ----------- | ------- |
@@ -2754,6 +2772,7 @@ Character | Meaning |
     ),
     pluginRuleTest(
         "bad_ul_explicit_aligned_column_style_missing_leading",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 + | Character | Meaning |
   ----------- | ------- |
@@ -2922,6 +2941,7 @@ Character | Meaning |
     ),
     pluginRuleTest(
         "bad_ol_explicit_aligned_column_style_missing_leading",
+        disable_rules="md055,md056,md058",
         source_file_contents="""
 1. | Character | Meaning |
    ----------- | ------- |

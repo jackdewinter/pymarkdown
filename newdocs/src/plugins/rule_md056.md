@@ -1,7 +1,7 @@
 # Rule - MD056
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md056`, `table-column-count` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -67,7 +67,7 @@ case there is no table for this rule to examine.
 | `plugins.table-column-count.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 As tables are only recognized when the

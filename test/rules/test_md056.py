@@ -73,7 +73,9 @@ scanTests = [
     pluginRuleTest(
         "good_empty_cells",
         enable_extensions="markdown-tables",
-        disable_rules=__plugin_disable_md041,
+        # MD060 (table-column-style) fires on the empty-cell alignment; it is
+        # unrelated to column counting, so disable it here.
+        disable_rules=__plugin_disable_md041 + ",md060",
         source_file_contents="""| abc | def |
 | --- | --- |
 |  |  |

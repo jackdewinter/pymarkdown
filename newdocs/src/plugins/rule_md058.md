@@ -1,7 +1,7 @@
 # Rule - MD058
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
 | Autofix Available | No |
 | Enabled By Default | Yes |
@@ -69,7 +69,7 @@ line on the missing side.
 | `plugins.blanks-around-tables.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 
 As tables are only recognized when the
