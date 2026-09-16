@@ -10,7 +10,10 @@ None
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+    - Fixed issue with a paragraph, then a list start, then the first line and
+      only line of a table before the next item of the list.
+    - Added checks for similar code in the LRD handling to be safe.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
