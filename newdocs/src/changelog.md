@@ -5,6 +5,26 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+    - Fixed issue with a paragraph, then a list start, then the first line and
+      only line of a table before the next item of the list.
+    - Added checks for similar code in the LRD handling to be safe.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+None
+
+## Version 0.9.40 - 2026-09-13
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1650](https://github.com/jackdewinter/pymarkdown/issues/1650)
     - Rules for Md049 (consistent emphasis) and Md050 (consistent strong emphasis)
 - [Issue 1652](https://github.com/jackdewinter/pymarkdown/issues/1652)

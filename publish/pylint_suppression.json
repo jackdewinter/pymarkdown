@@ -115,7 +115,7 @@
         "pymarkdown/general/parser_logger.py": {},
         "pymarkdown/general/parser_state.py": {
             "too-few-public-methods": 2,
-            "too-many-arguments": 2,
+            "too-many-arguments": 1,
             "too-many-instance-attributes": 1,
             "too-many-public-methods": 1
         },
@@ -128,7 +128,7 @@
             "too-many-arguments": 2
         },
         "pymarkdown/general/tokenized_markdown.py": {
-            "too-many-arguments": 6
+            "too-many-arguments": 5
         },
         "pymarkdown/html_helpers/__init__.py": {},
         "pymarkdown/html_helpers/html_helper.py": {
@@ -585,7 +585,7 @@
     "disables-by-name": {
         "too-many-instance-attributes": 32,
         "too-many-public-methods": 5,
-        "too-many-arguments": 295,
+        "too-many-arguments": 293,
         "too-few-public-methods": 57,
         "too-many-locals": 57,
         "chained-comparison": 3,
