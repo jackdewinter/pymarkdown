@@ -128,6 +128,17 @@ class RuleMd036(RulePlugin):
                 self.__pending_list_item_start_token = self.__start_token
             else:
                 self.report_next_token_error(context, self.__start_token)
+        elif self.__list_depth and (
+            token.is_inline_hard_break
+            or (
+                token.is_text
+                and cast(TextMarkdownToken, token).token_text.startswith(
+                    ParserHelper.newline_character
+                )
+            )
+        ):
+            assert self.__start_token is not None
+            self.report_next_token_error(context, self.__start_token)
         return new_state
 
     def __handle_pending_list_item(
