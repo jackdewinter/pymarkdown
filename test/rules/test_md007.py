@@ -71,6 +71,45 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_list_indentation_level_0",
+        source_file_contents="""This is a test
+
+<!-- pyml disable-next-line ul-indent-->
+ * this is level 1
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""This is a test
+
+<!-- pyml disable-next-line ul-indent-->
+ * this is level 1
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_list_indentation_level_0",
+        source_file_contents="""This is a test
+
+<!-- pyml disable-next-line ul-indent-->
+ * this is level 1
+
+This is a test
+
+ * this is level 1
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:8:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)",
+        fix_expected_file_contents="""This is a test
+
+<!-- pyml disable-next-line ul-indent-->
+ * this is level 1
+
+This is a test
+
+* this is level 1
+""",
+    ),
+    pluginRuleTest(
         "bad_list_indentation_level_1",
         source_file_name=f"{source_path}bad_list_indentation_level_1.md",
         source_file_contents="""This is a test

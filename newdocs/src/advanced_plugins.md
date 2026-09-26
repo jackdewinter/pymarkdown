@@ -604,7 +604,6 @@ settings, the configuration below is sufficient.
 Therefore, to accommodate Python-Markdown, the following configuration is suggested:
 
 <!-- pyml disable code-block-style-->
-
 === "Command Line"
     Not Applicable
 === "--set Argument"

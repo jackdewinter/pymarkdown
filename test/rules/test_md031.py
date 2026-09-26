@@ -63,6 +63,61 @@ This is a blank line and some text.
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_fenced_block_only_after",
+        source_file_contents="""This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+This is a blank line and some text.
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_fenced_block_only_after",
+        source_file_contents="""This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+This is a blank line and some text.
+```block
+A code block
+```
+
+This is a blank line and some text.
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+This is a blank line and some text.
+
+```block
+A code block
+```
+
+This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_only_after_with_fix_debug",
         source_file_contents="""This is text and no blank line.
 ```block
@@ -180,6 +235,71 @@ This is a blank line and some text.
 """,
         fix_expected_file_contents="""This is text and no blank line.
 ----
+
+```block
+A code block
+```
+
+---
+This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_fenced_block_only_after_with_thematics",
+        disable_rules="md022,md026",
+        source_file_contents="""This is text and no blank line.
+----
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+---
+This is a blank line and some text.
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""This is text and no blank line.
+----
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+---
+This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_fenced_block_only_after_with_thematics",
+        source_file_contents="""This is text and no blank line.
+----
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+---
+```block
+A code block
+```
+
+---
+This is a blank line and some text.
+""",
+        scan_expected_return_code=1,
+        disable_rules="md022,md026",
+        scan_expected_output="""{temp_source_path}:9:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""This is text and no blank line.
+----
+<!-- pyml disable-next-line blanks-around-fences-->
+```block
+A code block
+```
+
+---
 
 ```block
 A code block
@@ -369,6 +489,97 @@ This is a blank line and some text.
 > ```
 >
 >This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_fenced_block_only_after_in_block_quote",
+        source_file_contents="""> This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+> ```block
+> A code block
+> ```
+>
+>This is a blank line and some text.
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+> ```block
+> A code block
+> ```
+>
+>This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_fenced_block_only_after_in_block_quote",
+        disable_rules="md027",
+        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1697",
+        source_file_contents="""> This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+> ```block
+> A code block
+> ```
+>
+> This is text and no blank line.
+> ```block
+> A code block
+> ```
+>
+> This is a blank line and some text.
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> This is text and no blank line.
+<!-- pyml disable-next-line blanks-around-fences-->
+> ```block
+> A code block
+> ```
+>
+> This is text and no blank line.
+>
+> ```block
+> A code block
+> ```
+>
+> This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "enabled_and_enabled_bad_fenced_block_only_after_in_block_quote",
+        disable_rules="md027",
+        source_file_contents="""> This is text and no blank line.
+> ```block
+> A code block
+> ```
+>
+> This is text and no blank line.
+> ```block
+> A code block
+> ```
+>
+> This is a blank line and some text.
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> This is text and no blank line.
+>
+> ```block
+> A code block
+> ```
+>
+> This is text and no blank line.
+>
+> ```block
+> A code block
+> ```
+>
+> This is a blank line and some text.
 """,
     ),
     pluginRuleTest(

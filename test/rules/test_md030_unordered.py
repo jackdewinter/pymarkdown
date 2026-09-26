@@ -86,8 +86,37 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_spacing_ul_single_with_config_2_1",
+        use_strict_config=True,
+        set_args=["plugins.md030.ul_single=$#2", "plugins.md030.ul_multi=$#1"],
+        source_file_contents="""<!-- pyml disable-next-line list-marker-space-->
+* First
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line list-marker-space-->
+* First
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_spacing_ul_single_with_config_2_1",
+        use_strict_config=True,
+        set_args=["plugins.md030.ul_single=$#2", "plugins.md030.ul_multi=$#1"],
+        source_file_contents="""<!-- pyml disable-next-line list-marker-space-->
+* First
+* Second
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD030: Spaces after list markers [Expected: 2; Actual: 1] (list-marker-space)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line list-marker-space-->
+* First
+* Second
+""",
+    ),
+    pluginRuleTest(
         "bad_spacing_ul_single",
-        source_file_name=f"{source_path}bad_spacing_ul_single.md",
         source_file_contents="""*  First
 *  Second
 *  Third

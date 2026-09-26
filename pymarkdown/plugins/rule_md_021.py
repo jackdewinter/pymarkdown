@@ -21,6 +21,8 @@ class RuleMd021(RulePlugin):
     opening or closing hashes of an atx heading.
     """
 
+    __PLUGIN_ID = "MD021"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd021 class.
@@ -37,7 +39,7 @@ class RuleMd021(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="no-multiple-space-closed-atx",
-            plugin_id="MD021",
+            plugin_id=RuleMd021.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces are present inside hash characters on Atx Closed Heading.",
             plugin_version="0.5.1",
@@ -59,23 +61,26 @@ class RuleMd021(RulePlugin):
     ) -> None:
         assert self.__atx_heading_token is not None
         if context.in_fix_mode:
-            if self.__is_left_in_error:
-                assert self.__first_text_token is not None
-                self.register_fix_token_request(
-                    context,
-                    self.__first_text_token,
-                    "next_token",
-                    "extracted_whitespace",
-                    " ",
-                )
-            if len(extra_end_data) > 1:
-                self.register_fix_token_request(
-                    context,
-                    token,
-                    "next_token",
-                    "extra_end_data",
-                    " ",
-                )
+            if not context.check_for_pragma_suppression(
+                self.__atx_heading_token.line_number, RuleMd021.__PLUGIN_ID, False
+            ):
+                if self.__is_left_in_error:
+                    assert self.__first_text_token is not None
+                    self.register_fix_token_request(
+                        context,
+                        self.__first_text_token,
+                        "next_token",
+                        "extracted_whitespace",
+                        " ",
+                    )
+                if len(extra_end_data) > 1:
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "extra_end_data",
+                        " ",
+                    )
         else:
             self.report_next_token_error(context, self.__atx_heading_token)
 

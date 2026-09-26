@@ -29,6 +29,8 @@ class RuleMd046(RulePlugin):
     Class to implement a plugin that ensures the code blocks maintain a consistent style.
     """
 
+    __PLUGIN_ID = "MD046"
+
     __consistent_style = "consistent"
     __fenced_style = "fenced"
     __indented_style = "indented"
@@ -56,7 +58,7 @@ class RuleMd046(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="code-block-style",
-            plugin_id="MD046",
+            plugin_id=RuleMd046.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Code block style",
             plugin_version="0.7.0",
@@ -129,8 +131,11 @@ class RuleMd046(RulePlugin):
                 self.__actual_style_type = current_style
             if self.__actual_style_type != current_style:
                 if context.in_fix_mode:
-                    self.__start_fix_token = token
-                    self.__token_before_start_fix_token = self.__last_token
+                    if not context.check_for_pragma_suppression(
+                        token.line_number, RuleMd046.__PLUGIN_ID, False
+                    ):
+                        self.__start_fix_token = token
+                        self.__token_before_start_fix_token = self.__last_token
                 else:
                     extra_data = (
                         f"Expected: {self.__actual_style_type}; Actual: {current_style}"
@@ -192,6 +197,7 @@ class RuleMd046(RulePlugin):
         return replacement_tokens, new_end_token
 
     def __fix(self, context: PluginScanContext, end_fix_token: MarkdownToken) -> None:
+        assert self.__start_fix_token is not None
         if self.__actual_style_type == RuleMd046.__fenced_style:
             replacement_tokens, new_end_token = self.__create_new_fenced_tokens()
         else:
@@ -213,9 +219,10 @@ class RuleMd046(RulePlugin):
                 ),
             )
 
-        assert self.__start_fix_token is not None
+        assert not context.is_during_line_pass
         self.register_replace_tokens_request(
             context, self.__start_fix_token, end_fix_token, replacement_tokens
         )
+        # assert not context.is_during_line_pass
         self.__start_fix_token = None
         self.__inner_fix_token = None

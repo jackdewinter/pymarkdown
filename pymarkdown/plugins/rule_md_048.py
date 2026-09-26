@@ -22,6 +22,8 @@ class RuleMd048(RulePlugin):
     Class to implement a plugin that ensures that the style of fenced code blocks is consistent.
     """
 
+    __PLUGIN_ID = "MD048"
+
     __consistent_style = "consistent"
     __tilde_style = "tilde"
     __backtick_style = "backtick"
@@ -45,7 +47,7 @@ class RuleMd048(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="code-fence-style",
-            plugin_id="MD048",
+            plugin_id=RuleMd048.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Code fence style",
             plugin_version="0.6.0",
@@ -105,14 +107,21 @@ class RuleMd048(RulePlugin):
             self.__actual_style_type = current_style
         if self.__actual_style_type != current_style:
             if context.in_fix_mode:
-                replace_character = (
-                    "`"
-                    if self.__actual_style_type == RuleMd048.__backtick_style
-                    else "~"
-                )
-                self.register_fix_token_request(
-                    context, token, "next_token", "fence_character", replace_character
-                )
+                if not context.check_for_pragma_suppression(
+                    token.line_number, RuleMd048.__PLUGIN_ID, False
+                ):
+                    replace_character = (
+                        "`"
+                        if self.__actual_style_type == RuleMd048.__backtick_style
+                        else "~"
+                    )
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "fence_character",
+                        replace_character,
+                    )
             else:
                 extra_data = (
                     f"Expected: {self.__actual_style_type}; Actual: {current_style}"

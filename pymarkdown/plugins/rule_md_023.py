@@ -23,6 +23,8 @@ class RuleMd023(RulePlugin):
     beginning of the line.
     """
 
+    __PLUGIN_ID = "MD023"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd023 class.
@@ -41,7 +43,7 @@ class RuleMd023(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="heading-start-left, header-start-left",
-            plugin_id="MD023",
+            plugin_id=RuleMd023.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Headings must start at the beginning of the line.",
             plugin_version="0.5.3",
@@ -103,13 +105,16 @@ class RuleMd023(RulePlugin):
             return
 
         if context.in_fix_mode:
-            self.register_fix_token_request(
-                context,
-                token,
-                "next_token",
-                "extracted_whitespace",
-                self.__fix_adjustments(token.extracted_whitespace),
-            )
+            if not context.check_for_pragma_suppression(
+                token.line_number, RuleMd023.__PLUGIN_ID, False
+            ):
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "extracted_whitespace",
+                    self.__fix_adjustments(token.extracted_whitespace),
+                )
         else:
             self.report_next_token_error(context, token)
 
@@ -118,7 +123,18 @@ class RuleMd023(RulePlugin):
     ) -> None:
         self.__setext_start_token = token
         self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
-        if self.__any_leading_whitespace_detected and context.in_fix_mode:
+        if (
+            self.__any_leading_whitespace_detected
+            and context.in_fix_mode
+            and (
+                not context.check_for_pragma_suppression(
+                    token.line_number, RuleMd023.__PLUGIN_ID, False
+                )
+                and not context.check_for_pragma_suppression(
+                    token.original_line_number, RuleMd023.__PLUGIN_ID, False
+                )
+            )
+        ):
             assert token.extracted_whitespace
             whitespace_to_add = " " if token.extracted_whitespace[0] == "\t" else ""
             self.register_fix_token_request(
@@ -134,12 +150,40 @@ class RuleMd023(RulePlugin):
     def __handle_setext_heading_end(
         self, context: PluginScanContext, token: EndMarkdownToken
     ) -> None:
-        if self.__last_skipped_text_token and context.in_fix_mode:
+        assert isinstance(token, EndMarkdownToken)
+        assert isinstance(token.start_markdown_token, SetextHeadingMarkdownToken)
+        setext_start_token = token.start_markdown_token
+        # setext_start_token = cast(
+        #     SetextHeadingMarkdownToken, token.start_markdown_token
+        # )
+        if (
+            self.__last_skipped_text_token
+            and context.in_fix_mode
+            and (
+                not context.check_for_pragma_suppression(
+                    token.start_markdown_token.line_number, RuleMd023.__PLUGIN_ID, False
+                )
+                and not context.check_for_pragma_suppression(
+                    setext_start_token.original_line_number,
+                    RuleMd023.__PLUGIN_ID,
+                    False,
+                )
+            )
+        ):
             self.__handle_text(context, self.__last_skipped_text_token, True)
 
         if token.extracted_whitespace:
             self.__any_leading_whitespace_detected = True
-            if context.in_fix_mode:
+            if context.in_fix_mode and (
+                not context.check_for_pragma_suppression(
+                    token.start_markdown_token.line_number, RuleMd023.__PLUGIN_ID, False
+                )
+                and not context.check_for_pragma_suppression(
+                    setext_start_token.original_line_number,
+                    RuleMd023.__PLUGIN_ID,
+                    False,
+                )
+            ):
                 self.register_fix_token_request(
                     context,
                     token,

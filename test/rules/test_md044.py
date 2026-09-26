@@ -66,6 +66,36 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_paragraph_text",
+        source_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a paragraph without any capitalization errors
+""",
+        set_args=["plugins.md044.names=ParaGraph"],
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a paragraph without any capitalization errors
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_paragraph_text",
+        source_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a paragraph without any capitalization errors
+
+this is a paragraph without any capitalization errors
+""",
+        set_args=["plugins.md044.names=ParaGraph"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:11: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a paragraph without any capitalization errors
+
+this is a ParaGraph without any capitalization errors
+""",
+    ),
+    pluginRuleTest(
         "good_paragraph_text_prefix",
         source_file_contents="""nothing like a good reparagraph to go
 """,
@@ -135,6 +165,46 @@ error reporting works.
 {temp_source_path}:3:39: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
 """,
         fix_expected_file_contents="""this is a sample where the word ParaGraph should
+appear on multiple lines so we can make sure that
+advancing the line and column for the ParaGraph
+error reporting works.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_paragraph_text_multiples_on_multiple_lines",
+        source_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a sample where the word paragraph should
+appear on multiple lines so we can make sure that
+<!-- pyml disable-next-line proper-names-->
+advancing the line and column for the paragraph
+error reporting works.
+""",
+        set_args=["plugins.md044.names=ParaGraph"],
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a sample where the word paragraph should
+appear on multiple lines so we can make sure that
+<!-- pyml disable-next-line proper-names-->
+advancing the line and column for the paragraph
+error reporting works.
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_paragraph_text_multiples_on_multiple_lines",
+        source_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a sample where the word paragraph should
+appear on multiple lines so we can make sure that
+advancing the line and column for the paragraph
+error reporting works.
+""",
+        set_args=["plugins.md044.names=ParaGraph"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:39: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line proper-names-->
+this is a sample where the word paragraph should
 appear on multiple lines so we can make sure that
 advancing the line and column for the ParaGraph
 error reporting works.

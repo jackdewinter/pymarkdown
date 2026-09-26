@@ -27,6 +27,7 @@ def test_plugin_scan_context_register_token_fix_no_map() -> None:
 
     # Arrange
     scan_context = PluginScanContext(
+        "test_plugin_scan_context_register_token_fix_no_map",
         PluginManager(MainPresentation()),
         "scan_file",
         [],
@@ -52,6 +53,7 @@ def test_plugin_scan_context_register_token_first_one() -> None:
     # Arrange
     token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
     scan_context = PluginScanContext(
+        "test_plugin_scan_context_register_token_first_one",
         PluginManager(MainPresentation()),
         "scan_file",
         [],
@@ -83,6 +85,7 @@ def test_plugin_scan_context_register_token_second_one() -> None:
     # Arrange
     token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
     scan_context = PluginScanContext(
+        "test_plugin_scan_context_register_token_second_one",
         PluginManager(MainPresentation()),
         "scan_file",
         [],

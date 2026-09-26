@@ -44,6 +44,8 @@ class RuleMd044(RulePlugin):
     the correct capitalization.
     """
 
+    __PLUGIN_ID = "MD044"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd044 class.
@@ -62,7 +64,7 @@ class RuleMd044(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="proper-names",
-            plugin_id="MD044",
+            plugin_id=RuleMd044.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
             plugin_version="0.7.1",
@@ -158,9 +160,19 @@ class RuleMd044(RulePlugin):
                 # d1 = max(0,found_index-5)
                 # d2 = min(len(original_source), found_index+5)
                 # dd  = original_source[d1:d2]
-                self.__replacement_items.append(
-                    FoundReplacement(found_index, required_capitalization, part_context)
-                )
+                delta_from_start = original_source[:found_index].count("\n")
+
+                if not context.check_for_pragma_suppression(
+                    token.line_number,
+                    RuleMd044.__PLUGIN_ID,
+                    False,
+                    delta_from_start=delta_from_start,
+                ):
+                    self.__replacement_items.append(
+                        FoundReplacement(
+                            found_index, required_capitalization, part_context
+                        )
+                    )
             else:
                 extra_data = f"Expected: {required_capitalization}; Actual: {original_found_text}"
                 self.report_next_token_error(

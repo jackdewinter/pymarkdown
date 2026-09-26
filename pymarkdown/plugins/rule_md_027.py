@@ -43,6 +43,8 @@ class RuleMd027(RulePlugin):
     Class to implement a plugin that looks for excessive spaces after the block quote character.
     """
 
+    __PLUGIN_ID = "MD027"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd027 class.
@@ -75,7 +77,7 @@ class RuleMd027(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="no-multiple-space-blockquote",
-            plugin_id="MD027",
+            plugin_id=RuleMd027.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces after blockquote symbol",
             plugin_version="0.5.2",
@@ -109,10 +111,13 @@ class RuleMd027(RulePlugin):
         context: PluginScanContext,
         token: MarkdownToken,
         alternate_token: Optional[MarkdownToken],
+        line_number_delta: int,
     ) -> bool:
         keep_going = True
         if alternate_token:
-            keep_going = self.__fix_issue_alternate_token(context, alternate_token)
+            keep_going = self.__fix_issue_alternate_token(
+                context, alternate_token, line_number_delta, token
+            )
         elif (
             self.__last_leaf_token
             and self.__last_leaf_token.is_setext_heading
@@ -126,6 +131,9 @@ class RuleMd027(RulePlugin):
             or token.is_atx_heading
             or token.is_blank_line
         ):
+            # if not context.check_for_pragma_suppression(
+            #     token.line_number, RuleMd027.__PLUGIN_ID, False
+            # ):
             self.register_fix_token_request(
                 context, token, "next_token", "extracted_whitespace", ""
             )
@@ -142,7 +150,6 @@ class RuleMd027(RulePlugin):
             self.__fix_issue_link_reference(context, token)
         return keep_going
 
-    # pylint: disable=too-many-arguments
     def __report_issue(
         self,
         context: PluginScanContext,
@@ -152,7 +159,7 @@ class RuleMd027(RulePlugin):
         alternate_token: Optional[MarkdownToken] = None,
     ) -> bool:
         if context.in_fix_mode:
-            return self.__fix_issue(context, token, alternate_token)
+            return self.__fix_issue(context, token, alternate_token, line_number_delta)
 
         if token.is_setext_heading:
             current_line_number = cast(
@@ -184,13 +191,14 @@ class RuleMd027(RulePlugin):
         )
         return True
 
-    # pylint: enable=too-many-arguments
-
     def __fix_issue_alternate_token(
         self,
         context: PluginScanContext,
         alternate_token: MarkdownToken,
+        line_number_delta: int,
+        token: MarkdownToken,
     ) -> bool:
+        _ = (line_number_delta, token)
         if alternate_token.is_paragraph:
             para_token = cast(ParagraphMarkdownToken, alternate_token)
             extracted_whitespace = "\n" * ParserHelper.count_newlines_in_text(
@@ -204,10 +212,19 @@ class RuleMd027(RulePlugin):
                 extracted_whitespace,
             )
             return False
-        assert (
-            alternate_token.is_setext_heading_end
-            or alternate_token.is_fenced_code_block_end
-        )
+        if alternate_token.is_fenced_code_block_end:
+            # if not context.check_for_pragma_suppression(
+            #     token.line_number,
+            #     RuleMd027.__PLUGIN_ID,
+            #     False,
+            #     delta_from_start=line_number_delta,
+            # ):
+            self.register_fix_token_request(
+                context, alternate_token, "next_token", "extracted_whitespace", ""
+            )
+            # end if
+            return False
+        assert alternate_token.is_setext_heading_end
         self.register_fix_token_request(
             context, alternate_token, "next_token", "extracted_whitespace", ""
         )
@@ -305,7 +322,6 @@ class RuleMd027(RulePlugin):
             #     print("[[Delayed paragraph end processed]]")
             self.__is_paragraph_end_delayed = False
 
-    # pylint: disable=too-many-arguments
     def __process_delayed_blank_line(
         self,
         context: PluginScanContext,
@@ -338,8 +354,6 @@ class RuleMd027(RulePlugin):
             self.__delayed_blank_line_bq_index = None
             self.__delayed_blank_line_with_list_end = False
             self.__delayed_blank_line_container_token = None
-
-    # pylint: enable=too-many-arguments
 
     def __process_pending_container_end_tokens(
         self, context: PluginScanContext, token: MarkdownToken
@@ -420,7 +434,6 @@ class RuleMd027(RulePlugin):
         # if self.__debug_on:
         #     print(f"bq>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
 
-    # pylint: disable=too-many-arguments
     def __register_blank_line(
         self,
         token: BlockQuoteMarkdownToken,
@@ -435,8 +448,6 @@ class RuleMd027(RulePlugin):
             delayed_list = []
             self.__delayed_bleading_fixes[token] = delayed_list
         delayed_list.append((index, mod, did_x, blank_line_token))
-
-    # pylint: enable=too-many-arguments
 
     def __handle_block_quote_end(
         self,
@@ -926,7 +937,6 @@ class RuleMd027(RulePlugin):
         self.__last_leaf_token = None
         self.__bq_line_index[num_container_tokens] += 1
 
-    # pylint: disable=too-many-arguments
     def __report_lrd_error(
         self,
         lrd_token: LinkReferenceDefinitionMarkdownToken,
@@ -966,9 +976,6 @@ class RuleMd027(RulePlugin):
             column_number_delta=column_number_delta,
         )
 
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
     def __handle_link_reference_definition_check_after(
         self,
         context: PluginScanContext,
@@ -1006,8 +1013,6 @@ class RuleMd027(RulePlugin):
             line_number_delta=line_number_delta,
             column_number_delta=column_number_delta,
         )
-
-    # pylint: enable=too-many-arguments
 
     def __handle_code_span(
         self, context: PluginScanContext, token: MarkdownToken

@@ -297,6 +297,42 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_single_block_quote_space_bottom",
+        mark_fix_as_skipped=True,
+        mark_scan_as_skipped=True,
+        source_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_bottom",
+        mark_fix_as_skipped=True,
+        mark_scan_as_skipped=True,
+        source_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a block quote
+>
+>  within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
         "bad_double_block_quote_space_top",
         source_file_contents=""">  this is text
 
@@ -935,6 +971,41 @@ scanTests = [
 > 1. barney
 """,
     ),
+    #     pluginRuleTest(
+    #         "xxxxx",
+    #         mark_fix_as_skipped=True,
+    #         source_file_contents="""> This is text and no blank line.
+    # >
+    # > ```block
+    # > A code block
+    # > ```
+    # >
+    # > This is text and no blank line.
+    # >
+    # > ```block
+    # > A code block
+    # > ```
+    # >
+    # > This is a blank line and some text.
+    # """,
+    #         scan_expected_return_code=1,
+    #         scan_expected_output="""{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+    # """,
+    #         fix_expected_file_contents="""> This is text and no blank line.
+    # <!-- pyml disable-next-line blanks-around-fences-->
+    # > ```block
+    # > A code block
+    # > ```
+    # >
+    # > This is text and no blank line.
+    # >
+    # > ```block
+    # > A code block
+    # > ```
+    # >
+    # > This is a blank line and some text.
+    # """,
+    #     ),
     pluginRuleTest(
         "mix_md027_md007",
         source_file_contents=""">  + first

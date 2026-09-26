@@ -10,10 +10,14 @@ None
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
+    - Addressed issues with fixing not honoring suppressions.
+    - Except for XXX and XXX
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
     - Fixed issue with a paragraph, then a list start, then the first line and
       only line of a table before the next item of the list.
     - Added checks for similar code in the LRD handling to be safe.
+    https://github.com/jackdewinter/pymarkdown/issues/1679
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

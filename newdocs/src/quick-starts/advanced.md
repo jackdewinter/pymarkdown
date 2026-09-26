@@ -85,7 +85,6 @@ Enter one of the following commands at the command line:
     ```sh
     pipenv install pymarkdownlnt
     ```
-
 <!-- pyml enable code-block-style-->
 
 If you are using Pipenv as your **Python package manager** and would like
@@ -213,7 +212,6 @@ Enter one of the following commands at the command line:
     ```sh
     pipenv run pymarkdown scan sample.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### Step 3: Verify The Output
@@ -278,7 +276,6 @@ path:
     ```sh
     pipenv run pymarkdown scan {directory}/
     ```
-
 <!-- pyml enable code-block-style-->
 
 To scan `{directory}` and all subdirectories, add `--recurse`:
@@ -295,7 +292,6 @@ To scan `{directory}` and all subdirectories, add `--recurse`:
     ```sh
     pipenv run pymarkdown scan --recurse {directory}/
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### What You Can Do Now

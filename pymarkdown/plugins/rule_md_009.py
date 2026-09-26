@@ -23,6 +23,8 @@ class RuleMd009(RulePlugin):
     Class to implement a plugin that looks for trailing spaces in the files.
     """
 
+    __PLUGIN_ID = "MD009"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd009 class.
@@ -45,7 +47,7 @@ class RuleMd009(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="no-trailing-spaces",
-            plugin_id="MD009",
+            plugin_id=RuleMd009.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
             plugin_version="0.6.1",
@@ -185,7 +187,6 @@ class RuleMd009(RulePlugin):
                     expected_list_indent,
                 )
 
-    # pylint: disable=too-many-arguments
     def __report_fix(
         self,
         context: PluginScanContext,
@@ -194,6 +195,11 @@ class RuleMd009(RulePlugin):
         extracted_whitespace_length: int,
         first_non_whitespace_index: int,
     ) -> None:
+        if context.check_for_pragma_suppression(
+            context.line_number, RuleMd009.__PLUGIN_ID, False
+        ):
+            return
+
         if new_list_indent != -1:
             line = " " * new_list_indent
         else:
@@ -208,8 +214,6 @@ class RuleMd009(RulePlugin):
                 else line[: first_non_whitespace_index + self.__break_spaces]
             )
         context.set_current_fix_line(line)
-
-    # pylint: enable=too-many-arguments
 
     def __report_error(
         self,

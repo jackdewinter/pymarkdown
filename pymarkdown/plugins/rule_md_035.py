@@ -20,6 +20,8 @@ class RuleMd035(RulePlugin):
     Class to implement a plugin that looks for inconsistent styles for thematic breaks.
     """
 
+    __PLUGIN_ID = "MD035"
+
     __consistent_style = "consistent"
 
     def __init__(self) -> None:
@@ -36,7 +38,7 @@ class RuleMd035(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="hr-style",
-            plugin_id="MD035",
+            plugin_id=RuleMd035.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Horizontal rule style",
             plugin_version="0.6.0",
@@ -108,20 +110,23 @@ class RuleMd035(RulePlugin):
         if self.__actual_style:
             if self.__actual_style != break_token.rest_of_line:
                 if context.in_fix_mode:
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "start_character",
-                        self.__actual_style[0],
-                    )
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "rest_of_line",
-                        self.__actual_style,
-                    )
+                    if not context.check_for_pragma_suppression(
+                        token.line_number, RuleMd035.__PLUGIN_ID, False
+                    ):
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "start_character",
+                            self.__actual_style[0],
+                        )
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "rest_of_line",
+                            self.__actual_style,
+                        )
                 else:
                     extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
                     self.report_next_token_error(

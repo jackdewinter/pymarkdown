@@ -58,6 +58,8 @@ class RuleMd031(RulePlugin):
     Class to implement a plugin that ensures that blank lines surround fenced block quotes.
     """
 
+    __PLUGIN_ID = "MD031"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd031 class.
@@ -95,7 +97,7 @@ class RuleMd031(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="blanks-around-fences",
-            plugin_id="MD031",
+            plugin_id=RuleMd031.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Fenced code blocks should be surrounded by blank lines",
             plugin_version="0.7.1",
@@ -176,7 +178,7 @@ class RuleMd031(RulePlugin):
                 break
             search_index -= 1
 
-        replacement_tokens = [
+        replacement_tokens: List[MarkdownToken] = [
             BlankLineMarkdownToken(
                 extracted_whitespace="",
                 position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
@@ -1085,6 +1087,12 @@ class RuleMd031(RulePlugin):
         special_case: bool,
         special_case_2: bool,
     ) -> None:
+
+        if context.check_for_pragma_suppression(
+            token.line_number, RuleMd031.__PLUGIN_ID, False
+        ):
+            return
+
         if special_case:
             self.__fix_spacing_special_case(context, token)
             return

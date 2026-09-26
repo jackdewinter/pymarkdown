@@ -33,6 +33,8 @@ class RuleMd012(RulePlugin):
     Class to implement a plugin that looks for multiple blank lines in the files.
     """
 
+    __PLUGIN_ID = "MD012"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd012 class.
@@ -40,6 +42,7 @@ class RuleMd012(RulePlugin):
         super().__init__()
         self.__blank_lines_maximum = 0
         self.__blank_line_count = 0
+        self.__already_fired = False
         self.__last_blank_line: Optional[MarkdownToken] = None
         self.__captured_blank_line: List[MarkdownToken] = []
         self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
@@ -51,7 +54,7 @@ class RuleMd012(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="no-multiple-blanks",
-            plugin_id="MD012",
+            plugin_id=RuleMd012.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Multiple consecutive blank lines",
             plugin_version="0.7.0",
@@ -90,6 +93,7 @@ class RuleMd012(RulePlugin):
         """
         self.__blank_line_count = 0
         self.__last_blank_line = None
+        self.__already_fired = False
         self.__captured_blank_line.clear()
         self.__leading_space_index_tracker.clear()
         self.__container_fix_map.clear()
@@ -184,9 +188,17 @@ class RuleMd012(RulePlugin):
                     ),
                 )
 
-    def __check_for_excess_blank_lines(self, context: PluginScanContext) -> None:
-        if self.__blank_line_count > self.__blank_lines_maximum:
-            if context.in_fix_mode:
+    def __check_for_excess_blank_lines(self, context: PluginScanContext) -> bool:
+        if (
+            self.__blank_line_count <= self.__blank_lines_maximum
+            or self.__already_fired
+        ):
+            return False
+        assert self.__last_blank_line is not None
+        if context.in_fix_mode:
+            if not context.check_for_pragma_suppression(
+                self.__last_blank_line.line_number, RuleMd012.__PLUGIN_ID, False
+            ):
                 if self.__leading_space_index_tracker.in_at_least_one_container():
                     self.__fix_containers()
 
@@ -197,13 +209,14 @@ class RuleMd012(RulePlugin):
                     self.__captured_blank_line[-1],
                     replacement_tokens,
                 )
-            else:
-                assert self.__last_blank_line is not None
-                extra_data = f"Expected: {self.__blank_lines_maximum}, Actual: {self.__blank_line_count}"
-                self.report_next_token_error(
-                    context, self.__last_blank_line, extra_error_information=extra_data
-                )
+        else:
+            extra_data = f"Expected: {self.__blank_lines_maximum}, Actual: {self.__blank_line_count}"
+            self.report_next_token_error(
+                context, self.__last_blank_line, extra_error_information=extra_data
+            )
+        self.__already_fired = True
         self.__captured_blank_line.clear()
+        return True
 
     def __process_pending_container_end_fixes(
         self, context: PluginScanContext, token: MarkdownToken
@@ -232,6 +245,9 @@ class RuleMd012(RulePlugin):
                     del split_spaces[pending_container_fixes.leading_space_index]
                 del value_list[-1]
 
+            # if not context.check_for_pragma_suppression(
+            #     end_token.start_markdown_token.line_number, RuleMd012.__PLUGIN_ID, False
+            # ):
             self.register_fix_token_request(
                 context,
                 end_token.start_markdown_token,
@@ -239,6 +255,7 @@ class RuleMd012(RulePlugin):
                 token_part_name,
                 "\n".join(split_spaces),
             )
+            # end if
 
     def completed_file(self, context: PluginScanContext) -> None:
         """
@@ -251,19 +268,15 @@ class RuleMd012(RulePlugin):
         Event that a new token is being processed.
         """
         if token.is_blank_line:
-            if (
-                self.__last_blank_line is not None
-                and (token.line_number - self.__last_blank_line.line_number) != 1
-            ):
-                self.__check_for_excess_blank_lines(context)
-                self.__blank_line_count = 0
+            self.__blank_line_count += 1
             self.__captured_blank_line.append(token)
             self.__last_blank_line = token
-            self.__blank_line_count += 1
-        else:
-            if self.__blank_line_count:
-                self.__check_for_excess_blank_lines(context)
+        elif self.__blank_line_count:
+            self.__check_for_excess_blank_lines(context)
             self.__blank_line_count = 0
+            self.__last_blank_line = None
+            self.__already_fired = False
+            self.__captured_blank_line.clear()
 
         if token.is_block_quote_end or token.is_list_end:
             self.__process_pending_container_end_fixes(context, token)

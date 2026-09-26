@@ -130,7 +130,6 @@ class FileScanHelper:
                     did_fail_any_file = True
         return did_fix_any_file, did_fail_any_file, False
 
-    # pylint: disable=too-many-arguments
     def __fix_specific_file(
         self,
         is_first_file: bool,
@@ -158,8 +157,6 @@ class FileScanHelper:
             self.__presentation.print_fix_message(next_file)
             did_fix_any_file = True
         return did_succeed, did_fix_any_file, False
-
-    # pylint: enable=too-many-arguments
 
     def __check_file_name_against_per_file_disabled_identifiers(
         self, next_file_name: str
@@ -258,7 +255,10 @@ class FileScanHelper:
                 source_provider, do_add_end_of_stream_token=True
             )
             context = self.__plugins.starting_new_file(
-                next_file_name, actual_tokens, per_file_disabled_identifiers
+                "__scan_file",
+                next_file_name,
+                actual_tokens,
+                per_file_disabled_identifiers,
             )
 
             source_provider.reset_to_start()
@@ -278,7 +278,17 @@ class FileScanHelper:
             POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
 
-    # pylint: disable=too-many-arguments
+    def __find_and_compile_pragmas(
+        self,
+        next_file_name: str,
+        actual_tokens: List[MarkdownToken],
+    ) -> List[MarkdownToken]:
+        if actual_tokens and actual_tokens[-1].is_pragma:
+            pragma_token = cast(PragmaToken, actual_tokens[-1])
+            self.__plugins.compile_pragmas(next_file_name, pragma_token.pragma_lines)
+            actual_tokens = actual_tokens[:-1]
+        return actual_tokens
+
     def __process_file_scan(
         self,
         context: PluginScanContext,
@@ -288,10 +298,7 @@ class FileScanHelper:
         per_file_disabled_identifiers: Optional[Set[str]],
     ) -> None:
 
-        if actual_tokens and actual_tokens[-1].is_pragma:
-            pragma_token = cast(PragmaToken, actual_tokens[-1])
-            self.__plugins.compile_pragmas(next_file_name, pragma_token.pragma_lines)
-            actual_tokens = actual_tokens[:-1]
+        actual_tokens = self.__find_and_compile_pragmas(next_file_name, actual_tokens)
 
         POGGER.info("Scanning file '$' tokens.", next_file_name)
         for next_token in actual_tokens:
@@ -306,8 +313,6 @@ class FileScanHelper:
         self.__process_lines_in_file(
             source_provider, context, next_file_name, per_file_disabled_identifiers
         )
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __fix_specific_file_with_error_handling(
@@ -427,6 +432,7 @@ class FileScanHelper:
         collect_list: List[str],
         per_file_disabled_identifiers: Optional[Set[str]],
     ) -> Tuple[bool, Set[str], Set[str]]:
+
         # Scan the provided file for any token fixes.
         (
             next_file_two,
@@ -636,6 +642,7 @@ class FileScanHelper:
         with open(temporary_file_name, "wt", encoding="utf-8") as source_file:
             POGGER.info("Scanning before line-by-line fixes.")
             fix_context = self.__plugins.starting_new_file(
+                "__process_file_fix_lines-->fix_context",
                 next_file_name,
                 actual_tokens,
                 per_file_disabled_identifiers,
@@ -644,6 +651,7 @@ class FileScanHelper:
                 fix_token_map=None,
             )
             report_context = self.__plugins.starting_new_file(
+                "__process_file_fix_lines-->report_context",
                 next_file_name,
                 actual_tokens,
                 per_file_disabled_identifiers,
@@ -654,6 +662,11 @@ class FileScanHelper:
             }
             for i in collect_list:
                 context_map[i] = report_context
+
+            # In the normal case, we want to use the returned value from this method, as it
+            # has the pragam token removed.  However, as we are fixing the document, we need
+            # the information in that token to properly recreated the document.
+            self.__find_and_compile_pragmas(next_file_name, actual_tokens)
 
             # Due to context required to process the line requirements, we need go
             # through all the tokens first, before processing the lines.
@@ -711,6 +724,7 @@ class FileScanHelper:
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
         replace_tokens_list: List[ReplaceTokensRecord] = []
         fix_context = self.__plugins.starting_new_file(
+            "__process_file_fix_tokens-->fix_context",
             next_file_name,
             actual_tokens,
             per_file_disabled_identifiers,
@@ -721,11 +735,17 @@ class FileScanHelper:
             replace_tokens_list=replace_tokens_list,
         )
         report_context = self.__plugins.starting_new_file(
+            "__process_file_fix_tokens-->report_context",
             next_file_name,
             actual_tokens,
             per_file_disabled_identifiers,
             constraint_id_list=collect_list,
         )
+
+        # In the normal case, we want to use the returned value from this method, as it
+        # has the pragam token removed.  However, as we are fixing the document, we need
+        # the information in that token to properly recreated the document.
+        self.__find_and_compile_pragmas(next_file_name, actual_tokens)
 
         context_map = {i: fix_context for i in fix_list}
         for i in collect_list:
@@ -842,13 +862,14 @@ class FileScanHelper:
             next_token.adjust_line_number(context, line_number_delta)
         new_tokens.extend(end_tokens)
 
-        if new_tokens[-1].is_pragma:
-            pragma_token = cast(PragmaToken, new_tokens[-1])
-            for pragma_line_number in sorted(pragma_token.pragma_lines.keys())[::-1]:
-                if pragma_line_number > next_replacement.end_token.line_number:
-                    pragma_token.adjust_pragma_line_number(
-                        pragma_line_number, pragma_line_number + line_number_delta
-                    )
+        # if new_tokens[-1].is_pragma:
+        #     pragma_token = cast(PragmaToken, new_tokens[-1])
+        #     for pragma_line_number in sorted(pragma_token.pragma_lines.keys())[::-1]:
+        #         assert not next_replacement.end_token.is_end_token
+        #         if pragma_line_number > next_replacement.end_token.line_number:
+        #             pragma_token.adjust_pragma_line_number(
+        #                 pragma_line_number, pragma_line_number + line_number_delta
+        #             )
 
         actual_tokens.clear()
         actual_tokens.extend(new_tokens)
@@ -932,7 +953,6 @@ class FileScanHelper:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     def __process_file_fix_tokens_apply_fixes_inner(
         self,
         context: PluginScanContext,
@@ -973,8 +993,6 @@ class FileScanHelper:
             print("--")
 
         return did_any_tokens_get_fixed or bool(fix_token_map)
-
-    # pylint: enable=too-many-arguments
 
     def __print_file_in_debug_mode(
         self, fix_debug: bool, fix_file_debug: bool, next_file: str
@@ -1050,7 +1068,6 @@ class FileScanHelper:
                 "Token before <$> and after <$>.", before_instance, token_instance
             )
 
-    # pylint: disable=too-many-arguments
     def __process_lines_in_file(
         self,
         source_provider: FileSourceProvider,
@@ -1078,8 +1095,6 @@ class FileScanHelper:
         self.__plugins.completed_file(
             context, line_number, per_file_disabled_identifiers, context_map
         )
-
-    # pylint: enable=too-many-arguments
 
     @staticmethod
     def is_scan_stdin_specified(args: argparse.Namespace) -> bool:

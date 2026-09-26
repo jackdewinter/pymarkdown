@@ -63,6 +63,34 @@ a   bb  ccc ddd
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_simple_text_with_tab",
+        source_file_contents="""<!-- pyml disable-next-line no-hard-tabs-->
+before-tab\tafter-tab
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-hard-tabs-->
+before-tab\tafter-tab
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_simple_text_with_tab",
+        source_file_contents="""<!-- pyml disable-next-line no-hard-tabs-->
+before-tab\tafter-tab
+
+before-tab\tafter-tab
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-hard-tabs-->
+before-tab\tafter-tab
+
+before-tab  after-tab
+""",
+    ),
+    pluginRuleTest(
         "bad_simple_text_with_tab_fix_and_debug",
         source_file_name=f"{source_path}bad_simple_text_with_tab.md",
         source_file_contents="""before-tab\tafter-tab

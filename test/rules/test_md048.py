@@ -111,6 +111,54 @@ def test():
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_fenced_tildes_with_backticks",
+        set_args=["plugins.md048.style=backtick"],
+        source_file_contents="""<!-- pyml disable-next-line code-fence-style-->
+~~~Python
+def test():
+    print("test")
+~~~
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line code-fence-style-->
+~~~Python
+def test():
+    print("test")
+~~~
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_fenced_tildes_with_backticks",
+        set_args=["plugins.md048.style=backtick"],
+        source_file_contents="""<!-- pyml disable-next-line code-fence-style-->
+~~~Python
+def test():
+    print("test")
+~~~
+
+~~~Python
+def test():
+    print("test")
+~~~
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD048: Code fence style [Expected: backtick; Actual: tilde] (code-fence-style)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line code-fence-style-->
+~~~Python
+def test():
+    print("test")
+~~~
+
+```Python
+def test():
+    print("test")
+```
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_backticks_and_tildes_with_backticks",
         source_file_name=f"{source_path}bad_fenced_backticks_and_tildes.md",
         set_args=["plugins.md048.style=backtick"],

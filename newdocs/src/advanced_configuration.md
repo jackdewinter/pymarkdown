@@ -148,7 +148,6 @@ verify this for each release.
     plugins.MD013.enabled = true
     plugins.MD013.line_length = 100
     ```
-
 <!-- pyml enable code-block-style-->
 
 When `--config` is given a file whose extension is not `.json`, `.yaml`, `.yml`,

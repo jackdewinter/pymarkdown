@@ -145,6 +145,45 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_indentation_unordered_in_ordered",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""
+ 1. First Item
+<!-- pyml disable-next-line ul-start-left-->
+     - Second Item
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""
+ 1. First Item
+<!-- pyml disable-next-line ul-start-left-->
+     - Second Item
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_indentation_unordered_in_ordered",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md005_md007,
+        source_file_contents=""" 1. First Item
+<!-- pyml disable-next-line ul-start-left-->
+     - Second Item
+
+ 1. First Item
+     - Second Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:6:6: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)",
+        fix_expected_file_contents=""" 1. First Item
+<!-- pyml disable-next-line ul-start-left-->
+     - Second Item
+
+ 1. First Item
+    - Second Item
+""",
+    ),
+    pluginRuleTest(
         "good_indentation_nested",
         source_file_name=f"{source_path}good_indentation_nested.md",
         enable_rules=plugin_enable_this_rule,

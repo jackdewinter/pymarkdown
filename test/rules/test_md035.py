@@ -149,6 +149,48 @@ this is one section
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_dash_marker",
+        set_args=["plugins.md035.style=---"],
+        use_strict_config=True,
+        source_file_contents="""
+this is one section
+
+<!-- pyml disable-next-line hr-style-->
+- - -
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""
+this is one section
+
+<!-- pyml disable-next-line hr-style-->
+- - -
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_dash_marker",
+        set_args=["plugins.md035.style=---"],
+        use_strict_config=True,
+        source_file_contents="""
+this is one section
+<!-- pyml disable-next-line hr-style-->
+- - -
+this is another section
+- - -
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD035: Horizontal rule style [Expected: ---, Actual: - - -] (hr-style)
+""",
+        fix_expected_file_contents="""
+this is one section
+<!-- pyml disable-next-line hr-style-->
+- - -
+this is another section
+---
+""",
+    ),
+    pluginRuleTest(
         "good_consistent_asterisk",
         source_file_name=f"{source_path}good_consistent_asterisk.md",
     ),

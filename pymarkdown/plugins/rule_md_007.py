@@ -25,6 +25,8 @@ class RuleMd007(RulePlugin):
     start at predictable positions.
     """
 
+    __PLUGIN_ID = "MD007"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd007 class.
@@ -40,7 +42,7 @@ class RuleMd007(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="ul-indent",
-            plugin_id="MD007",
+            plugin_id=RuleMd007.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
             plugin_version="0.6.1",
@@ -193,6 +195,12 @@ class RuleMd007(RulePlugin):
         adjusted_column_number: int,
         calculated_column_number: int,
     ) -> None:
+
+        if context.check_for_pragma_suppression(
+            token.line_number, RuleMd007.__PLUGIN_ID, False
+        ):
+            return
+
         list_token = cast(ListStartMarkdownToken, token)
 
         # column_delta is the space before the list start and follow_space_delta

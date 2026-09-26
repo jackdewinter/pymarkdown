@@ -5,7 +5,7 @@ Module to provide context when reporting any errors.
 from __future__ import annotations
 
 from io import TextIOWrapper
-from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple, Union, cast
 
 from typing_extensions import override
 
@@ -16,6 +16,7 @@ from pymarkdown.plugin_manager.plugin_modify_context import PluginModifyContext
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 from pymarkdown.plugin_manager.replace_tokens_record import ReplaceTokensRecord
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
 
 if TYPE_CHECKING:  # pragma: no cover
     from pymarkdown.plugin_manager.plugin_manager import PluginManager
@@ -27,9 +28,10 @@ class PluginScanContext(PluginModifyContext):
     Class to provide context when reporting any errors.
     """
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,unused-private-member
     def __init__(
         self,
+        context_id: str,
         owning_manager: PluginManager,
         scan_file: str,
         actual_tokens: List[MarkdownToken],
@@ -41,6 +43,7 @@ class PluginScanContext(PluginModifyContext):
         """
         Initialize an instance of the PluginScanContext class.
         """
+        self.__context_id = context_id
         self.owning_manager, self.scan_file, self.line_number = (
             owning_manager,
             scan_file,
@@ -56,7 +59,27 @@ class PluginScanContext(PluginModifyContext):
         self.__replace_token_list = replace_tokens_list
         self.__actual_tokens = actual_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,unused-private-member
+
+    def check_for_pragma_suppression(
+        self,
+        line_number: int,
+        rule_id: str,
+        is_error_token_prefaced_by_blank_line: bool,
+        delta_from_start: int = 0,
+        start_token: Optional[MarkdownToken] = None,
+    ) -> bool:
+        """Given a line number and the primary ID of a rule plugin to check against, see if
+        that ID is registered as a suppressed line."""
+
+        is_error_token_prefaced_by_blank_line = self.__calc_x(start_token)
+
+        return self.owning_manager.skip_rule_failure_on_given_line_number(
+            line_number,
+            rule_id,
+            is_error_token_prefaced_by_blank_line,
+            delta_from_start,
+        )
 
     def register_replace_tokens_request(
         self,
@@ -74,7 +97,6 @@ class PluginScanContext(PluginModifyContext):
         )
         self.__replace_token_list.append(new_record)
 
-    # pylint: disable=too-many-arguments
     def register_fix_token_request(
         self,
         token: MarkdownToken,
@@ -98,8 +120,6 @@ class PluginScanContext(PluginModifyContext):
         else:
             existing_records = self.__fix_token_map[token]
         existing_records.append(new_record)
-
-    # pylint: enable=too-many-arguments
 
     def get_fix_token_map(self) -> Dict[MarkdownToken, List[FixTokenRecord]]:
         """
@@ -281,17 +301,17 @@ class PluginScanContext(PluginModifyContext):
 
         is_error_token_prefaced_by_blank_line = False
         for i, j in enumerate(self.__actual_tokens):  # pragma: no cover
-            if not (
-                j.line_number == error_token.line_number
-                and j.column_number == error_token.column_number
-                and j.token_name == error_token.token_name
+            if (
+                j.line_number != error_token.line_number
+                or j.column_number != error_token.column_number
+                or j.token_name != error_token.token_name
             ):
                 continue
 
             index_to_check = i
-            current_token = error_token
             dd = False
 
+            current_token = error_token
             index_to_check, current_token, dd, do_break = (
                 self.__calc_x_rewind_if_inline(index_to_check, current_token, dd)
             )
@@ -318,11 +338,30 @@ class PluginScanContext(PluginModifyContext):
             assert index_to_check >= 0
             if not dd and index_to_check > 0:
                 index_to_check -= 1
-            is_error_token_prefaced_by_blank_line = self.__actual_tokens[
-                index_to_check
-            ].is_blank_line
+
+            is_error_token_prefaced_by_blank_line = self.__calc_x__inner_part(
+                error_token, index_to_check
+            )
             break
         return is_error_token_prefaced_by_blank_line
+
+    def __calc_x__inner_part(
+        self, error_token: MarkdownToken, index_to_check: int
+    ) -> bool:
+        if not self.__actual_tokens[index_to_check].is_blank_line:
+            return False
+        if error_token.is_setext_heading:
+            setext_token = cast(SetextHeadingMarkdownToken, error_token)
+            etln = setext_token.original_line_number
+        else:
+            etln = error_token.line_number
+        itcln = self.__actual_tokens[index_to_check].line_number
+
+        return (
+            (self.owning_manager.is_pragma_on_line(etln - 2))
+            if (etln - itcln) == 1
+            else False
+        )
 
     def report_on_triggered_rules(self) -> None:
         """
