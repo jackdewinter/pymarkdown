@@ -853,24 +853,24 @@ scanTests = [
     pluginRuleTest(
         "good_in_block_quote_with_table_first_line",
         enable_extensions="markdown-tables",
+        disable_rules="md055,md056,md060",
         source_file_contents="""> this is text
 >
 > | abc | def |
 > | --- | --- |
 > a real test
 """,
-        disable_rules="md060",
     ),
     pluginRuleTest(
         "bad_in_block_quote_with_table_first_line",
         enable_extensions="markdown-tables",
+        disable_rules="md055,md056,md060",
         source_file_contents="""> this is text
 >
 >  | abc | def |
 > | --- | --- |
 > a real test
 """,
-        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text
@@ -883,13 +883,13 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_second_line",
         enable_extensions="markdown-tables",
+        disable_rules="md055,md056,md060",
         source_file_contents="""> this is text
 >
 > | abc | def |
 >  | --- | --- |
 > a real test
 """,
-        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text
@@ -902,13 +902,13 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_first_and_second_line",
         enable_extensions="markdown-tables",
+        disable_rules="md055,md056,md060",
         source_file_contents="""> this is text
 >
 >  | abc | def |
 >  | --- | --- |
 > a real test
 """,
-        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 {temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)""",
@@ -922,6 +922,7 @@ scanTests = [
     pluginRuleTest(
         "bad_in_block_quote_with_table_third_line",
         enable_extensions="markdown-tables",
+        disable_rules="md055,md056,md060",
         source_file_contents="""> this is text
 >
 > | abc | def |
@@ -929,7 +930,6 @@ scanTests = [
 >  | abc | def |
 > a real test
 """,
-        disable_rules="md060",
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:5:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
         fix_expected_file_contents="""> this is text
