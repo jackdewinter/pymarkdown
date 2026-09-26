@@ -762,13 +762,13 @@ Keep the style of links and images consistent within a Markdown document.
 | Property | Value |
 | --- | --- |
 | Aliases | `md055`, `table-pipe-style` |
-| Autofix Available | No |
+| Autofix Available | Pending |
 | Enabled By Default | Yes |
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
-Table pipe style.
+Table rows must use a consistent leading and trailing pipe style.
 
 ## Rule - MD056
 
@@ -783,7 +783,7 @@ Table pipe style.
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
-Table column count.
+Table rows must contain the same number of cells as the table's header row.
 
 ## Rule - MD058
 
@@ -792,7 +792,7 @@ Table column count.
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | No |
+| Autofix Available | Pending |
 | Enabled By Default | Yes |
 
 <!-- pyml disable-next-line no-duplicate-heading-->

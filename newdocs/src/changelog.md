@@ -5,7 +5,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-None
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Contributor: [spreston-sila](https://github.com/spreston-sila)
+    - Adds rules for MD055, MD056, and MD058
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
