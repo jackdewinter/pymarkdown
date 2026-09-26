@@ -23,6 +23,8 @@ class RuleMd010(RulePlugin):
     Class to implement a plugin that looks for hard tabs in the files.
     """
 
+    __PLUGIN_ID = "MD010"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd010 class.
@@ -41,7 +43,7 @@ class RuleMd010(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="no-hard-tabs",
-            plugin_id="MD010",
+            plugin_id=RuleMd010.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
             plugin_version="0.6.1",
@@ -159,7 +161,10 @@ class RuleMd010(RulePlugin):
             do_process = False
         if do_process:
             if context.in_fix_mode:
-                context.set_current_fix_line(TabHelper.detabify_string(line))
+                if not context.check_for_pragma_suppression(
+                    context.line_number, RuleMd010.__PLUGIN_ID, False
+                ):
+                    context.set_current_fix_line(TabHelper.detabify_string(line))
             else:
                 next_index = line.find("\t", 0)
                 while next_index != -1:

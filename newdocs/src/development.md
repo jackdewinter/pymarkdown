@@ -288,7 +288,7 @@ def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
 In the `starting_new_file` method, the Rule Plugin simply sets the `__last_heading_count` class variable
 to `0`, allowing the calculation of whether a heading level was skipped to start at a known value. Then,
 in the `next_token` method implementation, the Rule Plugin only pays attention to the three types of tokens
-that can impact heading levels: a Front-Matter token, an Atx Heading token, and a SetExt Heading token.
+that can impact heading levels: a Front-Matter token, an Atx Heading token, and a Setext Heading token.
 If it extracted the `hash_count` value from one of those tokens, then it checks to see if the heading
 level increased, and if so, further checks to see if the heading level increased by more than one.
 When the Rule Plugin is used to scan the document and the heading level increased by more than one, the

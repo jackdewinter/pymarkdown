@@ -61,6 +61,47 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_one_one_three_list",
+        source_file_contents="""1. Simple
+1. One
+<!-- pyml disable-next-line ol-prefix-->
+3. List
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""1. Simple
+1. One
+<!-- pyml disable-next-line ol-prefix-->
+3. List
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_one_one_three_list",
+        disable_rules="md032",
+        source_file_contents="""1. Simple
+1. One
+<!-- pyml disable-next-line ol-prefix-->
+3. List
+----
+1. Simple
+1. One
+3. List
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:1: MD029: Ordered list item prefix [Expected: 1; Actual: 3; Style: 1/1/1] (ol-prefix)
+""",
+        fix_expected_file_contents="""1. Simple
+1. One
+<!-- pyml disable-next-line ol-prefix-->
+3. List
+----
+1. Simple
+1. One
+1. List
+""",
+    ),
+    pluginRuleTest(
         "bad_one_two_one_list",
         source_file_name=f"{source_path}bad_one_two_one_list.md",
         source_file_contents="""1. Simple

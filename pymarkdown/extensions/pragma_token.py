@@ -541,14 +541,14 @@ class PragmaToken(MarkdownToken):
         """
         return self.__pragma_lines
 
-    def adjust_pragma_line_number(
-        self, initial_line_number: int, new_line_number: int
-    ) -> None:
-        """Perform an adjustment to the line number of a given pragma."""
-        old_pragma = self.__pragma_lines[initial_line_number]
-        del self.__pragma_lines[initial_line_number]
-        self.__pragma_lines[new_line_number] = old_pragma
-        self.__compose_extra_data_field()
+    # def adjust_pragma_line_number(
+    #     self, initial_line_number: int, new_line_number: int
+    # ) -> None:
+    #     """Perform an adjustment to the line number of a given pragma."""
+    #     old_pragma = self.__pragma_lines[initial_line_number]
+    #     del self.__pragma_lines[initial_line_number]
+    #     self.__pragma_lines[new_line_number] = old_pragma
+    #     self.__compose_extra_data_field()
 
     def register_for_markdown_transform(
         self,

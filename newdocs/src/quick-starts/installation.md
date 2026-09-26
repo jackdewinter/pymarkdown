@@ -98,7 +98,6 @@ open a terminal or command prompt and run one of the following:
     ```sh
     pipenv install pymarkdownlnt
     ```
-
 <!-- pyml enable code-block-style-->
 
 **Note:** The package name is `pymarkdownlnt` (without the second "i"). This is
@@ -154,7 +153,6 @@ file does not exist yet, create it first following the guidelines at
 the [Pre‑Commit](https://pre-commit.com/) homepage.
 
 <!-- pyml disable code-block-style-->
-
 For a minimal quick‑start Pre‑Commit configuration, you can use:
 
 ```yaml
@@ -185,7 +183,6 @@ For example:
   hooks:
     - id: pymarkdown
 ```
-
 <!-- pyml enable code-block-style-->
 
 Here, `rev: v0.9.0` tells Pre‑Commit to use the `v0.9.0` tag of the PyMarkdown repository
@@ -245,7 +242,6 @@ need to perform this check once, after installation or after configuration chang
 
 <!-- pyml disable list-marker-space-->
 <!-- pyml disable code-block-style-->
-
 1. At the base of your project directory (the top‑level folder for your project,
    also called the project root), create a file named `sample.md`. Copy the following
    contents into that file and save it:
@@ -305,7 +301,6 @@ need to perform this check once, after installation or after configuration chang
     - you are running the command in the same directory as `sample.md`, and
     - you can run `pymarkdown --version` (or `pipenv run pymarkdown --version`)
       without errors.
-
 <!-- pyml enable code-block-style-->
 <!-- pyml enable list-marker-space-->
 

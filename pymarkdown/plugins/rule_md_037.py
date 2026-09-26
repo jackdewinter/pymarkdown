@@ -43,6 +43,8 @@ class RuleMd037(RulePlugin):
     Class to implement a plugin that looks for spaces within emphasis sections.
     """
 
+    __PLUGIN_ID = "MD037"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd037 class.
@@ -58,7 +60,7 @@ class RuleMd037(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="no-space-in-emphasis",
-            plugin_id="MD037",
+            plugin_id=RuleMd037.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside emphasis markers",
             plugin_version="0.5.2",
@@ -146,14 +148,14 @@ class RuleMd037(RulePlugin):
         if before_surrounded and eligible_after.character_after == " ":
             if context.in_fix_mode:
                 assert eligible_before.text_token is not None
-                self.__fix(eligible_before.text_token, eligible_before, True)
+                self.__fix(context, eligible_before.text_token, eligible_before, True)
             else:
                 self.__report(context, eligible_before, eligible_after.found_length)
 
         if after_surrounded and eligible_before.character_before == " ":
             if context.in_fix_mode:
                 assert eligible_after.text_token is not None
-                self.__fix(eligible_after.text_token, eligible_after, False)
+                self.__fix(context, eligible_after.text_token, eligible_after, False)
             else:
                 self.__report(context, eligible_after, -1)
 
@@ -183,6 +185,7 @@ class RuleMd037(RulePlugin):
 
     def __fix(
         self,
+        context: PluginScanContext,
         token: TextMarkdownToken,
         eligible_after: EligibleEmphasis,
         was_after: bool,
@@ -199,6 +202,16 @@ class RuleMd037(RulePlugin):
                 )
             )
             end_fix_index = eligible_after.start_index
+
+        delta_from_start = token.token_text[:start_fix_index].count("\n")
+        if context.check_for_pragma_suppression(
+            token.line_number,
+            RuleMd037.__PLUGIN_ID,
+            False,
+            delta_from_start=delta_from_start,
+        ):
+            return
+
         self.__pending_fixes.append(PendingFixes(token, start_fix_index, end_fix_index))
 
     def __report(

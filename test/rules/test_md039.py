@@ -39,6 +39,46 @@ link
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_inline_link_trailing_space",
+        source_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+[a proper ](https://www.example.com)
+link
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+[a proper ](https://www.example.com)
+link
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_inline_link_trailing_space",
+        source_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+[a proper ](https://www.example.com)
+link
+
+this is not
+[a proper ](https://www.example.com)
+link
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD039: Spaces inside link text (no-space-in-links)
+""",
+        fix_expected_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+[a proper ](https://www.example.com)
+link
+
+this is not
+[a proper](https://www.example.com)
+link
+""",
+    ),
+    pluginRuleTest(
         "bad_inline_link_leading_space",
         source_file_name=f"{source_path}bad_inline_link_leading_space.md",
         source_file_contents="""this is not
@@ -318,6 +358,61 @@ link
 link
 
 [a proper]: /url
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_collapsed_image_both_space",
+        source_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+![ a proper ][]
+link
+
+<!-- pyml disable-next-line no-space-in-links-->
+[ a proper ]: /url
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+![ a proper ][]
+link
+
+<!-- pyml disable-next-line no-space-in-links-->
+[ a proper ]: /url
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_collapsed_image_both_space",
+        source_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+![ a proper ][]
+link
+
+<!-- pyml disable-next-line no-space-in-links-->
+[ a proper ]: /url
+
+![ another proper ][]
+link
+
+[ another proper ]: /url
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:1: MD039: Spaces inside link text (no-space-in-links)
+{temp_source_path}:12:1: MD039: Spaces inside link text (no-space-in-links)
+""",
+        fix_expected_file_contents="""this is not
+<!-- pyml disable-next-line no-space-in-links-->
+![ a proper ][]
+link
+
+<!-- pyml disable-next-line no-space-in-links-->
+[ a proper ]: /url
+
+![another proper][]
+link
+
+[another proper]: /url
 """,
     ),
     pluginRuleTest(

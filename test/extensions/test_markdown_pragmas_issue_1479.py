@@ -488,6 +488,8 @@ We skipped out a 2nd level heading in this document
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012",
             "scan",
             markdown_file_path,
         ]
@@ -834,6 +836,8 @@ We skipped out a 2nd level heading in this document
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012",
             "scan",
             markdown_file_path,
         ]
@@ -934,6 +938,8 @@ Heading 2
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012",
             "scan",
             markdown_file_path,
         ]
@@ -1984,19 +1990,21 @@ def test_pragmas_issue_1479_Md012_pragma_without_space_then_para_blank_lines_par
 ) -> None:
     """
     Test the case where we have Md012 violations and a disable-next-line pragma on the line before each one,
-    and we expect the rule not to fire.
+    and we expect the rule to fire.
 
-    Note: This rule does not fire because this rule has special rules for deal with pragmas
+    Previous Note: This rule does not fire because this rule has special rules for deal with pragmas
         that preserve the blank lines.  In this case, the pragma visually breaks the document
         up with only one blank line between the first paragraph and itself, and then again
         with itsel and the second paragraph. While the `line-length` rule is disabled, it
         could be any pragma line.
+    Note: This was corrected to the proper behavior, changing the `line-length` to `no-multiple-blanks`.
+
     """
 
     # Arrange
     source_markdown = """this is one line
 
-<!-- pyml disable-next-line line-length -->
+<!-- pyml disable-next-line no-multiple-blanks -->
 
 this is another line
 """
@@ -2541,6 +2549,8 @@ def test_pragmas_issue_1479_Md019_pragma_with_space_then_atx_with_extra_spaces(
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012",
             "scan",
             markdown_file_path,
         ]
@@ -2743,6 +2753,8 @@ def test_pragmas_issue_1479_Md021_pragma_with_space_then_atx_closed_with_extra_s
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012",
             "scan",
             markdown_file_path,
         ]
@@ -3051,6 +3063,8 @@ Some more text
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -3157,6 +3171,8 @@ Some more text
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -3254,6 +3270,8 @@ def test_pragmas_issue_1479_Md024_pragma_with_space_then_atx_with_same_title(
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -3357,7 +3375,7 @@ def test_pragmas_issue_1479_Md024_pragma_with_space_then_setext_with_same_title(
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "Md003",
+            "md003,md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -3467,6 +3485,8 @@ No other headings.
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -3584,7 +3604,7 @@ No other headings.
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "Md003",
+            "Md003,md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -13237,7 +13257,7 @@ def test_pragmas_issue_1479_Md043_pragma_with_space_then_atx_multiple_wildcard(
     ) as markdown_file_path:
         supplied_arguments = [
             "-d",
-            "Md022,Md024",
+            "md012,Md022,Md024",
             "--set",
             "plugins.md043.headings=# Heading 1,*,### Heading 3,*,### Heading 3",
             "--strict-config",
@@ -15067,6 +15087,8 @@ def test_pragmas_issue_1479_Md046_pragma_with_space_then_fenced_and_indented_cod
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -15170,6 +15192,8 @@ def test_pragmas_issue_1479_Md046_pragma_with_space_then_indented_and_fenced_cod
         supplied_configuration=source_markdown,
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]
@@ -15373,6 +15397,8 @@ def test():
         supplied_configuration=source_markdown
     ) as markdown_file_path:
         supplied_arguments = [
+            "-d",
+            "md012,md041",
             "scan",
             markdown_file_path,
         ]

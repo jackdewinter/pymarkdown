@@ -75,6 +75,56 @@ this is another paragraph
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
 """,
+        fix_expected_file_contents="""this is one paragraph
+\a\a
+this is another paragraph
+""".replace("\a", " "),
+    ),
+    pluginRuleTest(
+        "disabled_two_paragraphs_list_item_empty_line_no_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        source_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_two_paragraphs_list_item_empty_line_no_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        source_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+
+this is one paragraph
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+
+this is one paragraph
+\a\a
+this is another paragraph
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "good_indented_code_block_with_extra",

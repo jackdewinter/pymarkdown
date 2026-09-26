@@ -80,7 +80,6 @@ In more detail:
    Note that we pre-populate our issues with lists to help you follow these steps
    before submitting the issue. Saying you followed the process when you did not
    is usually frowned upon.
-
 <!-- pyml enable no-emphasis-as-heading-->
 
 ## Our Triage Process

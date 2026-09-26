@@ -96,6 +96,88 @@ this text *is* in italics
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_start_paragraph",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_double_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_surrounding_emphasis_short_non_first_start_paragraph",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this text * is * in italics
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+{temp_source_path}:4:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this text *is* in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_surrounding_emphasis_short_non_first_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this is the first line
+this text * is * in italics
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+{temp_source_path}:6:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this is the first line
+this text *is* in italics
+""",
+    ),
+    pluginRuleTest(
         "bad_surrounding_emphasis_short_with_backslash_before",
         source_file_contents="""this \\* text * is * in italics
 """,

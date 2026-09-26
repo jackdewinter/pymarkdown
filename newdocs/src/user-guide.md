@@ -321,7 +321,6 @@ If you are unsure what to do on the command line, run:
     ```sh
     pipenv run pymarkdown --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### Return Codes
@@ -380,7 +379,6 @@ To see options specific to a single command (instead of the global help), run:
     ```sh
     pipenv run pymarkdown {command} --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 Replace `{command}` with the command you want details about. This per‑command help
@@ -402,7 +400,6 @@ the commands and apply to all the commands. For example:
     ```sh
     pipenv run pymarkdown --config my-config.json scan examples
     ```
-
 <!-- pyml enable code-block-style-->
 
 These arguments are covered in the section
@@ -437,7 +434,6 @@ are:
     ```sh
     pipenv run pymarkdown scan examples
     ```
-
 <!-- pyml enable code-block-style-->
 
 and:
@@ -454,7 +450,6 @@ and:
     ```sh
     pipenv run pymarkdown scan examples/example-1.md examples/example-2.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 The first example will scan every Markdown `.md` file in the `examples` directory,
@@ -775,7 +770,6 @@ invoke PyMarkdown in this manner:
     ```sh
     my-program some-args | pipenv run pymarkdown scan-stdin
     ```
-
 <!-- pyml enable code-block-style-->
 
 Note that as a simple workaround, you may decide to pipe that standard input into
@@ -978,7 +972,6 @@ Other command lines that are more complex are:
     ```sh
     pipenv run pymarkdown fix **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 - find all Markdown files that do not have the `draft` prefix in any `docs` directory,

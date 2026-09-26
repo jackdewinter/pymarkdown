@@ -1132,7 +1132,7 @@
         },
         {
             "name": "test.rules.test_md001",
-            "totalTests": 15,
+            "totalTests": 19,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1156,7 +1156,7 @@
         },
         {
             "name": "test.rules.test_md004",
-            "totalTests": 36,
+            "totalTests": 40,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1164,7 +1164,7 @@
         },
         {
             "name": "test.rules.test_md005",
-            "totalTests": 108,
+            "totalTests": 112,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,
@@ -1172,7 +1172,7 @@
         },
         {
             "name": "test.rules.test_md006",
-            "totalTests": 25,
+            "totalTests": 29,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1180,7 +1180,7 @@
         },
         {
             "name": "test.rules.test_md007",
-            "totalTests": 87,
+            "totalTests": 91,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1188,7 +1188,7 @@
         },
         {
             "name": "test.rules.test_md009",
-            "totalTests": 71,
+            "totalTests": 76,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1196,7 +1196,7 @@
         },
         {
             "name": "test.rules.test_md010",
-            "totalTests": 54,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1212,10 +1212,10 @@
         },
         {
             "name": "test.rules.test_md012",
-            "totalTests": 96,
+            "totalTests": 107,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1244,7 +1244,7 @@
         },
         {
             "name": "test.rules.test_md019",
-            "totalTests": 48,
+            "totalTests": 52,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1260,7 +1260,7 @@
         },
         {
             "name": "test.rules.test_md021",
-            "totalTests": 54,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1276,7 +1276,7 @@
         },
         {
             "name": "test.rules.test_md023",
-            "totalTests": 107,
+            "totalTests": 119,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1308,26 +1308,26 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 137,
+            "totalTests": 141,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 4,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.rules.test_md027_inline",
-            "totalTests": 47,
+            "totalTests": 69,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 10,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.rules.test_md027_leaf",
-            "totalTests": 49,
+            "totalTests": 65,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 8,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1348,7 +1348,7 @@
         },
         {
             "name": "test.rules.test_md029",
-            "totalTests": 71,
+            "totalTests": 75,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1356,7 +1356,7 @@
         },
         {
             "name": "test.rules.test_md030_ordered",
-            "totalTests": 35,
+            "totalTests": 39,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1364,7 +1364,7 @@
         },
         {
             "name": "test.rules.test_md030_unordered",
-            "totalTests": 46,
+            "totalTests": 50,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1372,10 +1372,10 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 661,
+            "totalTests": 675,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 15,
+            "skippedTests": 16,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1404,7 +1404,7 @@
         },
         {
             "name": "test.rules.test_md035",
-            "totalTests": 30,
+            "totalTests": 34,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1420,7 +1420,7 @@
         },
         {
             "name": "test.rules.test_md037",
-            "totalTests": 59,
+            "totalTests": 69,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1428,7 +1428,7 @@
         },
         {
             "name": "test.rules.test_md038",
-            "totalTests": 13,
+            "totalTests": 17,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1436,7 +1436,7 @@
         },
         {
             "name": "test.rules.test_md039",
-            "totalTests": 59,
+            "totalTests": 67,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1476,7 +1476,7 @@
         },
         {
             "name": "test.rules.test_md044",
-            "totalTests": 100,
+            "totalTests": 108,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1492,10 +1492,10 @@
         },
         {
             "name": "test.rules.test_md046",
-            "totalTests": 36,
+            "totalTests": 44,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1508,7 +1508,7 @@
         },
         {
             "name": "test.rules.test_md048",
-            "totalTests": 17,
+            "totalTests": 21,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

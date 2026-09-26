@@ -74,7 +74,6 @@ finds in that file.
     ```sh
     pipenv run pymarkdown scan sample.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Scan Multiple Files
@@ -103,7 +102,6 @@ instead.
     ```sh
     pipenv run pymarkdown scan sample.md another-sample.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Scan a Directory
@@ -139,7 +137,6 @@ any problems it finds.
     ```sh
     pipenv run pymarkdown scan ./
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Scan a Directory Recursively
@@ -162,7 +159,6 @@ its subdirectories**, reporting any problems that it finds.
     ```sh
     pipenv run pymarkdown scan --recurse sample/
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Scan Glob Paths
@@ -195,7 +191,6 @@ are scanned is an advanced option. For details, see
     ```sh
     pipenv run pymarkdown scan **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Scan Paths and Exclude Certain Paths and `.gitignore`-Ignored Files

@@ -1558,7 +1558,10 @@ Some long lines
             source_path,
         ]
 
-        expected_results = ExpectedResults()
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        )
 
         # Act
         execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
