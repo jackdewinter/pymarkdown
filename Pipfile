@@ -42,6 +42,7 @@ columnar = ">=1.4.0"
 application-properties = ">=0.9.3"
 application-file-scanner = ">=0.6.4"
 py-walk = ">=0.3.3"
+platformdirs = "==4.11.14"
 
 [requires]
 python_version = "3.13"
