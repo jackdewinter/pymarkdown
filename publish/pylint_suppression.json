@@ -407,6 +407,9 @@
         "pymarkdown/plugins/rule_md_054.py": {
             "too-many-arguments": 1
         },
+        "pymarkdown/plugins/rule_md_055.py": {},
+        "pymarkdown/plugins/rule_md_056.py": {},
+        "pymarkdown/plugins/rule_md_058.py": {},
         "pymarkdown/plugins/rule_md_059.py": {},
         "pymarkdown/plugins/rule_md_060.py": {
             "too-many-arguments": 2,

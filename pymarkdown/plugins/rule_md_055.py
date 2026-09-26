@@ -146,6 +146,7 @@ class RuleMd055(RulePlugin):
             self.__report(context, actual_style, f"{verb} trailing pipe", line_delta)
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
+        # sourcery skip: low-code-quality
         """
         Event that a new token is being processed.
         """
@@ -169,9 +170,10 @@ class RuleMd055(RulePlugin):
                 # terminator) into the end token's whitespace. When that is
                 # present it carries the true trailing pipe; otherwise the last
                 # emitted item's whitespace does.
-                excess = token.extracted_whitespace
-                if excess:
-                    trailing = bool(self.__trailing_pipe.search(excess))
+                if token.extracted_whitespace:
+                    trailing = bool(
+                        self.__trailing_pipe.search(token.extracted_whitespace)
+                    )
                 else:
                     trailing = bool(
                         self.__unescaped_pipe.search(self.__last_item_whitespace)
