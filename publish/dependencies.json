@@ -19,6 +19,7 @@
     "mkdocstrings-python": "2.0.5",
     "pdoc3": "0.11.6",
     "pip-check-updates": "0.29.0",
+    "platformdirs": "4.11.14",
     "pre-commit": "4.6.2",
     "pre-commit-shfmt": "v3.13.1-1",
     "pre-commit-update": "0.9.0",
