@@ -327,7 +327,7 @@ guides.
   prompt**
   You will execute PyMarkdown from a terminal, command prompt, or shell window.
 
-- **Basic Python installation concepts**
+- **Basic Python installation concepts:**
   You should have Python installed (version 3.10 or later), and either:
     - be able to install packages with `pip`, or
     - be able to use a tool such as `pipenv` to manage a virtual environment for
@@ -337,7 +337,7 @@ guides.
 
 These tools are not required, but they can automate PyMarkdown in your workflow.
 
-- **Git and Pre‑Commit**
+- **Git and Pre‑Commit:**
   If you want PyMarkdown to run automatically each time you commit changes, you
   can set it up with Pre‑Commit, a tool that manages pre-commit hooks in your Git
   repositories.
