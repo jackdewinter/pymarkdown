@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "497ad4fe8abb205b5799af8a0eff176baa54ef4b4af8043d3a042456693ee911"
+            "sha256": "bf939ab54d5dcafb55c2ef0bc4bc2d77975404e4e8c8d890d1e59bd07513452a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -938,12 +938,12 @@
         },
         "gitpython": {
             "hashes": [
-                "sha256:39548bffb8fa0f3a548133348868bb4838e79d73283052207dc97781a569b6b4",
-                "sha256:e936431879fa85581b4311fa63492ea52251909e2d655b6529c704c904ddcc24"
+                "sha256:1791de66309bc0c7cfca40bf8d2e3de7ca091cbf94e6051be1ad0722c61062af",
+                "sha256:7002251225e10e29d2e1f49e6532613fe5d5d9f0b6f1f02997a52b38fe56899e"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==3.1.60"
+            "version": "==3.1.62"
         },
         "griffelib": {
             "hashes": [
