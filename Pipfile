@@ -36,6 +36,7 @@ tomli = "==2.4.1"
 twine = "==6.2.0"
 GitPython = "==3.1.60"
 platformdirs = "==4.11.14"
+urllib3 = "==2.8.0"
 
 [packages]
 typing-extensions = ">=4.15.0"
