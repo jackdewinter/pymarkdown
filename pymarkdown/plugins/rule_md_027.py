@@ -17,9 +17,6 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.fenced_code_block_markdown_token import (
     FencedCodeBlockMarkdownToken,
 )
-from pymarkdown.tokens.inline_code_span_markdown_token import (
-    InlineCodeSpanMarkdownToken,
-)
 from pymarkdown.tokens.link_reference_definition_markdown_token import (
     LinkReferenceDefinitionMarkdownToken,
 )
@@ -106,6 +103,20 @@ class RuleMd027(RulePlugin):
         self.__previous_tokens.clear()
         self.__table_header_hash = ""
 
+    def __fix_issue_setext_heading(
+        self, context: PluginScanContext, token: MarkdownToken, line_number_delta: int
+    ) -> None:
+        tok = cast(SetextHeadingMarkdownToken, token)
+        if not context.check_for_pragma_suppression(
+            tok.original_line_number,
+            RuleMd027.__PLUGIN_ID,
+            False,
+            delta_from_start=line_number_delta,
+        ):
+            self.register_fix_token_request(
+                context, token, "next_token", "extracted_whitespace", ""
+            )
+
     def __fix_issue(
         self,
         context: PluginScanContext,
@@ -124,16 +135,14 @@ class RuleMd027(RulePlugin):
             and token.is_text
         ):
             self.__fix_issue_setext_text(context, token)
+        elif token.is_setext_heading:
+            self.__fix_issue_setext_heading(context, token, line_number_delta)
         elif (
-            token.is_setext_heading
-            or token.is_thematic_break
+            token.is_thematic_break
             or token.is_fenced_code_block
             or token.is_atx_heading
             or token.is_blank_line
         ):
-            # if not context.check_for_pragma_suppression(
-            #     token.line_number, RuleMd027.__PLUGIN_ID, False
-            # ):
             self.register_fix_token_request(
                 context, token, "next_token", "extracted_whitespace", ""
             )
@@ -150,6 +159,7 @@ class RuleMd027(RulePlugin):
             self.__fix_issue_link_reference(context, token)
         return keep_going
 
+    # pylint: disable=too-many-arguments
     def __report_issue(
         self,
         context: PluginScanContext,
@@ -157,6 +167,7 @@ class RuleMd027(RulePlugin):
         line_number_delta: int = 0,
         column_number_delta: int = 0,
         alternate_token: Optional[MarkdownToken] = None,
+        apply_pragma_fix: bool = True,
     ) -> bool:
         if context.in_fix_mode:
             return self.__fix_issue(context, token, alternate_token, line_number_delta)
@@ -181,15 +192,59 @@ class RuleMd027(RulePlugin):
                 and self.__previous_tokens[token_index].is_blank_line
             )
         )
+        new_line_number_delta = line_number_delta
+        if apply_pragma_fix:
+            new_line_number_delta += context.calc_pragma_offset(
+                token, line_number_delta
+            )
         self.report_next_token_error(
             context,
             token,
-            line_number_delta=line_number_delta
-            + context.calc_pragma_offset(token, line_number_delta),
+            line_number_delta=new_line_number_delta,
             column_number_delta=column_number_delta,
             override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
         )
         return True
+
+    # pylint: enable=too-many-arguments
+
+    def __fix_issue_alternate_token_paragraph(
+        self,
+        context: PluginScanContext,
+        alternate_token: MarkdownToken,
+        token: MarkdownToken,
+    ) -> bool:
+        whitespace_parts: List[str] = []
+        para_token = cast(ParagraphMarkdownToken, alternate_token)
+
+        current_line_number = para_token.line_number
+        for next_line in para_token.extracted_whitespace.split("\n"):
+
+            if context.check_for_pragma_suppression(
+                current_line_number,
+                RuleMd027.__PLUGIN_ID,
+                False,
+                start_token=token,
+            ):
+                whitespace_parts.append(next_line)
+            else:
+                whitespace_parts.append("")
+
+            current_line_number += 1
+            if context.is_pragma_on_line(current_line_number):
+                current_line_number += 1
+
+        recombined_whitespace = "\n".join(whitespace_parts)
+
+        if recombined_whitespace != para_token.extracted_whitespace:
+            self.register_fix_token_request(
+                context,
+                alternate_token,
+                "next_token",
+                "extracted_whitespace",
+                recombined_whitespace,
+            )
+        return False
 
     def __fix_issue_alternate_token(
         self,
@@ -198,36 +253,31 @@ class RuleMd027(RulePlugin):
         line_number_delta: int,
         token: MarkdownToken,
     ) -> bool:
-        _ = (line_number_delta, token)
         if alternate_token.is_paragraph:
-            para_token = cast(ParagraphMarkdownToken, alternate_token)
-            extracted_whitespace = "\n" * ParserHelper.count_newlines_in_text(
-                para_token.extracted_whitespace
+            return self.__fix_issue_alternate_token_paragraph(
+                context, alternate_token, token
             )
-            self.register_fix_token_request(
-                context,
-                alternate_token,
-                "next_token",
-                "extracted_whitespace",
-                extracted_whitespace,
-            )
-            return False
         if alternate_token.is_fenced_code_block_end:
-            # if not context.check_for_pragma_suppression(
-            #     token.line_number,
-            #     RuleMd027.__PLUGIN_ID,
-            #     False,
-            #     delta_from_start=line_number_delta,
-            # ):
+            if not context.check_for_pragma_suppression(
+                token.line_number,
+                RuleMd027.__PLUGIN_ID,
+                False,
+                delta_from_start=line_number_delta,
+            ):
+                self.register_fix_token_request(
+                    context, alternate_token, "next_token", "extracted_whitespace", ""
+                )
+            return False
+        assert alternate_token.is_setext_heading_end
+        if not context.check_for_pragma_suppression(
+            token.line_number,
+            RuleMd027.__PLUGIN_ID,
+            False,
+            delta_from_start=line_number_delta,
+        ):
             self.register_fix_token_request(
                 context, alternate_token, "next_token", "extracted_whitespace", ""
             )
-            # end if
-            return False
-        assert alternate_token.is_setext_heading_end
-        self.register_fix_token_request(
-            context, alternate_token, "next_token", "extracted_whitespace", ""
-        )
         return True
 
     def __fix_issue_list_start(
@@ -254,21 +304,77 @@ class RuleMd027(RulePlugin):
         )
         self.__list_tracker.register(token, adjust_amount)
 
+    def __fix_issue_link_reference_calc(
+        self,
+        context: PluginScanContext,
+        lrd_token: LinkReferenceDefinitionMarkdownToken,
+    ) -> Tuple[int, int]:
+        assert lrd_token.link_destination_whitespace
+        assert lrd_token.link_name_debug is not None
+        assert lrd_token.link_destination_raw is not None
+        assert lrd_token.link_title_whitespace is not None
+        link_label_length = ParserHelper.count_newlines_in_text(
+            lrd_token.link_name_debug
+        )
+        pre_link_destination_length = ParserHelper.count_newlines_in_text(
+            lrd_token.link_destination_whitespace
+        )
+        link_destination_length = ParserHelper.count_newlines_in_text(
+            lrd_token.link_destination_raw
+        )
+        pre_link_destination_length = ParserHelper.count_newlines_in_text(
+            lrd_token.link_title_whitespace
+        )
+
+        document_line_number = lrd_token.line_number
+        end_line_number = (
+            lrd_token.line_number + link_label_length + pre_link_destination_length
+        )
+        for _ in range(lrd_token.line_number, end_line_number):
+            document_line_number += 1
+            if context.is_pragma_on_line(document_line_number):
+                document_line_number += 1
+        line_number_mark_one = document_line_number
+        end_line_number = (
+            document_line_number + link_destination_length + pre_link_destination_length
+        )
+        for _ in range(document_line_number, end_line_number):
+            document_line_number += 1
+            if context.is_pragma_on_line(document_line_number):
+                document_line_number += 1
+        line_number_mark_two = document_line_number
+
+        return (line_number_mark_one, line_number_mark_two)
+
     def __fix_issue_link_reference(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
-        assert token.is_link_reference_definition
         lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
-        if lrd_token.extracted_whitespace:
+        if lrd_token.extracted_whitespace and not context.check_for_pragma_suppression(
+            token.line_number,
+            RuleMd027.__PLUGIN_ID,
+            False,
+        ):
             self.register_fix_token_request(
                 context, token, "next_token", "extracted_whitespace", ""
             )
-        assert lrd_token.link_destination_whitespace
 
+        line_number_mark_one, line_number_mark_two = (
+            self.__fix_issue_link_reference_calc(context, lrd_token)
+        )
+
+        assert lrd_token.link_destination_whitespace is not None
         modified_whitespace = "\n" * ParserHelper.count_newlines_in_text(
             lrd_token.link_destination_whitespace
         )
-        if modified_whitespace != lrd_token.link_destination_whitespace:
+        if (
+            line_number_mark_one != token.line_number
+            and lrd_token.link_destination_whitespace != modified_whitespace
+        ) and not context.check_for_pragma_suppression(
+            line_number_mark_one,
+            RuleMd027.__PLUGIN_ID,
+            False,
+        ):
             self.register_fix_token_request(
                 context,
                 token,
@@ -281,7 +387,14 @@ class RuleMd027(RulePlugin):
             modified_whitespace = "\n" * ParserHelper.count_newlines_in_text(
                 lrd_token.link_title_whitespace
             )
-            if modified_whitespace != lrd_token.link_title_whitespace:
+            if (
+                line_number_mark_one != line_number_mark_two
+                and modified_whitespace != lrd_token.link_title_whitespace
+            ) and not context.check_for_pragma_suppression(
+                line_number_mark_two,
+                RuleMd027.__PLUGIN_ID,
+                False,
+            ):
                 self.register_fix_token_request(
                     context,
                     token,
@@ -715,7 +828,7 @@ class RuleMd027(RulePlugin):
         if scoped_token is not None and scoped_token.is_block_quote_start:
 
             self.__handle_blank_line_inner(
-                scoped_token, delayed_bq_index, blank_line_token, token
+                context, scoped_token, delayed_bq_index, blank_line_token, token
             )
 
         if blank_line_token.extracted_whitespace:
@@ -729,6 +842,7 @@ class RuleMd027(RulePlugin):
 
     def __handle_blank_line_inner(
         self,
+        context: PluginScanContext,
         scoped_token: MarkdownToken,
         delayed_bq_index: int,
         blank_line_token: BlankLineMarkdownToken,
@@ -747,7 +861,7 @@ class RuleMd027(RulePlugin):
             container_index
         ).is_block_quote_start:
             block_quote_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
-                token
+                context, token, use_pragma_adjust=True
             )
         else:
             block_quote_index = delayed_bq_index
@@ -791,7 +905,16 @@ class RuleMd027(RulePlugin):
         is_directly_within_block_quote: bool,
     ) -> None:
         common_token = cast(BlankLineMarkdownToken, token)
-        if common_token.extracted_whitespace and is_directly_within_block_quote:
+        if (
+            common_token.extracted_whitespace
+            and is_directly_within_block_quote
+            and not context.check_for_pragma_suppression(
+                token.line_number,
+                RuleMd027.__PLUGIN_ID,
+                False,
+                start_token=token,
+            )
+        ):
             column_number_delta = -(
                 token.column_number - len(common_token.extracted_whitespace)
             )
@@ -815,20 +938,37 @@ class RuleMd027(RulePlugin):
     ) -> None:
         text_token = cast(TextMarkdownToken, token)
         whitespace_parts: List[str] = []
+
+        # parts of the text block may have pragmas, so have to check and build as we go
         assert text_token.end_whitespace is not None
+        current_line_number = text_token.line_number
         for next_line in text_token.end_whitespace.split("\n"):
-            split_character_index = next_line.find(
-                ParserHelper.whitespace_split_character
-            )
-            if split_character_index == -1:
+
+            if context.check_for_pragma_suppression(
+                current_line_number,
+                RuleMd027.__PLUGIN_ID,
+                False,
+                start_token=token,
+            ):
                 whitespace_parts.append(next_line)
             else:
-                whitespace_parts.append(next_line[split_character_index + 1 :])
+                split_character_index = next_line.find(
+                    ParserHelper.whitespace_split_character
+                )
+                if split_character_index == -1:
+                    whitespace_parts.append(next_line)
+                else:
+                    whitespace_parts.append(next_line[split_character_index + 1 :])
+
+            current_line_number += 1
+            if context.is_pragma_on_line(current_line_number):
+                current_line_number += 1
+
         recombined_whitespace = "\n".join(whitespace_parts)
-        assert recombined_whitespace != text_token.end_whitespace
-        self.register_fix_token_request(
-            context, token, "next_token", "end_whitespace", recombined_whitespace
-        )
+        if recombined_whitespace != text_token.end_whitespace:
+            self.register_fix_token_request(
+                context, token, "next_token", "end_whitespace", recombined_whitespace
+            )
 
     def __handle_setext_heading(
         self,
@@ -1017,38 +1157,28 @@ class RuleMd027(RulePlugin):
     def __handle_code_span(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
-        code_span_token = cast(InlineCodeSpanMarkdownToken, token)
-
-        start_index = 0
-        next_index = code_span_token.span_text.find("\x07\n\x07", start_index)
-        recombine_list: List[str] = []
-        while next_index != -1:
-            recombine_list.extend(
-                (code_span_token.span_text[start_index:next_index], "\n")
-            )
-            after_space_index, _ = ParserHelper.collect_while_spaces_verified(
-                code_span_token.span_text, next_index + 3
-            )
-            is_there = ParserHelper.is_character_at_index(
-                code_span_token.span_text, after_space_index, "\x07"
-            )
-            assert is_there
-            start_index = after_space_index + 1
-            next_index = code_span_token.span_text.find("\x07\n\x07", start_index)
-        recombine_list.append(code_span_token.span_text[start_index:])
-        recombined_span_text = "".join(recombine_list)
-        if recombined_span_text != code_span_token.span_text:
-            self.register_fix_token_request(
-                context, token, "next_token", "span_text", recombined_span_text
-            )
+        # All of the handling of the code span's fix path are done by the paragraph.
+        # If for some reason this changes, it would roughly follow the same path as
+        # the __handle_raw_html function below.
+        _ = (context, token)
 
     def __handle_raw_html(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         raw_html_token = cast(RawHtmlMarkdownToken, token)
         recombine_list: List[str] = []
-        for next_tag_line in raw_html_token.raw_tag.split("\n"):
-            if next_tag_line.startswith("\a"):
+        for line_number_delta, next_tag_line in enumerate(
+            raw_html_token.raw_tag.split("\n")
+        ):
+
+            if next_tag_line.startswith(
+                "\a"
+            ) and not context.check_for_pragma_suppression(
+                raw_html_token.line_number,
+                RuleMd027.__PLUGIN_ID,
+                False,
+                delta_from_start=line_number_delta,
+            ):
                 after_space_index, _ = ParserHelper.collect_while_spaces_verified(
                     next_tag_line, 1
                 )
@@ -1249,12 +1379,19 @@ class RuleMd027(RulePlugin):
                     #     print(f"5>{line_index}")
                     #     print(f"column>{calculated_column_number}")
                     #     print("para-error")
+
+                    pragma_delta = context.calc_pragma_offset(
+                        token, paragraph_start_line_number_delta
+                    )
                     keep_going = self.__report_issue(
                         context,
                         scoped_block_quote_token,
-                        line_number_delta=paragraph_start_line_number_delta + delta_x,
+                        line_number_delta=paragraph_start_line_number_delta
+                        + delta_x
+                        + pragma_delta,
                         column_number_delta=-calculated_column_number,
                         alternate_token=paragraph_token,
+                        apply_pragma_fix=False,
                     )
                     if not keep_going:
                         break
