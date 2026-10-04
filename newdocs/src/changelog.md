@@ -12,11 +12,14 @@ None
 
 - [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
     - Addressed issues with fixing not honoring suppressions.
-    - Except for XXX and XXX
+    - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
+      and XXX
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
     - Fixed issue with a paragraph, then a list start, then the first line and
       only line of a table before the next item of the list.
     - Added checks for similar code in the LRD handling to be safe.
+- [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
+    - Fixed problems with Md027 and suppressions
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
