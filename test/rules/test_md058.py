@@ -331,9 +331,8 @@ x
         "bad_table_in_html_block_parse",
         enable_extensions="markdown-tables",
         disable_rules="md033,md041",
-        notes="The parser places this table inside the HTML block, so the "
-        + "token after the table is the HTML block's end token. Inserting a "
-        + "blank line before an end token crashed MD012 in fix mode.",
+        notes="The parser places this table inside the HTML block, so it is "
+        + "reported but not fixed.",
         source_file_contents="""<div>
 </div>
 | a | b |
@@ -342,11 +341,38 @@ x
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
 {temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
         fix_expected_file_contents="""<div>
 </div>
-
 | a | b |
 | - | - |
+""",
+    ),
+    pluginRuleTest(
+        "bad_table_in_html_block_parse_with_trailing_content",
+        enable_extensions="markdown-tables",
+        disable_rules="md033,md041",
+        notes="The parser's tokens for a table inside an HTML block repeat "
+        + "the following line, so fixing it would duplicate that line.",
+        source_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+| c | d |
+# H
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:5:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+| c | d |
+# H
 """,
     ),
 ]
