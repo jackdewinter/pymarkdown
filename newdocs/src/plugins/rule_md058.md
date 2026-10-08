@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -119,6 +119,13 @@ More text.
 ## Fix Description
 
 The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/111).
+
+## Fix Description
+
+A missing blank line is inserted above the table, below the table, or both.
+
+Only tables at the top level of the document are fixed.  Tables inside a block
+quote or a list item are still reported but are not changed by fix mode.
 
 ## Configuration
 
