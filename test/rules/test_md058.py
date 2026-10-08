@@ -327,6 +327,28 @@ x
   | --- | --- |
 """,
     ),
+    pluginRuleTest(
+        "bad_table_in_html_block_parse",
+        enable_extensions="markdown-tables",
+        disable_rules="md033,md041",
+        notes="The parser places this table inside the HTML block, so the "
+        + "token after the table is the HTML block's end token. Inserting a "
+        + "blank line before an end token crashed MD012 in fix mode.",
+        source_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_file_contents="""<div>
+</div>
+
+| a | b |
+| - | - |
+""",
+    ),
 ]
 
 

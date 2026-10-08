@@ -92,6 +92,9 @@ class RuleMd058(RulePlugin):
         if (
             context.is_during_line_pass
             or not self.__table_is_fixable
+            # A table the parser left inside an HTML block is followed by that
+            # block's end token; a blank line cannot be inserted before it.
+            or insert_before_token.is_end_token
             or context.check_for_pragma_suppression(
                 error_token.line_number, "MD058", False
             )
