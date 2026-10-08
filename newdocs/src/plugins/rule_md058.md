@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | No |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -60,6 +60,14 @@ More text.
 
 A table at the very start or very end of the document does not require a blank
 line on the missing side.
+
+## Fix Description
+
+A missing blank line is inserted above the table, below the table, or both.
+
+Only tables at the top level of the document are fixed.  Tables inside a block
+quote, a list item, or an HTML block are still reported by scan mode but are
+left unchanged by fix mode.
 
 ## Configuration
 

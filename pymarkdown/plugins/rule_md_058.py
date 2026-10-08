@@ -3,11 +3,14 @@ Module to implement a plugin that looks for tables that are not surrounded by
 blank lines.
 """
 
+import copy
 from typing import Optional
 
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
@@ -22,6 +25,9 @@ class RuleMd058(RulePlugin):
         self.__previous_token: Optional[MarkdownToken] = None
         self.__last_row_token: Optional[MarkdownToken] = None
         self.__awaiting_below = False
+        self.__container_depth = 0
+        self.__in_html_block = False
+        self.__fix_count = 0
 
     def get_details(self) -> PluginDetailsV2:
         """
@@ -32,9 +38,9 @@ class RuleMd058(RulePlugin):
             plugin_id="MD058",
             plugin_enabled_by_default=True,
             plugin_description="Tables should be surrounded by blank lines",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md058.md",
-            plugin_supports_fix=False,
+            plugin_supports_fix=True,
         )
 
     def starting_new_file(self) -> None:
@@ -44,6 +50,9 @@ class RuleMd058(RulePlugin):
         self.__previous_token = None
         self.__last_row_token = None
         self.__awaiting_below = False
+        self.__container_depth = 0
+        self.__in_html_block = False
+        self.__fix_count = 0
 
     @staticmethod
     def __is_clear_above(previous_token: Optional[MarkdownToken]) -> bool:
@@ -68,6 +77,43 @@ class RuleMd058(RulePlugin):
             or token.is_list_end
         )
 
+    def __report_or_fix(
+        self,
+        context: PluginScanContext,
+        error_token: MarkdownToken,
+        insert_before_token: MarkdownToken,
+    ) -> None:
+        if not context.in_fix_mode:
+            self.report_next_token_error(context, error_token)
+            return
+        # ponytail: only document-root tables are fixed; tables inside block
+        # quotes / lists need container-prefix handling (see MD031) and are left
+        # for a follow-up.  A table the parser left inside an HTML block is also
+        # skipped: its tokens repeat the following line, so a fix duplicates it.
+        if (
+            context.is_during_line_pass
+            or self.__container_depth
+            or self.__in_html_block
+            or context.check_for_pragma_suppression(
+                error_token.line_number, "MD058", False
+            )
+        ):
+            return
+        new_token = copy.deepcopy(insert_before_token)
+        self.__fix_count += 1
+        new_token.adjust_line_number(context, self.__fix_count)
+        replacement_tokens = [
+            BlankLineMarkdownToken(
+                extracted_whitespace="",
+                position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
+                column_delta=1,
+            ),
+            new_token,
+        ]
+        self.register_replace_tokens_request(
+            context, insert_before_token, insert_before_token, replacement_tokens
+        )
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -78,12 +124,21 @@ class RuleMd058(RulePlugin):
         if self.__awaiting_below:
             if not self.__is_clear_below(token):
                 assert self.__last_row_token is not None
-                self.report_next_token_error(context, self.__last_row_token)
+                self.__report_or_fix(context, self.__last_row_token, token)
             self.__awaiting_below = False
+
+        if token.is_block_quote_start or token.is_list_start:
+            self.__container_depth += 1
+        elif token.is_block_quote_end or token.is_list_end:
+            self.__container_depth -= 1
+        elif token.is_html_block:
+            self.__in_html_block = True
+        elif token.is_html_block_end:
+            self.__in_html_block = False
 
         if token.is_table:
             if not self.__is_clear_above(self.__previous_token):
-                self.report_next_token_error(context, token)
+                self.__report_or_fix(context, token, token)
             self.__last_row_token = token
         elif token.is_table_header or token.is_table_row:
             self.__last_row_token = token

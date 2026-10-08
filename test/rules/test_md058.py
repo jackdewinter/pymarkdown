@@ -3,6 +3,8 @@ Module to provide tests related to the MD058 rule.
 """
 
 from test.rules.utils import (
+    calculate_fix_tests,
+    execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
@@ -62,6 +64,12 @@ after
 """,
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:2:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_file_contents="""# Heading
+
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+""",
     ),
     pluginRuleTest(
         "bad_no_blank_below",
@@ -76,6 +84,14 @@ after
 """,
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:5:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+
+# Sub
+""",
     ),
     pluginRuleTest(
         "bad_no_blank_above_and_below",
@@ -90,6 +106,14 @@ after
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
 {temp_source_path}:4:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_file_contents="""# A
+
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+
+# B
+""",
     ),
     pluginRuleTest(
         "good_in_block_quote_surrounded",
@@ -136,6 +160,221 @@ after
   | ghi | jkl |
 """,
     ),
+    pluginRuleTest(
+        "bad_two_tables",
+        enable_extensions="markdown-tables",
+        disable_rules="md022,md025",
+        source_file_contents="""# A
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+# B
+| mno | pqr |
+| --- | --- |
+| stu | vwx |
+# C
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:4:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:6:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:8:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_file_contents="""# A
+
+| abc | def |
+| --- | --- |
+| ghi | jkl |
+
+# B
+
+| mno | pqr |
+| --- | --- |
+| stu | vwx |
+
+# C
+""",
+    ),
+    pluginRuleTest(
+        "bad_below_thematic_break",
+        enable_extensions="markdown-tables",
+        source_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+---
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+
+---
+""",
+    ),
+    pluginRuleTest(
+        "bad_below_fenced_md031_enabled",
+        enable_extensions="markdown-tables",
+        source_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+```text
+x
+```
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+        fix_expected_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+
+```text
+x
+```
+""",
+    ),
+    pluginRuleTest(
+        "bad_below_block_quote",
+        enable_extensions="markdown-tables",
+        source_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+> quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+
+> quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_below_list",
+        enable_extensions="markdown-tables",
+        disable_rules="md032",
+        source_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+- item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_file_contents="""# Top
+
+| abc | def |
+| --- | --- |
+
+- item
+""",
+    ),
+    pluginRuleTest(
+        "good_pragma_suppressed",
+        enable_extensions="markdown-tables",
+        disable_rules=__plugin_disable_md022,
+        source_file_contents="""# A
+<!-- pyml disable-next-line md058 -->
+| abc | def |
+| --- | --- |
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# A
+<!-- pyml disable-next-line md058 -->
+| abc | def |
+| --- | --- |
+""",
+    ),
+    pluginRuleTest(
+        "bad_in_block_quote_not_fixed",
+        enable_extensions="markdown-tables",
+        disable_rules=__plugin_disable_md022_md041,
+        source_file_contents="""> # A
+> | abc | def |
+> | --- | --- |
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:2:3: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""> # A
+> | abc | def |
+> | --- | --- |
+""",
+    ),
+    pluginRuleTest(
+        "bad_in_list_item_not_fixed",
+        enable_extensions="markdown-tables",
+        disable_rules=__plugin_disable_md022_md041,
+        source_file_contents="""- # A
+  | abc | def |
+  | --- | --- |
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:2:3: MD058: Tables should be surrounded by blank lines (blanks-around-tables)",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""- # A
+  | abc | def |
+  | --- | --- |
+""",
+    ),
+    pluginRuleTest(
+        "bad_table_in_html_block_parse",
+        enable_extensions="markdown-tables",
+        disable_rules="md033,md041",
+        notes="The parser places this table inside the HTML block, so it is "
+        + "reported but not fixed.",
+        source_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+""",
+    ),
+    pluginRuleTest(
+        "bad_table_in_html_block_parse_with_trailing_content",
+        enable_extensions="markdown-tables",
+        disable_rules="md033,md041",
+        notes="The parser's tokens for a table inside an HTML block repeat "
+        + "the following line, so fixing it would duplicate that line.",
+        source_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+| c | d |
+# H
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)
+{temp_source_path}:5:1: MD058: Tables should be surrounded by blank lines (blanks-around-tables)""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""<div>
+</div>
+| a | b |
+| - | - |
+| c | d |
+# H
+""",
+    ),
 ]
 
 
@@ -146,6 +385,17 @@ def test_md058_scan(test: pluginRuleTest) -> None:
     Execute a parameterized scan test for plugin md058.
     """
     execute_scan_test(test, "md058")
+
+
+@pytest.mark.rules
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
+def test_md058_fix(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md058.
+    """
+    execute_fix_test(test)
 
 
 @pytest.mark.rules
