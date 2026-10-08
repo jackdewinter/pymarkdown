@@ -5,7 +5,7 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- [Pull Request 1633](https://github.com/jackdewinter/pymarkdown/pull/1633)
+- [Pull Request 1707](https://github.com/jackdewinter/pymarkdown/pull/1707)
     - Rule MD058 (blanks-around-tables) now supports fix mode for tables at the
       top level of the document.
 
