@@ -26,7 +26,7 @@ class RuleMd058(RulePlugin):
         self.__last_row_token: Optional[MarkdownToken] = None
         self.__awaiting_below = False
         self.__container_depth = 0
-        self.__table_is_fixable = False
+        self.__in_html_block = False
         self.__fix_count = 0
 
     def get_details(self) -> PluginDetailsV2:
@@ -51,7 +51,7 @@ class RuleMd058(RulePlugin):
         self.__last_row_token = None
         self.__awaiting_below = False
         self.__container_depth = 0
-        self.__table_is_fixable = False
+        self.__in_html_block = False
         self.__fix_count = 0
 
     @staticmethod
@@ -88,13 +88,12 @@ class RuleMd058(RulePlugin):
             return
         # ponytail: only document-root tables are fixed; tables inside block
         # quotes / lists need container-prefix handling (see MD031) and are left
-        # for a follow-up.
+        # for a follow-up.  A table the parser left inside an HTML block is also
+        # skipped: its tokens repeat the following line, so a fix duplicates it.
         if (
             context.is_during_line_pass
-            or not self.__table_is_fixable
-            # A table the parser left inside an HTML block is followed by that
-            # block's end token; a blank line cannot be inserted before it.
-            or insert_before_token.is_end_token
+            or self.__container_depth
+            or self.__in_html_block
             or context.check_for_pragma_suppression(
                 error_token.line_number, "MD058", False
             )
@@ -132,9 +131,12 @@ class RuleMd058(RulePlugin):
             self.__container_depth += 1
         elif token.is_block_quote_end or token.is_list_end:
             self.__container_depth -= 1
+        elif token.is_html_block:
+            self.__in_html_block = True
+        elif token.is_html_block_end:
+            self.__in_html_block = False
 
         if token.is_table:
-            self.__table_is_fixable = self.__container_depth == 0
             if not self.__is_clear_above(self.__previous_token):
                 self.__report_or_fix(context, token, token)
             self.__last_row_token = token

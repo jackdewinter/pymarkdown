@@ -66,7 +66,8 @@ line on the missing side.
 A missing blank line is inserted above the table, below the table, or both.
 
 Only tables at the top level of the document are fixed.  Tables inside a block
-quote or a list item are still reported but are not changed by fix mode.
+quote, a list item, or an HTML block are still reported by scan mode but are
+left unchanged by fix mode.
 
 ## Configuration
 
