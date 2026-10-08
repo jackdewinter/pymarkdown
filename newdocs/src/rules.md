@@ -792,7 +792,7 @@ Table column count.
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | No |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 <!-- pyml disable-next-line no-duplicate-heading-->
