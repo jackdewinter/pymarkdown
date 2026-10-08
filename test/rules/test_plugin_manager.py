@@ -1319,7 +1319,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md054   link-image-style                True       True       0.5.0    No
   md055   table-pipe-style                True       True       0.5.0    No
   md056   table-column-count              True       True       0.5.0    No
-  md058   blanks-around-tables            True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.1    Yes
   md059   descriptive-link-text           True       True       0.5.0    No
   md060   table-column-style              True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1412,7 +1412,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md054   link-image-style                True       True       0.5.0    No
   md055   table-pipe-style                True       True       0.5.0    No
   md056   table-column-count              True       True       0.5.0    No
-  md058   blanks-around-tables            True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.1    Yes
   md059   descriptive-link-text           True       True       0.5.0    No
   md060   table-column-style              True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
@@ -1507,7 +1507,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1606,7 +1606,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1707,7 +1707,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
