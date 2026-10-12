@@ -12,6 +12,10 @@ Ensure table columns adhere to a consistent formatting style.
 
 ## Reasoning
 
+**Tables Extension**: As tables are only recognized when the
+[Markdown Tables](../extensions/markdown-tables.md) extension is enabled, this
+rule has no effect unless that extension is turned on.
+
 ### Readability
 
 Inconsistent table formatting increases cognitive load and creates visual clutter.
