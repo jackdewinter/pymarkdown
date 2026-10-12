@@ -13,13 +13,19 @@ None
 - [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
     - Addressed issues with fixing not honoring suppressions.
     - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
-      and XXX
+      and [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
     - Fixed issue with a paragraph, then a list start, then the first line and
       only line of a table before the next item of the list.
     - Added checks for similar code in the LRD handling to be safe.
+- [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
+    - More coverage and fixing issues with pragmas and Md013, Md031, and Md046.
+    - Created [Issue 1708](https://github.com/jackdewinter/pymarkdown/issues/1708)
+      to handle edge cases yet to be completed
 - [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
     - Fixed problems with Md027 and suppressions
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Adding scan only for Md055, Md056, and MD058
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

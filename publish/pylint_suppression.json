@@ -102,7 +102,7 @@
         "pymarkdown/file_scan_helper.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 9,
-            "too-many-locals": 5
+            "too-many-locals": 6
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
@@ -591,7 +591,7 @@
         "too-many-public-methods": 5,
         "too-many-arguments": 279,
         "too-few-public-methods": 57,
-        "too-many-locals": 57,
+        "too-many-locals": 58,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 10,
         "protected-access": 32,

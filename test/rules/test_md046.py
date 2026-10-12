@@ -151,7 +151,6 @@ wilma
     ),
     pluginRuleTest(
         "disabled_and_enabled_bad_fenced_and_indented_with_fenced",
-        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1697",
         source_file_contents="""
 <!-- pyml disable-next-line code-block-style-->
     # barney
@@ -166,6 +165,7 @@ wilma
 <!-- pyml disable-next-line code-block-style-->
     # barney
 -----
+
 ```
 # barney
 ```
@@ -192,7 +192,6 @@ wilma
     ),
     pluginRuleTest(
         "disabled_and_enabled_bad_fenced_and_indented_with_indented",
-        fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1697",
         source_file_contents="""
 <!-- pyml disable-next-line code-block-style-->
 ```Markdown
@@ -204,7 +203,6 @@ wilma
 ```
 """,
         set_args=["plugins.md046.style=indented"],
-        # use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:7:1: MD046: Code block style [Expected: indented; Actual: fenced] (code-block-style)""",
         fix_expected_file_contents="""
