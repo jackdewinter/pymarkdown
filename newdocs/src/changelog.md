@@ -5,7 +5,9 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-None
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Contributor: [spreston-sila](https://github.com/spreston-sila)
+    - Adds rules for MD055, MD056, and MD058
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -13,7 +15,7 @@ None
 - [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
     - Addressed issues with fixing not honoring suppressions.
     - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
-      and [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
+      and XXX
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
     - Fixed issue with a paragraph, then a list start, then the first line and
       only line of a table before the next item of the list.
