@@ -170,10 +170,8 @@ class RuleMd055(RulePlugin):
                 # terminator) into the end token's whitespace. When that is
                 # present it carries the true trailing pipe; otherwise the last
                 # emitted item's whitespace does.
-                if token.extracted_whitespace:
-                    trailing = bool(
-                        self.__trailing_pipe.search(token.extracted_whitespace)
-                    )
+                if excess := token.extracted_whitespace:
+                    trailing = bool(self.__trailing_pipe.search(excess))
                 else:
                     trailing = bool(
                         self.__unescaped_pipe.search(self.__last_item_whitespace)

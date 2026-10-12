@@ -281,13 +281,115 @@ scanTests = [
 > within a block quote
 """,
     ),
+    pluginRuleTest(
+        "disabled_bad_single_block_quote_space_top",
+        source_file_contents="""<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  this is text
+>
+> within a block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_top",
+        source_file_contents="""<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  this is text
+>
+> within a block quote
+---
+>  this is text
+>
+> within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  this is text
+>
+> within a block quote
+---
+> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_single_block_quote_space_top_multiple",
+        source_file_contents="""> this is
+>  text
+>
+> within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is
+> text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_single_block_quote_space_top_multiple",
+        source_file_contents="""> this is
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  text
+>
+> within a block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_top_multiple",
+        source_file_contents="""> this is
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  text
+>
+> within a block quote
+---
+> this is
+>  text
+>
+> within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  text
+>
+> within a block quote
+---
+> this is
+> text
+>
+> within a block quote
+""",
+    ),
     pluginRuleTest(  # test_extra_051d
         "bad_single_block_quote_space_bottom",
         source_file_contents="""> this is text
 >
 >  within a block quote
 """,
-        use_debug=True,
+        # use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
@@ -298,8 +400,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "disabled_bad_single_block_quote_space_bottom",
-        mark_fix_as_skipped=True,
-        mark_scan_as_skipped=True,
         source_file_contents="""> this is text
 >
 <!-- pyml disable-next-line no-multiple-space-blockquote-->
@@ -310,26 +410,245 @@ scanTests = [
         fix_expected_return_code=0,  # Nothing got fixed
         fix_expected_file_contents="""> this is text
 >
-> within a block quote
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a block quote
 """,
     ),
     pluginRuleTest(
         "disabled_and_enabled_bad_single_block_quote_space_bottom",
-        mark_fix_as_skipped=True,
-        mark_scan_as_skipped=True,
         source_file_contents="""> this is text
 >
 <!-- pyml disable-next-line no-multiple-space-blockquote-->
 >  within a block quote
+---
+> this is text
 >
 >  within a block quote
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:6:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+        scan_expected_output="""{temp_source_path}:8:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
         fix_expected_file_contents="""> this is text
 >
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a block quote
+---
+> this is text
+>
 > within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_single_block_quote_space_bottom_multiple",
+        source_file_contents="""> this is text
+>
+> within a
+>  block quote
+""",
+        # use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_single_block_quote_space_bottom_multiple",
+        source_file_contents="""> this is text
+>
+> within a
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is text
+>
+> within a
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_bottom_multiple",
+        source_file_contents="""> this is text
+>
+> within a
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  block quote
+---
+> this is text
+>
+> within a
+>  block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:10:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  block quote
+---
+> this is text
+>
+> within a
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_single_block_quote_space_middle",
+        source_file_contents="""> this is text
+>
+>  within a
+>
+> block quote
+""",
+        # use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a
+>
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_single_block_quote_space_middle",
+        source_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a
+>
+> block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a
+>
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_middle",
+        source_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a
+>
+> block quote
+---
+> this is text
+>
+>  within a
+>
+> block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:10:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  within a
+>
+> block quote
+---
+> this is text
+>
+> within a
+>
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_single_block_quote_space_middle_multiple",
+        source_file_contents="""> this is text
+>
+> within
+>  a
+>
+> block quote
+""",
+        # use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within
+> a
+>
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_single_block_quote_space_middle_multiple",
+        source_file_contents="""> this is text
+>
+> within
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  a
+>
+> block quote
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is text
+>
+> within
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  a
+>
+> block quote
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_single_block_quote_space_middle_multiple",
+        source_file_contents="""> this is text
+>
+> within
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  a
+>
+> block quote
+---
+> this is text
+>
+> within
+>  a
+>
+> block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:12:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within
+<!-- pyml disable-next-line no-multiple-space-blockquote-->
+>  a
+>
+> block quote
+---
+> this is text
+>
+> within
+> a
+>
+> block quote
 """,
     ),
     pluginRuleTest(
@@ -971,41 +1290,6 @@ scanTests = [
 > 1. barney
 """,
     ),
-    #     pluginRuleTest(
-    #         "xxxxx",
-    #         mark_fix_as_skipped=True,
-    #         source_file_contents="""> This is text and no blank line.
-    # >
-    # > ```block
-    # > A code block
-    # > ```
-    # >
-    # > This is text and no blank line.
-    # >
-    # > ```block
-    # > A code block
-    # > ```
-    # >
-    # > This is a blank line and some text.
-    # """,
-    #         scan_expected_return_code=1,
-    #         scan_expected_output="""{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-    # """,
-    #         fix_expected_file_contents="""> This is text and no blank line.
-    # <!-- pyml disable-next-line blanks-around-fences-->
-    # > ```block
-    # > A code block
-    # > ```
-    # >
-    # > This is text and no blank line.
-    # >
-    # > ```block
-    # > A code block
-    # > ```
-    # >
-    # > This is a blank line and some text.
-    # """,
-    #     ),
     pluginRuleTest(
         "mix_md027_md007",
         source_file_contents=""">  + first

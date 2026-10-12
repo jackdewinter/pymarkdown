@@ -349,7 +349,7 @@ class RuleMd031(RulePlugin):
         split_leading_space = block_quote_token.bleading_spaces.split("\n")
 
         leading_space_insert_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
-            token
+            context, token
         )
         former_item_leading_space = split_leading_space[leading_space_insert_index]
         apply_rstrip = True
@@ -1320,7 +1320,7 @@ class RuleMd031(RulePlugin):
                 -1
             ).is_block_quote_start:
                 leading_space_insert_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
-                    token
+                    context, token
                 )
             else:
                 leading_space_insert_index = self.__leading_space_index_tracker.get_tokens_list_leading_space_index(

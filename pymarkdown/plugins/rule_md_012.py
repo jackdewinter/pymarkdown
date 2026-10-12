@@ -108,7 +108,7 @@ class RuleMd012(RulePlugin):
             self.__container_fix_map[key] = value_list
         value_list.append(value)
 
-    def __fix_containers(self) -> None:
+    def __fix_containers(self, context: PluginScanContext) -> None:
         outer_container_index = (
             self.__leading_space_index_tracker.get_container_stack_size() - 1
         )
@@ -121,7 +121,7 @@ class RuleMd012(RulePlugin):
         )
         if container_token.is_block_quote_start:
             leading_space_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
-                self.__captured_blank_line[-1]
+                context, self.__captured_blank_line[-1]
             )
             self.__append_to_container_fix_map(
                 container_token,
@@ -174,7 +174,7 @@ class RuleMd012(RulePlugin):
                 inner_container_index -= 1
             if inner_container_index >= 0:
                 leading_space_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
-                    self.__captured_blank_line[-1], inner_container_index
+                    context, self.__captured_blank_line[-1], inner_container_index
                 )
                 container_token = (
                     self.__leading_space_index_tracker.get_container_stack_item(
@@ -200,7 +200,7 @@ class RuleMd012(RulePlugin):
                 self.__last_blank_line.line_number, RuleMd012.__PLUGIN_ID, False
             ):
                 if self.__leading_space_index_tracker.in_at_least_one_container():
-                    self.__fix_containers()
+                    self.__fix_containers(context)
 
                 replacement_tokens = self.__captured_blank_line[:1]
                 self.register_replace_tokens_request(
