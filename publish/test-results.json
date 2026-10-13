@@ -1212,10 +1212,10 @@
         },
         {
             "name": "test.rules.test_md012",
-            "totalTests": 107,
+            "totalTests": 241,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 15,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1495,7 +1495,7 @@
             "totalTests": 44,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

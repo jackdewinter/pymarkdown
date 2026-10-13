@@ -158,12 +158,21 @@ class PragmaExtension(ParserExtension):
         document_pragma_ranges: List[Tuple[int, int, Set[str]]],
         general_pragma_ranges: List[Tuple[int, int, str]],
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
-        log_pragma_failure: LogPragmaFailureProtocol,
+        log_pragma_failure: Optional[LogPragmaFailureProtocol],
         actual_pragma_line_numbers: List[int],
     ) -> None:
         """
         Compile a single pragma line, validating it before adding it to the dictionary of pragmas.
         """
+        if not log_pragma_failure:
+
+            def log_pragma_failure_impl(
+                scan_file: str, line_number: int, pragma_error: str
+            ) -> None:
+                _ = (scan_file, line_number, pragma_error)
+
+            log_pragma_failure = log_pragma_failure_impl
+
         if next_line_number > 0:
             prefix_length = len(PragmaToken.pragma_prefix)
             actual_line_number = next_line_number
@@ -541,14 +550,23 @@ class PragmaToken(MarkdownToken):
         """
         return self.__pragma_lines
 
-    # def adjust_pragma_line_number(
-    #     self, initial_line_number: int, new_line_number: int
-    # ) -> None:
-    #     """Perform an adjustment to the line number of a given pragma."""
-    #     old_pragma = self.__pragma_lines[initial_line_number]
-    #     del self.__pragma_lines[initial_line_number]
-    #     self.__pragma_lines[new_line_number] = old_pragma
-    #     self.__compose_extra_data_field()
+    def adjust_pragma_line_number(
+        self,
+        initial_line_number: int,
+        new_line_number: int,
+        old_pragma: Optional[str] = None,
+    ) -> None:
+        """Perform an adjustment to the line number of a given pragma."""
+        if not old_pragma:
+            old_pragma = self.__pragma_lines[initial_line_number]
+        del self.__pragma_lines[initial_line_number]
+        self.__pragma_lines[new_line_number] = old_pragma
+        self.__compose_extra_data_field()
+
+    def remove_pragma_line_number(self, line_number: int) -> None:
+        """Remove a given pragma, by line number, from the list."""
+        del self.__pragma_lines[line_number]
+        self.__compose_extra_data_field()
 
     def register_for_markdown_transform(
         self,

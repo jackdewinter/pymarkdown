@@ -476,7 +476,9 @@ class PluginManager:
         self.__presentation.print_pragma_failure(scan_file, line_number, pragma_error)
         self.number_of_pragma_failures += 1
 
-    def compile_pragmas(self, scan_file: str, pragma_lines: Dict[int, str]) -> None:
+    def compile_pragmas(
+        self, scan_file: str, pragma_lines: Dict[int, str], is_document_fix: bool
+    ) -> None:
         """
         Go through the list of extracted pragmas and compile them.
         """
@@ -484,6 +486,7 @@ class PluginManager:
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
 
         self.__pragma_line_numbers = []
+        lpf = None if is_document_fix else self.log_pragma_failure
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -494,7 +497,7 @@ class PluginManager:
                 self.__document_pragma_ranges,
                 self.__general_pragma_ranges,
                 active_general_pragmas,
-                self.log_pragma_failure,
+                lpf,
                 self.__pragma_line_numbers,
             )
         PragmaExtension.end(active_general_pragmas, self.__general_pragma_ranges)
@@ -907,6 +910,10 @@ class PluginManager:
             properties,
         ):
             self.__enabled_plugins.append(plugin_object)
+
+    def get_all_ids(self) -> Dict[str, FoundPlugin]:
+        """Get a map of all the Rule Plugins ids, and their matching object."""
+        return self.__all_ids
 
     def __register_plugins(
         self,
