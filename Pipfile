@@ -5,7 +5,7 @@ name = "pypi"
 
 [dev-packages]
 setuptools = "==83.0.0"
-build = "==1.5.1"
+build = "==1.6.1"
 cookieslicer = "==0.1.5"
 coverage = "==7.16.0"
 docvet = "==1.15.1"
