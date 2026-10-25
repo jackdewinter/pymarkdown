@@ -573,11 +573,10 @@ def test_api_fix_path_single_file_fix_required_with_error(
 test: assert
 ---
 """
-    expected_error_message = "Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."
-
-    write_temporary_configuration(
+    temporary_file_name = write_temporary_configuration(
         string_to_scan, directory=tmpdir, file_name_suffix=".md"
     )
+    expected_error_message = f"Unexpected Error(BadTokenizationError): An unhandled error occurred processing the '{temporary_file_name}' file."
 
     # Act & Assert
     assert_that_exception_is_raised(
@@ -856,7 +855,7 @@ test: assert
                     f"{file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
                     f"{file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
                 ]
-                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the '{file_name_2}' file."""
 
                 # Act
                 try:
@@ -920,7 +919,7 @@ test: assert
                 file_name_prefix="tmp3",
             ) as file_name_3:
                 # Arrange
-                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+                expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the '{file_name_2}' file."""
 
                 # Act
                 try:
@@ -967,7 +966,7 @@ test: assert
             contents_file_2,
             directory=tmpdir,
             file_name_prefix="tmp2",
-        ):
+        ) as file_name_2:
             with create_temporary_markdown_file(
                 contents_file_1_and_3,
                 directory=tmpdir,
@@ -975,7 +974,7 @@ test: assert
             ):
 
                 # Arrange
-                expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+                expected_error = f"""Unexpected Error(BadTokenizationError): An unhandled error occurred processing the '{file_name_2}' file."""
 
                 # Act
                 try:
@@ -1018,7 +1017,7 @@ test: assert
             contents_file_2,
             directory=tmpdir,
             file_name_prefix="tmp2",
-        ):
+        ) as file_name_2:
             with create_temporary_markdown_file(
                 contents_file_1_and_3,
                 directory=tmpdir,
@@ -1026,7 +1025,7 @@ test: assert
             ):
 
                 # Arrange
-                expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+                expected_error = f"""Unexpected Error(BadTokenizationError): An unhandled error occurred processing the '{file_name_2}' file."""
 
                 # Act
                 try:

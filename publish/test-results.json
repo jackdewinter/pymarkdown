@@ -1795,6 +1795,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_markdown_extra_issue_1706",
+            "totalTests": 12,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_markdown_transform_to_gfm",
             "totalTests": 3,
             "failedTests": 0,

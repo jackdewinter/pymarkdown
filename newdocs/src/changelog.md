@@ -5,17 +5,19 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
-    - Contributor: [spreston-sila](https://github.com/spreston-sila)
-    - Adds rules for MD055, MD056, and MD058
+- [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
+    - Added extra tests for [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+      to reaffirm that the issues mentioned were addressed.
+    - Added extra mention of the file that is being scanned or fixed if a parsing
+      failure occurs.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
-### Changed
+### Fixed
 
 None
 
 <!-- pyml disable-next-line no-duplicate-heading-->
-### Fixed
+### Changed
 
 None
 
@@ -35,8 +37,8 @@ None
     - Addressed issues with fixing not honoring suppressions.
     - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
-    - Fixed issue with a paragraph, then a list start, then the first line and
-      only line of a table before the next item of the list.
+    - Fixed issue with a paragraph, then a list start, then the first line and only
+      line of a table before the next item of the list.
     - Added checks for similar code in the LRD handling to be safe.
 - [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
     - More coverage and fixing issues with pragmas and Md013, Md031, and Md046.
@@ -44,10 +46,7 @@ None
       to handle edge cases yet to be completed
 - [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
     - Fixed problems with Md027 and suppressions
-- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
-    - Adding scan only for Md055, Md056, and MD058
 
-<!-- pyml disable-next-line no-duplicate-heading-->
 ## Version 0.9.40 - 2026-09-13
 
 <!-- pyml disable-next-line no-duplicate-heading-->

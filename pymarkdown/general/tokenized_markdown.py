@@ -62,6 +62,8 @@ class TokenizedMarkdown:
     Class to provide a tokenization of a markdown-encoded string.
     """
 
+    UNHANDLED_EXCEPTION_TEXT = "An unhandled error occurred processing the document."
+
     def __init__(self, resource_path: Optional[str] = None) -> None:
         """
         Initializes a new instance of the TokenizedMarkdown class.
@@ -155,7 +157,7 @@ class TokenizedMarkdown:
             return final_coalesced_results
         except Exception as this_exception:
             raise BadTokenizationError(
-                "An unhandled error occurred processing the document."
+                TokenizedMarkdown.UNHANDLED_EXCEPTION_TEXT
             ) from this_exception
 
     def __parse_blocks_pass(
