@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-setuptools = "==83.0.0"
+setuptools = "==84.1.0"
 build = "==1.5.1"
 cookieslicer = "==0.1.5"
 coverage = "==7.16.0"
@@ -34,9 +34,11 @@ sourcery = "==1.45.0"
 pyyaml = "==6.0.3"
 tomli = "==2.4.1"
 twine = "==6.2.0"
+
 GitPython = "==3.1.62"
 platformdirs = "==4.11.14"
 urllib3 = "==2.8.0"
+filelock = "==4.2.1"
 
 [packages]
 typing-extensions = ">=4.15.0"
