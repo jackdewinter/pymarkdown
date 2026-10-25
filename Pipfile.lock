@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d26ba241167ece43065f468ad168db4f94764261058ab4ec997ce99ec93a7f23"
+            "sha256": "61dbc3a0c26a10735b446a2cfec4130b04cb83fd9bbd95f3c94720a7fa8d0f53"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -942,12 +942,12 @@
         },
         "filelock": {
             "hashes": [
-                "sha256:2ce9818e3e2d8f284c1a964414447ef148d42a5fd5e2a477a7118e574b293ec1",
-                "sha256:ad7f724afef953e731b1cc39bcd3a09166d72ed7fcdf29e6e88b1c3235c6715d"
+                "sha256:7be2662e9e826b9bba28afc0f843a123280d799a2ea44bb5d35ccec67905ae44",
+                "sha256:c4c937ccac2a813cee448e662a56366cfb374c0f8702e75f295c412cc1c5d5a3"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.10'",
-            "version": "==4.1.0"
+            "markers": "python_version >= '3.11'",
+            "version": "==4.2.1"
         },
         "ghp-import": {
             "hashes": [
