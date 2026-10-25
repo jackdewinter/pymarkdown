@@ -1212,10 +1212,10 @@
         },
         {
             "name": "test.rules.test_md012",
-            "totalTests": 107,
+            "totalTests": 241,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 15,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1308,26 +1308,26 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 141,
+            "totalTests": 169,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 4,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.rules.test_md027_inline",
-            "totalTests": 69,
+            "totalTests": 107,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 10,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.rules.test_md027_leaf",
-            "totalTests": 65,
+            "totalTests": 103,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 8,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1495,7 +1495,7 @@
             "totalTests": 44,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

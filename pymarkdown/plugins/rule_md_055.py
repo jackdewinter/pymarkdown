@@ -146,6 +146,7 @@ class RuleMd055(RulePlugin):
             self.__report(context, actual_style, f"{verb} trailing pipe", line_delta)
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
+        # sourcery skip: low-code-quality
         """
         Event that a new token is being processed.
         """

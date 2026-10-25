@@ -17,7 +17,11 @@ from application_properties import ApplicationProperties
 from py_walk import get_parser_from_list
 from py_walk.models import Parser
 
-from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.extensions.pragma_token import (
+    GeneralPragmaDisableStart,
+    PragmaExtension,
+    PragmaToken,
+)
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
@@ -34,6 +38,7 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.replace_tokens_record import ReplaceTokensRecord
 from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -73,6 +78,7 @@ class FileScanHelper:
         self.__continue_on_error = False
         self.__properties = properties
         self.__per_file_ignores_list: List[Tuple[Parser, Set[str]]] = []
+        self.number_of_pragma_failures = 0
 
     # pylint: enable=too-many-arguments
 
@@ -289,10 +295,13 @@ class FileScanHelper:
         self,
         next_file_name: str,
         actual_tokens: List[MarkdownToken],
+        is_document_fix: bool,
     ) -> List[MarkdownToken]:
         if actual_tokens and actual_tokens[-1].is_pragma:
             pragma_token = cast(PragmaToken, actual_tokens[-1])
-            self.__plugins.compile_pragmas(next_file_name, pragma_token.pragma_lines)
+            self.__plugins.compile_pragmas(
+                next_file_name, pragma_token.pragma_lines, is_document_fix
+            )
             actual_tokens = actual_tokens[:-1]
         return actual_tokens
 
@@ -305,7 +314,9 @@ class FileScanHelper:
         per_file_disabled_identifiers: Optional[Set[str]],
     ) -> None:
 
-        actual_tokens = self.__find_and_compile_pragmas(next_file_name, actual_tokens)
+        actual_tokens = self.__find_and_compile_pragmas(
+            next_file_name, actual_tokens, is_document_fix=False
+        )
 
         POGGER.info("Scanning file '$' tokens.", next_file_name)
         for next_token in actual_tokens:
@@ -681,7 +692,9 @@ class FileScanHelper:
             # In the normal case, we want to use the returned value from this method, as it
             # has the pragam token removed.  However, as we are fixing the document, we need
             # the information in that token to properly recreated the document.
-            self.__find_and_compile_pragmas(next_file_name, actual_tokens)
+            self.__find_and_compile_pragmas(
+                next_file_name, actual_tokens, is_document_fix=True
+            )
 
             # Due to context required to process the line requirements, we need go
             # through all the tokens first, before processing the lines.
@@ -760,7 +773,9 @@ class FileScanHelper:
         # In the normal case, we want to use the returned value from this method, as it
         # has the pragam token removed.  However, as we are fixing the document, we need
         # the information in that token to properly recreated the document.
-        self.__find_and_compile_pragmas(next_file_name, actual_tokens)
+        self.__find_and_compile_pragmas(
+            next_file_name, actual_tokens, is_document_fix=True
+        )
 
         context_map = {i: fix_context for i in fix_list}
         for i in collect_list:
@@ -870,6 +885,7 @@ class FileScanHelper:
         ) + 1
         line_number_delta = line_number_delta_2 - line_number_delta_1
 
+        # May have to do this after pragmas to get proper line numbers.
         new_tokens = actual_tokens[:start_index]
         new_tokens.extend(next_replacement.replacement_tokens)
         end_tokens = actual_tokens[end_index + 1 :]
@@ -877,17 +893,154 @@ class FileScanHelper:
             next_token.adjust_line_number(context, line_number_delta)
         new_tokens.extend(end_tokens)
 
-        # if new_tokens[-1].is_pragma:
-        #     pragma_token = cast(PragmaToken, new_tokens[-1])
-        #     for pragma_line_number in sorted(pragma_token.pragma_lines.keys())[::-1]:
-        #         assert not next_replacement.end_token.is_end_token
-        #         if pragma_line_number > next_replacement.end_token.line_number:
-        #             pragma_token.adjust_pragma_line_number(
-        #                 pragma_line_number, pragma_line_number + line_number_delta
-        #             )
+        self.__handle_x(
+            new_tokens,
+            next_replacement,
+            actual_tokens,
+            end_index,
+            line_number_delta,
+        )
 
         actual_tokens.clear()
         actual_tokens.extend(new_tokens)
+
+    def __handle_x(
+        self,
+        new_tokens: List[MarkdownToken],
+        next_replacement: ReplaceTokensRecord,
+        actual_tokens: List[MarkdownToken],
+        end_index: int,
+        line_number_delta: int,
+    ) -> None:
+        if new_tokens[-1].is_pragma:
+            pragma_token = cast(PragmaToken, new_tokens[-1])
+
+            nr_rn_ln = next_replacement.end_token.line_number
+            if next_replacement.end_token.is_end_token:
+                new_end_index = end_index - 1
+                assert not actual_tokens[new_end_index].is_end_token
+                # while new_end_index >= start_index and actual_tokens[new_end_index].is_end_token:
+                #     new_end_index -= 1
+
+                # If more get added, will need to make this more robust.  This is for Md046.
+                assert actual_tokens[new_end_index].is_text
+                last_text_token = cast(TextMarkdownToken, actual_tokens[new_end_index])
+                nr_rn_ln = (
+                    last_text_token.line_number
+                    + ParserHelper.count_newlines_in_text(last_text_token.token_text)
+                )
+
+            pragma_line_numbers_to_remove: List[int] = []
+            for pragma_line_number in sorted(pragma_token.pragma_lines.keys())[::-1]:
+
+                # If the pragma's line number is before the first replaced token start,
+                # do not touch it as it was not affected.
+                # If the pragma's line_number is after the last replaced token end, then
+                # it is clearly after the block, and adjust it back by the required amount.
+                if pragma_line_number > nr_rn_ln:
+                    pragma_token.adjust_pragma_line_number(
+                        pragma_line_number, pragma_line_number + line_number_delta
+                    )
+
+                # If the pragma's line number is after the start and before the end
+                # (due to it not getting caught in the previous `if`), we have to deal
+                # with interesting cases.
+                elif pragma_line_number > next_replacement.start_token.line_number:
+                    self.__apply_replacement_fix_inner(
+                        pragma_token,
+                        pragma_line_number,
+                        next_replacement,
+                        pragma_line_numbers_to_remove,
+                    )
+
+            if pragma_line_numbers_to_remove:
+                while pragma_line_numbers_to_remove:
+                    pragma_token.remove_pragma_line_number(
+                        pragma_line_numbers_to_remove[-1]
+                    )
+                    del pragma_line_numbers_to_remove[-1]
+
+    def log_pragma_failure(
+        self, scan_file: str, line_number: int, pragma_error: str
+    ) -> None:
+        """
+        Log the pragma error in the appropriate format.
+        """
+        _ = (scan_file, line_number, pragma_error)
+        self.number_of_pragma_failures += 1
+
+    # pylint: disable=too-many-locals
+    def __apply_replacement_fix_inner(
+        self,
+        pragma_token: PragmaToken,
+        pragma_line_number: int,
+        next_replacement: ReplaceTokensRecord,
+        pragma_line_numbers_to_remove: List[int],
+    ) -> None:
+
+        # first_r_t = next_replacement.replacement_tokens[0]
+        ind = len(next_replacement.replacement_tokens) - 1
+        last_r_t = next_replacement.replacement_tokens[ind]
+        # while ind >= 0 and last_r_t.is_end_token:
+        #     ind -= 1
+        #     last_r_t = next_replacement.replacement_tokens[ind]
+        # if pragma_line_number < last_r_t.line_number:
+        #     assert False
+        #     return
+
+        # first_o_l = next_replacement.start_token.line_number
+        # last_o_l = next_replacement.end_token.line_number
+
+        xyz = pragma_token.pragma_lines[pragma_line_number]
+        all_ids = self.__plugins.get_all_ids()
+        document_pragmas: Dict[int, Set[str]] = {}
+        document_pragma_ranges: List[Tuple[int, int, Set[str]]] = []
+        general_pragma_ranges: List[Tuple[int, int, str]] = []
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
+        log_pragma_failure = self.log_pragma_failure
+        actual_pragma_line_numbers: List[int] = []
+        self.number_of_pragma_failures = 0
+        PragmaExtension.compile_single_pragma(
+            scan_file="bob",
+            next_line_number=pragma_line_number,
+            pragma_lines=pragma_token.pragma_lines,
+            all_ids=all_ids,
+            document_pragmas=document_pragmas,
+            document_pragma_ranges=document_pragma_ranges,
+            general_pragma_ranges=general_pragma_ranges,
+            active_general_pragmas=active_general_pragmas,
+            log_pragma_failure=log_pragma_failure,
+            actual_pragma_line_numbers=actual_pragma_line_numbers,
+        )
+        if document_pragmas or self.number_of_pragma_failures:
+            pragma_line_numbers_to_remove.append(pragma_line_number)
+        elif document_pragma_ranges:
+            ol = document_pragma_ranges[0]
+            ol_first = ol[0]
+            ol_last = ol[1]
+            # ot_first = next_replacement.start_token.line_number
+            ot_last = next_replacement.end_token.line_number
+            # rt_first = first_r_t.line_number
+            rt_last = last_r_t.line_number
+            olap = ot_last - pragma_line_number
+            ddd = (ol_last - ol_first + 1) - olap
+            target_line_number = rt_last + 1
+            ff = xyz.index("disable-num-lines ") + len("disable-num-lines ")
+            fg1, _ = ParserHelper.collect_while_one_of_characters(xyz, ff, "0123456789")
+            fi = xyz[:ff]
+            fj = str(ddd)
+            fk = xyz[fg1:]
+            new_pragma = fi + fj + fk
+            pragma_token.adjust_pragma_line_number(
+                pragma_line_number, target_line_number, new_pragma
+            )
+        else:
+            target_line_number = last_r_t.line_number + 1
+            pragma_token.adjust_pragma_line_number(
+                pragma_line_number, target_line_number
+            )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     def __apply_replacements(

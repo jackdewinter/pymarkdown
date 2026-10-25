@@ -11,6 +11,15 @@
     - Added extra mention of the file that is being scanned or fixed if a parsing
       failure occurs.
 
+## Version 0.9.41 - 2026-10-12
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Contributor: [spreston-sila](https://github.com/spreston-sila)
+    - Adds rules for MD055, MD056, and MD058
+
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
