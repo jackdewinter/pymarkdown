@@ -211,9 +211,9 @@ test: assert
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 """,
-                    expected_error="""
+                    expected_error=f"""
                 
-Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document.
+Unexpected Error(BadTokenizationError): An unhandled error occurred processing the '{file_name_2}' file.
 """,
                 )
 
@@ -274,7 +274,7 @@ test: assert
 {file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 """,
-                    expected_error=f"""{file_name_2}:0:0: An unhandled error occurred processing the document.""",
+                    expected_error=f"""{file_name_2}:0:0: An unhandled error occurred processing the '{file_name_2}' file.""",
                 )
 
                 # Act
@@ -434,9 +434,9 @@ test: assert
                 expected_results = ExpectedResults(
                     return_code=1,
                     expected_output=f"""Fixed: {file_name_1}""",
-                    expected_error="""
+                    expected_error=f"""
                 
-Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document.
+Unexpected Error(BadTokenizationError): An unhandled error occurred processing the '{file_name_2}' file.
 """,
                 )
 
@@ -490,7 +490,7 @@ test: assert
                     return_code=1,
                     expected_output=f"""Fixed: {file_name_1}
 Fixed: {file_name_3}""",
-                    expected_error=f"""{file_name_2}:0:0: An unhandled error occurred processing the document.""",
+                    expected_error=f"""{file_name_2}:0:0: An unhandled error occurred processing the '{file_name_2}' file.""",
                 )
                 # Act
                 execute_results = scanner_default.invoke_main(

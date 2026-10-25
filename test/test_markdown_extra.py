@@ -17721,7 +17721,6 @@ something
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -17765,7 +17764,6 @@ def test_extra_061x() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -17805,7 +17803,6 @@ def test_extra_061a() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -17845,7 +17842,6 @@ def test_extra_061b() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -17885,7 +17881,6 @@ def test_extra_061c() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -17956,7 +17951,6 @@ def test_extra_061d() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -17994,7 +17988,6 @@ def test_extra_062a() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18030,7 +18023,6 @@ def test_extra_062b() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18072,7 +18064,6 @@ def test_extra_062c() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18111,7 +18102,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18154,7 +18144,6 @@ def test_extra_062da() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18198,7 +18187,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        # show_debug=True,
         config_map=tables_config_map,
     )
 
@@ -18242,7 +18230,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18284,7 +18271,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18328,7 +18314,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18373,7 +18358,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18418,7 +18402,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18465,7 +18448,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18514,7 +18496,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18555,7 +18536,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18614,7 +18594,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18655,7 +18634,6 @@ def test_extra_062g() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=True,
         config_map=tables_config_map,
     )
     # assert
@@ -18694,7 +18672,6 @@ def test_extra_063ax() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18730,7 +18707,6 @@ def test_extra_063aa() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18766,7 +18742,6 @@ def test_extra_063bx() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18800,7 +18775,6 @@ def test_extra_063ba() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18842,7 +18816,6 @@ def test_extra_063cx() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18882,7 +18855,6 @@ def test_extra_063ca() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18926,7 +18898,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -18968,7 +18939,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19012,7 +18982,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19057,7 +19026,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19102,7 +19070,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19149,7 +19116,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19198,7 +19164,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19239,7 +19204,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 
@@ -19298,7 +19262,6 @@ some other text</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=tables_config_map,
     )
 

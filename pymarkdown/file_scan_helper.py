@@ -272,10 +272,17 @@ class FileScanHelper:
 
             context.report_on_triggered_rules()
             POGGER.info("Ending file '$'.", next_file_name)
-        except Exception:
+        except Exception as this_exception:
             if context:
                 context.report_on_triggered_rules()
             POGGER.info("Ending file '$' with exception.", next_file_name)
+            if (
+                isinstance(this_exception, BadTokenizationError)
+                and str(this_exception) == TokenizedMarkdown.UNHANDLED_EXCEPTION_TEXT
+            ):
+                raise BadTokenizationError(
+                    f"An unhandled error occurred processing the '{next_file_name}' file."
+                ) from this_exception
             raise
 
     def __find_and_compile_pragmas(
@@ -342,8 +349,16 @@ class FileScanHelper:
 
                 POGGER.info("Ending file to fix '$'.", next_file_name)
                 did_succeed = True
-            except Exception:
+            except Exception as this_exception:
                 POGGER.info("Ending file to fix '$' with exception.", next_file_name)
+                if (
+                    isinstance(this_exception, BadTokenizationError)
+                    and str(this_exception)
+                    == TokenizedMarkdown.UNHANDLED_EXCEPTION_TEXT
+                ):
+                    raise BadTokenizationError(
+                        f"An unhandled error occurred processing the '{next_file_name}' file."
+                    ) from this_exception
                 raise
         except (BadPluginError, BadPluginFixError) as this_exception:
             self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)

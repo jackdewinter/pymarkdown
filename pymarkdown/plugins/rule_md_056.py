@@ -59,7 +59,7 @@ class RuleMd056(RulePlugin):
         # excess-column count on the token if that ever matters.
         segments = cls.__unescaped_pipe.split(excess_text.rstrip())
         divider_count = len(segments) - 1
-        return divider_count if not segments[-1].strip() else divider_count + 1
+        return divider_count + 1 if segments[-1].strip() else divider_count
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

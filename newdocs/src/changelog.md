@@ -5,23 +5,47 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
+    - Added extra tests for [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+      to reaffirm that the issues mentioned were addressed.
+    - Added extra mention of the file that is being scanned or fixed if a parsing
+      failure occurs.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
 None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+None
+
+## Version 0.9.41 - 2026-10-12
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Contributor: [spreston-sila](https://github.com/spreston-sila)
+    - Adds rules for MD055, MD056, and MD058
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
     - Addressed issues with fixing not honoring suppressions.
-    - Except for XXX and XXX
+    - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
 - [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
-    - Fixed issue with a paragraph, then a list start, then the first line and
-      only line of a table before the next item of the list.
+    - Fixed issue with a paragraph, then a list start, then the first line and only
+      line of a table before the next item of the list.
     - Added checks for similar code in the LRD handling to be safe.
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Changed
-
-None
+- [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
+    - More coverage and fixing issues with pragmas and Md013, Md031, and Md046.
+    - Created [Issue 1708](https://github.com/jackdewinter/pymarkdown/issues/1708)
+      to handle edge cases yet to be completed
+- [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
+    - Fixed problems with Md027 and suppressions
 
 ## Version 0.9.40 - 2026-09-13
 

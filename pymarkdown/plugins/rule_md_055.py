@@ -160,36 +160,38 @@ class RuleMd055(RulePlugin):
             self.__row_token = token
             self.__last_item_whitespace = ""
         elif isinstance(token, EndMarkdownToken):
-            start_token = token.start_markdown_token
-            if start_token.is_table_header_item or start_token.is_table_row_item:
-                self.__last_item_whitespace = token.extracted_whitespace
-            elif start_token.is_table_header or start_token.is_table_row:
-                # An over-full row emits item tokens only up to the header column
-                # count and folds the excess cells (including the real row
-                # terminator) into the end token's whitespace. When that is
-                # present it carries the true trailing pipe; otherwise the last
-                # emitted item's whitespace does.
-                excess = token.extracted_whitespace
-                if excess:
-                    trailing = bool(self.__trailing_pipe.search(excess))
-                else:
-                    trailing = bool(
-                        self.__unescaped_pipe.search(self.__last_item_whitespace)
-                    )
-                self.__check_row(context, self.__row_leading, trailing)
-                if start_token.is_table_header:
-                    # The delimiter row is not its own token; its pipe style is
-                    # encoded in the header token's separator_line. Check it as a
-                    # row in its own right (it sits one line below the header).
-                    # ponytail: separator_line never contains escaped pipes, so a
-                    # plain strip/startswith is enough; full per-cell column
-                    # precision would need parser support.
-                    separator = cast(
-                        TableMarkdownHeaderToken, start_token
-                    ).separator_line
-                    self.__check_row(
-                        context,
-                        separator.lstrip().startswith("|"),
-                        separator.rstrip().endswith("|"),
-                        line_delta=1,
-                    )
+            self.__next_token_end(context, token)
+
+    def __next_token_end(
+        self, context: PluginScanContext, token: EndMarkdownToken
+    ) -> None:
+        start_token = token.start_markdown_token
+        if start_token.is_table_header_item or start_token.is_table_row_item:
+            self.__last_item_whitespace = token.extracted_whitespace
+        elif start_token.is_table_header or start_token.is_table_row:
+            # An over-full row emits item tokens only up to the header column
+            # count and folds the excess cells (including the real row
+            # terminator) into the end token's whitespace. When that is
+            # present it carries the true trailing pipe; otherwise the last
+            # emitted item's whitespace does.
+            if excess := token.extracted_whitespace:
+                trailing = bool(self.__trailing_pipe.search(excess))
+            else:
+                trailing = bool(
+                    self.__unescaped_pipe.search(self.__last_item_whitespace)
+                )
+            self.__check_row(context, self.__row_leading, trailing)
+            if start_token.is_table_header:
+                # The delimiter row is not its own token; its pipe style is
+                # encoded in the header token's separator_line. Check it as a
+                # row in its own right (it sits one line below the header).
+                # ponytail: separator_line never contains escaped pipes, so a
+                # plain strip/startswith is enough; full per-cell column
+                # precision would need parser support.
+                separator = cast(TableMarkdownHeaderToken, start_token).separator_line
+                self.__check_row(
+                    context,
+                    separator.lstrip().startswith("|"),
+                    separator.rstrip().endswith("|"),
+                    line_delta=1,
+                )
