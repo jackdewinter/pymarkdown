@@ -165,14 +165,9 @@ repos:
 -   repo: local
     hooks:
     -   id: docvet-coverage
-        name: "Scan:   DocVet - Coverage-pre"
-        language: system
-        entry: ls -la pymarkdown/
-        pass_filenames: false
-    -   id: docvet-coverage-main
         name: "Scan:   DocVet - Coverage"
         language: system
-        entry: pipenv run docvet coverage pymarkdown/**/*.py
+        entry: pipenv run docvet coverage --files pymarkdown/**/*.py
         pass_filenames: false
 -   repo: local
     hooks:
