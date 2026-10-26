@@ -1,18 +1,18 @@
 repos:
 -   repo: https://github.com/ambv/black
-    rev: 26.5.1
+    rev: 26.10.1
     hooks:
     -   id: black
         name: "Format: Black"
         args: ["--exclude", "test/resources", "--exclude", ".venv", "."]
         pass_filenames: false
 -   repo: https://github.com/pycqa/isort
-    rev: 8.0.1
+    rev: 9.0.2
     hooks:
     -   id: isort
         name: "Format: ISort"
 -   repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.13.1-1
+    rev: v3.14.1-1
     hooks:
     -   id: shfmt
         name: "Format: ShFmt"
@@ -24,7 +24,7 @@ repos:
         entry: pipenv run python utils/verify_install_requirements.py
         pass_filenames: false
 -   repo: https://github.com/pycqa/flake8
-    rev: '7.3.0'
+    rev: 7.4.1
     hooks:
     -   id: flake8
         name: "Scan:   Flake8"
@@ -70,7 +70,7 @@ repos:
         args: ["-j=1", "--recursive=y", "-rn", "-sn", "utils"]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.2.0
+    rev: v2.4.0
     hooks:
     -   id: mypy
         name: "Scan:   MyPy"
@@ -79,7 +79,7 @@ repos:
           "types-pyyaml", types-PyYAML, columnar]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.2.0
+    rev: v2.4.0
     hooks:
     -   id: mypy
         name: "Scan:   MyPy (test)"
@@ -117,7 +117,7 @@ repos:
         entry: pipenv run python utils/generate_dependencies_file.py
         pass_filenames: false
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.39
+    rev: v0.9.41
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (Old Documentation)"
@@ -129,7 +129,7 @@ repos:
         -   changelog.md
         -   ./docs
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.39
+    rev: v0.9.41
     hooks:
     -   id: pymarkdown
         name: "Scan:   PyMarkdown (README.md)"

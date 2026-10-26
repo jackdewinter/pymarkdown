@@ -61,7 +61,7 @@ possible for all users, this page assumes that:
 
 - you are comfortable using the command line in your favorite shell and
   understanding commands like "go to your project root directory and run this"
-- Python 3.10+ is installed and available on your `PATH`
+- Python 3.11+ is installed and available on your `PATH`
 - you know whether you need to use a **Python package manager** like Pipenv
   to install PyMarkdown, and if you want to install it as a **development-only dependency**
 - if you plan to install PyMarkdown via Pre-Commit, the basic usage and configuration
@@ -122,7 +122,7 @@ In general, the command is of the form:
 
 Before jumping to other docs, verify:
 
-1. `python --version` shows Python 3.10 or higher.
+1. `python --version` shows Python 3.11 or higher.
 2. `pip show pymarkdownlnt` (or `pipenv graph | grep pymarkdownlnt`) shows
    the package installed.
 

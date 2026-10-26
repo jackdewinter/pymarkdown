@@ -39,6 +39,8 @@ from pymarkdown.tokens.table_markdown_tokens import (
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
 
+# pylint: disable=too-many-lines
+
 
 @dataclass
 class CollectedTableHeaderItem:
@@ -405,12 +407,17 @@ class TableStyleEvaluator(ABC):
     # pylint: enable=too-many-arguments
 
 
-class SimpleStyleEvaluator(TableStyleEvaluator):
+class SimpleStyleEvaluator(TableStyleEvaluator, ABC):
     """Base class to handle simple evaluations."""
 
     def __init__(self, expect_value: int) -> None:
         super().__init__()
         self.__expect_value = expect_value
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Name of the style evaluator."""
 
     def __evaluate_title_row(
         self,

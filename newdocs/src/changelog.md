@@ -3,6 +3,13 @@
 ## Unversioned
 
 <!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+- Upgraded minimum version from Python 3.10 to 3.11 due to various
+  CVEs found with the filelock package, which has a minimum supported
+  version of 3.11
+
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
