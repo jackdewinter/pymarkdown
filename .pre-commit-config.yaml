@@ -167,19 +167,14 @@ repos:
     -   id: docvet-coverage
         name: "Scan:   DocVet - Coverage"
         language: system
-        entry: pipenv run docvet coverage --files pymarkdown/**/*.py
+        entry: pipenv run docvet coverage --all
         pass_filenames: false
 -   repo: local
     hooks:
     -   id: docvet-presence-main
-        name: "Scan:   DocVet - Presence (Main Directory)"
+        name: "Scan:   DocVet - Presence"
         language: system
-        entry: pipenv run docvet presence pymarkdown/*.py
-        pass_filenames: false
-    -   id: docvet-presence2-pymarkdown
-        name: "Scan:   DocVet - Presence (Subdirectories)"
-        language: system
-        entry: pipenv run docvet presence pymarkdown/**/*.py
+        entry: pipenv run docvet presence --all
         pass_filenames: false
 -   repo: local
     hooks:
