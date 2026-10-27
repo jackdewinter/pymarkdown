@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that locally aimed link fragments are valid.
 """
 
+import html
 import re
 import urllib
 from enum import Enum
@@ -226,6 +227,7 @@ class RuleMd051(RulePlugin):
         )
         converted_heading = self.__resolve_special_case(converted_heading)
         converted_heading = ParserHelper.resolve_all_from_text(converted_heading)
+        converted_heading = html.unescape(converted_heading)
         converted_heading = RuleMd051.__PUNCTUATION_REGEXP.sub("", converted_heading)
         converted_heading = converted_heading.replace(" ", "-")
 
