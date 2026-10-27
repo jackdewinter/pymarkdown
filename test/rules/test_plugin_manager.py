@@ -8,6 +8,7 @@ from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import (
     ARGPARSE_X,
+    USAGE_X,
     assert_file_is_as_expected,
     copy_to_temp_file,
     create_temporary_configuration_file,
@@ -42,7 +43,7 @@ def test_markdown_with_plugins_only(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: main.py plugins [-h] {list,info} ...
+        expected_output="""usage: {USAGE_X} plugins [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -51,7 +52,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -1832,9 +1833,9 @@ def test_markdown_with_plugins_list_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py plugins list [-h] [--all] [list_filter]
-main.py plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
-""",
+        expected_error="""usage: {USAGE_X} plugins list [-h] [--all] [list_filter]
+{USAGE_X} plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -1859,9 +1860,9 @@ def test_markdown_with_plugins_info_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py plugins info [-h] info_filter
-main.py plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
-""",
+        expected_error="""usage: {USAGE_X} plugins info [-h] info_filter
+{USAGE_X} plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act

@@ -7,6 +7,7 @@ import runpy
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import (
+    USAGE_X,
     assert_file_is_as_expected,
     copy_to_temp_file,
     create_temporary_markdown_file,
@@ -37,7 +38,7 @@ def test_markdown_return_code_command_line_bad(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+        expected_error="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
@@ -46,7 +47,9 @@ def test_markdown_return_code_command_line_bad(
                [--log-file LOG_FILE]
                [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
-main.py: error: argument --return-code-scheme: invalid __validate_return_code_scheme value: 'invalid'""",
+{USAGE_X}: error: argument --return-code-scheme: invalid __validate_return_code_scheme value: 'invalid'""".replace(
+            "{USAGE_X}", USAGE_X
+        ),
     )
 
     # Act
@@ -130,11 +133,13 @@ def test_markdown_return_code_default_command_line_error(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
 main.py scan: error: the following arguments are required: path
-""",
+""".replace(
+            "{USAGE_X}", USAGE_X
+        ),
     )
 
     # Act
@@ -329,11 +334,13 @@ def test_markdown_return_code_minimal_command_line_error(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS] [--respect-gitignore]
                     path [path ...]
-main.py scan: error: the following arguments are required: path
-""",
+{USAGE_X} scan: error: the following arguments are required: path
+""".replace(
+            "{USAGE_X}", USAGE_X
+        ),
     )
 
     # Act

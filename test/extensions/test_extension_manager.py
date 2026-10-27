@@ -26,7 +26,7 @@ def test_markdown_with_extensions_only(scanner_default: MarkdownScanner) -> None
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""{USAGE_X} extensions [-h] {list,info} ...
+        expected_output="""usage: {USAGE_X} extensions [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -491,9 +491,9 @@ def test_markdown_with_extensions_list_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions list [-h] [--all] [list_filter]
-main.py extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
-""",
+        expected_error="""usage: {USAGE_X} extensions list [-h] [--all] [list_filter]
+{USAGE_X} extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
