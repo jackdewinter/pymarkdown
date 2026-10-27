@@ -425,6 +425,35 @@ scanTests = [
         scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
 """,
     ),
+    pluginRuleTest(
+        "good_code_span_entity_is_literal",
+        source_file_contents="""# Example
+
+[link to the heading](#heading-with-amp-inside)
+
+## Heading with `&amp;` inside
+""",
+    ),
+    pluginRuleTest(
+        "good_html_id_with_encoded_entity",
+        source_file_contents="""# Example
+
+[link to the id](#thequotfast)
+
+<div id="the&amp;quot;fast"></div>
+""",
+        disable_rules="md033",
+    ),
+    pluginRuleTest(
+        "good_uppercase_entity_name_stays_literal",
+        source_file_contents="""# Example
+
+[link to the heading](#euro)
+
+## &EURO;
+""",
+        disable_rules="md026",
+    ),
 ]
 
 

@@ -215,9 +215,13 @@ class RuleMd051(RulePlugin):
             )
         return converted_heading
 
-    def __add_current_heading(self) -> None:
+    def __add_current_heading(self, already_decoded: bool = False) -> None:
         """
         https://github.com/gjtorikian/html-pipeline/blob/f13a1534cb650ba17af400d1acd3a22c28004c09/lib/html/pipeline/toc_filter.rb#L30
+
+        `already_decoded` is set when the heading text was produced by an HTMLParser,
+        which already decodes character references in attribute values. Decoding a
+        second time would turn an id such as `the&quot;fast` into `the"fast`.
         """
 
         converted_heading = (
@@ -227,7 +231,8 @@ class RuleMd051(RulePlugin):
         )
         converted_heading = self.__resolve_special_case(converted_heading)
         converted_heading = ParserHelper.resolve_all_from_text(converted_heading)
-        converted_heading = html.unescape(converted_heading)
+        if not already_decoded:
+            converted_heading = html.unescape(converted_heading)
         converted_heading = RuleMd051.__PUNCTUATION_REGEXP.sub("", converted_heading)
         converted_heading = converted_heading.replace(" ", "-")
 
@@ -245,7 +250,7 @@ class RuleMd051(RulePlugin):
         parser.close()
         for i in parser.valid_targets:
             self.__current_heading = i
-            self.__add_current_heading()
+            self.__add_current_heading(already_decoded=True)
 
     def __handle_html_block(self) -> None:
         parser = MyHTMLParser()
@@ -253,7 +258,7 @@ class RuleMd051(RulePlugin):
         parser.close()
         for i in parser.valid_targets:
             self.__current_heading = i
-            self.__add_current_heading()
+            self.__add_current_heading(already_decoded=True)
         self.__current_heading = ""
 
     def __next_token_look(self, token: MarkdownToken) -> None:
