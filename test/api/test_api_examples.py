@@ -33,6 +33,7 @@ def test_api_api_basics_example(caplog: pytest.LogCaptureFixture) -> None:
         source_path,
     )
 
+
 @pytest.mark.skip
 def test_api_exceptions_example_bad(caplog: pytest.LogCaptureFixture) -> None:
     """
