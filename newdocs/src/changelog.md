@@ -14,7 +14,10 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1698](https://github.com/jackdewinter/pymarkdown/issues/1698)
+    - Rule md060 no longer undercounts the display width of strong emphasis
+      (`**text**` and `__text__`) in table cells by two characters, which caused
+      false `Expected-Column` errors on correctly aligned tables.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

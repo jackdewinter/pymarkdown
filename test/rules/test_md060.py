@@ -2980,6 +2980,36 @@ Character | Meaning |
 {temp_source_path}:2:41: MD060: Table column style. [Style: tight Expected-Whitespace: 0 Actual-Whitespace: 1] (table-column-style)
 """,
     ),
+    pluginRuleTest(
+        "good_strong_emphasis_in_aligned_table",
+        source_file_contents="""| A     | B        |
+| ----- | -------- |
+| plain | **bold** |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "good_strong_emphasis_underscore_in_aligned_table",
+        source_file_contents="""| A     | B        |
+| ----- | -------- |
+| plain | __bold__ |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "bad_strong_emphasis_in_aligned_table_with_extra_space",
+        source_file_contents="""| A     | B        |
+| ----- | -------- |
+| plain | **bold**  |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:21: MD060: Table column style. [Style: aligned Expected-Column: 20 Actual-Column: 21] (table-column-style)
+""",
+    ),
 ]
 
 
