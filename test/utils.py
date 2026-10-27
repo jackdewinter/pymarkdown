@@ -25,6 +25,10 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
+if sys.version_info >= (3, 14)  and sys.platform.startswith("win"):
+    USAGE_X = "usage: python.exe main.py"
+else:
+    USAGE_X = "usage: main.py"
 if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:

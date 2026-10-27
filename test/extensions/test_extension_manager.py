@@ -8,7 +8,7 @@ of the tests.
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import ARGPARSE_X, write_temporary_configuration
+from test.utils import ARGPARSE_X, USAGE_X, write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
@@ -26,7 +26,7 @@ def test_markdown_with_extensions_only(scanner_default: MarkdownScanner) -> None
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: main.py extensions [-h] {list,info} ...
+        expected_output="""{USAGE_X} extensions [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -35,7 +35,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
