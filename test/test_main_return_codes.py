@@ -7,6 +7,7 @@ import runpy
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import (
+    USAGE_INDENT_X,
     USAGE_X,
     assert_file_is_as_expected,
     copy_to_temp_file,
@@ -134,11 +135,13 @@ def test_markdown_return_code_default_command_line_error(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
-main.py scan: error: the following arguments are required: path
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
+{USAGE_X} scan: error: the following arguments are required: path
 """.replace(
             "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
         ),
     )
 

@@ -517,9 +517,9 @@ def test_markdown_with_extensions_info_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions info [-h] info_filter
-main.py extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
-""",
+        expected_error="""usage: {USAGE_X} extensions info [-h] info_filter
+{USAGE_X} extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act

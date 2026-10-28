@@ -5,7 +5,7 @@ Module to provide tests related to alternate extensions.
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import USAGE_X
+from test.utils import USAGE_INDENT_X, USAGE_X
 from typing import Tuple
 
 
@@ -112,10 +112,12 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period.""".replace(
             "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
         ),
     )
 
@@ -145,10 +147,12 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period.""".replace(
             "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
         ),
     )
 
@@ -178,9 +182,13 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
-main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period.""",
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
+main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period.""".replace(
+            "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
+        ),
     )
 
     # Act
@@ -242,10 +250,12 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Alternate extensions cannot be an empty string.""".replace(
             "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
         ),
     )
 

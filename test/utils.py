@@ -27,8 +27,10 @@ from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkd
 
 if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
     USAGE_X = "python.exe main.py"
+    USAGE_INDENT_X = "           "
 else:
     USAGE_X = "main.py"
+    USAGE_INDENT_X = ""
 if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:
