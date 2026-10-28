@@ -14,7 +14,11 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1666](https://github.com/jackdewinter/pymarkdown/issues/1666)
+    - Fixed MD014 reporting a violation for PowerShell environment variable
+      assignments in code blocks.  A `$` followed by a name character starts a
+      variable reference, not a shell prompt, so only a `$` followed by
+      whitespace (or the end of the line) is treated as a prompt marker.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

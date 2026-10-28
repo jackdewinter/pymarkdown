@@ -149,6 +149,92 @@ def test_md014_bad_shell_example_indented(scanner_default: MarkdownScanner) -> N
     execute_results.assert_results(expected_results=expected_results)
 
 
+@pytest.mark.rules
+def test_md014_good_powershell_env_assignments(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced block of PowerShell environment variable assignments.
+
+    A `$` followed by a name character starts a variable reference, not a
+    shell prompt.  See https://github.com/jackdewinter/pymarkdown/issues/1666
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("good_powershell_env_assignments.md")
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults()
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md014_good_powershell_env_assignment_single(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule does not trigger with a blockquoted fenced
+    block containing a single PowerShell environment variable assignment.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path(
+        "good_powershell_env_assignment_single.md"
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults()
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+def test_md014_bad_shell_prompt_standalone_dollar(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule still triggers for lines that consist of a
+    bare `$`, which has no other interpretation than a prompt.
+    """
+
+    # Arrange
+    source_path, abs_source_path = __generate_source_path(
+        "bad_shell_prompt_standalone_dollar.md"
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"{abs_source_path}:2:1: MD014: Dollar signs used before commands without showing output (commands-show-output)"
+        "",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
 def test_md014_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md014",
