@@ -187,9 +187,7 @@ def test_md014_good_powershell_env_assignment_single(
     """
 
     # Arrange
-    source_path, _ = __generate_source_path(
-        "good_powershell_env_assignment_single.md"
-    )
+    source_path, _ = __generate_source_path("good_powershell_env_assignment_single.md")
     supplied_arguments = [
         "scan",
         source_path,
@@ -224,8 +222,7 @@ def test_md014_bad_shell_prompt_standalone_dollar(
 
     expected_results = ExpectedResults(
         return_code=1,
-        expected_output=f"{abs_source_path}:2:1: MD014: Dollar signs used before commands without showing output (commands-show-output)"
-        "",
+        expected_output=f"{abs_source_path}:2:1: MD014: Dollar signs used before commands without showing output (commands-show-output)",
     )
 
     # Act
