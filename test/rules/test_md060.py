@@ -3010,6 +3010,34 @@ Character | Meaning |
         scan_expected_output="""{temp_source_path}:3:21: MD060: Table column style. [Style: aligned Expected-Column: 20 Actual-Column: 21] (table-column-style)
 """,
     ),
+    pluginRuleTest(
+        "good_code_span_entity_sentinels_in_aligned_table",
+        source_file_contents="""# MD060 repro
+
+| Syntax    | Meaning     |
+| --------- | ----------- |
+| `a+`      | one or more |
+| `(?P<n>)` | named group |
+| `a&b`     | ampersand   |
+| `"x"`     | quotes      |
+| x < y     | plain text  |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "bad_code_span_entity_misaligned_table",
+        source_file_contents="""| Code      | Meaning     |
+| --------- | ----------- |
+| `(?P<n>)`  | named group |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:14: MD060: Table column style. [Style: aligned Expected-Column: 13 Actual-Column: 14] (table-column-style)
+{temp_source_path}:3:28: MD060: Table column style. [Style: aligned Expected-Column: 27 Actual-Column: 28] (table-column-style)
+""",
+    ),
 ]
 
 

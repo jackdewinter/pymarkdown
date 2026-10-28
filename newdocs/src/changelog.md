@@ -18,6 +18,10 @@
     - Rule md060 no longer undercounts the display width of strong emphasis
       (`**text**` and `__text__`) in table cells by two characters, which caused
       false `Expected-Column` errors on correctly aligned tables.
+    - Rule md060 no longer overcounts the display width of code spans
+      (`` `text` ``) containing entity-like characters such as `<`, `>` and `&`
+      in table cells, which caused false `Expected-Column` errors on correctly
+      aligned tables.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

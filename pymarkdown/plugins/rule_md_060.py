@@ -166,7 +166,9 @@ class TableStyleEvaluator(ABC):
             elif next_inline_token.is_inline_code_span:
                 code_span_token = cast(InlineCodeSpanMarkdownToken, next_inline_token)
                 data_length += (
-                    self.__safe_string_length(code_span_token.span_text)
+                    self.__safe_string_length(
+                        ParserHelper.remove_all_from_text(code_span_token.span_text)
+                    )
                     + (2 * len(code_span_token.extracted_start_backticks))
                     + len(code_span_token.leading_whitespace)
                     + len(code_span_token.trailing_whitespace)
