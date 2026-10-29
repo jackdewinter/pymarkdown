@@ -15,6 +15,7 @@ from test.utils import (
     CONFIG_FILE_X,
     DISABLE_RULES_X,
     ENABLE_RULES_X,
+    HELP_OPTIONS_X,
     SET_CONFIG_X,
     USAGE_X,
 )
@@ -47,237 +48,7 @@ def test_markdown_with_no_parameters(scanner_default: MarkdownScanner) -> None:
     expected_results = ExpectedResults(
         return_code=2,
         expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--enable-extensions ENABLE_EXTENSIONS]
-               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
-               [--stack-trace] [--continue-on-error]
-               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
-               [--return-code-scheme {default,minimal,explicit}]
-               {extensions,fix,plugins,scan,scan-stdin,version} ...
-
-Lint any found Markdown files.
-
-positional arguments:
-  {extensions,fix,plugins,scan,scan-stdin,version}
-    extensions          extension commands
-    fix                 fix the Markdown files in any specified paths
-    plugins             plugin commands
-    scan                scan the Markdown files in any specified paths
-    scan-stdin          scan the standard input as a Markdown file
-    version             version of the application
-
-{ARGPARSE_X}
-  -h, --help            show this help message and exit
-  {ENABLE_RULES_X}
-                        comma separated list of rules to enable
-  {DISABLE_RULES_X}
-                        comma separated list of rules to disable
-  --enable-extensions ENABLE_EXTENSIONS
-                        comma separated list of extensions to enable
-  --add-plugin ADD_PLUGIN
-                        path to a plugin containing a new rule to apply
-  {CONFIG_FILE_X}
-                        path to the configuration file to use
-  {SET_CONFIG_X}
-                        manually set an individual configuration property
-  --strict-config       throw an error if configuration is bad, instead of
-                        assuming default
-  --no-json5            use stdlib's json reader instead of new JSON5 json
-                        reader
-  --stack-trace         if an error occurs, print out the stack trace for
-                        debug purposes
-  --continue-on-error   if a tokenization or plugin error occurs, allow
-                        processing to continue
-  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
-                        minimum level required to log messages
-  --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal,explicit}
-                        scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
-        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
-        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
-        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
-        .replace("{USAGE_X}", USAGE_X),
-    )
-
-    # Act
-    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(expected_results=expected_results)
-
-
-def test_markdown_with_no_parameters_through_module(
-    scanner_module: MarkdownScanner,
-) -> None:
-    """
-    Test to make sure we get the simple information if no parameters are supplied,
-    but through the module interface.
-    """
-
-    # Arrange
-    supplied_arguments: List[str] = []
-
-    expected_results = ExpectedResults(
-        return_code=2,
-        expected_output="""usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-                   [--enable-extensions ENABLE_EXTENSIONS]
-                   [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-                   [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
-                   [--stack-trace] [--continue-on-error]
-                   [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-                   [--log-file LOG_FILE]
-                   [--return-code-scheme {default,minimal,explicit}]
-                   {extensions,fix,plugins,scan,scan-stdin,version} ...
-
-Lint any found Markdown files.
-
-positional arguments:
-  {extensions,fix,plugins,scan,scan-stdin,version}
-    extensions          extension commands
-    fix                 fix the Markdown files in any specified paths
-    plugins             plugin commands
-    scan                scan the Markdown files in any specified paths
-    scan-stdin          scan the standard input as a Markdown file
-    version             version of the application
-
-{ARGPARSE_X}
-  -h, --help            show this help message and exit
-  {ENABLE_RULES_X}
-                        comma separated list of rules to enable
-  {DISABLE_RULES_X}
-                        comma separated list of rules to disable
-  --enable-extensions ENABLE_EXTENSIONS
-                        comma separated list of extensions to enable
-  --add-plugin ADD_PLUGIN
-                        path to a plugin containing a new rule to apply
-  {CONFIG_FILE_X}
-                        path to the configuration file to use
-  {SET_CONFIG_X}
-                        manually set an individual configuration property
-  --strict-config       throw an error if configuration is bad, instead of
-                        assuming default
-  --no-json5            use stdlib's json reader instead of new JSON5 json
-                        reader
-  --stack-trace         if an error occurs, print out the stack trace for
-                        debug purposes
-  --continue-on-error   if a tokenization or plugin error occurs, allow
-                        processing to continue
-  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
-                        minimum level required to log messages
-  --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal,explicit}
-                        scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
-        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
-        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
-        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X),
-    )
-
-    # Act
-    execute_results = scanner_module.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(expected_results=expected_results)
-
-
-def test_markdown_with_no_parameters_through_main(
-    scanner_main: MarkdownScanner,
-) -> None:
-    """
-    Test to make sure we get the simple information if no parameters are supplied,
-    but through the main interface.
-    """
-
-    # Arrange
-    supplied_arguments: List[str] = []
-
-    expected_results = ExpectedResults(
-        return_code=2,
-        expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--enable-extensions ENABLE_EXTENSIONS]
-               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
-               [--stack-trace] [--continue-on-error]
-               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
-               [--return-code-scheme {default,minimal,explicit}]
-               {extensions,fix,plugins,scan,scan-stdin,version} ...
-
-Lint any found Markdown files.
-
-positional arguments:
-  {extensions,fix,plugins,scan,scan-stdin,version}
-    extensions          extension commands
-    fix                 fix the Markdown files in any specified paths
-    plugins             plugin commands
-    scan                scan the Markdown files in any specified paths
-    scan-stdin          scan the standard input as a Markdown file
-    version             version of the application
-
-{ARGPARSE_X}
-  -h, --help            show this help message and exit
-  {ENABLE_RULES_X}
-                        comma separated list of rules to enable
-  {DISABLE_RULES_X}
-                        comma separated list of rules to disable
-  --enable-extensions ENABLE_EXTENSIONS
-                        comma separated list of extensions to enable
-  --add-plugin ADD_PLUGIN
-                        path to a plugin containing a new rule to apply
-  {CONFIG_FILE_X}
-                        path to the configuration file to use
-  {SET_CONFIG_X}
-                        manually set an individual configuration property
-  --strict-config       throw an error if configuration is bad, instead of
-                        assuming default
-  --no-json5            use stdlib's json reader instead of new JSON5 json
-                        reader
-  --stack-trace         if an error occurs, print out the stack trace for
-                        debug purposes
-  --continue-on-error   if a tokenization or plugin error occurs, allow
-                        processing to continue
-  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
-                        minimum level required to log messages
-  --log-file LOG_FILE   destination file for log messages
-  --return-code-scheme {default,minimal,explicit}
-                        scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
-        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
-        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
-        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
-        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
-        .replace("{USAGE_X}", USAGE_X),
-    )
-
-    # Act
-    execute_results = scanner_main.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(expected_results=expected_results)
-
-
-def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
-    """
-    Test to make sure we get help if '-h' is supplied.
-    """
-
-    # Arrange
-    supplied_arguments = ["-h"]
-
-    expected_results = ExpectedResults(
-        expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--enable-extensions ENABLE_EXTENSIONS]
-               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
-               [--stack-trace] [--continue-on-error]
-               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
-               [--return-code-scheme {default,minimal,explicit}]
-               {extensions,fix,plugins,scan,scan-stdin,version} ...
+{HELP_OPTIONS_X}
 
 Lint any found Markdown files.
 
@@ -323,6 +94,215 @@ positional arguments:
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
         .replace("{SET_CONFIG_X}", SET_CONFIG_X)
         .replace("{USAGE_X}", USAGE_X)
+        .replace("{HELP_OPTIONS_X}", HELP_OPTIONS_X),
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_no_parameters_through_module(
+    scanner_module: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure we get the simple information if no parameters are supplied,
+    but through the module interface.
+    """
+
+    # Arrange
+    supplied_arguments: List[str] = []
+
+    help_options = HELP_OPTIONS_X.split("\n")
+    altered_help_options = "    " + "\n    ".join(help_options)
+
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+{HELP_OPTIONS_X}
+
+Lint any found Markdown files.
+
+positional arguments:
+  {extensions,fix,plugins,scan,scan-stdin,version}
+    extensions          extension commands
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
+    scan-stdin          scan the standard input as a Markdown file
+    version             version of the application
+
+{ARGPARSE_X}
+  -h, --help            show this help message and exit
+  {ENABLE_RULES_X}
+                        comma separated list of rules to enable
+  {DISABLE_RULES_X}
+                        comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  {CONFIG_FILE_X}
+                        path to the configuration file to use
+  {SET_CONFIG_X}
+                        manually set an individual configuration property
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
+  --stack-trace         if an error occurs, print out the stack trace for
+                        debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+  --return-code-scheme {default,minimal,explicit}
+                        scheme to choose for selecting the application return
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{HELP_OPTIONS_X}", altered_help_options),
+    )
+
+    # Act
+    execute_results = scanner_module.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_no_parameters_through_main(
+    scanner_main: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure we get the simple information if no parameters are supplied,
+    but through the main interface.
+    """
+
+    # Arrange
+    supplied_arguments: List[str] = []
+
+    expected_results = ExpectedResults(
+        return_code=2,
+        expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+{HELP_OPTIONS_X}
+
+Lint any found Markdown files.
+
+positional arguments:
+  {extensions,fix,plugins,scan,scan-stdin,version}
+    extensions          extension commands
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
+    scan-stdin          scan the standard input as a Markdown file
+    version             version of the application
+
+{ARGPARSE_X}
+  -h, --help            show this help message and exit
+  {ENABLE_RULES_X}
+                        comma separated list of rules to enable
+  {DISABLE_RULES_X}
+                        comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  {CONFIG_FILE_X}
+                        path to the configuration file to use
+  {SET_CONFIG_X}
+                        manually set an individual configuration property
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
+  --stack-trace         if an error occurs, print out the stack trace for
+                        debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+  --return-code-scheme {default,minimal,explicit}
+                        scheme to choose for selecting the application return
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{USAGE_X}", USAGE_X)
+        .replace("{HELP_OPTIONS_X}", HELP_OPTIONS_X),
+    )
+
+    # Act
+    execute_results = scanner_main.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure we get help if '-h' is supplied.
+    """
+
+    # Arrange
+    supplied_arguments = ["-h"]
+
+    expected_results = ExpectedResults(
+        expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+{HELP_OPTIONS_X}
+
+Lint any found Markdown files.
+
+positional arguments:
+  {extensions,fix,plugins,scan,scan-stdin,version}
+    extensions          extension commands
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
+    scan-stdin          scan the standard input as a Markdown file
+    version             version of the application
+
+{ARGPARSE_X}
+  -h, --help            show this help message and exit
+  {ENABLE_RULES_X}
+                        comma separated list of rules to enable
+  {DISABLE_RULES_X}
+                        comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  {CONFIG_FILE_X}
+                        path to the configuration file to use
+  {SET_CONFIG_X}
+                        manually set an individual configuration property
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
+  --stack-trace         if an error occurs, print out the stack trace for
+                        debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+  --return-code-scheme {default,minimal,explicit}
+                        scheme to choose for selecting the application return
+                        code""".replace("{ARGPARSE_X}", ARGPARSE_X)
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{USAGE_X}", USAGE_X)
+        .replace("{HELP_OPTIONS_X}", HELP_OPTIONS_X)
     )
 
     # Act

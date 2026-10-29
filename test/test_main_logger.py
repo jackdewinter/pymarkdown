@@ -17,6 +17,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.stack_token import StackToken
 
 from .utils import (
+    HELP_OPTIONS_X,
     USAGE_X,
     assert_file_is_as_expected,
     create_temporary_configuration_file,
@@ -123,16 +124,9 @@ def test_markdown_with_dash_dash_log_level_invalid(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--enable-extensions ENABLE_EXTENSIONS]
-               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
-               [--stack-trace] [--continue-on-error]
-               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
-               [--return-code-scheme {default,minimal,explicit}]
-               {extensions,fix,plugins,scan,scan-stdin,version} ...
+{HELP_OPTIONS_X}
 {USAGE_X}: error: argument --log-level: invalid validate_log_level_type value: 'invalid'
-""".replace("{USAGE_X}", USAGE_X),
+""".replace("{USAGE_X}", USAGE_X).replace("{HELP_OPTIONS_X}", HELP_OPTIONS_X),
     )
 
     # Act

@@ -181,7 +181,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
 {USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period.""".replace(
