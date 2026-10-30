@@ -7,6 +7,7 @@ of the tests.
 
 import logging
 import os
+import sys
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
 from test.pytest_execute import ExpectedResults
@@ -23,6 +24,7 @@ from typing import List, Tuple
 
 from pytest import LogCaptureFixture
 
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -114,8 +116,23 @@ def test_markdown_with_no_parameters_through_module(
 
     # Arrange
     supplied_arguments: List[str] = []
+    xx = " [--continue-on-error]"
 
     help_options = HELP_OPTIONS_X.split("\n")
+    if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
+        for i, j in enumerate(help_options):
+            if j.endswith(xx):
+                k = []
+
+                l1 = j[: -len(xx)]
+                _, l3 = ParserHelper.extract_spaces(l1, 0)
+                l2 = l3 + xx.strip()
+
+                k.extend(help_options[:i])
+                k.append(l1)
+                k.append(l2)
+                k.extend(help_options[i + 1 :])
+                help_options = k
     altered_help_options = "    " + "\n    ".join(help_options)
 
     expected_results = ExpectedResults(
