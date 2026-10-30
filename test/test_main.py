@@ -119,7 +119,6 @@ def test_markdown_with_no_parameters_through_module(
 
     altered_usage = USAGE_X
 
-
     xx = " [--continue-on-error]"
     help_options = HELP_OPTIONS_X.split("\n")
     if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
