@@ -116,10 +116,15 @@ def test_markdown_with_no_parameters_through_module(
 
     # Arrange
     supplied_arguments: List[str] = []
-    xx = " [--continue-on-error]"
 
+    altered_usage = USAGE_X
+
+
+    xx = " [--continue-on-error]"
     help_options = HELP_OPTIONS_X.split("\n")
     if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
+        altered_usage = "python.exe __main__.py"
+
         for i, j in enumerate(help_options):
             if j.endswith(xx):
                 k = []
@@ -137,7 +142,7 @@ def test_markdown_with_no_parameters_through_module(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+        expected_output="""usage: {USAGE_X} [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
 {HELP_OPTIONS_X}
 
 Lint any found Markdown files.
@@ -183,6 +188,7 @@ positional arguments:
         .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
         .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
         .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+        .replace("{USAGE_X}", altered_usage)
         .replace("{HELP_OPTIONS_X}", altered_help_options),
     )
 
