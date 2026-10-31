@@ -21,7 +21,12 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1713](https://github.com/jackdewinter/pymarkdown/issues/1713)
+    - Fixed MD051 deriving an incorrect expected anchor for headings that
+      contain HTML entities.  The punctuation filter was only stripping the
+      `&` and `;` of the escape sequence, leaving the entity name inside the
+      calculated fragment, so links to headings such as `Cats & dogs` or
+      `The "fast" path` were reported as invalid.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
