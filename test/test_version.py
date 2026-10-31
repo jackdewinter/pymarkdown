@@ -5,9 +5,10 @@ Module to make sure that the version number is tested.
 import os
 import platform
 import runpy
+from pymarkdown.version_helper import VersionHelper
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import ARGPARSE_X
+from test.utils import ARGPARSE_X, USAGE_X
 
 
 def test_version_composition() -> None:
@@ -40,12 +41,12 @@ def test_version_command_line_help(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=0,
-        expected_output="""usage: main.py version [-h] [--extended]
+        expected_output="""usage: {USAGE_X} version [-h] [--extended]
 
 {ARGPARSE_X}
   -h, --help  show this help message and exit
   --extended  show extended version information
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -95,12 +96,11 @@ def test_version_command_line_with_extended(scanner_default: MarkdownScanner) ->
     version_meta = runpy.run_path(version_path)
     semantic_version = version_meta["__version__"]
     python_version = f"{platform.python_version()} ({platform.python_implementation()}, {platform.python_compiler()})"
-    operating_system = f"{platform.system()} {platform.release()}"
 
     expected_results = ExpectedResults(
         expected_output=f"""PyMarkdown:         {semantic_version}
 Python:             {python_version}
-Operating System:   {operating_system}
+Operating System:   {VersionHelper.get_operating_system()}
 """
     )
 
