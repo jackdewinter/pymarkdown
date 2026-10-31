@@ -28,13 +28,11 @@ Please replace any of `[these areas]` in the paragraphs below with the requested
 
 ### Specifics
 
-What operating system and version are you running into this behavior on?
+What operating system and Python version are you seeing this behavior in? (Run `pymarkdown version --extended`.)
 
-[Provide Operating System and Version Number]
-
-What version are you seeing this behavior in? (Run `pip list` or `pipenv run pip list` and look for the entry beside `pymarkdownlnt`.)
-
-[PyMarkdownLnt Version Number]
+```text
+paste contents from `pymarkdownlnt version --extended` here
+```
 
 Are there any extra steps that need to be taken before executing the application?
 

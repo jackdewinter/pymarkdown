@@ -122,19 +122,19 @@ def test_markdown_with_no_parameters_through_module(
     if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
         altered_usage = "python.exe __main.py__"
 
-        for i, j in enumerate(help_option_parts):
-            if j.endswith(special_line_suffix):
-                k = []
+        for help_option_index, help_option_line in enumerate(help_option_parts):
+            if help_option_line.endswith(special_line_suffix):
 
-                l1 = j[: -len(special_line_suffix)]
-                _, l3 = ParserHelper.extract_spaces(l1, 0)
-                l2 = l3 + special_line_suffix.strip()
+                new_first_line = help_option_line[: -len(special_line_suffix)]
+                _, spaces_prefix = ParserHelper.extract_spaces(new_first_line, 0)
+                new_second_line = spaces_prefix + special_line_suffix.strip()
 
-                k.extend(help_option_parts[:i])
-                k.append(l1)
-                k.append(l2)
-                k.extend(help_option_parts[i + 1 :])
-                help_option_parts = k
+                new_options = []
+                new_options.extend(help_option_parts[:help_option_index])
+                new_options.append(new_first_line)
+                new_options.append(new_second_line)
+                new_options.extend(help_option_parts[help_option_index + 1 :])
+                help_option_parts = new_options
     else:
         altered_usage = USAGE_X.replace("main.py", "__main.py__")
 

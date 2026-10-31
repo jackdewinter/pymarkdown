@@ -1820,7 +1820,7 @@
         },
         {
             "name": "test.test_version",
-            "totalTests": 3,
+            "totalTests": 4,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
