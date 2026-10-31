@@ -117,11 +117,10 @@ def test_markdown_with_no_parameters_through_module(
     # Arrange
     supplied_arguments: List[str] = []
 
-    altered_usage = USAGE_X.replace("main.py", "__main.py__")
     special_line_suffix = " [--continue-on-error]"
     help_option_parts = HELP_OPTIONS_X.split("\n")
     if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
-        altered_usage = "python.exe __main__.py"
+        altered_usage = "python.exe __main.py__"
 
         for i, j in enumerate(help_option_parts):
             if j.endswith(special_line_suffix):
@@ -136,6 +135,8 @@ def test_markdown_with_no_parameters_through_module(
                 k.append(l2)
                 k.extend(help_option_parts[i + 1 :])
                 help_option_parts = k
+    else:
+        altered_usage = USAGE_X.replace("main.py", "__main.py__")
 
     altered_help_options = "    " + "\n    ".join(help_option_parts)
 
