@@ -117,27 +117,29 @@ def test_markdown_with_no_parameters_through_module(
     # Arrange
     supplied_arguments: List[str] = []
 
-    altered_usage = USAGE_X
-
-    xx = " [--continue-on-error]"
-    help_options = HELP_OPTIONS_X.split("\n")
+    altered_usage = USAGE_X.replace("main.py", "__main.py__")
+    special_line_suffix = " [--continue-on-error]"
+    help_option_parts = HELP_OPTIONS_X.split("\n")
     if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
         altered_usage = "python.exe __main__.py"
 
-        for i, j in enumerate(help_options):
-            if j.endswith(xx):
+        for i, j in enumerate(help_option_parts):
+            if j.endswith(special_line_suffix):
                 k = []
 
-                l1 = j[: -len(xx)]
+                l1 = j[: -len(special_line_suffix)]
                 _, l3 = ParserHelper.extract_spaces(l1, 0)
-                l2 = l3 + xx.strip()
+                l2 = l3 + special_line_suffix.strip()
 
-                k.extend(help_options[:i])
+                k.extend(help_option_parts[:i])
                 k.append(l1)
                 k.append(l2)
-                k.extend(help_options[i + 1 :])
-                help_options = k
-    altered_help_options = "    " + "\n    ".join(help_options)
+                k.extend(help_option_parts[i + 1 :])
+                help_option_parts = k
+    # elif sys.version_info >= (3, 15) and sys.platform.startswith("darwin"):
+    #     altered_usage = "__main.py__"
+
+    altered_help_options = "    " + "\n    ".join(help_option_parts)
 
     expected_results = ExpectedResults(
         return_code=2,
