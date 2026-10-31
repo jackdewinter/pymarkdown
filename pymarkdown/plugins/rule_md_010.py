@@ -105,6 +105,7 @@ class RuleMd010(RulePlugin):
         elif token.is_fenced_code_block_end:
             self.__last_fenced_code_end_token = cast(EndMarkdownToken, token)
 
+    # pylint: disable=chained-comparison
     def __is_line_inside_of_fenced_code_block(self) -> bool:
         is_inside_of_fenced_code_block = False
         leaf_token = self.__leaf_tokens[self.__leaf_token_index]
@@ -124,6 +125,8 @@ class RuleMd010(RulePlugin):
                 and self.__line_index < end_code_block_line_number
             )
         return is_inside_of_fenced_code_block
+
+    # pylint: enable=chained-comparison
 
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """

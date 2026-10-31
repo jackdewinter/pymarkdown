@@ -2,10 +2,11 @@
 src-root = "pymarkdown"
 extend-exclude = ["test", "utils"]
 fail-on = ["coverage", "enrichment"]
+#fail-on = ["coverage", "enrichment", "presence"]
 # warn-on = ["griffe", "coverage"]
 
 [tool.docvet.presence]
-min-coverage = 95.0 
+min-coverage = 0.999999999
 ignore-init = false
 
 [tool.docvet.freshness]

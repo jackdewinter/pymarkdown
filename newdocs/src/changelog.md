@@ -3,6 +3,13 @@
 ## Unversioned
 
 <!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+- Upgraded minimum version from Python 3.10 to 3.11 due to various
+  CVEs found with the filelock package, which has a minimum supported
+  version of 3.11
+
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
@@ -10,6 +17,9 @@
       to reaffirm that the issues mentioned were addressed.
     - Added extra mention of the file that is being scanned or fixed if a parsing
       failure occurs.
+- [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
+    - Added `version --extended` to provide clear information about where the application
+      is being executed, to be able to paste into bug reports.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -20,11 +30,22 @@
       `&` and `;` of the escape sequence, leaving the entity name inside the
       calculated fragment, so links to headings such as `Cats & dogs` or
       `The "fast" path` were reported as invalid.
+- [Issue 1728](https://github.com/jackdewinter/pymarkdown/pull/1728)
+    - Rule md060 no longer undercounts the display width of strong emphasis
+      (`**text**` and `__text__`) in table cells by two characters, which caused
+      false `Expected-Column` errors on correctly aligned tables.
+    - Rule md060 no longer overcounts the display width of code spans
+      (`` `text` ``) containing entity-like characters such as `<`, `>` and `&`
+      in table cells, which caused false `Expected-Column` errors on correctly
+      aligned tables.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-None
+- [Issue 1717](https://github.com/jackdewinter/pymarkdown/issues/1717)
+    - Upgraded minimum version from 3.10 to 3.11 due to dependencies on
+      filelock package which only supports 3.11+
+    - At same time, added support for 3.14 and 3.15 in scenario tests.
 
 ## Version 0.9.41 - 2026-10-12
 

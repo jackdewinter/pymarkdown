@@ -15,7 +15,7 @@
             "totalTests": 10,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1588,7 +1588,7 @@
         },
         {
             "name": "test.rules.test_md060",
-            "totalTests": 174,
+            "totalTests": 179,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1652,7 +1652,7 @@
         },
         {
             "name": "test.test_main",
-            "totalTests": 10,
+            "totalTests": 9,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1820,7 +1820,7 @@
         },
         {
             "name": "test.test_version",
-            "totalTests": 1,
+            "totalTests": 4,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
