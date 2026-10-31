@@ -17,6 +17,9 @@
       to reaffirm that the issues mentioned were addressed.
     - Added extra mention of the file that is being scanned or fixed if a parsing
       failure occurs.
+- [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
+    - Added `version --extended` to provide clear information about where the application
+      is being executed, to be able to paste into bug reports.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -26,7 +29,10 @@ None
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-None
+- [Issue 1717](https://github.com/jackdewinter/pymarkdown/issues/1717)
+    - Upgraded minimum version from 3.10 to 3.11 due to dependencies on
+      filelock package which only supports 3.11+
+    - At same time, added support for 3.14 and 3.15 in scenario tests.
 
 ## Version 0.9.41 - 2026-10-12
 
