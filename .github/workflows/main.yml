@@ -181,7 +181,7 @@ jobs:
 
     name: Project Quality Analysis
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     defaults:
       run:
         shell: bash
