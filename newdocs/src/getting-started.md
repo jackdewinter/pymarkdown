@@ -11,7 +11,7 @@ on the same underlying Python environment and package management.
 
 The next sections describe how to set up:
 
-- Python (3.10+)
+- Python (3.11+)
 - Pipenv for project-local dependency management
 
 After that, we show how to install PyMarkdown directly and via Pre-Commit.
@@ -47,13 +47,13 @@ If you already have Python and Pipenv installed, feel free to skip ahead to
 
 ### Installing Python
 
-PyMarkdown requires Python 3.10 or later. Verify your version:
+PyMarkdown requires Python 3.11 or later. Verify your version:
 
 ```text
 python --version
 ```
 
-If this does not report at least Python 3.10.x, install or upgrade Python from the
+If this does not report at least Python 3.11.x, install or upgrade Python from the
 [official downloads page](https://www.python.org/downloads/) before continuing.
 
 ### Installing Pipenv
@@ -291,7 +291,7 @@ file. It shows the start of the `lint` job we use to validate code changes.
 
 For this example, we made one change: we replaced the
 `${{ env.default-python-version }}` expression (defined earlier in `main.yml`) with
-the explicit value `3.10`.
+the explicit value `3.11`.
 
 ```yaml
   lint:
@@ -304,10 +304,10 @@ the explicit value `3.10`.
       - name: Checkout Repository
         uses: actions/checkout@v5
 
-      - name: Setup Python 3.10
+      - name: Setup Python 3.11
         uses: actions/setup-python@v5.2.0
         with:
-          python-version: 3.10
+          python-version: 3.11
 
       - name: Install Pipenv
         run: |
@@ -327,7 +327,7 @@ the explicit value `3.10`.
 The first three steps do the standard setup:
 
 - check out the repository,
-- install Python 3.10, and
+- install Python 3.11, and
 - install Pipenv.
 
 This mirrors the local setup from [Installing Python](#installing-python) and
@@ -419,7 +419,7 @@ For more information on configuration files and available options, refer to the
 Most CI platforms can follow the same sequence you saw in the GitHub Actions example:
 
 1. Check out your repository.
-2. Install Python 3.10+.
+2. Install Python 3.11+.
 3. Install Pipenv.
 4. Run `pipenv update -d` (or `pipenv sync -d`) to install dependencies.
 5. Run PyMarkdown:
@@ -432,7 +432,7 @@ For example, in GitLab CI:
 
 ```yaml
 pymarkdown:
-  image: python:3.10
+  image: python:3.11
   script:
     - pip install pipenv==2023.12.1
     - pipenv update -d

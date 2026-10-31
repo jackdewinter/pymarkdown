@@ -11,7 +11,7 @@ on:
 env:
   project-name: pymarkdown
   default-python-version: 3.13
-  default-pipenv-version: 2025.0.3
+  default-pipenv-version: 2026.0.3
   default-platform: ubuntu-latest
 
 jobs:

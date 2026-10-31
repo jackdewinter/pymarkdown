@@ -8,7 +8,7 @@ of the tests.
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import ARGPARSE_X, write_temporary_configuration
+from test.utils import ARGPARSE_X, USAGE_X, write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
@@ -26,7 +26,7 @@ def test_markdown_with_extensions_only(scanner_default: MarkdownScanner) -> None
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: main.py extensions [-h] {list,info} ...
+        expected_output="""usage: {USAGE_X} extensions [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -35,7 +35,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -491,9 +491,9 @@ def test_markdown_with_extensions_list_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions list [-h] [--all] [list_filter]
-main.py extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
-""",
+        expected_error="""usage: {USAGE_X} extensions list [-h] [--all] [list_filter]
+{USAGE_X} extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -517,9 +517,9 @@ def test_markdown_with_extensions_info_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions info [-h] info_filter
-main.py extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
-""",
+        expected_error="""usage: {USAGE_X} extensions info [-h] info_filter
+{USAGE_X} extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
