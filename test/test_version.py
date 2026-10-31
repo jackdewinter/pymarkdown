@@ -5,10 +5,11 @@ Module to make sure that the version number is tested.
 import os
 import platform
 import runpy
-from pymarkdown.version_helper import VersionHelper
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import ARGPARSE_X, USAGE_X
+
+from pymarkdown.version_helper import VersionHelper
 
 
 def test_version_composition() -> None:

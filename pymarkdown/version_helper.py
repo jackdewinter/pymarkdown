@@ -4,7 +4,8 @@ import argparse
 import os
 import platform
 import runpy
-import subprocess
+import shutil
+import subprocess  # nosec
 
 from pymarkdown.return_code_helper import ApplicationResult
 
@@ -26,8 +27,7 @@ class VersionHelper:
         return str(version_meta["__version__"])
 
     @staticmethod
-    def _linux_distribution_version() -> str: # pragma: no cover
-        
+    def _linux_distribution_version() -> str:  # pragma: no cover
 
         # Try /etc/os-release (or /usr/lib/os-release) for VERSION_ID / NAME.
         # Return e.g. "Ubuntu 22.04" or "Fedora 39".
@@ -49,16 +49,17 @@ class VersionHelper:
         return ""
 
     @staticmethod
-    def _macos_product_version() -> str: # pragma: no cover
-        
+    def _macos_product_version() -> str:  # pragma: no cover
 
         # Run `sw_vers -productVersion` (or `sw_vers -productVersionName`
         # depending on macOS) to obtain e.g. "14.5".
         # Return "" on failure.
         try:
+            if (executable := shutil.which("sw_vers")) is None:
+                return ""
             return (
-                subprocess.check_output(
-                    ["sw_vers", "-productVersion"],
+                subprocess.check_output(  # nosec
+                    [executable, "-productVersion"],
                     stderr=subprocess.DEVNULL,
                     timeout=2,
                 )
@@ -69,8 +70,7 @@ class VersionHelper:
             return ""
 
     @staticmethod
-    def get_operating_system() -> str:         # pragma: no cover
-
+    def get_operating_system() -> str:  # pragma: no cover
         """
         Get a human-readable string describing the operating system.
 
@@ -102,7 +102,7 @@ class VersionHelper:
                 release = mac
         # ... existing code ...
         return f"{system} {release}"
-    
+
     @staticmethod
     def argparse_subparser_name() -> str:
         """Name associated with the subparser."""
