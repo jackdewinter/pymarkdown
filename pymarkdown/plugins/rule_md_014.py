@@ -46,6 +46,21 @@ class RuleMd014(RulePlugin):
         """
         self.__in_code_block = False
 
+    @staticmethod
+    def __is_shell_prompt_line(next_line: str) -> bool:
+        """
+        Determine whether the line starts with a shell prompt marker.
+
+        A prompt marker is a `$` followed by whitespace or the end of the line.
+        A `$` that is immediately followed by a name character starts a
+        variable reference instead - PowerShell's `$env:NAME = value` is the
+        common case - and is not a prompt.
+        """
+        stripped_line = next_line.strip(" ")
+        if not stripped_line.startswith("$"):
+            return False
+        return len(stripped_line) == 1 or stripped_line[1].isspace()
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -60,6 +75,7 @@ class RuleMd014(RulePlugin):
                 ParserHelper.newline_character
             )
             if all(
-                next_line.strip(" ").startswith("$") for next_line in split_token_text
+                RuleMd014.__is_shell_prompt_line(next_line)
+                for next_line in split_token_text
             ):
                 self.report_next_token_error(context, token)
