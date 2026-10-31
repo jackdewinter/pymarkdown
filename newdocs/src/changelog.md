@@ -24,12 +24,6 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- [Issue 1713](https://github.com/jackdewinter/pymarkdown/issues/1713)
-    - Fixed MD051 deriving an incorrect expected anchor for headings that
-      contain HTML entities.  The punctuation filter was only stripping the
-      `&` and `;` of the escape sequence, leaving the entity name inside the
-      calculated fragment, so links to headings such as `Cats & dogs` or
-      `The "fast" path` were reported as invalid.
 - [Issue 1728](https://github.com/jackdewinter/pymarkdown/pull/1728)
     - Rule md060 no longer undercounts the display width of strong emphasis
       (`**text**` and `__text__`) in table cells by two characters, which caused
@@ -38,6 +32,12 @@
       (`` `text` ``) containing entity-like characters such as `<`, `>` and `&`
       in table cells, which caused false `Expected-Column` errors on correctly
       aligned tables.
+- [Issue 1730](https://github.com/jackdewinter/pymarkdown/issues/1730)
+    - Fixed MD051 deriving an incorrect expected anchor for headings that
+      contain HTML entities.  The punctuation filter was only stripping the
+      `&` and `;` of the escape sequence, leaving the entity name inside the
+      calculated fragment, so links to headings such as `Cats & dogs` or
+      `The "fast" path` were reported as invalid.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
