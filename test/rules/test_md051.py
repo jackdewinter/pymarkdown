@@ -368,6 +368,92 @@ scanTests = [
         scan_expected_output="""{temp_source_path}:1:1: MD051: Link fragments should be valid. (link-fragments)
 """,
     ),
+    pluginRuleTest(
+        "good_heading_with_quote_entity",
+        source_file_contents="""# Example
+
+[link to the heading](#the-fast-path)
+
+## The "fast" path
+""",
+    ),
+    pluginRuleTest(
+        "good_heading_with_ampersand_entity",
+        source_file_contents="""# Example
+
+[link to the heading](#cats--dogs)
+
+## Cats & dogs
+""",
+    ),
+    pluginRuleTest(
+        "good_heading_with_less_than_entity",
+        source_file_contents="""# Example
+
+[link to the heading](#less--than)
+
+## Less < than
+""",
+    ),
+    pluginRuleTest(
+        "good_heading_with_greater_than_entity",
+        source_file_contents="""# Example
+
+[link to the heading](#greater--than)
+
+## Greater > than
+""",
+    ),
+    pluginRuleTest(
+        "good_heading_with_apostrophe",
+        source_file_contents="""# Example
+
+[link to the heading](#dont-stop)
+
+## Don''t stop
+""",
+    ),
+    pluginRuleTest(
+        "bad_heading_quote_entity_name_leaked_into_slug",
+        source_file_contents="""# Example
+
+[link to the heading](#the-quotfastquot-path)
+
+## The "fast" path
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD051: Link fragments should be valid. (link-fragments)
+""",
+    ),
+    pluginRuleTest(
+        "good_code_span_entity_is_literal",
+        source_file_contents="""# Example
+
+[link to the heading](#heading-with-amp-inside)
+
+## Heading with `&amp;` inside
+""",
+    ),
+    pluginRuleTest(
+        "good_html_id_with_encoded_entity",
+        source_file_contents="""# Example
+
+[link to the id](#thequotfast)
+
+<div id="the&amp;quot;fast"></div>
+""",
+        disable_rules="md033",
+    ),
+    pluginRuleTest(
+        "good_uppercase_entity_name_stays_literal",
+        source_file_contents="""# Example
+
+[link to the heading](#euro)
+
+## &EURO;
+""",
+        disable_rules="md026",
+    ),
 ]
 
 
