@@ -1836,8 +1836,6 @@ As the simplest of the information commands, the `version` command reports which
 PyMarkdown build you are running. As noted in the [Getting Started document](./getting-started.md#installing-pymarkdown),
 it simply returns the installed version in the form:
 
-As noted in the [Missing link], it simply returns the installed version in the form:
-
 ```txt
 {major}.{minor}.{fix}
 ```
@@ -1846,3 +1844,24 @@ A common troubleshooting pattern is to run `pymarkdown version`, then use
 `pymarkdown plugins list --all` and `pymarkdown extensions list` to capture both
 the version and your current Rule Plugin/extension configuration before filing an
 issue or comparing results with another developer.
+
+##### Extended Option
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.42**
+
+When filing issues with GitHub for PyMarkdown, include a triplet of environment
+information — PyMarkdown version, Python version, and operating system with version.
+This is the minimum our team needs to reproduce a reported issue cleanly before
+attempting a fix.
+
+The `pymarkdown version --extended` command line prints that triplet in a simple
+three-line format:
+
+```text
+PyMarkdown:         0.9.42
+Python:             3.13.1 (CPython, MSC v.1942 64 bit (AMD64))
+Operating System:   Windows 11
+```
+
+The output is intentionally minimal: only the fields needed to reproduce an issue.

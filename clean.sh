@@ -430,7 +430,7 @@ if ! python.exe -m pip install --upgrade pip >"${TEMP_FILE}" 2>&1; then
 	complete_process 1 "{Cannot ensure pip has been upgraded.  Please check your Python installation and try again.}"
 fi
 
-if ! pip install -U pipenv==2025.0.3 >"${TEMP_FILE}" 2>&1; then
+if ! pip install -U pipenv==2026.0.3 >"${TEMP_FILE}" 2>&1; then
 	cat "${TEMP_FILE}"
 	complete_process 1 "{Cannot ensure pipenv has been upgraded.  Please check your Python installation and try again.}"
 fi

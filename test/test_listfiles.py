@@ -3,24 +3,17 @@ Module to provide tests related to the "-l" option.
 """
 
 import os
-import sys
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import write_temporary_configuration
-
-if sys.version_info < (3, 10):
-    ARGPARSE_X = "optional arguments:"
-else:
-    ARGPARSE_X = "options:"
-if sys.version_info < (3, 13):
-    ALT_EXTENSIONS_X = (
-        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
-    )
-    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
-else:
-    ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
-    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
+from test.utils import (
+    ALT_EXTENSIONS_X,
+    ARGPARSE_X,
+    EXCLUSIONS_X,
+    USAGE_INDENT_X,
+    USAGE_X,
+    write_temporary_configuration,
+)
 
 # pylint: disable=too-many-lines
 
@@ -34,9 +27,9 @@ def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
     supplied_arguments = ["scan", "-h"]
 
     expected_results = ExpectedResults(
-        expected_output=f"""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
+        expected_output=f"""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
 
 positional arguments:
   path                  one or more paths to examine for eligible Markdown
@@ -78,11 +71,15 @@ def test_markdown_with_dash_l_only(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-                    path [path ...]
-main.py scan: error: the following arguments are required: path
-""",
+        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    path [path ...]
+{USAGE_X} scan: error: the following arguments are required: path
+""".replace(
+            "{USAGE_X}", USAGE_X
+        ).replace(
+            "{USAGE_INDENT_X}", USAGE_INDENT_X
+        ),
     )
 
     # Act

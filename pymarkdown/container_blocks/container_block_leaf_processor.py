@@ -573,7 +573,7 @@ class ContainerBlockLeafProcessor:
 
     # pylint: enable=too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, chained-comparison
     @staticmethod
     def __adjust_for_inner_list_container(
         parser_state: ParserState,
@@ -633,7 +633,7 @@ class ContainerBlockLeafProcessor:
             text_removed_by_container,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,chained-comparison
 
     @staticmethod
     def __adjust_for_list_container_after_block_quote_special_special(
@@ -1042,7 +1042,7 @@ class ContainerBlockLeafProcessor:
         )
         return xposition_marker
 
-    # pylint: disable=too-many-boolean-expressions,too-many-arguments
+    # pylint: disable=too-many-boolean-expressions,too-many-arguments,chained-comparison
     @staticmethod
     def __adjust_for_list_container_kludge(
         parser_state: ParserState,
@@ -1093,7 +1093,7 @@ class ContainerBlockLeafProcessor:
             )
         return apply_fix
 
-    # pylint: enable=too-many-boolean-expressions, too-many-arguments
+    # pylint: enable=too-many-boolean-expressions, too-many-arguments, chained-comparison
 
     @staticmethod
     def __adjust_for_list_container_find(

@@ -11,7 +11,7 @@ on:
 env:
   project-name: pymarkdown
   default-python-version: 3.13
-  default-pipenv-version: 2025.0.3
+  default-pipenv-version: 2026.0.3
   default-platform: ubuntu-latest
 
 jobs:
@@ -181,7 +181,7 @@ jobs:
 
     name: Project Quality Analysis
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     defaults:
       run:
         shell: bash
@@ -191,6 +191,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
 
+      - uses: dcondrey/unicode-safety-check@v2
+        id: scan
+        with:
+          scan-mode: all
+          sarif-file: unicode-safety.sarif
+        continue-on-error: true
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: unicode-safety.sarif
+
+      - run: |
+          echo "Findings: ${{ steps.scan.outputs.findings }}"
+          echo "Critical: ${{ steps.scan.outputs.critical }}"
+          echo "High: ${{ steps.scan.outputs.high }}"
+          
       - name: Setup Python ${{ env.default-python-version }}
         uses: actions/setup-python@v7.0.0
         with:

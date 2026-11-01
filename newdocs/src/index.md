@@ -127,7 +127,7 @@ and free of common Markdown issues.
 
 ### Portable
 
-This project runs on any system that has Python 3.10 or later installed, without
+This project runs on any system that has Python 3.11 or later installed, without
 requiring any modifications to the PyMarkdown code itself. Before any code changes
 are merged into the project's "main" branch, every scenario test (tests that run
 PyMarkdown against realistic Markdown examples) is executed against the application.

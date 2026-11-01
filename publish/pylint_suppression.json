@@ -34,7 +34,7 @@
             "too-few-public-methods": 1,
             "too-many-locals": 3,
             "too-many-arguments": 11,
-            "chained-comparison": 2,
+            "chained-comparison": 4,
             "too-many-boolean-expressions": 2
         },
         "pymarkdown/container_blocks/container_block_nested_processor.py": {
@@ -58,7 +58,8 @@
         "pymarkdown/container_blocks/container_helper.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 2,
-            "too-many-locals": 1
+            "too-many-locals": 1,
+            "chained-comparison": 1
         },
         "pymarkdown/container_blocks/container_indices.py": {},
         "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
@@ -334,7 +335,9 @@
         "pymarkdown/plugins/rule_md_009.py": {
             "too-many-instance-attributes": 1
         },
-        "pymarkdown/plugins/rule_md_010.py": {},
+        "pymarkdown/plugins/rule_md_010.py": {
+            "chained-comparison": 1
+        },
         "pymarkdown/plugins/rule_md_011.py": {
             "too-many-boolean-expressions": 1
         },
@@ -584,7 +587,8 @@
         "pymarkdown/transform_markdown/transform_to_markdown.py": {
             "too-many-arguments": 1
         },
-        "pymarkdown/version.py": {}
+        "pymarkdown/version.py": {},
+        "pymarkdown/version_helper.py": {}
     },
     "disables-by-name": {
         "too-many-instance-attributes": 32,
@@ -592,7 +596,7 @@
         "too-many-arguments": 279,
         "too-few-public-methods": 57,
         "too-many-locals": 58,
-        "chained-comparison": 3,
+        "chained-comparison": 7,
         "too-many-boolean-expressions": 10,
         "protected-access": 32,
         "deprecated-decorator": 3,
