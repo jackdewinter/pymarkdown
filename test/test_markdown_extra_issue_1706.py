@@ -57,23 +57,71 @@ def test_extra_issue_1706_primary() -> None:
     )
 
 
-def test_extra_issue_1706_a() -> None:
+def test_extra_issue_1706_aa() -> None:
     """
     TBD
     """
 
     # Arrange
-    source_markdown = """- a / - b | c
+    source_markdown = """- a
+  - b | c
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
-        "[text(1,3):a / - b | c:]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,3):-::4:  :]",
+        "[para(2,5):]",
+        "[text(2,5):b | c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
-    expected_gfm = """<ul>\n<li>a / - b | c</li>\n</ul>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=TABLES_CONFIG_MAP
+    )
+
+
+def test_extra_issue_1706_ab() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- a
+    - b | c
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b | c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -87,15 +135,29 @@ def test_extra_issue_1706_b() -> None:
     """
 
     # Arrange
-    source_markdown = """a / - b \\|
+    source_markdown = """- a
+    - b \\| c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a / - b \\\b|:]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b \\\b| c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a / - b |</p>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -109,17 +171,31 @@ def test_extra_issue_1706_c() -> None:
     """
 
     # Arrange
-    source_markdown = """a / - b `X | Y` c
+    source_markdown = """- a
+    - b `X | Y` c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a / - b :]",
-        "[icode-span(1,9):X | Y:`::]",
-        "[text(1,16): c:]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b :]",
+        "[icode-span(2,9):X | Y:`::]",
+        "[text(2,16): c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a / - b <code>X | Y</code> c</p>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b <code>X | Y</code> c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -133,17 +209,29 @@ def test_extra_issue_1706_d() -> None:
     """
 
     # Arrange
-    source_markdown = """1. a / 1. b | c
+    source_markdown = """1. a
+    1. b | c
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
+        "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
-        "[text(1,4):a / 1. b | c:]",
+        "[text(1,4):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[olist(2,5):.:1:7:    :]",
+        "[para(2,8):]",
+        "[text(2,8):b | c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
         "[end-olist:::True]",
     ]
-    expected_gfm = """<ol>\n<li>a / 1. b | c</li>\n</ol>"""
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b | c</li>
+</ol>
+</li>
+</ol>"""
 
     # Act & Assert
     act_and_assert(
@@ -157,21 +245,35 @@ def test_extra_issue_1706_e() -> None:
     """
 
     # Arrange
-    source_markdown = """> - a / > - b | c
+    source_markdown = """
+> - a
+>    - b | c
 """
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):-::4:]",
-        "[para(1,5):]",
-        "[text(1,5):a / \a>\a&gt;\a - b | c:]",
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> \n> ]",
+        "[ulist(2,3):-::4:]",
+        "[para(2,5):]",
+        "[text(2,5):a:]",
+        "[end-para:::True]",
+        "[ulist(3,6):-::7:   ]",
+        "[para(3,8):]",
+        "[text(3,8):b | c:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
+        "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(2,1):]",
+        "[BLANK(4,1):]",
     ]
-    expected_gfm = (
-        """<blockquote>\n<ul>\n<li>a / &gt; - b | c</li>\n</ul>\n</blockquote>"""
-    )
+    expected_gfm = """<blockquote>
+<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -185,15 +287,29 @@ def test_extra_issue_1706_f() -> None:
     """
 
     # Arrange
-    source_markdown = """a / - b | c
+    source_markdown = """- a
+    - b | c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a / - b | c:]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b | c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a / - b | c</p>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -207,21 +323,32 @@ def test_extra_issue_1706_g() -> None:
     """
 
     # Arrange
-    source_markdown = """a
-- b | c
+    source_markdown = """- a
+
+    - b | c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[ulist(2,1):-::2::]",
-        "[para(2,3):]",
-        "[text(2,3):b | c:]",
+        "[BLANK(2,1):]",
+        "[ulist(3,5):-::6:    :]",
+        "[para(3,7):]",
+        "[text(3,7):b | c:]",
         "[end-para:::True]",
-        "[BLANK(3,1):]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a</p>\n<ul>\n<li>b | c</li>\n</ul>"""
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -235,15 +362,29 @@ def test_extra_issue_1706_h() -> None:
     """
 
     # Arrange
-    source_markdown = """a / - b &#124; c
+    source_markdown = """- a
+    - b &#124; c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a / - b \a&#124;\a|\a c:]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b \a&#124;\a|\a c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a / - b | c</p>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(
@@ -257,15 +398,29 @@ def test_extra_issue_1706_i() -> None:
     """
 
     # Arrange
-    source_markdown = """a / - b | c
+    source_markdown = """- a
+    - b | c
 """
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a / - b | c:]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
         "[end-para:::True]",
-        "[BLANK(2,1):]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):b | c:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>a / - b | c</p>"""
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b | c</li>
+</ul>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, config_map=None)

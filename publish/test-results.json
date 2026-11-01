@@ -1796,7 +1796,7 @@
         },
         {
             "name": "test.test_markdown_extra_issue_1706",
-            "totalTests": 12,
+            "totalTests": 13,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
