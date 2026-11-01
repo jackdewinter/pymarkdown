@@ -24,11 +24,6 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- [Issue 1666](https://github.com/jackdewinter/pymarkdown/issues/1666)
-    - Fixed MD014 reporting a violation for PowerShell environment variable
-      assignments in code blocks.  A `$` followed by a name character starts a
-      variable reference, not a shell prompt, so only a `$` followed by
-      whitespace (or the end of the line) is treated as a prompt marker.
 - [Issue 1728](https://github.com/jackdewinter/pymarkdown/pull/1728)
     - Rule md060 no longer undercounts the display width of strong emphasis
       (`**text**` and `__text__`) in table cells by two characters, which caused
@@ -43,6 +38,11 @@
       `&` and `;` of the escape sequence, leaving the entity name inside the
       calculated fragment, so links to headings such as `Cats & dogs` or
       `The "fast" path` were reported as invalid.
+- [Issue 1732](https://github.com/jackdewinter/pymarkdown/issues/1732)
+    - Fixed MD014 reporting a violation for PowerShell environment variable
+      assignments in code blocks.  A `$` followed by a name character starts a
+      variable reference, not a shell prompt, so only a `$` followed by
+      whitespace (or the end of the line) is treated as a prompt marker.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
