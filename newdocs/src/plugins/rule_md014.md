@@ -23,7 +23,9 @@ invisible, making it impossible to tell what a command produced.
 
 ### Failure Scenarios
 
-This rule triggers when every line within a code block begins with the `$` indicator.
+This rule triggers when every line within the code block contains the `$` indicator
+alone on a line or contains the `$` indicator followed by a space character and
+then one or more non-space characters.
 
 ````Markdown
 ```shell
@@ -52,6 +54,20 @@ on each line.
 > of two leading spaces does not exempt the line. Because no line is free of a leading
 > `$`, the rule's requirement — that at least one line in the block does not start
 > with `$` — is not satisfied.
+
+Unlike the previous example, this case mixes a `$`-prefixed command line with a
+line that is just a lone `$` (no trailing characters).
+
+````Markdown
+```shell
+$ ls /my/dir
+$
+```
+````
+
+> **Explanation**: This example fails because, after the bare `$` line, no line is
+> present that shows command output. The lone `$` does not qualify as output; the
+> rule still requires at least one line in the block to be free of a leading `$`.
 
 ### Correct Scenarios
 
@@ -84,6 +100,34 @@ $ cat /my/dir/file
 > lines `file` and `file2` represent command output, satisfying the rule's exception
 > that allows `$` prefixes when output is also shown. This distinguishes it from
 > the first correct scenario where all prefixes were removed.
+
+Unlike the previous example, this case shows a line where a non-space character
+directly follows the `$` (a Bash variable expansion), which the rule does not
+treat as a command prompt.
+
+````Markdown
+```shell
+${some-bash-environment-variable}
+```
+````
+
+> **Explanation**: This example passes because the `$` is immediately followed by
+> a non-space character (`{`), which the rule does not interpret as the command
+> prompt indicator. The block therefore does not meet the trigger condition that
+> every line is a `$`-prefixed command.
+
+Unlike the previous example, this case uses the PowerShell `$env:` syntax, where
+a non-space character (`:`) directly follows the `$`.
+
+````Markdown
+```shell
+$env:PYTHONUTF8 = "1"
+```
+````
+
+> **Explanation**: This example passes for the same reason as the Bash case: the
+> `$` is immediately followed by a non-space character (`:`), so the rule does
+> not treat it as the command prompt indicator. The trigger condition is not met.
 
 ## Fix Description
 

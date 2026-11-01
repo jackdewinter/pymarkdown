@@ -168,20 +168,22 @@ class TableStyleEvaluator(ABC):
             elif next_inline_token.is_inline_code_span:
                 code_span_token = cast(InlineCodeSpanMarkdownToken, next_inline_token)
                 data_length += (
-                    self.__safe_string_length(code_span_token.span_text)
+                    self.__safe_string_length(
+                        ParserHelper.remove_all_from_text(code_span_token.span_text)
+                    )
                     + (2 * len(code_span_token.extracted_start_backticks))
                     + len(code_span_token.leading_whitespace)
                     + len(code_span_token.trailing_whitespace)
                 )
             elif next_inline_token.is_inline_emphasis:
                 emphasis_start_token = cast(EmphasisMarkdownToken, next_inline_token)
-                data_length += len(emphasis_start_token.emphasis_character)
+                data_length += emphasis_start_token.emphasis_length
             elif next_inline_token.is_inline_emphasis_end:
                 end_token = cast(EndMarkdownToken, next_inline_token)
                 emphasis_end_token = cast(
                     EmphasisMarkdownToken, end_token.start_markdown_token
                 )
-                data_length += len(emphasis_end_token.emphasis_character)
+                data_length += emphasis_end_token.emphasis_length
             elif next_inline_token.is_inline_raw_html:
                 raw_html_token = cast(RawHtmlMarkdownToken, next_inline_token)
                 data_length += len(raw_html_token.raw_tag) + 2
