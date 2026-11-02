@@ -133,30 +133,37 @@ This is a blank line and some text.
         fix_expected_output="""md009-before:This is text and no blank line.:
 md010-before:This is text and no blank line.:
 md047-before:This is text and no blank line.:
+md058-before:This is text and no blank line.:
 nl-ltw:This is text and no blank line.\\n:
 md009-before:```block:
 md010-before:```block:
 md047-before:```block:
+md058-before:```block:
 nl-ltw:```block\\n:
 md009-before:A code block:
 md010-before:A code block:
 md047-before:A code block:
+md058-before:A code block:
 nl-ltw:A code block\\n:
 md009-before:```:
 md010-before:```:
 md047-before:```:
+md058-before:```:
 nl-ltw:```\\n:
 md009-before::
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md009-before:This is a blank line and some text.:
 md010-before:This is a blank line and some text.:
 md047-before:This is a blank line and some text.:
+md058-before:This is a blank line and some text.:
 nl-ltw:This is a blank line and some text.\\n:
 md009-before::
 md010-before::
 md047-before::
+md058-before::
 was_newline_added_at_end_of_file=True
 fixed:This is a blank line and some text.\\n:
 is_line_empty=True

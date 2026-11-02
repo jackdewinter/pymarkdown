@@ -3,14 +3,11 @@ Module to implement a plugin that looks for tables that are not surrounded by
 blank lines.
 """
 
-import copy
-from typing import Optional
+from typing import Dict, Optional
 
-from pymarkdown.general.position_marker import PositionMarker
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV3
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
-from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
@@ -25,15 +22,15 @@ class RuleMd058(RulePlugin):
         self.__previous_token: Optional[MarkdownToken] = None
         self.__last_row_token: Optional[MarkdownToken] = None
         self.__awaiting_below = False
-        self.__container_depth = 0
         self.__in_html_block = False
-        self.__fix_count = 0
+        self.__last_table_line_number = 0
+        self.__lines_to_fix: Dict[int, bool] = {}
 
-    def get_details(self) -> PluginDetailsV2:
+    def get_details(self) -> PluginDetailsV3:
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="blanks-around-tables",
             plugin_id="MD058",
             plugin_enabled_by_default=True,
@@ -41,6 +38,7 @@ class RuleMd058(RulePlugin):
             plugin_version="0.5.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md058.md",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     def starting_new_file(self) -> None:
@@ -50,9 +48,9 @@ class RuleMd058(RulePlugin):
         self.__previous_token = None
         self.__last_row_token = None
         self.__awaiting_below = False
-        self.__container_depth = 0
         self.__in_html_block = False
-        self.__fix_count = 0
+        self.__last_table_line_number = 0
+        self.__lines_to_fix = {}
 
     @staticmethod
     def __is_clear_above(previous_token: Optional[MarkdownToken]) -> bool:
@@ -81,37 +79,37 @@ class RuleMd058(RulePlugin):
         self,
         context: PluginScanContext,
         error_token: MarkdownToken,
-        insert_before_token: MarkdownToken,
+        fix_line_number: int,
+        insert_below: bool,
     ) -> None:
         if not context.in_fix_mode:
             self.report_next_token_error(context, error_token)
             return
-        # ponytail: only document-root tables are fixed; tables inside block
-        # quotes / lists need container-prefix handling (see MD031) and are left
-        # for a follow-up.  A table the parser left inside an HTML block is also
-        # skipped: its tokens repeat the following line, so a fix duplicates it.
+        # The blank line is inserted during the line pass, by copying the
+        # container prefix (any `>` characters) of the table's own line, so
+        # tables inside block quotes and list items are fixed the same way as
+        # top-level ones.  A table the parser left inside an HTML block is
+        # skipped: by CommonMark those lines belong to the HTML block, and a
+        # blank line would turn them into a real table.
         if (
             context.is_during_line_pass
-            or self.__container_depth
-            or self.__in_html_block
-            or context.check_for_pragma_suppression(
+            and not self.__in_html_block
+            and not context.check_for_pragma_suppression(
                 error_token.line_number, "MD058", False
             )
         ):
+            self.__lines_to_fix[fix_line_number] = insert_below
+
+    def next_line(self, context: PluginScanContext, line: str) -> None:
+        """
+        Event that a new line is being processed.
+        """
+        insert_below = self.__lines_to_fix.get(context.line_number)
+        if insert_below is None:
             return
-        new_token = copy.deepcopy(insert_before_token)
-        self.__fix_count += 1
-        new_token.adjust_line_number(context, self.__fix_count)
-        replacement_tokens = [
-            BlankLineMarkdownToken(
-                extracted_whitespace="",
-                position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
-                column_delta=1,
-            ),
-            new_token,
-        ]
-        self.register_replace_tokens_request(
-            context, insert_before_token, insert_before_token, replacement_tokens
+        blank_line = line[: len(line) - len(line.lstrip(" \t>"))].rstrip()
+        context.set_current_fix_line(
+            f"{line}\n{blank_line}" if insert_below else f"{blank_line}\n{line}"
         )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
@@ -124,24 +122,29 @@ class RuleMd058(RulePlugin):
         if self.__awaiting_below:
             if not self.__is_clear_below(token):
                 assert self.__last_row_token is not None
-                self.__report_or_fix(context, self.__last_row_token, token)
+                self.__report_or_fix(
+                    context,
+                    self.__last_row_token,
+                    self.__last_table_line_number,
+                    True,
+                )
             self.__awaiting_below = False
 
-        if token.is_block_quote_start or token.is_list_start:
-            self.__container_depth += 1
-        elif token.is_block_quote_end or token.is_list_end:
-            self.__container_depth -= 1
-        elif token.is_html_block:
+        if token.is_html_block:
             self.__in_html_block = True
         elif token.is_html_block_end:
             self.__in_html_block = False
 
         if token.is_table:
             if not self.__is_clear_above(self.__previous_token):
-                self.__report_or_fix(context, token, token)
+                self.__report_or_fix(context, token, token.line_number, False)
             self.__last_row_token = token
         elif token.is_table_header or token.is_table_row:
             self.__last_row_token = token
+            # The delimiter row has no token of its own; it follows the header.
+            self.__last_table_line_number = token.line_number + (
+                1 if token.is_table_header else 0
+            )
         elif token.is_table_end:
             self.__awaiting_below = True
 

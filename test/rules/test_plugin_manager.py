@@ -2278,12 +2278,15 @@ def test_markdown_fixed_issue_with_debug_on(scanner_default: MarkdownScanner) ->
         expected_return_code = 3
         expected_output = f"""md010-before:# This is a test:
 md047-before:# This is a test:
+md058-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
+md058-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
 fixed:\\n:
 is_line_empty=False
@@ -2331,12 +2334,15 @@ def test_markdown_fixed_issue_line_with_debug_and_file_debug_on(
         expected_return_code = 3
         expected_output = """md010-before:# This is a test:
 md047-before:# This is a test:
+md058-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
+md058-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
 fixed:\\n:
 is_line_empty=False
