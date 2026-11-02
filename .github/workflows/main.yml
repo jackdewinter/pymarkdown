@@ -191,7 +191,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
 
-      - uses: dcondrey/unicode-safety-check@v2
+      - uses: dcondrey/unicode-safety-check@v3
         id: scan
         with:
           scan-mode: all
