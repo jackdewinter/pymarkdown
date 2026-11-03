@@ -22,6 +22,9 @@
 - [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
     - Added `version --extended` to provide clear information about where the application
       is being executed, to be able to paste into bug reports.
+- [Issue 1676](https://github.com/jackdewinter/pymarkdown/issues/1676)
+    - Added autofix support for MD049 (emphasis-style), rewriting inline emphasis
+      spans to the delimiter required by the `style` configuration.
 - [Issue 1739](https://github.com/jackdewinter/pymarkdown/issues/1739)
     - Added `--urls` to `scan` command to append the URL of the plugin rule being
       triggered to the Rule Failure report.

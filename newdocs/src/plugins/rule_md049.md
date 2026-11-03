@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md049`, `emphasis-style` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -114,7 +114,12 @@ This is *another* emphasis.
 
 ## Fix Description
 
-The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/1676).
+Emphasis spans will be rewritten to use the delimiter character required by the
+`style` configuration. If `style` is `consistent`, every span after the first is
+converted to match the delimiter used by the first emphasis span in the document.
+If `style` is `asterisk`, all spans are converted to use asterisks (`*`). If `style`
+is `underscore`, all spans are converted to use underscores (`_`). Only the
+delimiter characters themselves are replaced; the emphasized text is left untouched.
 
 ## Configuration
 

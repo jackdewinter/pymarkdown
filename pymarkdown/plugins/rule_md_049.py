@@ -20,6 +20,8 @@ class RuleMd049(RulePlugin):
     Class to implement a plugin that ensures that the style of emphasis is consistent.
     """
 
+    __PLUGIN_ID = "MD049"
+
     __consistent_style = "consistent"
     __asterisk_style = "asterisk"
     __underscore_style = "underscore"
@@ -46,11 +48,11 @@ class RuleMd049(RulePlugin):
             plugin_id="MD049",
             plugin_enabled_by_default=True,
             plugin_description="Emphasis style",
-            plugin_version="0.5.0",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md049.md",
             plugin_configuration="style",
-            # plugin_supports_fix=True,
-            # plugin_fix_level=2,
+            plugin_supports_fix=True,
+            plugin_fix_level=2,
         )
 
     @classmethod
@@ -107,19 +109,26 @@ class RuleMd049(RulePlugin):
         if not self.__actual_style_type:
             self.__actual_style_type = current_style
         if self.__actual_style_type != current_style:
-            #     if context.in_fix_mode:
-            #         replace_character = (
-            #             "`"
-            #             if self.__actual_style_type == RuleMd048.__backtick_style
-            #             else "~"
-            #         )
-            #         self.register_fix_token_request(
-            #             context, token, "next_token", "fence_character", replace_character
-            #         )
-            #     else:
-            extra_data = (
-                f"Expected: {self.__actual_style_type}; Actual: {current_style}"
-            )
-            self.report_next_token_error(
-                context, token, extra_error_information=extra_data
-            )
+            if context.in_fix_mode:
+                if not context.check_for_pragma_suppression(
+                    token.line_number, RuleMd049.__PLUGIN_ID, False
+                ):
+                    replace_character = (
+                        "*"
+                        if self.__actual_style_type == RuleMd049.__asterisk_style
+                        else "_"
+                    )
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "emphasis_character",
+                        replace_character,
+                    )
+            else:
+                extra_data = (
+                    f"Expected: {self.__actual_style_type}; Actual: {current_style}"
+                )
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_data
+                )
