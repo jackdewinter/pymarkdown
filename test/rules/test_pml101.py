@@ -114,6 +114,18 @@ scanTests = [
 * this is now level 2
 """,
     ),
+    # Regression: `__check_apply_fix` used to pass the token index as the list
+    # ordinal. Once a document grew past 256 tokens the index no longer matched
+    # the ordinal, so every marker beyond that point was rewritten to indent 0.
+    pluginRuleTest(
+        "fix_list_beyond_token_index_256",
+        enable_rules=__plugin_enable_this_rule,
+        disable_rules=(__plugin_disable_this_rule + ",md041"),
+        source_file_contents=("para\n\n" * 300) + "* top\n  * child\n",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:602:3: PML101: Anchored list indentation [Expected: 4, Actual=2] (list-anchored-indent)""",
+        fix_expected_file_contents=("para\n\n" * 300) + "* top\n    * child\n",
+    ),
     pluginRuleTest(
         "good_simple_indent_default_level_0_ol",
         enable_rules=__plugin_enable_this_rule,

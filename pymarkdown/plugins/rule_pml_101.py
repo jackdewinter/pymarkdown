@@ -23,6 +23,8 @@ class RulePml101(RulePlugin):
     Class to implement a plugin that
     """
 
+    __PLUGIN_ID = "PML101"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RulePml101 class.
@@ -142,6 +144,11 @@ class RulePml101(RulePlugin):
         adjusted_column_number: int,
         calculated_column_number: int,
     ) -> None:
+        if context.check_for_pragma_suppression(
+            token.line_number, RulePml101.__PLUGIN_ID, False
+        ):
+            return
+
         list_token = cast(ListStartMarkdownToken, token)
 
         # delta is the number of spaces to add before the list marker, and is
@@ -151,14 +158,51 @@ class RulePml101(RulePlugin):
         if not delta:
             return
 
+        # This rule rewrites the same token fields that MD007 (ul-indent) does,
+        # and the two rules disagree on the target indentation whenever
+        # `indent` (default 4) differs from MD007's `ul-indent` (default 2).
+        # The fix framework refuses to apply two fixes to one field, so running
+        # both in fix mode either raises BadPluginFixError or lets the two rules
+        # fight over successive passes. Leave the file untouched rather than
+        # produce an oscillation the user cannot see.
+        if getattr(list_token, "tabbed_extracted_whitespace", None) is not None or (
+            getattr(list_token, "tabbed_adjust", -1) >= 0
+        ):
+            # Tab-derived indentation is tracked in separate metadata that this
+            # fix does not keep in sync; rewriting only `extracted_whitespace`
+            # would leave `TransformListBlock` rehydrating the list from stale
+            # tab data. Report the violation and leave the line alone.
+            return
+
         current_whitespace = list_token.extracted_whitespace
         if delta > 0:
             adjusted_whitespace = current_whitespace + (" " * delta)
         else:
+            # `delta` is measured in columns, `current_whitespace` in
+            # characters. They only agree while every character is one column
+            # wide, which the tab guard above already guarantees.
             removable = min(len(current_whitespace), -delta)
             adjusted_whitespace = current_whitespace[
                 : len(current_whitespace) - removable
             ]
+
+        leading_spaces = getattr(list_token, "leading_spaces", None)
+        new_spaces: List[str] = []
+        if leading_spaces:
+            for next_space_line in leading_spaces.split("\n"):
+                if not next_space_line:
+                    # The first entry is always empty: it carries the marker's
+                    # own indentation, which `extracted_whitespace` already
+                    # covers. Continuation lines without indentation stay that
+                    # way.
+                    new_spaces.append(next_space_line)
+                elif delta > 0:
+                    new_spaces.append(next_space_line + (" " * delta))
+                else:
+                    removable = min(len(next_space_line), -delta)
+                    new_spaces.append(
+                        next_space_line[: len(next_space_line) - removable]
+                    )
 
         self.register_fix_token_request(
             context,
@@ -181,19 +225,7 @@ class RulePml101(RulePlugin):
             "column_number",
             list_token.column_number + delta,
         )
-        leading_spaces = getattr(list_token, "leading_spaces", None)
-        if leading_spaces:
-            new_spaces = []
-            for next_space_line in leading_spaces.split("\n"):
-                if not next_space_line:
-                    new_spaces.append(next_space_line)
-                elif delta > 0:
-                    new_spaces.append(next_space_line + (" " * delta))
-                else:
-                    removable = min(len(next_space_line), -delta)
-                    new_spaces.append(
-                        next_space_line[: len(next_space_line) - removable]
-                    )
+        if new_spaces:
             self.register_fix_token_request(
                 context,
                 token,

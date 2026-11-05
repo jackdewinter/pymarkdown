@@ -136,6 +136,19 @@ from this rule, disable MD007:
 }
 ```
 
+## Automatic Correction Limits
+
+The correction is deliberately conservative.  It only rewrites a list marker
+when the surrounding text can be moved with it:
+
+* Lines that derive their indentation from a hard tab keep relying on tab
+  metadata that this rule does not rewrite, so those markers are reported but
+  left untouched rather than half-corrected.
+* A continuation line that carries no leading whitespace of its own stays that
+  way; only the marker and the lines that do carry whitespace are shifted.
+
+In those cases the violation is still reported, so a manual edit is required.
+
 ## Configuration
 
 | Prefixes |
