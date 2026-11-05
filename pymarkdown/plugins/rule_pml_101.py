@@ -14,6 +14,7 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.container_token_manager import ContainerTokenManager
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
@@ -39,10 +40,10 @@ class RulePml101(RulePlugin):
             plugin_id="PML101",
             plugin_enabled_by_default=False,
             plugin_description="Anchored list indentation",
-            plugin_version="0.6.0",
+            plugin_version="0.7.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_pml101.md",
             plugin_configuration="indent",
-            plugin_supports_fix=False,
+            plugin_supports_fix=True,
             plugin_fix_level=3,
         )
 
@@ -134,59 +135,72 @@ class RulePml101(RulePlugin):
                 stack_index -= 1
         return container_base_column, block_quote_base, list_depth
 
-    # def __check_apply_fix(
-    #     self,
-    #     context: PluginScanContext,
-    #     token: MarkdownToken,
-    #     adjusted_column_number: int,
-    #     calculated_column_number: int,
-    # ) -> None:
-    #     list_token = cast(ListStartMarkdownToken, token)
+    def __check_apply_fix(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        adjusted_column_number: int,
+        calculated_column_number: int,
+    ) -> None:
+        list_token = cast(ListStartMarkdownToken, token)
 
-    #     # column_delta is the space before the list start and follow_space_delta
-    #     # is the space following the list start, before the list text commences.
-    #     column_delta = adjusted_column_number - calculated_column_number
-    #     follow_space_delta = (list_token.indent_level - list_token.column_number) - 1
+        # delta is the number of spaces to add before the list marker, and is
+        # positive when the list needs to be indented further and negative when
+        # it needs to be dedented.
+        delta = calculated_column_number - adjusted_column_number
+        if not delta:
+            return
 
-    #     assert len(list_token.extracted_whitespace) >= column_delta
-    #     adjusted_whitespace = list_token.extracted_whitespace[:-column_delta]
+        current_whitespace = list_token.extracted_whitespace
+        if delta > 0:
+            adjusted_whitespace = current_whitespace + (" " * delta)
+        else:
+            removable = min(len(current_whitespace), -delta)
+            adjusted_whitespace = current_whitespace[
+                : len(current_whitespace) - removable
+            ]
 
-    #     self.register_fix_token_request(
-    #         context,
-    #         token,
-    #         "next_token",
-    #         "extracted_whitespace",
-    #         adjusted_whitespace,
-    #     )
-    #     self.register_fix_token_request(
-    #         context,
-    #         token,
-    #         "next_token",
-    #         "indent_level",
-    #         list_token.indent_level - column_delta - follow_space_delta,
-    #     )
-    #     if not token.is_new_list_item:
-    #         self.register_fix_token_request(
-    #             context,
-    #             token,
-    #             "next_token",
-    #             "column_number",
-    #             list_token.column_number - column_delta,
-    #         )
-    #         if list_token.leading_spaces:
-    #             new_spaces = []
-    #             total_delta = column_delta + follow_space_delta
-    #             for i in list_token.leading_spaces.split("\n"):
-    #                 if len(i) >= list_token.indent_level:
-    #                     i = i[:-total_delta]
-    #                 new_spaces.append(i)
-    #             self.register_fix_token_request(
-    #                 context,
-    #                 list_token,
-    #                 "next_token",
-    #                 "leading_spaces",
-    #                 "\n".join(new_spaces),
-    #             )
+        self.register_fix_token_request(
+            context,
+            token,
+            "next_token",
+            "extracted_whitespace",
+            adjusted_whitespace,
+        )
+        self.register_fix_token_request(
+            context,
+            token,
+            "next_token",
+            "indent_level",
+            list_token.indent_level + delta,
+        )
+        self.register_fix_token_request(
+            context,
+            token,
+            "next_token",
+            "column_number",
+            list_token.column_number + delta,
+        )
+        leading_spaces = getattr(list_token, "leading_spaces", None)
+        if leading_spaces:
+            new_spaces = []
+            for next_space_line in leading_spaces.split("\n"):
+                if not next_space_line:
+                    new_spaces.append(next_space_line)
+                elif delta > 0:
+                    new_spaces.append(next_space_line + (" " * delta))
+                else:
+                    removable = min(len(next_space_line), -delta)
+                    new_spaces.append(
+                        next_space_line[: len(next_space_line) - removable]
+                    )
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "leading_spaces",
+                "\n".join(new_spaces),
+            )
 
     def __check(self, context: PluginScanContext, token: MarkdownToken) -> None:
 
@@ -202,19 +216,17 @@ class RulePml101(RulePlugin):
         adjusted_column_number = token.column_number - 1 - container_base_column
         calculated_column_number = list_depth * self.__indent_basis
         if adjusted_column_number != calculated_column_number:
-            # if context.in_fix_mode:
-            #     self.__check_apply_fix(
-            #         context, token, adjusted_column_number, calculated_column_number
-            #     )
-            # else:
-            if block_quote_base:
-                container_base_column -= block_quote_base
-            # elif container_base_column:
-            #     container_base_column += 1
-            extra_error_information = (
-                f"Expected: {calculated_column_number + container_base_column}, "
-                + f"Actual={adjusted_column_number + container_base_column}"
-            )
-            self.report_next_token_error(
-                context, token, extra_error_information=extra_error_information
-            )
+            if context.in_fix_mode:
+                self.__check_apply_fix(
+                    context, token, adjusted_column_number, calculated_column_number
+                )
+            else:
+                if block_quote_base:
+                    container_base_column -= block_quote_base
+                extra_error_information = (
+                    f"Expected: {calculated_column_number + container_base_column}, "
+                    + f"Actual={adjusted_column_number + container_base_column}"
+                )
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_error_information
+                )

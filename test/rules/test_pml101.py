@@ -4,7 +4,9 @@ Module to provide tests related to the MD007 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
+    execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
@@ -51,6 +53,12 @@ scanTests = [
     * this is level 1
         * this is level 2
 """,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""* text
+    * this is level 1
+        * this is level 2
+""",
     ),
     pluginRuleTest(
         "good_simple_indent_default_level_0_ul",
@@ -67,6 +75,8 @@ scanTests = [
 """,
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)",
+        fix_expected_file_contents="""* this is level 1
+""",
     ),
     pluginRuleTest(
         "good_simple_indent_default_level_0_ul_enhanced",
@@ -99,6 +109,10 @@ scanTests = [
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)
 {temp_source_path}:3:2: PML101: Anchored list indentation [Expected: 0, Actual=1] (list-anchored-indent)""",
+        fix_expected_file_contents="""* this is level 1
+  part of level 1
+* this is now level 2
+""",
     ),
     pluginRuleTest(
         "good_simple_indent_default_level_0_ol",
@@ -548,12 +562,15 @@ def test_pml101_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "pml101")
 
 
-# @pytest.mark.parametrize("test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn)
-# def test_pml101_fix(test: pluginRuleTest) -> None:
-#     """
-#     Execute a parameterized fix test for plugin md001.
-#     """
-#     execute_fix_test(test)
+@pytest.mark.rules
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
+def test_pml101_fix(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin pml101.
+    """
+    execute_fix_test(test)
 
 
 @pytest.mark.rules

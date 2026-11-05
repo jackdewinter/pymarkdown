@@ -5,6 +5,10 @@
 | `pml101` |
 | `list-anchored-indent` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Anchored list indentation.
@@ -101,6 +105,36 @@ This rule was developed as an alternative to [Rule Md007](./rule_md007.md), enab
 the project to better support parsers like the
 [Python-Markdown](https://python-markdown.github.io/) parser. As such, it is strongly
 advised to disable Rule Md007 when enabling Pml101.
+
+## Fix Description
+
+Any list start element and any new list item element is examined to determine its
+actual indent column and the column that this rule expects.  The expected column
+is the column of the containing container (a block quote or a base list) plus the
+configured `indent` value multiplied by the list depth.  If the actual and
+expected columns differ, the list element is re-indented so that its list marker
+starts at the expected column.
+
+The correction works in both directions: list items that are too shallow are
+pushed right, and list items that are too deep are pulled left.  The leading
+whitespace of the list element, its `indent_level`, its `column_number`, and any
+`leading_spaces` recorded for continuation lines are updated together so that the
+element and its continuation lines stay aligned.
+
+Since [Rule MD007](./rule_md007.md) validates sub-list indentation against its own
+`indent` value, and that value defaults to `2` for MD007 while it defaults to `4`
+for this rule, the two rules disagree about the expected column unless MD007 is
+disabled or configured with a matching `indent`.  To use the automatic correction
+from this rule, disable MD007:
+
+```json
+{
+  "plugins": {
+    "pml101": { "enabled": true },
+    "md007": { "enabled": false }
+  }
+}
+```
 
 ## Configuration
 
