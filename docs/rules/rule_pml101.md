@@ -144,8 +144,10 @@ when the surrounding text can be moved with it:
 * Lines that derive their indentation from a hard tab keep relying on tab
   metadata that this rule does not rewrite, so those markers are reported but
   left untouched rather than half-corrected.
-* A continuation line that carries no leading whitespace of its own stays that
-  way; only the marker and the lines that do carry whitespace are shifted.
+* When the lines that visually belong to an item are tracked by the enclosing
+  item instead of by the item itself, moving the marker would push them left of
+  it, out of the list. Those markers are reported but the whole item is left
+  untouched.
 
 In those cases the violation is still reported, so a manual edit is required.
 

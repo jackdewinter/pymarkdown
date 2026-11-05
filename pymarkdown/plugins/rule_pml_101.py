@@ -189,7 +189,14 @@ class RulePml101(RulePlugin):
         leading_spaces = getattr(list_token, "leading_spaces", None)
         new_spaces: List[str] = []
         if leading_spaces:
-            for next_space_line in leading_spaces.split("\n"):
+            split_spaces = leading_spaces.split("\n")
+            if not any(split_spaces):
+                # Every recorded continuation line carries no indentation of
+                # its own, so the lines that visibly sit inside this item are
+                # tracked elsewhere. Moving the marker alone would leave them
+                # to the left of it, outside the list, so report and skip.
+                return
+            for next_space_line in split_spaces:
                 if not next_space_line:
                     # The first entry is always empty: it carries the marker's
                     # own indentation, which `extracted_whitespace` already
