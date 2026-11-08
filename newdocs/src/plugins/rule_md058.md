@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -118,7 +118,12 @@ More text.
 
 ## Fix Description
 
-The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/111).
+A missing blank line is inserted above the table, below the table, or both.
+Inside a block quote, the inserted line keeps the `>` characters of the
+table's line, so the table stays inside the block quote.
+
+A table that the parser places inside an HTML block is still reported by scan
+mode, but fix mode leaves it unchanged.
 
 ## Configuration
 

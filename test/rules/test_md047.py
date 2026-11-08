@@ -70,14 +70,17 @@ The line after this line should be blank.
         fix_expected_output="""md009-before:# This is a test:
 md010-before:# This is a test:
 md047-before:# This is a test:
+md058-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md009-before::
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md009-before:The line after this line should be blank.:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
+md058-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
 fixed:\\n:
 is_line_empty=False

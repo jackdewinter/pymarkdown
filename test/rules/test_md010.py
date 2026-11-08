@@ -116,25 +116,30 @@ a   bb  ccc ddd
 md010-before:before-tab\\tafter-tab:
 md010-after :before-tab  after-tab:
 md047-before:before-tab  after-tab:
+md058-before:before-tab  after-tab:
 nl-ltw:before-tab  after-tab\\n:
 md009-before:before-tab\\tafter-tab:
 md010-before:before-tab\\tafter-tab:
 md010-after :before-tab  after-tab:
 md047-before:before-tab  after-tab:
+md058-before:before-tab  after-tab:
 nl-ltw:before-tab  after-tab\\n:
 md009-before:before-tab\\tafter-tab\\tafter-another:
 md010-before:before-tab\\tafter-tab\\tafter-another:
 md010-after :before-tab  after-tab   after-another:
 md047-before:before-tab  after-tab   after-another:
+md058-before:before-tab  after-tab   after-another:
 nl-ltw:before-tab  after-tab   after-another\\n:
 md009-before:a\\tbb\\tccc\\tddd:
 md010-before:a\\tbb\\tccc\\tddd:
 md010-after :a   bb  ccc ddd:
 md047-before:a   bb  ccc ddd:
+md058-before:a   bb  ccc ddd:
 nl-ltw:a   bb  ccc ddd\\n:
 md009-before::
 md010-before::
 md047-before::
+md058-before::
 was_newline_added_at_end_of_file=True
 fixed:a   bb  ccc ddd\\n:
 is_line_empty=True

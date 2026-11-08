@@ -20,6 +20,9 @@
 - [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
     - Added `version --extended` to provide clear information about where the application
       is being executed, to be able to paste into bug reports.
+- [Pull Request 1707](https://github.com/jackdewinter/pymarkdown/pull/1707)
+    - Rule MD058 (blanks-around-tables) now supports fix mode, including for
+      tables inside block quotes and list items.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

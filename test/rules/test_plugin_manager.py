@@ -1319,7 +1319,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md054   link-image-style                True       True       0.5.0    No
   md055   table-pipe-style                True       True       0.5.0    No
   md056   table-column-count              True       True       0.5.0    No
-  md058   blanks-around-tables            True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.1    Yes
   md059   descriptive-link-text           True       True       0.5.0    No
   md060   table-column-style              True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1412,7 +1412,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md054   link-image-style                True       True       0.5.0    No
   md055   table-pipe-style                True       True       0.5.0    No
   md056   table-column-count              True       True       0.5.0    No
-  md058   blanks-around-tables            True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.1    Yes
   md059   descriptive-link-text           True       True       0.5.0    No
   md060   table-column-style              True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
@@ -1507,7 +1507,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1606,7 +1606,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1707,7 +1707,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md054   link-image-style                True       False      0.5.0    No
   md055   table-pipe-style                True       False      0.5.0    No
   md056   table-column-count              True       False      0.5.0    No
-  md058   blanks-around-tables            True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.1    Yes
   md059   descriptive-link-text           True       False      0.5.0    No
   md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -2278,12 +2278,15 @@ def test_markdown_fixed_issue_with_debug_on(scanner_default: MarkdownScanner) ->
         expected_return_code = 3
         expected_output = f"""md010-before:# This is a test:
 md047-before:# This is a test:
+md058-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
+md058-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
 fixed:\\n:
 is_line_empty=False
@@ -2331,12 +2334,15 @@ def test_markdown_fixed_issue_line_with_debug_and_file_debug_on(
         expected_return_code = 3
         expected_output = """md010-before:# This is a test:
 md047-before:# This is a test:
+md058-before:# This is a test:
 nl-ltw:# This is a test\\n:
 md010-before::
 md047-before::
+md058-before::
 nl-ltw:\\n:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
+md058-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
 fixed:\\n:
 is_line_empty=False

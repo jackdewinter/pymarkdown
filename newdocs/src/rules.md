@@ -792,7 +792,7 @@ Table rows must contain the same number of cells as the table's header row.
 | Property | Value |
 | --- | --- |
 | Aliases | `md058`, `blanks-around-tables` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 <!-- pyml disable-next-line no-duplicate-heading-->
