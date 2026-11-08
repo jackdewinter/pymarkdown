@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `pml101`, `list-anchored-indent` |
-| Autofix Available | No |
+| Autofix Available | Yes |
 | Enabled By Default | No |
 
 ## Summary
@@ -219,12 +219,33 @@ any sublists may start at columns 5 (1+4), 9 (1+8), and so on.
 
 ## Fix Description
 
-Automatic correction is not provided because determining the correct anchor
-column and the intended indent size for a multi-paragraph list item requires
-understanding the author's intended list structure, which the linter cannot
-infer from syntax alone. Users can correct these violations by re-indenting
-sub-list items so that their column offset from the base list is a multiple of
-the configured `indent` value.
+Any list start element and any new list item element is examined to determine
+its actual indent column and the column that the rule expects.  That expected
+column is the column of the containing container (a block quote or a base list)
+plus the configured `indent` value multiplied by the list depth.  If the actual
+and expected columns differ, the list element is re-indented so its list marker
+starts at the expected column.
+
+The indent is adjusted on both directions: list items that are too shallow are
+pushed right, and list items that are too deep are pulled left.  The leading
+whitespace recorded for the list element, its `indent_level`, its
+`column_number`, and any `leading_spaces` recorded for continuation lines are all
+updated together so that the element and its continuation lines stay aligned.
+
+Since [Rule MD007](./rule_md007.md) validates sub-list indentation against its own
+`indent` value, and that value defaults to `2` here while it defaults to `4` for
+this rule, the two rules will disagree about the expected column unless MD007 is
+disabled or configured with a matching `indent`.  To use the automatic correction
+from this rule, disable MD007:
+
+```json
+{
+  "plugins": {
+    "pml101": { "enabled": true },
+    "md007": { "enabled": false }
+  }
+}
+```
 
 ## Configuration
 
