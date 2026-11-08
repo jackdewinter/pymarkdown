@@ -24,6 +24,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
+    - Rule Md031 and addressing issues with fix mode
 - [Issue 1728](https://github.com/jackdewinter/pymarkdown/pull/1728)
     - Rule md060 no longer undercounts the display width of strong emphasis
       (`**text**` and `__text__`) in table cells by two characters, which caused
