@@ -686,7 +686,7 @@ Enforce a consistent code fence style throughout the document.
 | Property | Value |
 | --- | --- |
 | Aliases | `md049`, `emphasis-style` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 <!-- pyml disable-next-line no-duplicate-heading-->

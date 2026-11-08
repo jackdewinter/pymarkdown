@@ -20,6 +20,9 @@
 - [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
     - Added `version --extended` to provide clear information about where the application
       is being executed, to be able to paste into bug reports.
+- [Issue 1676](https://github.com/jackdewinter/pymarkdown/issues/1676)
+    - Added autofix support for MD049 (emphasis-style), rewriting inline emphasis
+      spans to the delimiter required by the `style` configuration.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
