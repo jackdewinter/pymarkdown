@@ -280,3 +280,58 @@ def test_markdown_with_dash_d_and_dash_e_single_by_name(
 
     # Assert
     execute_results.assert_results(expected_results=expected_results)
+
+def test_markdown_with_dash_d_unknown_rule_id(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure that disabling a rule id that does not match any
+    registered plugin fails fast with a clear error instead of being
+    silently ignored.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    supplied_arguments = [
+        "-d",
+        "md047x",
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="BadPluginError encountered while loading plugins:\nUnknown rule identifier(s) specified on the command line: md047x.\n",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_dash_e_unknown_rule_id(scanner_default: MarkdownScanner) -> None:
+    """
+    Test to make sure that enabling a rule id that does not match any
+    registered plugin fails fast with a clear error instead of being
+    silently ignored.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("end_with_blank_line.md")
+    supplied_arguments = [
+        "-e",
+        "md047x",
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_error="BadPluginError encountered while loading plugins:\nUnknown rule identifier(s) specified on the command line: md047x.\n",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
