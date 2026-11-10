@@ -951,11 +951,47 @@ class PluginManager:
                 properties,
             )
 
+        self.__verify_command_line_rule_identifiers(
+            command_line_enabled_rules, command_line_disabled_rules
+        )
+
         # Non-windows system may report these in weird orders, so sort them to have
         # a predictable order.
         self.__enabled_plugins = sorted(
             self.__enabled_plugins, reverse=False, key=lambda plugin: plugin.plugin_id
         )
+
+    def __verify_command_line_rule_identifiers(
+        self,
+        command_line_enabled_rules: Set[str],
+        command_line_disabled_rules: Set[str],
+    ) -> None:
+        """
+        Make sure every rule identifier passed with --enable-rules or
+        --disable-rules matches a registered plugin, so a typo fails fast
+        with a clear error instead of being silently ignored.
+        """
+        known_identifiers = {
+            next_identifier.lower()
+            for plugin_object in self.__registered_plugins
+            for next_identifier in plugin_object.plugin_identifiers
+        }
+        unknown_enabled_rules = sorted(
+            next_identifier
+            for next_identifier in command_line_enabled_rules
+            if next_identifier.lower() not in known_identifiers
+        )
+        unknown_disabled_rules = sorted(
+            next_identifier
+            for next_identifier in command_line_disabled_rules
+            if next_identifier != PluginManager.__disable_rules_wildcard
+            and next_identifier.lower() not in known_identifiers
+        )
+        if unknown_enabled_rules or unknown_disabled_rules:
+            unknown_rules = ", ".join(unknown_enabled_rules + unknown_disabled_rules)
+            raise BadPluginError(
+                formatted_message=f"Unknown rule identifier(s) specified on the command line: {unknown_rules}."
+            )
 
     def get_plugin_id_from_identifier(self, identifier_to_match: str) -> Optional[str]:
         """
