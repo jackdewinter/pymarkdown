@@ -23,7 +23,7 @@ from pymarkdown.extensions.pragma_token import (
     PragmaToken,
 )
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.source_providers import FileSourceProvider
@@ -62,7 +62,7 @@ class FileScanHelper:
         self,
         tokenizer: TokenizedMarkdown,
         plugins: PluginManager,
-        presentation: MainPresentation,
+        presentation: BasePresentation,
         show_stack_trace: bool,
         handle_error: Callable[[str, Optional[Exception], bool, str], None],
         properties: ApplicationProperties,
@@ -1292,9 +1292,24 @@ class FileScanHelper:
         )
 
         if not is_fix_mode:
-            subparsers.add_parser(
+            new_sub_parser.add_argument(
+                "--urls",
+                dest="show_urls",
+                action="store_true",
+                default=False,
+                help="show urls for any reported rule failures",
+            )
+
+            new_sub_parser = subparsers.add_parser(
                 FileScanHelper.__stdin_scan_subcommand,
                 help="scan the standard input as a Markdown file",
+            )
+            new_sub_parser.add_argument(
+                "--urls",
+                dest="show_urls",
+                action="store_true",
+                default=False,
+                help="show urls for any reported rule failures",
             )
 
     def __validate_entry(

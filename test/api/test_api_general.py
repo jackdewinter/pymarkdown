@@ -56,7 +56,7 @@ def test_api_interface_version() -> None:
     # NOTE: If this ever changes, care must be made to publish the change
     #       widely and to think about increasing a minor version if there
     #       is a breaking change.
-    assert found_version == 1
+    assert found_version == 2
 
 
 def test_api_tokenizer_init_exception() -> None:

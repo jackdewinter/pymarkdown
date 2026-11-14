@@ -279,6 +279,8 @@ The available configuration items are grouped into:
 - [General - `mode.*` + command line](#general) - Global settings.
 - [Logs - `log.*`](#logs) - Settings that affect how logging works.
 - [System - `system.*`](#system) - Settings that affect the entire system.
+- [Scan Command Options - `scan.*`](#scan-command-options) - Setting that affect
+  the `scan` command.
 - [Rule Plugins - `plugins.*` + command line](#rule-plugins) - Settings that affect
   the various Rule Plugins.
 - [Extensions - `extensions.*`](#extensions) - Settings that affect the various
@@ -426,6 +428,14 @@ request).
     system.exclude_path = ["draft_*.md","draft-*.md"]
     ```
 <!-- pyml enable code-block-style-->
+
+### Scan Command Options
+
+These items provide options on how the output of the scan command is generated:
+
+| Key | Command Line | Type | Description |
+| --- | --- | --- | --- |
+| `show-urls` | [--show-url](./user-guide.md#--urls) | Boolean | Show URLs as part of Rule Failures. |
 
 ### Rule Plugins
 

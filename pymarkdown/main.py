@@ -23,6 +23,7 @@ from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.file_scan_helper import FileScanHelper
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
@@ -44,7 +45,7 @@ class PyMarkdownLint:
 
     def __init__(
         self,
-        presentation: Optional[MainPresentation] = None,
+        presentation: Optional[BasePresentation] = None,
         show_stack_trace: bool = False,
         inherit_logging: bool = False,
         string_to_scan: Optional[str] = None,
@@ -372,10 +373,18 @@ class PyMarkdownLint:
         POGGER.info("Initializing parser.")
         self.__initialize_parser()
 
+        show_urls = hasattr(args, "show_urls") and args.show_urls
+        if not show_urls and self.__properties:
+            show_urls = (
+                self.__properties.get_boolean_property("scan.show-urls") or False
+            )
+
         POGGER.info("Processing files with parser.")
         assert (
             self.__tokenizer is not None
         ), "When scanning, the tokenizer should have already been initialized."
+        if show_urls and isinstance(self.__presentation, MainPresentation):
+            self.__presentation.initialize(show_urls)
         fsh = FileScanHelper(
             self.__tokenizer,
             self.__plugins,

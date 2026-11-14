@@ -112,7 +112,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period.""".replace(
             "{USAGE_X}", USAGE_X
@@ -147,7 +147,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period.""".replace(
             "{USAGE_X}", USAGE_X
@@ -182,7 +182,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period.""".replace(
             "{USAGE_X}", USAGE_X
@@ -217,7 +217,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' must only contain alphanumeric characters after the period.""".replace(
             "{USAGE_X}", USAGE_X
@@ -252,7 +252,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: argument -ae/--alternate-extensions: Alternate extensions cannot be an empty string.""".replace(
             "{USAGE_X}", USAGE_X

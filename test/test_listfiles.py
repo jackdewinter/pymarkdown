@@ -28,7 +28,7 @@ def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         expected_output=f"""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 
 positional arguments:
@@ -48,6 +48,7 @@ positional arguments:
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
   --respect-gitignore   respect any setting in the local .gitignore file.
+  --urls                show urls for any reported rule failures
 """
     )
 
@@ -72,7 +73,7 @@ def test_markdown_with_dash_l_only(scanner_default: MarkdownScanner) -> None:
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: the following arguments are required: path
 """.replace(

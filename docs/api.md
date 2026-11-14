@@ -53,12 +53,13 @@ Create a new instance of the `PyMarkdownApi` class.
 
         The history of the interface versions and what they support is as follows:
 
-        | Version | Description |
-        | ------- | ----------- |
-        |    1    | Initial version. |
+        | Interface Version | PyMarkdown Version | Description. |
+        | --- | --- | --- |
+        | `1` | N/A | Original version. |
+        | `2` | `0.9.42` | Added `rule_url` field to [PyMarkdownScanFailure](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownScanFailure). |
 
         Returns:
-            The current plugin interface version. The current plugin interface version is `1`.
+            The current plugin interface version. The current plugin interface version is `2`.
 
         Examples:
             This function queries the current version of this API.
@@ -1237,7 +1238,7 @@ Create a new instance of the `PyMarkdownApi` class.
     `pragma_error: str`
     :   The error message reported by PyMarkdown.
 
-`PyMarkdownScanFailure(scan_file: str, line_number: int, column_number: int, rule_id: str, rule_name: str, rule_description: str, extra_error_information: str | None)`
+`PyMarkdownScanFailure(scan_file: str, line_number: int, column_number: int, rule_id: str, rule_name: str, rule_description: str, extra_error_information: str | None, rule_url: str | None = None)`
 :   A dataclass containing information about a rule failure from a rule plugin.
 
     This is the API interface encapsulation of the [Rule Failure Format](../user-guide.md#rule-failure-format),
@@ -1287,6 +1288,8 @@ Create a new instance of the `PyMarkdownApi` class.
                 print(f"    Desc: {failure.rule_description}")
                 if failure.extra_error_information:
                     print(f"    Extra: {failure.extra_error_information}")
+                if failure.rule_url:
+                    print(f"    URL: {failure.rule_url}")
                 print("-" * 40)
         else:
             print("\nNo rule failures found.")
@@ -1311,6 +1314,9 @@ Create a new instance of the `PyMarkdownApi` class.
 
     `rule_name: str`
     :   The names of the rule that triggered the rule failure.
+
+    `rule_url: str | None`
+    :   The type of the None singleton.
 
     `scan_file: str`
     :   File that was being scanned when the failure occurred.

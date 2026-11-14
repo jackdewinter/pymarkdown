@@ -485,7 +485,9 @@ that are specific to that tool.
 
 Keeping to that format, the output format for any PyMarkdown failure is as follows:
 
-`file-name:line:column: rule-id: description {extra-information} (aliases)`
+```text
+file-name:line:column: rule-id: description {extra-information} (aliases)[rule-URL]
+```
 
 For the formal definition and behavior of a Rule Failure, see [Rule Failure](#rule-failure).
 
@@ -512,6 +514,10 @@ Breaking it down into its constituent parts:
     - These aliases are the same strings you can pass to `--enable-rules` / `--disable-rules`
       (see [Rule Plugin and Extension Selection](#rule-plugin-and-extension-selection))
       and to Pragma directives (see [Pragma Extension](#pragma-extension)).
+- `rule-URL` - optional information with the URL for the documentation for the
+  Rule Plugin specified by the `rule-id` field, if the Rule Plugin itself specifies
+  such an URL in its definition. For more information, check the command line [--urls](#--urls)
+  flag.
 
 Using the output from the command line from the last section, that scan output reports
 one failure that occurred in the file `examples\example-1.md` on line 1 at
@@ -589,6 +595,7 @@ optional arguments:
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
   --respect-gitignore   respect any setting in the local .gitignore file.
+  --urls                show urls for any reported rule failures
 ```
 
 ##### --list-files or -l
@@ -701,6 +708,28 @@ from the
 [Exit Codes](#exit-codes) section; for example, the `minimal` scheme avoids
 failing
 builds solely because no files were scanned.
+
+##### --urls
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.42**
+
+The `--urls` flag tells PyMarkdown's two scan commands, `scan` and `scan-stdin`,
+to display the URL that triggered the rule failure that is being reported. Alternatively,
+the [`scan.show-urls`](./advanced_configuration.md#scan-command-options) configuration
+item can be set to `True` to achieve the same result.
+
+Looking back at the [Rule Failure Format](#rule-failure-format) section, enabling
+this configuration allows for the Rule Plugin's URL to be appended to the end of
+the information presented with the Rule Failure.
+
+While the initial design of this feature was to provide more assistance to new users
+who may not know that Rule Plugin `MD013` (or its alternative id `line-length`),
+our team quickly discovered other benefits. The most prominent of those benefits
+is to provide all users with a quick way to clarify their understanding of the
+Rule Plugin's behavior. Instead of having to look for the documentation related
+to that specific Rule Plugin on the documentation website, they can simply use
+the URL provided with the Rule Failure and go directly to the specific documentation.
 
 ##### path
 

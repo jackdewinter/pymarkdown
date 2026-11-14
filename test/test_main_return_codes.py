@@ -131,7 +131,7 @@ def test_markdown_return_code_default_command_line_error(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: the following arguments are required: path
 """.replace(
@@ -334,7 +334,7 @@ def test_markdown_return_code_minimal_command_line_error(
     expected_results = ExpectedResults(
         return_code=2,
         expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
 {USAGE_INDENT_X}                    path [path ...]
 {USAGE_X} scan: error: the following arguments are required: path
 """.replace(

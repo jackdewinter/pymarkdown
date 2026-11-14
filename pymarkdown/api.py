@@ -12,7 +12,7 @@ from typing import Any, List, Optional
 from application_file_scanner import ApplicationFileScanner
 
 from pymarkdown.application_logging import ApplicationLogging
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.main import PyMarkdownLint
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
@@ -33,7 +33,10 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
         __inherit_logging (bool): Kept version of the `inherit_logging` parameter.
     """
 
-    __INTERFACE_VERSION = 1
+    # History
+    # 1 - Original
+    # 2 - Issue 1739 added `rule_url` to PyMarkdownScanFailure
+    __INTERFACE_VERSION = 2
 
     def __init__(self, inherit_logging: bool = False) -> None:
         """
@@ -54,7 +57,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
         self.__disable_json5_configuration = False
         self.__enable_continue_on_error = False
 
-    # pylint: disable=too-many-arguments
     def scan_path(
         self,
         path_to_scan: str,
@@ -159,8 +161,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
                 ) from this_exception
         return self.__handle_scan_results(return_code, this_presentation)
 
-    # pylint: enable=too-many-arguments
-
     def scan_string(
         self,
         string_to_scan: str,
@@ -238,7 +238,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
             )
         return self.__handle_scan_results(return_code, this_presentation)
 
-    # pylint: disable=too-many-arguments
     def fix_path(
         self,
         path_to_scan: str,
@@ -339,8 +338,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
             )
         return self.__handle_fix_results(return_code, this_presentation)
 
-    # pylint: enable=too-many-arguments
-
     def fix_string(
         self,
         string_to_scan: str,
@@ -435,7 +432,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
             if temp_file and os.path.isfile(temp_file.name):  # pragma: no cover
                 os.remove(temp_file.name)
 
-    # pylint: disable=too-many-arguments
     def list_path(
         self,
         path_to_scan: str,
@@ -541,8 +537,6 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
             self.__generate_scan_exception(this_presentation)
         return PyMarkdownListPathResult(this_presentation.pso[0].split("\n"))
 
-    # pylint: enable=too-many-arguments
-
     @property
     def application_version(self) -> str:
         """
@@ -571,12 +565,13 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
 
         The history of the interface versions and what they support is as follows:
 
-        | Version | Description |
-        | ------- | ----------- |
-        |    1    | Initial version. |
+        | Interface Version | PyMarkdown Version | Description. |
+        | --- | --- | --- |
+        | `1` | N/A | Original version. |
+        | `2` | `0.9.42` | Added `rule_url` field to [PyMarkdownScanFailure](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownScanFailure). |
 
         Returns:
-            The current plugin interface version. The current plugin interface version is `1`.
+            The current plugin interface version. The current plugin interface version is `2`.
 
         Examples:
             This function queries the current version of this API.
@@ -1411,7 +1406,7 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
                 f"Parameter named '{argument_name}' is not a valid comma-separated list of extensions.",
             ) from this_exception
 
-    class ApiPresentation(MainPresentation):  # docvet: ignore[missing-examples]
+    class ApiPresentation(BasePresentation):  # docvet: ignore[missing-examples]
         """
         Class to provide for the output of the PyMarkdown application.
 
@@ -1467,6 +1462,7 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
                 rule_name=scan_failure.rule_name,
                 rule_description=scan_failure.rule_description,
                 extra_error_information=scan_failure.extra_error_information,
+                rule_url=scan_failure.rule_url,
             )
             self.scan_failures.append(local_copy)
 
@@ -1476,10 +1472,29 @@ class PyMarkdownApi:  # docvet: ignore[missing-examples]
             """
             self.files_fixed.append(file_fixed)
 
+        def format_scan_error(
+            self,
+            next_file: str,
+            this_exception: Exception,
+            show_extended_information: bool = False,
+            allow_shortcut: bool = False,
+        ) -> str | None:
+            if allow_shortcut:
+                formatted_error = f"{next_file}:0:0: {this_exception}"
+            else:
+                formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+                if show_extended_information:
+                    current_cause = this_exception.__cause__
+                    while current_cause:
+                        formatted_error += f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
+                        current_cause = current_cause.__cause__
+            return formatted_error
+
 
 # pylint: enable=too-many-instance-attributes,too-many-public-methods
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass(frozen=True)
 class PyMarkdownScanFailure:  # docvet: ignore[missing-examples]
     """
@@ -1532,6 +1547,8 @@ class PyMarkdownScanFailure:  # docvet: ignore[missing-examples]
                 print(f"    Desc: {failure.rule_description}")
                 if failure.extra_error_information:
                     print(f"    Extra: {failure.extra_error_information}")
+                if failure.rule_url:
+                    print(f"    URL: {failure.rule_url}")
                 print("-" * 40)
         else:
             print("\\nNo rule failures found.")
@@ -1552,6 +1569,7 @@ class PyMarkdownScanFailure:  # docvet: ignore[missing-examples]
     """A detailed description of the rule that triggered the rule failure."""
     extra_error_information: Optional[str]
     """Optional string providing more information on why the rule was triggered."""
+    rule_url: Optional[str] = None
 
     def partial_equals(self, other: "PyMarkdownScanFailure") -> bool:
         """
@@ -1566,6 +1584,9 @@ class PyMarkdownScanFailure:  # docvet: ignore[missing-examples]
             and self.column_number == other.column_number
             and self.rule_id == other.rule_id
         )
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 @dataclass(frozen=True)

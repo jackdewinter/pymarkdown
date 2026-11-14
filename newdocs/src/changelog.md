@@ -8,6 +8,8 @@
 - Upgraded minimum version from Python 3.10 to 3.11 due to various
   CVEs found with the filelock package, which has a minimum supported
   version of 3.11
+- Incremented the [`interface_version`](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownApi.interface_version)
+  to `2` because the `rule_url` field was added to [PyMarkdownScanFailure](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownScanFailure).
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
@@ -20,6 +22,9 @@
 - [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
     - Added `version --extended` to provide clear information about where the application
       is being executed, to be able to paste into bug reports.
+- [Issue 1739](https://github.com/jackdewinter/pymarkdown/issues/1739)
+    - Added `--urls` to `scan` command to append the URL of the plugin rule being
+      triggered to the Rule Failure report.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

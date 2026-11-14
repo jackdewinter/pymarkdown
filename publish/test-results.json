@@ -60,7 +60,7 @@
         },
         {
             "name": "test.api.test_api_scan",
-            "totalTests": 32,
+            "totalTests": 34,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1709,6 +1709,14 @@
         {
             "name": "test.test_main_return_codes",
             "totalTests": 13,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_main_scan_urls",
+            "totalTests": 3,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
