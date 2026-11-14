@@ -82,6 +82,7 @@ class RuleMd031(RulePlugin):
         self.__x3: List[int] = []
         self.__x4: List[EndMarkdownToken] = []
         self.__x5: List[EndMarkdownToken] = []
+        self.__x5a: List[EndMarkdownToken] = []
         self.__removed_container_adjustments: Optional[
             List[PendingContainerAdjustment]
         ] = None
@@ -143,6 +144,7 @@ class RuleMd031(RulePlugin):
         self.__x3.clear()
         self.__x4.clear()
         self.__x5.clear()
+        self.__x5a.clear()
 
     def __xabc(self, context: PluginScanContext, token: MarkdownToken) -> None:
         assert (
@@ -638,6 +640,7 @@ class RuleMd031(RulePlugin):
 
     # pylint: disable=too-many-boolean-expressions
     def __fix_spacing_list_remove_list_kludge(self, token: MarkdownToken) -> bool:
+
         if (
             len(self.__x1) == 2
             and self.__x1[0].is_list_start
@@ -653,7 +656,7 @@ class RuleMd031(RulePlugin):
             list_token = cast(ListStartMarkdownToken, self.__x1[0])
             assert list_token.leading_spaces is not None
             split_leading_spaces = list_token.leading_spaces.split("\n")
-            split_leading_spaces.insert(self.__x3[0] - 1, "")
+            split_leading_spaces.insert(self.__x3[0], "")
             self.__leading_space_index_tracker.nudge_list_container(
                 token, nudge_positive=False
             )
@@ -781,25 +784,39 @@ class RuleMd031(RulePlugin):
                 adjust = self.__calculate_adjust(initial_index, container_index)
         if not continue_processing:
             last_closed_container_info.adjustment += adj2
+
+        container_item = self.__leading_space_index_tracker.get_container_stack_item(
+            initial_index
+        )
         index = (
             LeadingSpaceIndexTracker.calculate_token_line_number(token)
-            - self.__leading_space_index_tracker.get_container_stack_item(
-                initial_index
-            ).line_number
+            - container_item.line_number
         )
         index -= (
             last_closed_container_info.adjustment
             + last_closed_container_info.list_nudge_count
         )
+        if (
+            self.__x5a
+            and (
+                len(self.__x5a) >= 2
+                and self.__x5a[-1].is_list_end
+                and self.__x5a[-2].is_list_end
+            )
+            and last_closed_container_info.list_nudge_count > 0
+        ):
+            index += 1
         index -= adjust
         if index < 0:
             index = 0
             self.__leading_space_index_tracker.nudge_list_container(
                 token, nudge_positive=False
             )
-        self.__container_adjustments[initial_index].append(
-            PendingContainerAdjustment(index, "")
-        )
+
+        if not self.__submitted_fix:
+            self.__container_adjustments[initial_index].append(
+                PendingContainerAdjustment(index, "")
+            )
 
     def __fix_spacing_list_prefix(
         self,
@@ -1084,10 +1101,12 @@ class RuleMd031(RulePlugin):
         self,
         context: PluginScanContext,
         token: MarkdownToken,
+        is_start: bool,
         special_case: bool,
         special_case_2: bool,
     ) -> None:
 
+        _ = is_start
         if context.check_for_pragma_suppression(
             token.line_number, RuleMd031.__PLUGIN_ID, False
         ):
@@ -1145,6 +1164,11 @@ class RuleMd031(RulePlugin):
         else:
             self.__fix_spacing_with_else(context, token, new_token)
 
+        # if is_start:
+        #     self.__x5a = self.__x5[:]
+        # else:
+        #     self.__x5a.clear()
+
     def __handle_fenced_code_block(
         self,
         context: PluginScanContext,
@@ -1167,7 +1191,7 @@ class RuleMd031(RulePlugin):
             and can_trigger
         ):
             if context.in_fix_mode and not context.is_during_line_pass:
-                self.__fix_spacing(context, token, special_case, special_case_2)
+                self.__fix_spacing(context, token, True, special_case, special_case_2)
             else:
                 self.report_next_token_error(context, token)
 
@@ -1222,7 +1246,7 @@ class RuleMd031(RulePlugin):
             and can_trigger
         ):
             if context.in_fix_mode:
-                self.__fix_spacing(context, token, False, False)
+                self.__fix_spacing(context, token, False, False, False)
             else:
                 assert self.__last_non_end_token
                 if self.__last_non_end_token.is_text:
@@ -1349,6 +1373,7 @@ class RuleMd031(RulePlugin):
             del self.__container_adjustments[-1]
             del self.__container_x[-1]
             # is_first = False
+            self.__x5a = self.__x5[:]
 
     def __calculate_special_case(self) -> bool:
         return bool(
@@ -1416,6 +1441,8 @@ class RuleMd031(RulePlugin):
             self.__leading_space_index_tracker.open_container(token)
         elif token.is_block_quote_end or token.is_list_end:
             self.__leading_space_index_tracker.register_container_end(token)
+        elif token.is_new_list_item:
+            self.__leading_space_index_tracker.nudge_list_container(token)
         elif token.is_fenced_code_block:
             self.__handle_fenced_code_block(
                 context, token, special_case, special_case_2
@@ -1425,10 +1452,6 @@ class RuleMd031(RulePlugin):
         elif token.is_fenced_code_block_end:
             self.__end_fenced_code_block_token = cast(EndMarkdownToken, token)
 
-        if token.is_end_token:
-            self.__x5.append(cast(EndMarkdownToken, token))
-        else:
-            self.__x5.clear()
         self.__leading_space_index_tracker.track_since_last_non_end_token(token)
 
         self.__next_token_after(context, token)
@@ -1437,6 +1460,10 @@ class RuleMd031(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
 
+        if token.is_end_token:
+            self.__x5.append(cast(EndMarkdownToken, token))
+        else:
+            self.__x5.clear()
         if (
             not token.is_end_token
             and not token.is_block_quote_start
