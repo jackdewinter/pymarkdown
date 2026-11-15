@@ -71,15 +71,11 @@ def test_markdown_with_dash_l_only(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
-{USAGE_INDENT_X}                    path [path ...]
+        expected_error="""usage: {USAGE_X} scan {USAGE_SCAN_X}
 {USAGE_X} scan: error: the following arguments are required: path
-""".replace(
-            "{USAGE_X}", USAGE_X
-        ).replace(
-            "{USAGE_INDENT_X}", USAGE_INDENT_X
-        ),
+""".replace("{USAGE_X}", USAGE_X)
+        .replace("{USAGE_INDENT_X}", USAGE_INDENT_X)
+        .replace("{USAGE_SCAN_X}", USAGE_SCAN_X),
     )
 
     # Act
