@@ -87,7 +87,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v7.0.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -151,7 +151,7 @@ jobs:
       #       pytest.xml
 
       - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@v1.12.2
+        uses: MishaKav/pytest-coverage-comment@v1.13.1
         if: ${{ matrix.python == env.default-python-version && matrix.platform == env.default-platform }}
         with:
           pytest-xml-coverage-path: ./coverage.xml
@@ -191,7 +191,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
 
-      - uses: dcondrey/unicode-safety-check@v2
+      - uses: dcondrey/unicode-safety-check@v3
         id: scan
         with:
           scan-mode: all
@@ -209,7 +209,7 @@ jobs:
           echo "High: ${{ steps.scan.outputs.high }}"
           
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v7.0.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -247,7 +247,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v7.0.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -291,7 +291,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v7.0.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ env.default-python-version }}
 

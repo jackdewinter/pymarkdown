@@ -24,7 +24,7 @@ repos:
         entry: pipenv run python utils/verify_install_requirements.py
         pass_filenames: false
 -   repo: https://github.com/pycqa/flake8
-    rev: 7.4.1
+    rev: 7.5.0
     hooks:
     -   id: flake8
         name: "Scan:   Flake8"
@@ -70,7 +70,7 @@ repos:
         args: ["-j=1", "--recursive=y", "-rn", "-sn", "utils"]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
     -   id: mypy
         name: "Scan:   MyPy"
@@ -79,7 +79,7 @@ repos:
           "types-pyyaml", types-PyYAML, columnar]
         pass_filenames: false
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
     -   id: mypy
         name: "Scan:   MyPy (test)"
@@ -148,20 +148,6 @@ repos:
         language: system
         entry: pipenv run python "main.py" --config newdocs/clean.json scan -r --exclude "draft-*.md" --exclude "development*.md" ./newdocs/src
         pass_filenames: false
-# -   repo: https://github.com/jackdewinter/pymarkdown
-#     rev: v0.9.37
-#     hooks:
-#     -   id: pymarkdown-new
-#         name: "Scan:   PyMarkdown (New Documentation)"
-#         pass_filenames: false
-#         args:
-#         -   --config
-#         -   newdocs/clean.json
-#         -   scan
-#         -   "-r"
-#         -   --exclude
-#         -   "draft-*.md"
-#         -   ./newdocs/src
 -   repo: local
     hooks:
     -   id: docvet-coverage
