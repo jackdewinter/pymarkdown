@@ -373,18 +373,10 @@ class PyMarkdownLint:
         POGGER.info("Initializing parser.")
         self.__initialize_parser()
 
-        show_urls = hasattr(args, "show_urls") and args.show_urls
-        if not show_urls and self.__properties:
-            show_urls = (
-                self.__properties.get_boolean_property("scan.show-urls") or False
-            )
-
         POGGER.info("Processing files with parser.")
         assert (
             self.__tokenizer is not None
         ), "When scanning, the tokenizer should have already been initialized."
-        if show_urls and isinstance(self.__presentation, MainPresentation):
-            self.__presentation.initialize(show_urls)
         fsh = FileScanHelper(
             self.__tokenizer,
             self.__plugins,
@@ -392,6 +384,7 @@ class PyMarkdownLint:
             self.__show_stack_trace,
             self.__handle_error,
             self.__properties,
+            show_urls=hasattr(args, "show_urls") and args.show_urls,
         )
         did_fix_any_files, did_fail_any_file, no_plugins_active_for_fix = (
             fsh.process_files_to_scan(

@@ -11,6 +11,7 @@ from test.utils import (
     ARGPARSE_X,
     EXCLUSIONS_X,
     USAGE_INDENT_X,
+    USAGE_SCAN_X,
     USAGE_X,
     write_temporary_configuration,
 )
@@ -27,9 +28,7 @@ def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
     supplied_arguments = ["scan", "-h"]
 
     expected_results = ExpectedResults(
-        expected_output=f"""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
-{USAGE_INDENT_X}                    path [path ...]
+        expected_output=f"""usage: {USAGE_X} scan {USAGE_SCAN_X}
 
 positional arguments:
   path                  one or more paths to examine for eligible Markdown

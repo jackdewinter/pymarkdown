@@ -486,7 +486,7 @@ that are specific to that tool.
 Keeping to that format, the output format for any PyMarkdown failure is as follows:
 
 ```text
-file-name:line:column: rule-id: description {extra-information} (aliases)[rule-URL]
+file-name:line:column: rule-id: description {extra-information} (aliases) rule-URL
 ```
 
 For the formal definition and behavior of a Rule Failure, see [Rule Failure](#rule-failure).

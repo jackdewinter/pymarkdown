@@ -435,7 +435,7 @@ These items provide options on how the output of the scan command is generated:
 
 | Key | Command Line | Type | Description |
 | --- | --- | --- | --- |
-| `show-urls` | [--show-url](./user-guide.md#--urls) | Boolean | Show URLs as part of Rule Failures. |
+| `show-urls` | [--urls](./user-guide.md#--urls) | Boolean | Show URLs as part of Rule Failures. |
 
 ### Rule Plugins
 

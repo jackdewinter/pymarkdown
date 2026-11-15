@@ -80,7 +80,7 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
 
         supplied_arguments = [
             "scan",
-            "--url",
+            "--urls",
             source_file_path,
         ]
 
