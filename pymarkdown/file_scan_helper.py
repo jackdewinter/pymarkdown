@@ -23,6 +23,7 @@ from pymarkdown.extensions.pragma_token import (
     PragmaToken,
 )
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -62,10 +63,11 @@ class FileScanHelper:
         self,
         tokenizer: TokenizedMarkdown,
         plugins: PluginManager,
-        presentation: MainPresentation,
+        presentation: BasePresentation,
         show_stack_trace: bool,
         handle_error: Callable[[str, Optional[Exception], bool, str], None],
         properties: ApplicationProperties,
+        show_urls: bool = False,
     ):
         """
         Initialize a new instance of the FileScanHelper class.
@@ -79,6 +81,7 @@ class FileScanHelper:
         self.__properties = properties
         self.__per_file_ignores_list: List[Tuple[Parser, Set[str]]] = []
         self.number_of_pragma_failures = 0
+        self.__show_urls = show_urls
 
     # pylint: enable=too-many-arguments
 
@@ -95,6 +98,16 @@ class FileScanHelper:
 
         self.__continue_on_error = args.continue_on_error
         in_fix_mode = args.primary_subparser == FileScanHelper.__normal_fix_subcommand
+
+        show_urls = self.__show_urls
+        if not in_fix_mode and not show_urls:
+            scan_show_urls = self.__properties.get_boolean_property(
+                "scan.show-urls", False
+            )
+            assert scan_show_urls is not None
+            show_urls = scan_show_urls
+        if isinstance(self.__presentation, MainPresentation):
+            self.__presentation.initialize(show_urls)
 
         # sourcery skip: raise-specific-error
         did_fix_any_file = False
@@ -1292,9 +1305,24 @@ class FileScanHelper:
         )
 
         if not is_fix_mode:
-            subparsers.add_parser(
+            new_sub_parser.add_argument(
+                "--urls",
+                dest="show_urls",
+                action="store_true",
+                default=False,
+                help="show urls for any reported rule failures",
+            )
+
+            new_sub_parser = subparsers.add_parser(
                 FileScanHelper.__stdin_scan_subcommand,
                 help="scan the standard input as a Markdown file",
+            )
+            new_sub_parser.add_argument(
+                "--urls",
+                dest="show_urls",
+                action="store_true",
+                default=False,
+                help="show urls for any reported rule failures",
             )
 
     def __validate_entry(

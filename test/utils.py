@@ -37,6 +37,10 @@ if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
                           [--log-file LOG_FILE]
                           [--return-code-scheme {default,minimal,explicit}]
                           {extensions,fix,plugins,scan,scan-stdin,version} ..."""
+    USAGE_SCAN_X = f"""[-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [--urls]
+{USAGE_INDENT_X}                    path [path ...]"""
 else:
     USAGE_X = "main.py"
     USAGE_INDENT_X = ""
@@ -48,6 +52,10 @@ else:
                [--log-file LOG_FILE]
                [--return-code-scheme {default,minimal,explicit}]
                {extensions,fix,plugins,scan,scan-stdin,version} ..."""
+
+    USAGE_SCAN_X = f"""[-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
+{USAGE_INDENT_X}                    path [path ...]"""
 if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:

@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from typing_extensions import override
 
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 # https://docs.pytest.org/en/latest/goodpractices.html#tests-outside-application-code
@@ -21,7 +21,7 @@ from pymarkdown.__main__ import main
 # pylint: enable=wrong-import-position
 
 
-class AlternateMainPresentation(MainPresentation):
+class AlternateMainPresentation(BasePresentation):
     """
     Alternate presentation class to test that an alternate presentation
     can be effected.
@@ -52,10 +52,17 @@ class AlternateMainPresentation(MainPresentation):
         Format a scan error for display.  Returning a value of None means that
         the function has handled any required output.
         """
-        dd = super().format_scan_error(
-            next_file, this_exception, show_extended_information
-        )
-        scan_error = "[fse[" + (dd if dd else "") + "]]"
+        if allow_shortcut:
+            formatted_error = f"{next_file}:0:0: {this_exception}"
+        else:
+            formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+            if show_extended_information:
+                current_cause = this_exception.__cause__
+                while current_cause:
+                    formatted_error += f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
+                    current_cause = current_cause.__cause__
+
+        scan_error = "[fse[" + (formatted_error if formatted_error else "") + "]]"
         self.print_system_error(scan_error)
         return None
 
@@ -77,8 +84,12 @@ class AlternateMainPresentation(MainPresentation):
         """
         self.print_system_output(
             f"[psf[{scan_failure.scan_file}:{scan_failure.line_number}:{scan_failure.column_number}: "
-            + f"{scan_failure.rule_id}: {scan_failure.rule_description}{scan_failure.extra_error_information} ({scan_failure.rule_name})]]"
+            + f"{scan_failure.rule_id}: {scan_failure.rule_description}{scan_failure.extra_error_information} ({scan_failure.rule_name}) "
+            + f"{scan_failure.rule_url}]]"
         )
+
+    def print_fix_message(self, file_fixed: str) -> None:
+        self.print_system_output(f"[pfm[{file_fixed}]]")
 
 
 class MarkdownScanner(InProcessExecution):

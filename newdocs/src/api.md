@@ -30,7 +30,7 @@ offering an alternative to command-line execution.
 
 ## API Versioning and Stability
 
-The PyMarkdownApi is currently at **interface version `1`**. This version is considered
+The PyMarkdownApi is currently at **interface version `2`**. This version is considered
 stable for production use. Future updates within v1 will focus on adding non-breaking
 features and fixing bugs.
 
@@ -41,8 +41,9 @@ For example:
 
 - **Non-Breaking (v1 stable):** Adding a new optional parameter to `scan_path` or
   adding a new method like `list_files_by_type`.
-- **Breaking (v2 required):** Renaming `scan_path` to `scan_files`, or changing
-  the return type of `list_path` from a list to a generator.
+- **Breaking (v2 required):** Renaming `scan_path` to `scan_files`, adding an important
+  field to a response object, or changing the return type of `list_path` from a
+  list to a generator.
 
 Always check both `api.interface_version` and `api.application_version` if your
 code relies on specific API behaviors to ensure compatibility with the installed

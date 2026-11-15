@@ -11,6 +11,7 @@ from test.utils import (
     ARGPARSE_X,
     EXCLUSIONS_X,
     USAGE_INDENT_X,
+    USAGE_SCAN_X,
     USAGE_X,
     write_temporary_configuration,
 )
@@ -27,9 +28,7 @@ def test_markdown_with_dash_h(scanner_default: MarkdownScanner) -> None:
     supplied_arguments = ["scan", "-h"]
 
     expected_results = ExpectedResults(
-        expected_output=f"""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-{USAGE_INDENT_X}                    path [path ...]
+        expected_output=f"""usage: {USAGE_X} scan {USAGE_SCAN_X}
 
 positional arguments:
   path                  one or more paths to examine for eligible Markdown
@@ -48,6 +47,7 @@ positional arguments:
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
   --respect-gitignore   respect any setting in the local .gitignore file.
+  --urls                show urls for any reported rule failures
 """
     )
 
@@ -71,15 +71,11 @@ def test_markdown_with_dash_l_only(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: {USAGE_X} scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
-{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
-{USAGE_INDENT_X}                    path [path ...]
+        expected_error="""usage: {USAGE_X} scan {USAGE_SCAN_X}
 {USAGE_X} scan: error: the following arguments are required: path
-""".replace(
-            "{USAGE_X}", USAGE_X
-        ).replace(
-            "{USAGE_INDENT_X}", USAGE_INDENT_X
-        ),
+""".replace("{USAGE_X}", USAGE_X)
+        .replace("{USAGE_INDENT_X}", USAGE_INDENT_X)
+        .replace("{USAGE_SCAN_X}", USAGE_SCAN_X),
     )
 
     # Act

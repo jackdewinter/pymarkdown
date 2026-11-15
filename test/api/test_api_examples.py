@@ -153,7 +153,7 @@ def test_api_scan_failures(
     modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
-        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=18, rule_id='MD047', rule_name='single-trailing-newline', rule_description='Each file should end with a single newline character.', extra_error_information='')]\n[]\n"
+        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=18, rule_id='MD047', rule_name='single-trailing-newline', rule_description='Each file should end with a single newline character.', extra_error_information='', rule_url='https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md047.md')]\n[]\n"
     )
 
 
@@ -186,7 +186,7 @@ def test_api_extra_information(
     modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
-        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]\n[]\n"
+        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]', rule_url='https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md007.md')]\n[]\n"
     )
 
 
@@ -218,7 +218,7 @@ def test_api_pragma_failures(
     modified_resource_path = abs_resource_path.replace("\\", "\\\\")
     assert (
         captured.out
-        == f"""[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=4, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]
+        == f"""[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=4, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]', rule_url='https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md007.md')]
 [PyMarkdownPragmaError(file_path='{modified_resource_path}', line_number=3, pragma_error="Inline configuration command 'disable-next-line' unable to find a plugin with the id 'invalid'.")]
 """
     )
