@@ -5,6 +5,28 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Notes
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.42 - 2026-11-15
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
 - Upgraded minimum version from Python 3.10 to 3.11 due to various
   CVEs found with the filelock package, which has a minimum supported
   version of 3.11
