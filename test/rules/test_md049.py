@@ -241,6 +241,78 @@ This is *one* emphasis.
 This is _one_ emphasis.
 """,
     ),
+    pluginRuleTest(
+        "bad_underscore_between_words_is_left_alone",
+        source_file_contents="""foo*i*bar
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:4: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""foo*i*bar
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_before_word_is_left_alone",
+        source_file_contents="""*i*bar
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""*i*bar
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_after_word_is_left_alone",
+        source_file_contents="""foo*i*
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:4: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""foo*i*
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_between_punctuation_is_fixed",
+        source_file_contents="""(*i*)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""(_i_)
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_inside_link_label_is_fixed",
+        source_file_contents="""[*i*](http://example.com)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""[_i_](http://example.com)
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_inside_link_label_leaves_strong_alone",
+        source_file_contents="""[**b** *i*](http://example.com)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:8: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""[**b** _i_](http://example.com)
+""",
+    ),
 ]
 
 

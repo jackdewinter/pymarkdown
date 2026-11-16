@@ -21,12 +21,15 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline emphasis element.
     """
 
+    # pylint: disable-next=too-many-arguments
     def __init__(
         self,
         emphasis_length: int,
         emphasis_character: str,
         line_number: int = 0,
         column_number: int = 0,
+        preceding_character: Optional[str] = None,
+        following_character: Optional[str] = None,
     ) -> None:
         """
         Initialize an instance of the EmphasisMarkdownToken class.
@@ -34,6 +37,16 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         self.__emphasis_length, self.__emphasis_character = (
             emphasis_length,
             emphasis_character,
+        )
+        # The characters immediately before the opener and after the closer of
+        # this emphasis span, taken from the source text.  They are not part of
+        # the token's identity, so they are deliberately left out of
+        # __compose_extra_data_field: a fix that swaps the delimiter character
+        # relies on them to tell whether the emphasis still resolves, but two
+        # spans of the same shape remain equal for transform purposes.
+        self.__preceding_character, self.__following_character = (
+            preceding_character,
+            following_character,
         )
         InlineMarkdownToken.__init__(
             self,
@@ -79,6 +92,22 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         Returns the character used for the current emphasis text.
         """
         return self.__emphasis_character
+
+    @property
+    def preceding_character(self) -> Optional[str]:
+        """
+        Returns the source character directly before the opening delimiter, or
+        None if this emphasis was not built from source delimiters.
+        """
+        return self.__preceding_character
+
+    @property
+    def following_character(self) -> Optional[str]:
+        """
+        Returns the source character directly after the closing delimiter, or
+        None if this emphasis was not built from source delimiters.
+        """
+        return self.__following_character
 
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
         if (

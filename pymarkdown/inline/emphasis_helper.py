@@ -276,11 +276,31 @@ class EmphasisHelper:
         POGGER.debug("open_column_number_delta>>$", open_column_number_delta)
 
         start_index_in_blocks = inline_blocks.index(open_token)
+        # Only trust the neighbouring source characters when the delimiters are
+        # exactly the run that produced this span.  For ``***text***`` the inner
+        # single emphasis is left with an unused ``*`` on either side, so the
+        # real neighbours are asterisks rather than whatever the source says.
+        delimiters_are_exact = (
+            open_token.repeat_count == emphasis_length
+            and close_token.repeat_count == emphasis_length
+        )
+        preceding_character, following_character = (
+            (
+                open_token.preceding_two.rjust(2, ParserHelper.space_character)[-1],
+                close_token.following_two.ljust(2, ParserHelper.space_character)[0],
+            )
+            if delimiters_are_exact
+            and open_token.preceding_two is not None
+            and close_token.following_two is not None
+            else (None, None)
+        )
         new_token = EmphasisMarkdownToken(
-            emphasis_length,
-            emphasis_character,
+            emphasis_length=emphasis_length,
+            emphasis_character=emphasis_character,
             line_number=open_token.line_number,
             column_number=open_token.column_number + open_column_number_delta,
+            preceding_character=preceding_character,
+            following_character=following_character,
         )
         inline_blocks.insert(
             start_index_in_blocks + 1,
