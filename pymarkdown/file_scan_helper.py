@@ -1395,7 +1395,7 @@ class FileScanHelper:
                 rules_to_disable_by_id.add(normalize_identifier)
 
             parser = get_parser_from_list(
-                [validated_entry], base_dir=os.path.abspath(os.getcwd()).lower()
+                [validated_entry.lower()], base_dir=os.path.abspath(os.getcwd()).lower()
             )
             self.__per_file_ignores_list.append((parser, rules_to_disable_by_id))
 
