@@ -15,7 +15,11 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1749](https://github.com/jackdewinter/pymarkdown/issues/1749)
+    - Table cells containing only whitespace no longer have that whitespace
+      counted as both leading and trailing whitespace, which caused rule md060
+      to report false `Expected-Column` errors for aligned tables with empty
+      columns.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

@@ -1981,6 +1981,26 @@ Y | Yes |
         enable_extensions="markdown-tables",
     ),
     pluginRuleTest(
+        "good_explicit_compact_column_style_with_whitespace_only_column",
+        source_file_contents="""| Character | Meaning |
+| --- | --- |
+| Y | |
+| | No |
+""",
+        set_args=["plugins.md060.style=compact"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "good_explicit_compact_column_style_with_whitespace_only_title_column",
+        source_file_contents="""| | Meaning |
+| --- | --- |
+| Y | Yes |
+| N | No |
+""",
+        set_args=["plugins.md060.style=compact"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_second_column",
         source_file_contents="""| Character | Meaning |
 | --- | --- |
@@ -2364,6 +2384,29 @@ N           | No      |
         scan_expected_output="""{temp_source_path}:4:14: MD060: Table column style. [Style: aligned Expected-Column: 23 Actual-Column: 14] (table-column-style)
 {temp_source_path}:5:14: MD060: Table column style. [Style: aligned Expected-Column: 23 Actual-Column: 14] (table-column-style)
 """,
+    ),
+    pluginRuleTest(
+        "good_explicit_aligned_column_style_whitespace_only_column",
+        source_file_contents="""
+| Model       | Removed Filter  | Comments                |
+| :---------- | :-------------- | :---------------------- |
+| Prefix      | region          |                         |
+| Prefix      | vrf_id          | Use vrf filter instead  |
+| RouteTarget |                 |                         |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "good_explicit_aligned_column_style_whitespace_only_title_column",
+        source_file_contents="""
+|           | Meaning |
+| --------- | ------- |
+| Y         | Yes     |
+| N         | No      |
+""",
+        set_args=["plugins.md060.style=aligned"],
+        enable_extensions="markdown-tables",
     ),
     pluginRuleTest(
         "bad_explicit_aligned_column_style_missing_leading_with_ws",
