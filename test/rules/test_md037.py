@@ -26,6 +26,7 @@ scanTests = [
     pluginRuleTest(
         "bad_surrounding_emphasis",
         source_file_name=f"{source_path}bad_surrounding_emphasis.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text * is * in italics
 
 this text _ is _ in italics
@@ -55,6 +56,7 @@ this text __is__ in bold
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis_extra",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text *  is  * in italics
 
 this text _  is  _ in italics
@@ -212,6 +214,7 @@ this text *is* in italics
     pluginRuleTest(
         "bad_leading_emphasis",
         source_file_name=f"{source_path}bad_leading_emphasis.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text * is* in italics
 
 this text _ is_ in italics
@@ -238,6 +241,7 @@ this text __is__ in bold
     pluginRuleTest(
         "bad_trailing_emphasis",
         source_file_name=f"{source_path}bad_trailing_emphasis.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text *is * in italics
 
 this text _is _ in italics
@@ -264,6 +268,7 @@ this text __is__ in bold
     pluginRuleTest(
         "bad_surrounding_emphasis_multiline",
         source_file_name=f"{source_path}bad_surrounding_emphasis_multiline.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text * is
 not * in italics
 
@@ -301,6 +306,7 @@ not__ in bold
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis_multiline_extra",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text *  is
 not  * in italics
 
@@ -339,6 +345,7 @@ not__ in bold
     pluginRuleTest(
         "bad_surrounding_empahsis_setext",
         source_file_name=f"{source_path}bad_surrounding_empahsis_setext.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""this text * is * in italics
 ===
 
@@ -377,6 +384,7 @@ this text __is__ in bold
     pluginRuleTest(
         "bad_surrounding_empahsis_atx",
         source_file_name=f"{source_path}bad_surrounding_empahsis_atx.md",
+        set_args=["plugins.md049.enabled=$!False"],
         source_file_contents="""# this text * is * in italics
 
 ## this text _ is _ in italics

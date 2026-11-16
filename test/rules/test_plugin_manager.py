@@ -1314,7 +1314,7 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
-  md049   emphasis-style                  True       True       0.5.0    No
+  md049   emphasis-style                  True       True       0.6.0    Yes
   md050   strong-style                    True       True       0.5.0    No
   md051   link-fragments                  True       True       0.5.0    No
   md053   link-image-reference-definitio  True       True       0.5.0    No
@@ -1407,7 +1407,7 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
-  md049   emphasis-style                  True       True       0.5.0    No
+  md049   emphasis-style                  True       True       0.6.0    Yes
   md050   strong-style                    True       True       0.5.0    No
   md051   link-fragments                  True       True       0.5.0    No
   md053   link-image-reference-definitio  True       True       0.5.0    No
@@ -1502,7 +1502,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
-  md049   emphasis-style                  True       False      0.5.0    No
+  md049   emphasis-style                  True       False      0.6.0    Yes
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
   md053   link-image-reference-definitio  True       False      0.5.0    No
@@ -1601,7 +1601,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
-  md049   emphasis-style                  True       False      0.5.0    No
+  md049   emphasis-style                  True       False      0.6.0    Yes
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
   md053   link-image-reference-definitio  True       False      0.5.0    No
@@ -1702,7 +1702,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
-  md049   emphasis-style                  True       False      0.5.0    No
+  md049   emphasis-style                  True       False      0.6.0    Yes
   md050   strong-style                    True       False      0.5.0    No
   md051   link-fragments                  True       False      0.5.0    No
   md053   link-image-reference-definitio  True       False      0.5.0    No
@@ -1748,7 +1748,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
   md019  no-multiple-space-atx  True       True       0.5.1    Yes
   md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
-  md049  emphasis-style         True       True       0.5.0    No
+  md049  emphasis-style         True       True       0.6.0    Yes
   md059  descriptive-link-text  True       True       0.5.0    No
 """,
     )
