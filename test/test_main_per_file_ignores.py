@@ -6,6 +6,7 @@ import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
+from typing import Tuple
 
 from .utils import temporary_change_to_directory, write_temporary_configuration
 
@@ -1538,6 +1539,205 @@ this is a very, very, very, very, very, very, (yes, this is on purpose), very, v
         ]
 
         expected_results = ExpectedResults()
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner_default.invoke_main(
+                arguments=supplied_arguments, suppress_first_line_heading_rule=False
+            )
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+def __issue_1511_setup(
+    tmp_dir_path: str, configuration_content: str
+) -> Tuple[str, str]:
+    scan_content = """# This is a doc
+
+this is a very, very, very, very, very, very, (yes, this is on purpose), very, very, long line
+"""
+
+    docs_path = os.path.join(tmp_dir_path, "docs")
+    os.makedirs(docs_path, exist_ok=True)
+
+    full_file_name = os.path.join(docs_path, "SCHEMA.md")
+    with open(full_file_name, "wt", encoding="utf-8") as outfile:
+        outfile.write(scan_content)
+
+    full_file_name = os.path.join(docs_path, "notes.md")
+    with open(full_file_name, "wt", encoding="utf-8") as outfile:
+        outfile.write(scan_content)
+
+    configuration_file_path = write_temporary_configuration(
+        configuration_content,
+        directory=tmp_dir_path,
+        file_name_suffix=".toml",
+    )
+    return configuration_file_path, docs_path
+
+
+def test_markdown_per_file_ignores_issue_1511_a(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure a per-file-ignores work with different casing.
+    In this scenario, a `per-file-ignores` of `*.md` should match both `SCHEMA.md` and `notes.md` in the test directory.
+    """
+
+    # Arrange
+    configuration_content = """[tool.pymarkdown.plugins.per-file-ignores]
+"/docs/*.md" = "md013"
+"""
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path, _ = __issue_1511_setup(
+            tmp_dir_path, configuration_content
+        )
+
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-r",
+            tmp_dir_path,
+        ]
+
+        expected_results = ExpectedResults(return_code=0)
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner_default.invoke_main(
+                arguments=supplied_arguments, suppress_first_line_heading_rule=False
+            )
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_per_file_ignores_issue_1511_b(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure a per-file-ignores work with different casing.
+    In this scenario, a `per-file-ignores` of `notes.md` should match `notes.md` in the test directory,
+    leaving only the output for `SCHEMA.md`.
+    """
+
+    # Arrange
+    configuration_content = """[tool.pymarkdown.plugins.per-file-ignores]
+"/docs/notes.md" = "md013"
+"""
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path, docs_path = __issue_1511_setup(
+            tmp_dir_path, configuration_content
+        )
+
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-r",
+            tmp_dir_path,
+        ]
+
+        schema_file_path = os.path.join(docs_path, "SCHEMA.md")
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{schema_file_path}:3:1: MD013: Line length [Expected: 80, Actual: 94] (line-length)",
+        )
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner_default.invoke_main(
+                arguments=supplied_arguments, suppress_first_line_heading_rule=False
+            )
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_per_file_ignores_issue_1511_c(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure a per-file-ignores...
+    """
+
+    # Arrange
+    configuration_content = """[tool.pymarkdown.plugins.per-file-ignores]
+"/docs/schema.md" = "md013"
+"""
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path, docs_path = __issue_1511_setup(
+            tmp_dir_path, configuration_content
+        )
+
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-r",
+            tmp_dir_path,
+        ]
+
+        notes_file_path = os.path.join(docs_path, "notes.md")
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{notes_file_path}:3:1: MD013: Line length [Expected: 80, Actual: 94] (line-length)",
+        )
+
+        # Act
+        with temporary_change_to_directory(tmp_dir_path):
+            execute_results = scanner_default.invoke_main(
+                arguments=supplied_arguments, suppress_first_line_heading_rule=False
+            )
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_per_file_ignores_issue_1511_d(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure a per-file-ignores work with different casing.
+    In this scenario, a `per-file-ignores` of `SCHEMA.md` should
+
+
+    match `notes.md` in the test directory,
+    leaving only the output for `SCHEMA.md`.
+    """
+
+    # Arrange
+    configuration_content = """[tool.pymarkdown.plugins.per-file-ignores]
+"/docs/SCHEMA.md" = "md013"
+"""
+
+    # dir=os.getcwd() is needed here to avoid /private/var vs /var issues on MacOS when using the temporary directory context manager.
+    with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmp_dir_path:
+        configuration_file_path, docs_path = __issue_1511_setup(
+            tmp_dir_path, configuration_content
+        )
+
+        supplied_arguments = [
+            "-c",
+            configuration_file_path,
+            "scan",
+            "-r",
+            tmp_dir_path,
+        ]
+
+        notes_file_path = os.path.join(docs_path, "notes.md")
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"{notes_file_path}:3:1: MD013: Line length [Expected: 80, Actual: 94] (line-length)",
+        )
 
         # Act
         with temporary_change_to_directory(tmp_dir_path):
