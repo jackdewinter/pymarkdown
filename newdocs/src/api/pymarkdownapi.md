@@ -177,7 +177,7 @@ with all action methods.
       show_docstring_attributes: false
       heading_level: 3
       members: [scan_file, line_number, column_number, rule_id, rule_name, rule_description,
-        extra_error_information]
+        extra_error_information, rule_url]
 
 ---
 

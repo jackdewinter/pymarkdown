@@ -499,6 +499,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
     source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
     plugin_path = generate_path_to_bad_plugin("bad_starting_new_file.py")
     supplied_arguments = [
+        "--stack-trace",
         "--add-plugin",
         plugin_path,
         "scan",
@@ -508,7 +509,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
     expected_results = ExpectedResults(
         return_code=1,
         expected_error=f"""[pse[[fse[BadPluginError encountered while scanning '{abs_source_path}':
-Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.]]]]
+Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
+Caused by: Exception:
+   bad starting_new_file]]]]
 """,
     )
 
@@ -2125,7 +2128,8 @@ def test_markdown_with_plugins_and_alternate_output() -> None:
 
     expected_results = ExpectedResults(
         return_code=1,
-        expected_output=f"""[pso[[psf[{absolute_source_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]""",
+        expected_output=f"[pso[[psf[{absolute_source_path}:3:1: MD001: Heading levels should only increment by one level at a time."
+        + " [Expected: h2; Actual: h3] (heading-increment,header-increment) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md001.md]]]]",
     )
 
     # Act

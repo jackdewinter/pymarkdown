@@ -3,6 +3,8 @@ Module for directly using PyMarkdown's scan api.
 """
 
 import os
+from test.markdown_scanner import MarkdownScanner
+from test.pytest_execute import ExpectedResults
 from test.utils import (
     assert_if_lists_different,
     assert_that_exception_is_raised,
@@ -257,7 +259,7 @@ def test_api_scan_recursive_for_directory() -> None:
 
     itemized_scan_failures = "\n".join(str(i) for i in scan_result.scan_failures)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 270
+    assert len(scan_result.scan_failures) == 271
 
     scan_failures: List[str] = []
     for i in scan_result.scan_failures:
@@ -1068,6 +1070,98 @@ Testo con caratteri accentati: à è ò ù
     assert scan_result.scan_failures[1].line_number == 1
     assert scan_result.scan_failures[1].column_number == 1
     assert scan_result.scan_failures[1].rule_id == "MD041"
+
+
+contents_file = """#\tPerfectly healthy file
+This triggers several rules:
+1. Guess which ones
+1. Bla
+"""
+
+expected_output_contents = [
+    "{file_name}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md019.md",
+    "{file_name}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md022.md",
+    "{file_name}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md010.md",
+    "{file_name}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md032.md",
+]
+
+
+def test_api_scan_simple_scan_with_command_line(
+    scanner_default: MarkdownScanner,
+    tmpdir: py._path.local.LocalPath,
+) -> None:
+    """
+    Test...
+
+    test_api_scan_simple_scan_with_api
+    """
+
+    # Arrange
+    with create_temporary_markdown_file(
+        contents_file,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ) as file_name:
+        supplied_arguments = [
+            "scan",
+            "--urls",
+            file_name,
+        ]
+
+        expected_output = "\n".join(expected_output_contents)
+        expected_output = expected_output.replace("{file_name}", file_name)
+
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=expected_output,
+        )
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_api_scan_simple_scan_with_api(
+    tmpdir: py._path.local.LocalPath,
+) -> None:
+    """
+    Test to make sure that we can
+
+    test_api_scan_simple_scan_with_command_line
+    """
+
+    # Arrange
+    scan_result = None
+    with create_temporary_markdown_file(
+        contents_file,
+        directory=tmpdir,
+        file_name_prefix="tmp1",
+    ) as file_name:
+        expected_output: List[str] = []
+        for i in expected_output_contents:
+            expected_output.append(i.replace("{file_name}", file_name))
+
+        # Act
+        try:
+            scan_result = PyMarkdownApi().scan_path(os.path.join(tmpdir, "*"))
+        except PyMarkdownApiException as this_exception:
+            raise AssertionError(f"Unexpected exception: {this_exception}")
+
+    # Assert
+    assert scan_result is not None
+    assert len(scan_result.scan_failures) == len(expected_output)
+    for failure_index, next_failure in enumerate(scan_result.scan_failures):
+
+        extra_data = next_failure.extra_error_information or ""
+        assert (
+            expected_output[failure_index]
+            == f"{next_failure.scan_file}:{next_failure.line_number}:{next_failure.column_number}: {next_failure.rule_id}: {next_failure.rule_description}{extra_data} ({next_failure.rule_name}) {next_failure.rule_url}"
+        )
+
+    assert len(scan_result.pragma_errors) == 0
+    assert len(scan_result.critical_errors) == 0
 
 
 # change print_system_error to also accept optional exception?

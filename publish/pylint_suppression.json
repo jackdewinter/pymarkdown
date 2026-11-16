@@ -3,9 +3,9 @@
         "pymarkdown/__init__.py": {},
         "pymarkdown/__main__.py": {},
         "pymarkdown/api.py": {
-            "too-many-instance-attributes": 1,
+            "too-many-instance-attributes": 2,
             "too-many-public-methods": 1,
-            "too-many-arguments": 4
+            "too-many-arguments": 1
         },
         "pymarkdown/application_configuration_helper.py": {
             "too-few-public-methods": 1
@@ -107,6 +107,7 @@
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
+        "pymarkdown/general/base_presentation.py": {},
         "pymarkdown/general/constants.py": {},
         "pymarkdown/general/main_presentation.py": {},
         "pymarkdown/general/parser_helper.py": {
@@ -591,9 +592,9 @@
         "pymarkdown/version_helper.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 32,
+        "too-many-instance-attributes": 33,
         "too-many-public-methods": 5,
-        "too-many-arguments": 279,
+        "too-many-arguments": 276,
         "too-few-public-methods": 57,
         "too-many-locals": 58,
         "chained-comparison": 7,

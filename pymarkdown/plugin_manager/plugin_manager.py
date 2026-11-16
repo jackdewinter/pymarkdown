@@ -18,7 +18,7 @@ from pymarkdown.extensions.pragma_token import (
     GeneralPragmaDisableStart,
     PragmaExtension,
 )
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.fix_line_record import FixLineRecord
@@ -54,7 +54,7 @@ class PluginManager:
 
     def __init__(
         self,
-        presentation: MainPresentation,
+        presentation: BasePresentation,
     ) -> None:
         """
         Initialize an instance of the PluginManager class.
@@ -453,6 +453,7 @@ class PluginManager:
             else ""
         )
         rule_id = scan_failure.rule_id.upper()
+        rule_url = self.__all_ids[rule_id.lower()].plugin_url
 
         adjusted_failure = PluginScanFailure(
             scan_failure.scan_file,
@@ -463,6 +464,7 @@ class PluginManager:
             scan_failure.rule_description,
             extra_info,
             False,
+            rule_url=rule_url,
         )
         self.__presentation.print_scan_failure(adjusted_failure)
         self.number_of_scan_failures += 1

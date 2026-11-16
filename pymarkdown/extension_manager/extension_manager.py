@@ -23,7 +23,7 @@ from pymarkdown.extensions.markdown_strikethrough import MarkdownStrikeThroughEx
 from pymarkdown.extensions.markdown_tables import MarkdownTablesExtension
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
@@ -47,7 +47,7 @@ class ExtensionManager:
 
     def __init__(
         self,
-        presentation: MainPresentation,
+        presentation: BasePresentation,
     ) -> None:
         """
         Initialize an instance of the ExtensionManager class.
