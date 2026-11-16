@@ -558,7 +558,7 @@ With this configuration, all Rule Plugins are disabled except for `MD007`, regar
 of
 the system's default Rule Plugins settings.
 
-##### Per-File Disabling Of Rule Plugins
+##### Per-File Disabling of Rule Plugins
 
 <!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.36**
@@ -570,15 +570,14 @@ The `plugins.per-file-ignores` configuration item takes inspiration from the
 [Flake8 linter](https://flake8.pycqa.org/en/latest/user/options.html#cmdoption-flake8-per-file-ignores)
 and the [Ruff linter](https://docs.astral.sh/ruff/settings/#lint_per-file-ignores),
 in being able to disable the Rule Plugins belonging to a comma-separated set of
-identifiers associated with one ore more matching
+identifiers associated with one or more matching
 paths.
 
 The file paths are specified using the same glob-based syntax as `.gitignore` files
 used with the [`--respect-gitignore` command-line argument](./user-guide.md#-respect-gitignore)
 and the [`--exclude` command-line argument](./user-guide.md#-e-exclude-path_exclusions).
-This feature is strictly for disabling Rule Plugins. It does not enable Rule Plugins
-that are
-currently disabled.
+This feature is strictly for **disabling** Rule Plugins on a per-file basis. It
+has no effect on Rule Plugins that are already disabled globally.
 
 <!-- pyml disable code-block-style-->
 === "Command Line"
@@ -630,6 +629,16 @@ currently disabled.
     plugins.per-file-ignores."changelog/*.md" = ["MD013","MD041"]
     ```
 <!-- pyml enable code-block-style-->
+
+###### Clarification Regarding Per-File Disabling And Case Sensitivity
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.43**
+
+Starting in version 0.9.43, pattern matching is case-insensitive, so `README.md`
+in your configuration matches `readme.md` on disk, and vice versa. For more information
+on this change, consult [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
+for more information.
 
 #### Adding Rule Plugins
 
