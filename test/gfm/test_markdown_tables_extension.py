@@ -464,6 +464,53 @@ def test_tables_extension_198_enabled_with_empty_columns() -> None:
     )
 
 
+# pylint: disable-next=missing-function-docstring
+def test_tables_extension_198_enabled_with_whitespace_only_columns() -> None:
+    source_markdown = """| foo | bar |
+| --- | --- |
+|     |     |"""
+    expected_tokens = [
+        "[table(1,1)]",
+        "[table-header(1,1):::True:| --- | --- |]",
+        "[table-header-item(1,3): :]",
+        "[text(1,3):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,9): :]",
+        "[text(1,9):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,1)]",
+        "[table-row(3,1):::True:0]",
+        "[table-row-item(3,7):     :]",
+        "[text(3,7)::]",
+        "[end-table-row-item:|::False]",
+        "[table-row-item(3,13):     :]",
+        "[text(3,13)::]",
+        "[end-table-row-item:|::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>"""
+
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
 def test_tables_extension_198_enabled_with_internal_tabs() -> None:
     """
     Test case 198:  The delimiter row consists of cells whose only content are hyphens (-), and optionally, a leading or trailing colon (:), or both, to indicate left, right, or center alignment respectively.
