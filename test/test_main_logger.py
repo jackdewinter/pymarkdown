@@ -9,11 +9,12 @@ from test.pytest_execute import ExpectedResults
 from typing import Tuple
 
 import py  # type: ignore[import-untyped]
-from pytest import LogCaptureFixture
+from pytest import LogCaptureFixture, MonkeyPatch
 
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import StackToken
 
 from .utils import (
@@ -580,3 +581,44 @@ def test_markdown_fix_with_no_rescan_log_warn(
             "Setting logging level to WARN during rescan upon request." in caplog.text
         )
         assert "Restoring log level to WARNING." in caplog.text
+
+
+def test_markdown_scan_without_debug_does_not_format_tokens(
+    scanner_default: MarkdownScanner, monkeypatch: MonkeyPatch
+) -> None:
+    """
+    Test to make sure that, with debug logging off, a scan does not turn the
+    token document into a string for every line it parses.  Doing that made
+    the time for a scan grow with the square of the document's length.
+
+    https://github.com/jackdewinter/pymarkdown/issues/1752
+    """
+
+    # Arrange
+    source_markdown = "# Title\n" + "".join(
+        f"\n## Section {index}\n\nParagraph {index}.\n" for index in range(50)
+    )
+    original_repr = MarkdownToken.__repr__
+    repr_calls = []
+
+    def counting_repr(self: MarkdownToken) -> str:
+        repr_calls.append(self)
+        return original_repr(self)
+
+    monkeypatch.setattr(MarkdownToken, "__repr__", counting_repr)
+
+    with create_temporary_markdown_file(source_markdown) as temp_source_path:
+        supplied_arguments = [
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_results = ExpectedResults()
+
+        # Act
+        ParserLogger.sync_on_next_call()
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+        assert not repr_calls

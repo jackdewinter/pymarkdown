@@ -15,7 +15,10 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1752](https://github.com/jackdewinter/pymarkdown/issues/1752)
+    - Scan time no longer grows with the square of the document's length
+      when debug logging is off. Two debug messages in the parser were
+      built for every line, even when they were not logged.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
