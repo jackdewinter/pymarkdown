@@ -56,6 +56,55 @@ Some more text
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_improper_indent_atx",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line heading-start-left-->
+  ## Heading 2
+
+Some more text
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line heading-start-left-->
+  ## Heading 2
+
+Some more text
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_improper_indent_atx",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line heading-start-left-->
+  ## Heading 2
+
+Some more text
+
+  ## Heading 3
+
+Some more text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line heading-start-left-->
+  ## Heading 2
+
+Some more text
+
+## Heading 3
+
+Some more text
+""",
+    ),
+    pluginRuleTest(
         "good_proper_indent_atx_in_list_item",
         source_file_name=f"{source_path}proper_indent_atx_in_list_item.md",
         enable_rules=plugin_enable_this_rule,
@@ -164,6 +213,92 @@ Very
 Very
 Long Heading
 -----------------
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_improper_indent_setext_x",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+  Heading 2
+---------
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+  Heading 2
+---------
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_improper_indent_setext_x",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+  Heading 2
+---------
+
+  Heading 3
+---------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+  Heading 2
+---------
+
+Heading 3
+---------
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_improper_indent_setext_x_end",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+Heading 2
+  ---------
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+Heading 2
+  ---------
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_improper_indent_setext_x_end",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+Heading 2
+  ---------
+
+Heading 3
+  ---------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        fix_expected_file_contents="""Some text
+
+<!-- pyml disable-next-line header-start-left-->
+Heading 2
+  ---------
+
+Heading 3
+---------
 """,
     ),
     pluginRuleTest(

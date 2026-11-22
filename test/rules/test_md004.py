@@ -82,6 +82,47 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_asterisk_plus_single_level",
+        set_args=[set_style_asterisk],
+        source_file_contents="""<!-- pyml disable-next-line ul-style-->
++ first
++ second
++ third
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line ul-style-->
++ first
++ second
++ third
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_asterisk_plus_single_level",
+        set_args=[set_style_asterisk],
+        source_file_contents="""<!-- pyml disable-next-line ul-style-->
++ first
++ second
++ third
+
+- first
+- second
+- third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:6:1: MD004: Inconsistent Unordered List Start style [Expected: asterisk; Actual: dash] (ul-style)",
+        fix_expected_file_contents="""<!-- pyml disable-next-line ul-style-->
++ first
++ second
++ third
+
+* first
+* second
+* third
+""",
+    ),
+    pluginRuleTest(
         "good_dash_single_level",
         source_file_name=f"{source_path}good_list_dash_single_level.md",
         set_args=[set_style_dash],

@@ -69,6 +69,8 @@ class RuleMd005(RulePlugin):
     are equivalent with each other.
     """
 
+    __PLUGIN_ID = "MD005"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd005 class.
@@ -99,7 +101,7 @@ class RuleMd005(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="list-indent",
-            plugin_id="MD005",
+            plugin_id=RuleMd005.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent indentation for list items at the same level",
             plugin_version="0.5.2",
@@ -279,13 +281,16 @@ class RuleMd005(RulePlugin):
         delta: Optional[int] = None,
     ) -> None:
         if context.in_fix_mode:
-            list_level = len(self.__list_stack)
-            if token.is_new_list_item:
-                self.__report_issue_new_list_item(context, token, list_level, delta)
-            elif token.is_unordered_list_start:
-                self.__report_issue_unordered_list(context, token, list_level)
-            else:
-                self.__report_issue_ordered_list(context, token, list_level)
+            if not context.check_for_pragma_suppression(
+                token.line_number, RuleMd005.__PLUGIN_ID, False
+            ):
+                list_level = len(self.__list_stack)
+                if token.is_new_list_item:
+                    self.__report_issue_new_list_item(context, token, list_level, delta)
+                elif token.is_unordered_list_start:
+                    self.__report_issue_unordered_list(context, token, list_level)
+                else:
+                    self.__report_issue_ordered_list(context, token, list_level)
         else:
             if expected_indent < 0:
                 list_token = cast(NewListItemMarkdownToken, token)

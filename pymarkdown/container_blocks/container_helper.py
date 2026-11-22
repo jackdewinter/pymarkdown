@@ -201,7 +201,7 @@ class ContainerHelper:
             stack_index -= 1
         return last_newline_part[indent_level:]
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, chained-comparison
     @staticmethod
     def reduce_containers_if_required(
         parser_state: ParserState,
@@ -246,7 +246,7 @@ class ContainerHelper:
 
         return split_tab, extracted_whitespace, whitespace_prefix
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, chained-comparison
 
 
 # pylint: enable=too-few-public-methods

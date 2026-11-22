@@ -321,7 +321,6 @@ If you are unsure what to do on the command line, run:
     ```sh
     pipenv run pymarkdown --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### Return Codes
@@ -332,9 +331,9 @@ Linters complicate that simple model because calling scripts often want to disti
 between "success" (`0`), "something bad happened but the tool itself is fine" (`1`),
 and "something is configured wrong or the tool failed" (`2`).
 
-The available schemes, and how to configure them, are described in the
-[Return Code Scheme](#-return-code-scheme-observability) section under Basic
-Configuration.
+The available schemes, and how to configure them, are described in
+[Return Code Scheme](#--return-code-scheme-observability) from the
+[Exit Codes](#exit-codes) section
 
 ### Available Groups of Commands
 
@@ -380,7 +379,6 @@ To see options specific to a single command (instead of the global help), run:
     ```sh
     pipenv run pymarkdown {command} --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 Replace `{command}` with the command you want details about. This per‑command help
@@ -402,11 +400,10 @@ the commands and apply to all the commands. For example:
     ```sh
     pipenv run pymarkdown --config my-config.json scan examples
     ```
-
 <!-- pyml enable code-block-style-->
 
 These arguments are covered in the section
-below on [Basic Configuration](#basic-configuration).
+below on [Basic Configuration](#configuration-files-and-overrides).
 
 ### Basic Scanning
 
@@ -437,7 +434,6 @@ are:
     ```sh
     pipenv run pymarkdown scan examples
     ```
-
 <!-- pyml enable code-block-style-->
 
 and:
@@ -454,7 +450,6 @@ and:
     ```sh
     pipenv run pymarkdown scan examples/example-1.md examples/example-2.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 The first example will scan every Markdown `.md` file in the `examples` directory,
@@ -490,7 +485,9 @@ that are specific to that tool.
 
 Keeping to that format, the output format for any PyMarkdown failure is as follows:
 
-`file-name:line:column: rule-id: description {extra-information} (aliases)`
+```text
+file-name:line:column: rule-id: description {extra-information} (aliases) rule-URL
+```
 
 For the formal definition and behavior of a Rule Failure, see [Rule Failure](#rule-failure).
 
@@ -515,8 +512,12 @@ Breaking it down into its constituent parts:
 - `aliases` - One or more aliases used to reference the Rule Plugin in configuration,
   Pragmas, and command line options.
     - These aliases are the same strings you can pass to `--enable-rules` / `--disable-rules`
-      (see [Basic Configuration](#basic-configuration)) and to Pragma directives
-      (see [Pragma Extension](#pragma-extension)).
+      (see [Rule Plugin and Extension Selection](#rule-plugin-and-extension-selection))
+      and to Pragma directives (see [Pragma Extension](#pragma-extension)).
+- `rule-URL` - optional information with the URL for the documentation for the
+  Rule Plugin specified by the `rule-id` field, if the Rule Plugin itself specifies
+  such an URL in its definition. For more information, check the command line [--urls](#--urls)
+  flag.
 
 Using the output from the command line from the last section, that scan output reports
 one failure that occurred in the file `examples\example-1.md` on line 1 at
@@ -594,6 +595,7 @@ optional arguments:
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
   --respect-gitignore   respect any setting in the local .gitignore file.
+  --urls                show urls for any reported rule failures
 ```
 
 ##### --list-files or -l
@@ -610,9 +612,9 @@ of resolved files but still want to verify how PyMarkdown's path resolution and
 filtering logic behaves. Our team treats `--list-files` as the "dry run" mode of
 the scanner: it shows you what would be processed without actually running any Rule
 Plugins.
-Combined with the [`--return-code-scheme`](#-return-code-scheme-observability) options
-from
-[Basic Configuration](#basic-configuration), you can decide whether a `--list-files`
+Combined with the [`--return-code-scheme`](#--return-code-scheme-observability) options
+from the
+[Exit Codes](#exit-codes) section, you can decide whether a `--list-files`
 "dry run"
 should fail CI. For example, using the `minimal` scheme lets you run
 `pymarkdown scan --list-files`
@@ -681,7 +683,7 @@ package:
 
 If you are unsure why a file is being skipped or included, combine `--exclude`
 with `--list-files` (described above) to see which paths survive filtering, and
-compare that list against your configuration from [Basic Configuration](#basic-configuration).
+compare that list against your configuration.
 
 ##### --respect-gitignore
 
@@ -701,11 +703,33 @@ In CI environments where Git is not available or the extra startup cost is unacc
 prefer
 multiple `--exclude` patterns instead of `--respect-gitignore`. To control how these
 situations
-affect pipeline status, adjust [`--return-code-scheme`](#-return-code-scheme-observability)
-in
-[Basic Configuration](#basic-configuration); for example, the `minimal` scheme avoids
+affect pipeline status, adjust [`--return-code-scheme`](#--return-code-scheme-observability)
+from the
+[Exit Codes](#exit-codes) section; for example, the `minimal` scheme avoids
 failing
 builds solely because no files were scanned.
+
+##### --urls
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.42**
+
+The `--urls` flag tells PyMarkdown's two scan commands, `scan` and `scan-stdin`,
+to display the URL that triggered the rule failure that is being reported. Alternatively,
+the [`scan.show-urls`](./advanced_configuration.md#scan-command-options) configuration
+item can be set to `True` to achieve the same result.
+
+Looking back at the [Rule Failure Format](#rule-failure-format) section, enabling
+this configuration allows for the Rule Plugin's URL to be appended to the end of
+the information presented with the Rule Failure.
+
+While the initial design of this feature was to provide more assistance to new users
+who may not know that Rule Plugin `MD013` (or its alternative id `line-length`),
+our team quickly discovered other benefits. The most prominent of those benefits
+is to provide all users with a quick way to clarify their understanding of the
+Rule Plugin's behavior. Instead of having to look for the documentation related
+to that specific Rule Plugin on the documentation website, they can simply use
+the URL provided with the Rule Failure and go directly to the specific documentation.
 
 ##### path
 
@@ -723,13 +747,16 @@ paths.
 By default, PyMarkdown only processes files whose names end with `.md`. This means
 you can scan a directory by passing `.` or `examples` instead of writing `./*.md`.
 
-Conceptually, PyMarkdown uses two stages to decide which files to scan:
+Conceptually, PyMarkdown uses three stages to decide which files to scan:
 
 - **Discovery:** globs and path arguments (along with `--recurse`) determine which
   filesystem entries are considered at all.
-- **Filtering:** the extension filter (the default `.md` set, or your `--alternate-extensions`)
-  and any exclude mechanisms (`--exclude` and `--respect-gitignore`) decide which
-  of those entries are treated as Markdown candidates.
+- **Eligibility:** the discovered files are reduced to only target eligible Markdown
+  files, specified using either the default `.md` extension or the `--alternate-extensions`
+  argument ands its comma-separated list of extensions provided
+- **Exclusion:** further reducing the list of eligible files using any provided
+  exclusion mechanisms (`--exclude` and `--respect-gitignore`) to arrive at the
+  final list of files
 
 The advanced flags in this section simply modify one of these two steps: they either
 change how entries are discovered or how the discovered entries are filtered.
@@ -772,7 +799,6 @@ invoke PyMarkdown in this manner:
     ```sh
     my-program some-args | pipenv run pymarkdown scan-stdin
     ```
-
 <!-- pyml enable code-block-style-->
 
 Note that as a simple workaround, you may decide to pipe that standard input into
@@ -911,7 +937,7 @@ These steps help you avoid unexpected changes in fix behavior when you move betw
 PyMarkdown versions.
 
 | Rule ID & Link | Human-Readable Identifier | Short Description |
-| -- | -- | -- |
+| --- | --- | --- |
 | [MD001](./plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
 | [MD004](./plugins/rule_md004.md#fix-description) | `ul-style` | Inconsistent Unordered List Start style. |
 | [MD005](./plugins/rule_md005.md#fix-description) | `list-indent` | Inconsistent indentation for list items at the same level. |
@@ -975,7 +1001,6 @@ Other command lines that are more complex are:
     ```sh
     pipenv run pymarkdown fix **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 - find all Markdown files that do not have the `draft` prefix in any `docs` directory,
@@ -1393,20 +1418,23 @@ Rule Plugins themselves, see the [Rule Plugins](#rule-plugins) section.
 In the context of Basic Configuration, they are general flags that work with any
 command (for example, `scan`, `fix`, or `scan-stdin`).
 Both arguments require an extra argument that specifies a comma-separated list of
-identifiers to which the corresponding option applies. An example that disables
-Rule Plugins `MD012` and `MD013` is:
+identifiers to which the corresponding option applies. These identifiers can either
+be the primary identifier of the Rule Plugin, such as `MD013`, or the human readable
+identifier, such as `line-length`.
+
+An example that disables Rule Plugins `MD012` and `line-length` is:
 
 <!-- pyml disable code-block-style-->
 === "Global Python Install"
 
     ```sh
-    pymarkdown --disable-rules MD012,MD013 scan examples
+    pymarkdown --disable-rules MD012,line-length scan examples
     ```
 
 === "Pipenv Package Manager"
 
     ```sh
-    pipenv run pymarkdown --disable-rules MD012,MD013 scan examples
+    pipenv run pymarkdown --disable-rules MD012,line-length scan examples
     ```
 <!-- pyml enable code-block-style-->
 
@@ -1612,10 +1640,11 @@ exit code:
     - internal application errors.
 
 Formally, the `--return-code-scheme` argument controls how PyMarkdown converts
-high-level outcomes into process exit codes. It accepts two values:
+high-level outcomes into process exit codes. It accepts three values:
 
 - `default`
 - `minimal`
+- `explicit`
 
 PyMarkdown first classifies each run into one of these outcome categories:
 
@@ -1634,17 +1663,26 @@ Then, the chosen scheme maps those categories to exit codes:
     - `COMMAND_LINE_ERROR` returns `2`.
     - `FIXED_AT_LEAST_ONE_FILE` returns `3`.
     - All other non-success outcomes return `1`.
-
 - With `minimal`:
     - Only `COMMAND_LINE_ERROR` and `SYSTEM_ERROR` return non-zero.
     - All other outcomes (including "no files to scan" and "no Rule Failures reported")
       return `0`.
+- With `explicit`:
+    - `SUCCESS` returns `0`.
+    - `NO_FILES_TO_SCAN` returns `1`.
+    - `COMMAND_LINE_ERROR` returns `2`.
+    - `FIXED_AT_LEAST_ONE_FILE` returns `3`.
+    - `SCAN_TRIGGERED_AT_LEAST_ONCE` returns `4`.
+    - `SYSTEM_ERROR` returns `5`.
+    - `FIXED_NO_PLUGINS`  returns `6`.
 
 In practice, use `default` when you want CI and scripts to treat Rule Failures
-and fixes as hard failures, and use `minimal` when you only want CI to fail on misconfiguration
+and fixes as hard failures. Use `minimal` when you only want CI to fail on misconfiguration
 or internal errors. In larger CI setups, this is often combined with
 `--log-level INFO` and `--log-file` so that you can inspect detailed logs even when
 the pipeline treats Rule Failures as non‑blocking.
+Finally, if you need to give detailed feedback about what happened during execution,
+you can always use `explicit` and map the return codes yourself.
 
 ### Information Commands
 
@@ -1827,8 +1865,6 @@ As the simplest of the information commands, the `version` command reports which
 PyMarkdown build you are running. As noted in the [Getting Started document](./getting-started.md#installing-pymarkdown),
 it simply returns the installed version in the form:
 
-As noted in the [Missing link], it simply returns the installed version in the form:
-
 ```txt
 {major}.{minor}.{fix}
 ```
@@ -1837,3 +1873,24 @@ A common troubleshooting pattern is to run `pymarkdown version`, then use
 `pymarkdown plugins list --all` and `pymarkdown extensions list` to capture both
 the version and your current Rule Plugin/extension configuration before filing an
 issue or comparing results with another developer.
+
+##### Extended Option
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.42**
+
+When filing issues with GitHub for PyMarkdown, include a triplet of environment
+information — PyMarkdown version, Python version, and operating system with version.
+This is the minimum our team needs to reproduce a reported issue cleanly before
+attempting a fix.
+
+The `pymarkdown version --extended` command line prints that triplet in a simple
+three-line format:
+
+```text
+PyMarkdown:         0.9.42
+Python:             3.13.1 (CPython, MSC v.1942 64 bit (AMD64))
+Operating System:   Windows 11
+```
+
+The output is intentionally minimal: only the fields needed to reproduce an issue.

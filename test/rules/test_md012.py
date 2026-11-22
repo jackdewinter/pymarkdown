@@ -51,6 +51,50 @@ this is another line
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_simple_paragraphs_double_blanks",
+        source_file_contents="""this is one line
+
+<!-- pyml disable-next-line no-multiple-blanks-->
+
+this is another line
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is one line
+
+<!-- pyml disable-next-line no-multiple-blanks-->
+
+this is another line
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_simple_paragraphs_double_blanks",
+        source_file_contents="""this is one line
+
+<!-- pyml disable-next-line no-multiple-blanks-->
+
+this is another line
+
+this is one line
+
+
+this is another line
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""this is one line
+
+<!-- pyml disable-next-line no-multiple-blanks-->
+
+this is another line
+
+this is one line
+
+this is another line
+""",
+    ),
+    pluginRuleTest(
         "good_simple_paragraphs_double_blanks",
         source_file_contents="""this is one line
 
@@ -69,6 +113,22 @@ this is another line
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""this is one line
+
+this is another line
+""",
+    ),
+    pluginRuleTest(
+        "bad_simple_paragraphs_quadruple_blanks",
+        source_file_contents="""this is one line
+
+
+
+
+this is another line
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 4] (no-multiple-blanks)""",
         fix_expected_file_contents="""this is one line
 
 this is another line
@@ -121,63 +181,485 @@ this is outside the code block
 """,
     ),
     pluginRuleTest(
-        "good_blanks_around_single_pragma",
+        "bad_blanks_single_around_single_pragma_start",
         source_file_contents="""Some markdown here
-
-<!--pyml disable-num-lines 5 md013-->
-
-My 10 lines
-""",
-    ),
-    pluginRuleTest(
-        "bad_blanks_double_around_single_pragma",
-        source_file_contents="""Some markdown here
-
-
 <!--pyml disable-num-lines 5 md013-->
 
 
 My 10 lines
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
-{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
+""",
         fix_expected_file_contents="""Some markdown here
-
 <!--pyml disable-num-lines 5 md013-->
 
 My 10 lines
 """,
     ),
     pluginRuleTest(
-        "bad_blanks_double_within_double_pragmas",
+        "bad_blanks_single_around_single_pragma_before",
         source_file_contents="""Some markdown here
 
 <!--pyml disable-num-lines 5 md013-->
 
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
+""",
+        fix_expected_file_contents="""Some markdown here
 
-<!--pyml disable-num-lines 5 md013-->
+<!--pyml disable-num-lines 4 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_after_sl_pragma",
+        source_file_contents="""
+<!--pyml disable-next-line md013-->
+Some markdown here
+
 
 My 10 lines
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable-next-line md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_before_sl_pragma",
+        source_file_contents="""Some markdown here
+
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
         fix_expected_file_contents="""Some markdown here
 
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_before_and_after_sl_pragmas",
+        source_file_contents="""<!--pyml disable-next-line md013-->
+Some markdown here
+
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-next-line md013-->
+Some markdown here
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_sl_pragma_1",
+        source_file_contents="""Some markdown here
+<!--pyml disable-next-line md013-->
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+<!--pyml disable-next-line md013-->
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_sl_pragma_2",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable-next-line md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_after_ml_pragma",
+        source_file_contents="""
+<!--pyml disable-num-lines 5 md013-->
+Some markdown here
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable-num-lines 5 md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_before_ml_pragma",
+        source_file_contents="""Some markdown here
+
+
+My 10 lines
+<!--pyml disable-num-lines 5 md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+<!--pyml disable-num-lines 5 md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_ml_pragma_1",
+        source_file_contents="""Some markdown here
 <!--pyml disable-num-lines 5 md013-->
 
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
 <!--pyml disable-num-lines 5 md013-->
 
 My 10 lines
 """,
     ),
     pluginRuleTest(
-        "bad_blanks_double_around_double_pragmas",
+        "bad_blanks_double_inner_ml_pragma_2",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 5 md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 4 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_ml_pragma_3",
         source_file_contents="""Some markdown here
 
 
 <!--pyml disable-num-lines 5 md013-->
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
 
+<!--pyml disable-num-lines 5 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_after_de_pragma",
+        source_file_contents="""
+<!--pyml disable md013-->
+Some markdown here
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_before_de_pragma",
+        source_file_contents="""Some markdown here
+
+
+My 10 lines
+<!--pyml disable md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+<!--pyml disable md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_de_pragma_1",
+        source_file_contents="""Some markdown here
+<!--pyml disable md013-->
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+<!--pyml disable md013-->
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_de_pragma_2",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_inner_de_pragma_3",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_sl_pragma",
+        source_file_contents="""
+<!--pyml disable-next-line md013-->
+Some markdown here
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable-next-line md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_sl_pragma_plus_one",
+        source_file_contents="""
+Some markdown here
+<!--pyml disable-next-line md013-->
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+Some markdown here
+<!--pyml disable-next-line md013-->
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_sl_pragma",
+        source_file_contents="""Some markdown here
+
+
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_sl_pragma_minus_one",
+        source_file_contents="""Some markdown here
+
+
+
+<!--pyml disable-next-line md013-->
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable-next-line md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_and_after_sl_pragmas",
+        source_file_contents="""<!--pyml disable-next-line md013-->
+Some markdown here
+
+
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-next-line md013-->
+Some markdown here
+
+My 10 lines
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_sl_pragma_inner_bad",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable-next-lines md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        scan_expected_error="""{temp_source_path}:4:1: INLINE: Inline configuration command 'disable-next-lines' not understood.""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_sl_pragma_inner",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable-next-line md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_ml_pragma",
+        source_file_contents="""
+<!--pyml disable-num-lines 5 md013-->
+Some markdown here
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable-num-lines 5 md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_ml_pragma_plus_one",
+        source_file_contents="""
+Some markdown here
+<!--pyml disable-num-lines 5 md013-->
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+Some markdown here
+<!--pyml disable-num-lines 5 md013-->
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_ml_pragma",
+        source_file_contents="""Some markdown here
+
+
+
+My 10 lines
+<!--pyml disable-num-lines 5 md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+<!--pyml disable-num-lines 5 md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_ml_pragma_minus_one",
+        source_file_contents="""Some markdown here
+
+
+
+<!--pyml disable-num-lines 5 md013-->
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 5 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_inner_ml_pragma_1",
+        source_file_contents="""Some markdown here
 
 <!--pyml disable-num-lines 5 md013-->
 
@@ -185,14 +667,153 @@ My 10 lines
 My 10 lines
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
-{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
-{temp_source_path}:9:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
         fix_expected_file_contents="""Some markdown here
 
-<!--pyml disable-num-lines 5 md013-->
+<!--pyml disable-num-lines 3 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_inner_ml_pragma_2",
+        source_file_contents="""Some markdown here
+
 
 <!--pyml disable-num-lines 5 md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 4 md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_de_pragma",
+        source_file_contents="""
+<!--pyml disable md013-->
+Some markdown here
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+<!--pyml disable md013-->
+Some markdown here
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_after_de_pragma_plus_one",
+        source_file_contents="""
+Some markdown here
+<!--pyml disable md013-->
+
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""
+Some markdown here
+<!--pyml disable md013-->
+
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_de_pragma",
+        source_file_contents="""Some markdown here
+
+
+
+My 10 lines
+<!--pyml disable md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+My 10 lines
+<!--pyml disable md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_before_de_pragma_minus_one",
+        source_file_contents="""Some markdown here
+
+
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_inner_de_pragma_1",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_triple_inner_de_pragma_2",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
+
+<!--pyml disable md013-->
+My 10 lines
+""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_around_double_pragmas_removed",
+        # fix_skip_reason="https://github.com/jackdewinter/pymarkdown/issues/1697",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable-next-line md013-->
+
+
+<!--pyml disable-next-line md013-->
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 6] (no-multiple-blanks)""",
+        fix_expected_file_contents="""Some markdown here
 
 My 10 lines
 """,
@@ -207,6 +828,78 @@ My 10 lines
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
         fix_expected_file_contents="""> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_block_quote_with_double_blanks_at_middle",
+        disable_rules="md027",
+        source_file_contents="""> this is a start
+>
+<!-- pyml disable-next-line no-multiple-blanks-->
+>
+> this is an end
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""> this is a start
+>
+<!-- pyml disable-next-line no-multiple-blanks-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_block_quote_with_double_blanks_at_middle",
+        disable_rules="md027",
+        source_file_contents="""> this is a start
+>
+<!-- pyml disable-next-line no-multiple-blanks-->
+>
+> this is an end
+---
+> this is a start
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!-- pyml disable-next-line no-multiple-blanks-->
+>
+> this is an end
+---
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_block_quote_with_double_blanks_at_middlexxx",
+        disable_rules="md027",
+        source_file_contents="""> this is a start
+>
+>
+> this is an end
+---
+> this is a start
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
+{temp_source_path}:8:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
+""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+---
+> this is a start
 >
 > this is an end
 """,
@@ -549,6 +1242,564 @@ My 10 lines
 """,
     ),
     pluginRuleTest(
+        "bad_block_quote_blanks_double_after_sl_pragma",
+        source_file_contents="""<!--pyml disable-next-line md013-->
+> this is a start
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-next-line md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_after_sl_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable-next-line md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable-next-line md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_sl_pragma",
+        source_file_contents="""> this is a start
+>
+>
+> this is an end
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_sl_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable-next-line md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-next-line md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_inner_sl_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable-next-line md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_sl_pragma",
+        source_file_contents="""<!--pyml disable-next-line md013-->
+> this is a start
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-next-line md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_sl_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable-next-line md013-->
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable-next-line md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_sl_pragma",
+        source_file_contents="""> this is a start
+>
+>
+>
+> this is an end
+<!--pyml disable-next-line md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable-next-line md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_sl_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+>
+<!--pyml disable-next-line md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-next-line md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_sl_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable-next-line md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_sl_pragma_2",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable-next-line md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_after_ml_pragma",
+        source_file_contents="""<!--pyml disable-num-lines 5 md013-->
+> this is a start
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-num-lines 5 md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_after_ml_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable-num-lines 5 md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable-num-lines 5 md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_ml_pragma",
+        source_file_contents="""> this is a start
+>
+>
+> this is an end
+<!--pyml disable-num-lines 5 md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable-num-lines 5 md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_ml_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable-num-lines 5 md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 5 md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_inner_ml_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 5 md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 4 md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_ml_pragma",
+        source_file_contents="""<!--pyml disable-num-lines 5 md013-->
+> this is a start
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable-num-lines 5 md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_ml_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable-num-lines 5 md013-->
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable-num-lines 5 md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_ml_pragma",
+        source_file_contents="""> this is a start
+>
+>
+>
+> this is an end
+<!--pyml disable-num-lines 5 md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable-num-lines 5 md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_ml_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+>
+<!--pyml disable-num-lines 5 md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 5 md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_ml_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 5 md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 3 md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_ml_pragma_2",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable-num-lines 5 md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable-num-lines 4 md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_after_de_pragma",
+        source_file_contents="""<!--pyml disable md013-->
+> this is a start
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_after_de_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_de_pragma",
+        source_file_contents="""> this is a start
+>
+>
+> this is an end
+<!--pyml disable md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_before_de_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_double_inner_de_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_de_pragma",
+        source_file_contents="""<!--pyml disable md013-->
+> this is a start
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""<!--pyml disable md013-->
+> this is a start
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_after_de_pragma_plus_one",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+<!--pyml disable md013-->
+>
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+<!--pyml disable md013-->
+>
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_de_pragma",
+        source_file_contents="""> this is a start
+>
+>
+>
+> this is an end
+<!--pyml disable md013-->
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+> this is an end
+<!--pyml disable md013-->
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_before_de_pragma_minus_one",
+        source_file_contents="""> this is a start
+>
+>
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_de_pragma_1",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+>
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_blanks_triple_inner_de_pragma_2",
+        fix_skip_reason="bob",
+        source_file_contents="""> this is a start
+>
+>
+<!--pyml disable md013-->
+>
+> this is an end
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        fix_expected_file_contents="""> this is a start
+>
+<!--pyml disable md013-->
+> this is an end
+""",
+    ),
+    pluginRuleTest(
         "bad_in_list_in_list_with_double_blanks_at_middle",
         source_file_contents="""+ 1. fred
 
@@ -753,6 +2004,7 @@ z
         scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 4] (no-multiple-blanks)
 {temp_source_path}:14:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
         disable_rules="md030,md032,md033",
+        use_debug=True,
         fix_expected_file_contents="""# z
 
 z
@@ -909,6 +2161,345 @@ z
 -   z
 
 </div>
+""",
+    ),
+    pluginRuleTest(  # Atx single pragma single
+        "issue-1751-xx",
+        source_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Atx double pragma single
+        "issue-1751-xa",
+        source_file_contents="""# Title
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 2; Below] (blanks-around-headings,blanks-around-headers)
+{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Atx single pragma double
+        "issue-1751-xb",
+        source_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Para single pragma single
+        "issue-1751-ax",
+        source_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Para double pragma single
+        "issue-1751-aa",
+        source_file_contents="""Title
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Para single pragma double
+        "issue-1751-ab",
+        source_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Thematic single pragma single
+        "issue-1751-bx",
+        source_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Thematic double pragma single
+        "issue-1751-ba",
+        source_file_contents="""------------
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Thematic single pragma double
+        "issue-1751-bb",
+        source_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # fcb single pragma single
+        "issue-1751-cx",
+        source_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # fcb double pragma single
+        "issue-1751-ca",
+        source_file_contents="""```text
+text
+```
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # fcb single pragma double
+        "issue-1751-cb",
+        source_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # html single pragma single
+        "issue-1751-dx",
+        source_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # html double pragma single
+        "issue-1751-da",
+        source_file_contents="""<!--
+html block
+-->
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # html single pragma double
+        "issue-1751-db",
+        source_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # lrd single pragma single
+        "issue-1751-ex",
+        source_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # lrd double pragma single
+        "issue-1751-ea",
+        source_file_contents="""[fred](/flintstone)
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # lrd single pragma double
+        "issue-1751-eb",
+        source_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
 """,
     ),
 ]

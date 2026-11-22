@@ -185,7 +185,9 @@ def execute_scan_test(
         expected_output = test.scan_expected_output.replace(
             "{temp_source_path}", temp_source_path
         )
-        expected_error = test.scan_expected_error
+        expected_error = test.scan_expected_error.replace(
+            "{temp_source_path}", temp_source_path
+        )
 
         # Act
         execute_results = scanner.invoke_main(

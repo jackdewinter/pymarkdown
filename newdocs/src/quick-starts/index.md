@@ -327,8 +327,8 @@ guides.
   prompt**
   You will execute PyMarkdown from a terminal, command prompt, or shell window.
 
-- **Basic Python installation concepts:**
-  You should have Python installed (version 3.10 or later), and either:
+- **Basic Python installation concepts**
+  You should have Python installed (version 3.11 or later), and either:
     - be able to install packages with `pip`, or
     - be able to use a tool such as `pipenv` to manage a virtual environment for
       your project.

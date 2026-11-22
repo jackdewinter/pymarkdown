@@ -113,7 +113,6 @@ class RulePlugin(ABC):
         """
         return self.__is_completed_file_implemented_in_plugin
 
-    # pylint: disable=too-many-arguments
     def register_fix_token_request(
         self,
         context: PluginScanContext,
@@ -143,9 +142,6 @@ class RulePlugin(ABC):
             self.get_details().plugin_id, start_token, end_token, replacement_tokens
         )
 
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
     def report_next_line_error(
         self,
         context: PluginScanContext,
@@ -174,8 +170,6 @@ class RulePlugin(ABC):
             override_is_error_token_prefaced_by_blank_line=override_is_error_token_prefaced_by_blank_line,
         )
 
-    # pylint: enable=too-many-arguments
-
     # pylint: disable=too-many-arguments
     def report_next_token_error(
         self,
@@ -201,9 +195,6 @@ class RulePlugin(ABC):
 
         does_support_fix = False
         plugin_details = self.get_details()
-        # if isinstance(xx, PluginDetailsV2):
-        #     xy = cast(PluginDetailsV2, xx)
-        #     does_support_fix = xy.plugin_supports_fix
 
         context.add_triggered_rule(
             context.scan_file,

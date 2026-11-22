@@ -87,7 +87,7 @@ switch to the `setext_with_atx` style.
 | `plugins.header-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `consistent` | Style of headings expected in the document. |
 | `allow-setext-update` | boolean | `False` | If `style` is `consistent` and the document started off as `setext`, allow an upgrade to `setext_with_atx` if a level 3 Atx Header or higher is observed. |
@@ -95,7 +95,7 @@ switch to the `setext_with_atx` style.
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |
 | `atx` | Only Atx Headings without any closing hashes are used. |
 | `atx_closed` | Only Atx Headings with closing hashes are used. |

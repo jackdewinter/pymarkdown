@@ -25,6 +25,37 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
+if sys.version_info >= (3, 14) and sys.platform.startswith("win"):
+    USAGE_X = "python.exe main.py"
+    USAGE_INDENT_X = "           "
+    HELP_OPTIONS_X = """                          [--enable-extensions ENABLE_EXTENSIONS]
+                          [--add-plugin ADD_PLUGIN]
+                          [--config CONFIGURATION_FILE]
+                          [--set SET_CONFIGURATION] [--strict-config]
+                          [--no-json5] [--stack-trace] [--continue-on-error]
+                          [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+                          [--log-file LOG_FILE]
+                          [--return-code-scheme {default,minimal,explicit}]
+                          {extensions,fix,plugins,scan,scan-stdin,version} ..."""
+    USAGE_SCAN_X = f"""[-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore]
+{USAGE_INDENT_X}                    [--urls]
+{USAGE_INDENT_X}                    path [path ...]"""
+else:
+    USAGE_X = "main.py"
+    USAGE_INDENT_X = ""
+    HELP_OPTIONS_X = """               [--enable-extensions ENABLE_EXTENSIONS]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+               [--stack-trace] [--continue-on-error]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+               [--log-file LOG_FILE]
+               [--return-code-scheme {default,minimal,explicit}]
+               {extensions,fix,plugins,scan,scan-stdin,version} ..."""
+
+    USAGE_SCAN_X = f"""[-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+{USAGE_INDENT_X}                    [-e PATH_EXCLUSIONS] [--respect-gitignore] [--urls]
+{USAGE_INDENT_X}                    path [path ...]"""
 if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:

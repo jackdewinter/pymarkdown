@@ -3,9 +3,17 @@
 ## Unversioned
 
 <!-- pyml disable-next-line no-duplicate-heading-->
-### Added
+### Notes
 
 - None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1751](https://github.com/jackdewinter/pymarkdown/issues/1751)
+    - Added `include_pragmas` flag for Md012 that allows it to treat
+      pragmas as real text in its blank line calculations
+    - This provides compatiblity with formatters such as [Prettier](https://prettier.io/)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -17,7 +25,152 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
+- [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
+    - pattern matching and file names are now **BOTH** put through a lowercase
+      filter to ensure that any patterns and filenames can be match irrespective
+      of case
+
+## Version 0.9.42 - 2026-11-15
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+- Upgraded minimum version from Python 3.10 to 3.11 due to various
+  CVEs found with the filelock package, which has a minimum supported
+  version of 3.11
+- Incremented the [`interface_version`](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownApi.interface_version)
+  to `2` because the `rule_url` field was added to [PyMarkdownScanFailure](/api/pymarkdownapi/#pymarkdown.api.PyMarkdownScanFailure).
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
+    - Added extra tests for [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+      to reaffirm that the issues mentioned were addressed.
+    - Added extra mention of the file that is being scanned or fixed if a parsing
+      failure occurs.
+- [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
+    - Added `version --extended` to provide clear information about where the application
+      is being executed, to be able to paste into bug reports.
+- [Issue 1739](https://github.com/jackdewinter/pymarkdown/issues/1739)
+    - Added `--urls` to `scan` command to append the URL of the plugin rule being
+      triggered to the Rule Failure report.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1706](https://github.com/jackdewinter/pymarkdown/issues/1706)
+    - Rule Md031 and addressing issues with fix mode
+- [Issue 1728](https://github.com/jackdewinter/pymarkdown/pull/1728)
+    - Rule md060 no longer undercounts the display width of strong emphasis
+      (`**text**` and `__text__`) in table cells by two characters, which caused
+      false `Expected-Column` errors on correctly aligned tables.
+    - Rule md060 no longer overcounts the display width of code spans
+      (`` `text` ``) containing entity-like characters such as `<`, `>` and `&`
+      in table cells, which caused false `Expected-Column` errors on correctly
+      aligned tables.
+- [Issue 1730](https://github.com/jackdewinter/pymarkdown/issues/1730)
+    - Fixed MD051 deriving an incorrect expected anchor for headings that
+      contain HTML entities.  The punctuation filter was only stripping the
+      `&` and `;` of the escape sequence, leaving the entity name inside the
+      calculated fragment, so links to headings such as `Cats & dogs` or
+      `The "fast" path` were reported as invalid.
+- [Issue 1732](https://github.com/jackdewinter/pymarkdown/issues/1732)
+    - Fixed MD014 reporting a violation for PowerShell environment variable
+      assignments in code blocks.  A `$` followed by a name character starts a
+      variable reference, not a shell prompt, so only a `$` followed by
+      whitespace (or the end of the line) is treated as a prompt marker.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1717](https://github.com/jackdewinter/pymarkdown/issues/1717)
+    - Upgraded minimum version from 3.10 to 3.11 due to dependencies on
+      filelock package which only supports 3.11+
+    - At same time, added support for 3.14 and 3.15 in scenario tests.
+
+## Version 0.9.41 - 2026-10-12
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1701](https://github.com/jackdewinter/pymarkdown/issues/1701)
+    - Contributor: [spreston-sila](https://github.com/spreston-sila)
+    - Adds rules for MD055, MD056, and MD058
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1674](https://github.com/jackdewinter/pymarkdown/issues/1674)
+    - Addressed issues with fixing not honoring suppressions.
+    - Except for [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
+- [Issue 1679](https://github.com/jackdewinter/pymarkdown/issues/1679)
+    - Fixed issue with a paragraph, then a list start, then the first line and only
+      line of a table before the next item of the list.
+    - Added checks for similar code in the LRD handling to be safe.
+- [Issue 1697](https://github.com/jackdewinter/pymarkdown/issues/1697)
+    - More coverage and fixing issues with pragmas and Md013, Md031, and Md046.
+    - Created [Issue 1708](https://github.com/jackdewinter/pymarkdown/issues/1708)
+      to handle edge cases yet to be completed
+- [Issue 1699](https://github.com/jackdewinter/pymarkdown/issues/1699)
+    - Fixed problems with Md027 and suppressions
+
+## Version 0.9.40 - 2026-09-13
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1650](https://github.com/jackdewinter/pymarkdown/issues/1650)
+    - Rules for Md049 (consistent emphasis) and Md050 (consistent strong emphasis)
+- [Issue 1652](https://github.com/jackdewinter/pymarkdown/issues/1652)
+    - Rule for Md051 (valid local link fragments)
+- [Issue 1656](https://github.com/jackdewinter/pymarkdown/issues/1656)
+    - Rule for Md059 (descriptive-link-text)
+- [Issue 1658](https://github.com/jackdewinter/pymarkdown/issues/1658)
+    - Rule for Md053 (link-image-reference-definitions)
+- [Issue 1660](https://github.com/jackdewinter/pymarkdown/issues/1660)
+    - Rule for Md054 (link-image-style)
+- [Issue 1669](https://github.com/jackdewinter/pymarkdown/issues/1669)
+    - Rule for Md060 (table-column-style)
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1639](https://github.com/jackdewinter/pymarkdown/issues/1639)
+    - `extensions` and `plugins` commands were not case insensitive
+- [Issue 1684](https://github.com/jackdewinter/pymarkdown/issues/1684)
+    - Rule Plugin MD011 was not handling tables properly.
+- [Issue 1685](https://github.com/jackdewinter/pymarkdown/issues/1685)
+    - Rule Plugin MD011 was not reporting reversed links properly on lines that
+      have more than one link/reverse-link.
+- [Issue 1686](https://github.com/jackdewinter/pymarkdown/issues/1686)
+    - Rule Plugin MD011 was not reporting multiple failures on the same line
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1681](https://github.com/jackdewinter/pymarkdown/issues/1681)
+    - Extensive updating of Rule Plugins docs
+
+## Version 0.9.39 - 2026-07-11
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1553](https://github.com/jackdewinter/pymarkdown/issues/1553)
+    - Added new documentation around how APIs are listed in the documentation.
+    - Added a completely redone document showing how to the PyMarkdownApi.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
 - None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1625](https://github.com/jackdewinter/pymarkdown/issues/1625)
+    - Changed how HTML tokens are generated for testing, to make more streamlined
 
 ## Version 0.9.38 - 2026-06-09
 
@@ -172,26 +325,26 @@
 - [Issue 1475](https://github.com/jackdewinter/pymarkdown/issues/1475)
     - fixed typo in documentation
 - [Issue 1505](https://github.com/jackdewinter/pymarkdown/issues/1505)
-    - fixed an issue with Md002/Md041 where the bottom of the SetExt
+    - fixed an issue with Md002/Md041 where the bottom of the Setext
       token was being reported instead of the top
     - additionally, fixed a small issue with empty documents falsely
       reporting the end-of-stream token as a "bad" heading
 - [Issue 1506](https://github.com/jackdewinter/pymarkdown/issues/1506)
-    - fixed an issue with Md003 where the bottom of the SetExt
+    - fixed an issue with Md003 where the bottom of the Setext
       token was being reported instead of the top
 - [Issue 1507](https://github.com/jackdewinter/pymarkdown/issues/1507)
-    - fixed an issue with Md023 where the bottom of the SetExt
+    - fixed an issue with Md023 where the bottom of the Setext
       token was being reported instead of the top
 - [Issue 1508](https://github.com/jackdewinter/pymarkdown/issues/1508)
     - fixed an issue with Md024 where the accumulated text for the Atx Heading
-      and the accumulated text for the SetExt heading with the same text
+      and the accumulated text for the Setext heading with the same text
       differed
 - [Issue 1510](https://github.com/jackdewinter/pymarkdown/issues/1510)
-    - fixed an issue with Md025 where the bottom of the SetExt
+    - fixed an issue with Md025 where the bottom of the Setext
       token was being reported instead of the top
 - [Issue 1512](https://github.com/jackdewinter/pymarkdown/issues/1512)
-    - adding missing tests for Md043 and SetExt headings
-    - fixed an issue with Md043 where the bottom of the SetExt
+    - adding missing tests for Md043 and Setext headings
+    - fixed an issue with Md043 where the bottom of the Setext
       token was being reported instead of the top
 - [Issue 1514](https://github.com/jackdewinter/pymarkdown/issues/1514)
     - when parsing inline elements from a text block, pragmas were not
@@ -559,7 +712,7 @@ to improve the project for everyone!
 ### Added
 
 - [Issue 1212](https://github.com/jackdewinter/pymarkdown/issues/1212)
-    - added cases to Md031 for SetExt
+    - added cases to Md031 for Setext
     - added extra test cases and resolution to other cases
 
 <!-- pyml disable-next-line no-duplicate-heading-->
@@ -1408,7 +1561,7 @@ have been addressed:
 - [Issue 613](https://github.com/jackdewinter/pymarkdown/issues/613)
     - fixed issues with tabs and thematic breaks
 - [Issue 620](https://github.com/jackdewinter/pymarkdown/issues/620)
-    - fixed issues with tabs and SetExt headings
+    - fixed issues with tabs and Setext headings
 - [Issue 622](https://github.com/jackdewinter/pymarkdown/issues/622)
     - fixed issues with tabs and paragraphs
 - [Issue 625](https://github.com/jackdewinter/pymarkdown/issues/625)
@@ -1912,7 +2065,7 @@ the full descriptions are below, here are some highlights:
       level on return
 - [Fixed - Issue 59](https://github.com/jackdewinter/pymarkdown/issues/59)
     - parser: on line after list item, if started with `===`, would think it was
-      SetExt instead of continuation text.
+      Setext instead of continuation text.
 - [Fixed - Issue 72](https://github.com/jackdewinter/pymarkdown/issues/72)
     - rule md006: was not properly handling block quotes and nested lists
 - [Fixed - Issue 74](https://github.com/jackdewinter/pymarkdown/issues/74)
@@ -1976,7 +2129,7 @@ here are some highlights:
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/22)
     - rule Md033: no longer triggers on end tags, adjusted default allowed tags
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23)
-    - rule Md023: whitespace at end of lines in SetExt Heading no longer being
+    - rule Md023: whitespace at end of lines in Setext Heading no longer being
       recognized as starting whitespace.
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/27)
     - rule Md032: was not recognizing 2 end list tokens in a row

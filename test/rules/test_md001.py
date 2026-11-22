@@ -82,6 +82,54 @@ We skipped out a 2nd level heading in this document
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_improper_atx_heading_incrementing",
+        source_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line heading-increment-->
+### Heading 3
+
+We skipped out a 2nd level heading in this document
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line heading-increment-->
+### Heading 3
+
+We skipped out a 2nd level heading in this document
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_improper_atx_heading_incrementing",
+        source_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line heading-increment-->
+### Heading 3
+
+We skipped out a 2nd level heading in this document
+
+##### Heading 5
+
+We skipped out a 4th level heading in this document
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:8:1: MD001: Heading levels should only increment by one level at a time. [Expected: h4; Actual: h5] (heading-increment,header-increment)
+""",
+        fix_expected_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line heading-increment-->
+### Heading 3
+
+We skipped out a 2nd level heading in this document
+
+#### Heading 5
+
+We skipped out a 4th level heading in this document
+""",
+    ),
+    pluginRuleTest(
         "bad_improper_setext_heading_incrementing",
         source_file_name=f"{source_path}improper_setext_heading_incrementing.md",
         disable_rules=__plugin_disable_md003,

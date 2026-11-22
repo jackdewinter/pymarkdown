@@ -1468,6 +1468,8 @@ def test_md022_link_reference_definition_before_header(
         "link_reference_definition_before_header.md",
     )
     supplied_arguments = [
+        "--disable-rules",
+        "MD059",
         "scan",
         source_path,
     ]
@@ -1495,7 +1497,7 @@ def test_md022_link_reference_definition_around_header(
     )
     supplied_arguments = [
         "--disable-rules",
-        "md012",
+        "md012,md059",
         "scan",
         source_path,
     ]
@@ -1522,6 +1524,8 @@ def test_md022_fenced_block_before_header(scanner_default: MarkdownScanner) -> N
     # Arrange
     source_path, _ = __generate_source_path("fenced_block_before_header.md")
     supplied_arguments = [
+        "--disable-rules",
+        "MD059",
         "scan",
         source_path,
     ]
@@ -1554,7 +1558,10 @@ Some long lines
             source_path,
         ]
 
-        expected_results = ExpectedResults()
+        expected_results = ExpectedResults(
+            return_code=1,
+            expected_output=f"""{source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        )
 
         # Act
         execute_results = scanner_default.invoke_main(arguments=supplied_arguments)

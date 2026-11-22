@@ -17047,11 +17047,11 @@ def test_extra_058ca() -> None:
         "[end-table-header:::False]",
         "[table-body(3,1)]",
         "[table-row(3,3):  : :True:0]",
-        "[table-row-item(3,4):  :]",
-        "[text(3,4):abc:]",
+        "[table-row-item(3,6):  :]",
+        "[text(3,6):abc:]",
         "[end-table-row-item:  |::False]",
-        "[table-row-item(3,11): :center]",
-        "[text(3,11):def:]",
+        "[table-row-item(3,13): :center]",
+        "[text(3,13):def:]",
         "[end-table-row-item: |::False]",
         "[end-table-row:::False]",
         "[end-table-body:::False]",
@@ -17681,6 +17681,1588 @@ another list</li>
         expected_gfm,
         expected_tokens,
         show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_060x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
+```html
+<pre>
+<code>
+something
+</code>
+</pre>
+<code>
+```
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[fcode-block(2,1):`:3:html:::::]",
+        "[text(3,1):\a<\a&lt;\apre\a>\a&gt;\a\n\a<\a&lt;\acode\a>\a&gt;\a\nsomething\n\a<\a&lt;\a/code\a>\a&gt;\a\n\a<\a&lt;\a/pre\a>\a&gt;\a\n\a<\a&lt;\acode\a>\a&gt;\a:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<pre><code class="language-html">&lt;pre&gt;
+&lt;code&gt;
+something
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;code&gt;
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| [My\\$Google][Google] | [My\\$Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[link(3,3):full:http://google.com::::Google:My\\$Google:False::::]",
+        "[text(3,4):My\\\b$Google:]",
+        "[end-link::]",
+        "[text(3,23): | :]",
+        "[link(3,26):full:http://google.com::::Google:My\\$Google:False::::]",
+        "[text(3,27):My\\\b$Google:]",
+        "[end-link::]",
+        "[text(3,46): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <a href="http://google.com">My$Google</a> | <a href="http://google.com">My$Google</a> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![My\\$Google][Google] | ![My\\$Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::My$Google:::Google:My\\$Google:False::::]",
+        "[text(3,24): | :]",
+        "[image(3,27):full:http://google.com::My$Google:::Google:My\\$Google:False::::]",
+        "[text(3,48): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="My$Google" /> | <img src="http://google.com" alt="My$Google" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061b() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![My `copy` Google][Google] | ![My `copy` Google][Google] |
+|N|No|
+
+[Google]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::My copy Google:::Google:My `copy` Google:False::::]",
+        "[text(3,30): | :]",
+        "[image(3,33):full:http://google.com::My copy Google:::Google:My `copy` Google:False::::]",
+        "[text(3,60): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::google:Google: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="My copy Google" /> | <img src="http://google.com" alt="My copy Google" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061c() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """|Character|Meaning|
+|---|---|
+| ![MyGoogle][Goo `copy` gle] | ![MyGoogle][Goo `copy` gle] |
+|N|No|
+
+[Goo `copy` gle]: http://google.com
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):|Character|Meaning|\n|---|---|\n| ::\n\n]",
+        "[image(3,3):full:http://google.com::MyGoogle:::Goo `copy` gle:MyGoogle:False::::]",
+        "[text(3,30): | :]",
+        "[image(3,33):full:http://google.com::MyGoogle:::Goo `copy` gle:MyGoogle:False::::]",
+        "[text(3,60): |\n|N|No|::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[link-ref-def(6,1):True::goo `copy` gle:Goo `copy` gle: :http://google.com:::::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>|Character|Meaning|
+|---|---|
+| <img src="http://google.com" alt="MyGoogle" /> | <img src="http://google.com" alt="MyGoogle" /> |
+|N|No|</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_061d() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """ | Character | Meaning |
+  | --- | --- |
+   | Y | Yes |
+ | N | No |
+"""
+    expected_tokens = [
+        "[table(1,2)]",
+        "[table-header(1,2): ::True:  | --- | --- |]",
+        "[table-header-item(1,4): :]",
+        "[text(1,4):Character:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,16): :]",
+        "[text(1,16):Meaning:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,1)]",
+        "[table-row(3,4):   ::True:0]",
+        "[table-row-item(3,6): :]",
+        "[text(3,6):Y:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,10): :]",
+        "[text(3,10):Yes:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[table-row(4,2): ::True:0]",
+        "[table-row-item(4,4): :]",
+        "[text(4,4):N:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(4,8): :]",
+        "[text(4,8):No:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>Character</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Y</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>N</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062a() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+
+- a | b
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):-::2::]",
+        "[para(3,3):]",
+        "[text(3,3):a | b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>a | b</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062b() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- a | b
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):]",
+        "[text(2,3):a | b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>a | b</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062c() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- a | b
+- abc
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):]",
+        "[text(2,3):a | b:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>a | b</li>
+<li>abc</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062dx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[para(1,3):]",
+        "[text(1,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062da() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- item 1
+- | foo | bar |
+- item 3
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):item 1:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):item 3:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>item 1</li>
+<li>| foo | bar |</li>
+<li>item 3</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062e() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """pre list
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):pre list:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>pre list</p>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# pre list
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):pre list: ]",
+        "[end-atx::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h1>pre list</h1>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fa() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """---------
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[tbreak(1,1):-::---------]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<hr />
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fb() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """## Heading
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[atx(1,1):2:0:]",
+        "[text(1,4):Heading: ]",
+        "[end-atx::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h2>Heading</h2>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fc() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """Heading
+-------
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[setext(2,1):-:7::(1,1)]",
+        "[text(1,1):Heading:]",
+        "[end-setext::]",
+        "[ulist(3,1):-::2::\n]",
+        "[para(3,3):]",
+        "[text(3,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):\n]",
+        "[text(4,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h2>Heading</h2>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fd() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """    icb
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text(1,5):icb:]",
+        "[end-icode-block:::True]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<pre><code>icb
+</code></pre>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fe() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """```
+fcb
+```
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):fcb:]",
+        "[end-fcode-block:::3:False]",
+        "[ulist(4,1):-::2::\n]",
+        "[para(4,3):]",
+        "[text(4,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):\n]",
+        "[text(5,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<pre><code>fcb
+</code></pre>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062ff() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!--
+html block
+-->
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<!--\nhtml block\n-->:]",
+        "[end-html-block:::False]",
+        "[ulist(4,1):-::2::\n]",
+        "[para(4,3):]",
+        "[text(4,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):\n]",
+        "[text(5,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """
+<!--
+html block
+-->
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fg() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """[lrd]: /url
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::lrd:: :/url:::::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062fh() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """| foo | bar |
+| --- | --- |
+- | foo | bar |
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[table(1,1)]",
+        "[table-header(1,1):::True:| --- | --- |]",
+        "[table-header-item(1,3): :]",
+        "[text(1,3):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,9): :]",
+        "[text(1,9):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[ulist(3,1):-::2::\n]",
+        "[para(3,3):]",
+        "[text(3,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):\n]",
+        "[text(4,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_062g() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+> a | b
+# abc
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):a | b:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[atx(3,1):1:0:]",
+        "[text(3,3):abc: ]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<blockquote>
+<p>a | b</p>
+</blockquote>
+<h1>abc</h1>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+    # assert
+
+
+@pytest.mark.gfm
+def test_extra_063ax() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+
+- [lrd]:
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):-::2::]",
+        "[para(3,3):]",
+        "[text(3,3):[lrd]::]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>[lrd]:</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063aa() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+
+- [lrd]: /url
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):-::2::]",
+        "[link-ref-def(3,3):True::lrd:: :/url:::::]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063bx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- [lrd]:
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>[lrd]:</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063ba() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- [lrd]: /url
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[link-ref-def(2,3):True::lrd:: :/url:::::]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063cx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- [lrd]:
+- abc
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li>[lrd]:</li>
+<li>abc</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063ca() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """paragraph text
+- [lrd]: /url
+- abc
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):paragraph text:]",
+        "[end-para:::True]",
+        "[ulist(2,1):-::2::]",
+        "[link-ref-def(2,3):True::lrd:: :/url:::::]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>paragraph text</p>
+<ul>
+<li></li>
+<li>abc</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fx() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# pre list
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):pre list: ]",
+        "[end-atx::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h1>pre list</h1>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fa() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """---------
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[tbreak(1,1):-::---------]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<hr />
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fb() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """## Heading
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[atx(1,1):2:0:]",
+        "[text(1,4):Heading: ]",
+        "[end-atx::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h2>Heading</h2>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fc() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """Heading
+-------
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[setext(2,1):-:7::(1,1)]",
+        "[text(1,1):Heading:]",
+        "[end-setext::]",
+        "[ulist(3,1):-::2::\n]",
+        "[para(3,3):]",
+        "[text(3,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):\n]",
+        "[text(4,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<h2>Heading</h2>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fd() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """    icb
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text(1,5):icb:]",
+        "[end-icode-block:::True]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<pre><code>icb
+</code></pre>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fe() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """```
+fcb
+```
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):fcb:]",
+        "[end-fcode-block:::3:False]",
+        "[ulist(4,1):-::2::\n]",
+        "[para(4,3):]",
+        "[text(4,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):\n]",
+        "[text(5,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<pre><code>fcb
+</code></pre>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063ff() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """<!--
+html block
+-->
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<!--\nhtml block\n-->:]",
+        "[end-html-block:::False]",
+        "[ulist(4,1):-::2::\n]",
+        "[para(4,3):]",
+        "[text(4,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):\n]",
+        "[text(5,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """
+<!--
+html block
+-->
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fg() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """[lrd]: /url
+- [xlrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::lrd:: :/url:::::]",
+        "[ulist(2,1):-::2::\n]",
+        "[para(2,3):]",
+        "[text(2,3):[xlrd]::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[text(3,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>[xlrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_063fh() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """| foo | bar |
+| --- | --- |
+- [lrd]:
+- some text
+some other text
+"""
+    expected_tokens = [
+        "[table(1,1)]",
+        "[table-header(1,1):::True:| --- | --- |]",
+        "[table-header-item(1,3): :]",
+        "[text(1,3):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,9): :]",
+        "[text(1,9):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[end-table:::False]",
+        "[ulist(3,1):-::2::\n]",
+        "[para(3,3):]",
+        "[text(3,3):[lrd]::]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):\n]",
+        "[text(4,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>[lrd]:</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=tables_config_map,
     )
 
 

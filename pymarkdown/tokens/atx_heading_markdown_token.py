@@ -2,12 +2,18 @@
 Module to provide for an encapsulation of the atx heading element.
 """
 
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
@@ -181,6 +187,7 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_atx_heading_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -189,17 +196,24 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             transform_state.actual_token_index - 1
         ]
 
-        token_parts = [output_html]
-        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
-            previous_token.is_paragraph_end and not transform_state.is_in_loose_list
+        if previous_token.is_paragraph_end and not transform_state.is_in_loose_list:
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        if (
+            output_parts
+            and isinstance(output_parts[-1], HtmlCloseTagItem)
+            and output_parts[-1].get_raw_html_text() in ["</ul>", "</ol>"]
         ):
-            token_parts.append(ParserHelper.newline_character)
-        token_parts.extend(["<h", str(atx_token.hash_count), ">"])
-        return "".join(token_parts)
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlOpenTagItem(f"h{atx_token.hash_count}"))
+
+        return AtxHeadingMarkdownToken.__handle_start_atx_heading_token_old(
+            output_html, transform_state, atx_token, previous_token
+        )
 
     @staticmethod
     def __handle_end_atx_heading_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -213,6 +227,32 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             transform_state.actual_tokens[fenced_token_index],
         )
 
+        output_parts.append(HtmlCloseTagItem(f"h{fenced_token.hash_count}"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return AtxHeadingMarkdownToken.__handle_end_atx_heading_token_old(
+            output_html, fenced_token
+        )
+
+    @staticmethod
+    def __handle_start_atx_heading_token_old(
+        output_html: str,
+        transform_state: TransformState,
+        atx_token: "AtxHeadingMarkdownToken",
+        previous_token: MarkdownToken,
+    ) -> str:
+        token_parts: List[str] = [output_html]
+        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
+            previous_token.is_paragraph_end and not transform_state.is_in_loose_list
+        ):
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(["<h", str(atx_token.hash_count), ">"])
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_atx_heading_token_old(
+        output_html: str, fenced_token: SetextHeadingMarkdownToken
+    ) -> str:
         return "".join(
             [
                 output_html,

@@ -5,13 +5,21 @@ Module to provide for the output of the PyMarkdown application.
 import sys
 from typing import Optional
 
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 
-class MainPresentation:
+class MainPresentation(BasePresentation):
     """
     Class to provide for the output of the PyMarkdown application.
     """
+
+    def __init__(self) -> None:
+        self.__show_urls = False
+
+    def initialize(self, show_urls: bool) -> None:
+        """Initialize the presentation."""
+        self.__show_urls = show_urls
 
     def print_system_output(self, output_string: str) -> None:
         """
@@ -59,10 +67,13 @@ class MainPresentation:
         """
         Print a scan failure for a specific file and location.
         """
-        self.print_system_output(
+        failure_text = (
             f"{scan_failure.scan_file}:{scan_failure.line_number}:{scan_failure.column_number}: "
             + f"{scan_failure.rule_id}: {scan_failure.rule_description}{scan_failure.extra_error_information} ({scan_failure.rule_name})"
         )
+        if self.__show_urls and scan_failure.rule_url is not None:
+            failure_text = f"{failure_text} {scan_failure.rule_url}"
+        self.print_system_output(failure_text)
 
     def print_fix_message(self, file_fixed: str) -> None:
         """

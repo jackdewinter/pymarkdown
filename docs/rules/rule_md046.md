@@ -65,14 +65,14 @@ value of `fenced` or `consistent` will not cause this rule to trigger.
 | `plugins.code-block-style.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `consistent` | Style of code blocks expected in the document. |
 
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |
 | `fenced` | Only fenced code blocks are to be used. |
 | `indented` | Only indented code blocks are to be used. |

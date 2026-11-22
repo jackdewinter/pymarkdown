@@ -74,7 +74,7 @@ This failure scenario is managed by
 | `plugins.no-missing-space-closed-atx.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

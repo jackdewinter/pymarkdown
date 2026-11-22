@@ -13,7 +13,7 @@ from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.requeue_line_info import RequeueLineInfo
 from pymarkdown.general.tab_helper import TabHelper
-from pymarkdown.html.html_helper import HtmlHelper
+from pymarkdown.html_helpers.html_helper import HtmlHelper
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
 from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor

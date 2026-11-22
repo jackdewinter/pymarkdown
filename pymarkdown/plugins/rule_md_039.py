@@ -20,13 +20,15 @@ class RuleMd039(RulePlugin):
     Class to implement a plugin that looks for spaces within link labels.
     """
 
+    __PLUGIN_ID = "MD039"
+
     def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
         return PluginDetailsV2(
             plugin_name="no-space-in-links",
-            plugin_id="MD039",
+            plugin_id=RuleMd039.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside link text",
             plugin_version="0.5.2",
@@ -45,13 +47,16 @@ class RuleMd039(RulePlugin):
             )
             if link_token.text_from_blocks != stripped_text_from_blocks:
                 if context.in_fix_mode:
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "text_from_blocks",
-                        stripped_text_from_blocks,
-                    )
+                    if not context.check_for_pragma_suppression(
+                        token.line_number, RuleMd039.__PLUGIN_ID, False
+                    ):
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "text_from_blocks",
+                            stripped_text_from_blocks,
+                        )
                 else:
                     self.report_next_token_error(context, token)
         elif token.is_link_reference_definition:
@@ -62,12 +67,15 @@ class RuleMd039(RulePlugin):
             )
             if link_def_token.link_name_debug != stripped_text_from_blocks:
                 if context.in_fix_mode:
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "link_name_debug",
-                        stripped_text_from_blocks,
-                    )
+                    if not context.check_for_pragma_suppression(
+                        token.line_number, RuleMd039.__PLUGIN_ID, False
+                    ):
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "link_name_debug",
+                            stripped_text_from_blocks,
+                        )
                 else:
                     self.report_next_token_error(context, token)

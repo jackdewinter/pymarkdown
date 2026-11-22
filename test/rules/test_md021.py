@@ -65,6 +65,42 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disbled_bad_multiple_spacing_left",
+        source_file_contents="""# Heading 1 #
+
+<!-- pyml disable-next-line no-multiple-space-closed-atx-->
+##  Heading 2 ##
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""# Heading 1 #
+
+<!-- pyml disable-next-line no-multiple-space-closed-atx-->
+##  Heading 2 ##
+""",
+    ),
+    pluginRuleTest(
+        "disbled_and_enabled_bad_multiple_spacing_left",
+        source_file_contents="""# Heading 1 #
+
+<!-- pyml disable-next-line no-multiple-space-closed-atx-->
+##  Heading 2 ##
+
+##  Heading 3 ##
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# Heading 1 #
+
+<!-- pyml disable-next-line no-multiple-space-closed-atx-->
+##  Heading 2 ##
+
+## Heading 3 ##
+""",
+    ),
+    pluginRuleTest(
         "bad_multiple_spacing_right",
         source_file_name=f"{source_path}multiple_spacing_right.md",
         source_file_contents="""# Heading 1  #

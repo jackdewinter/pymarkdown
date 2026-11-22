@@ -58,6 +58,10 @@ scanTests = [
     pluginRuleTest(
         "good_paragraph_no_extra",
         source_file_name=f"{source_path}good_paragraph_no_extra.md",
+        source_file_contents="""this is some text
+there is nothing wrong
+with this text.
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "two_paragraphs_list_item_empty_line_no_spaces",
@@ -71,14 +75,76 @@ this is another paragraph
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
 """,
+        fix_expected_file_contents="""this is one paragraph
+\a\a
+this is another paragraph
+""".replace("\a", " "),
+    ),
+    pluginRuleTest(
+        "disabled_two_paragraphs_list_item_empty_line_no_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        source_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_two_paragraphs_list_item_empty_line_no_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        source_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+
+this is one paragraph
+\a\a\a\a
+this is another paragraph
+""".replace("\a", " "),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""this is one paragraph
+<!-- pyml disable-next-line no-trailing-spaces-->
+\a\a\a\a
+this is another paragraph
+
+this is one paragraph
+\a\a
+this is another paragraph
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "good_indented_code_block_with_extra",
+        source_file_contents="""    indented\a
+    code\a
+    block
+""".replace("\a", " "),
         source_file_name=f"{source_path}good_indented_code_block_with_extra.md",
     ),
     pluginRuleTest(
         "good_fenced_code_block_with_extra",
         source_file_name=f"{source_path}good_fenced_code_block_with_extra.md",
+        source_file_contents="""```Python
+this\a
+is\a
+a\a
+code\a
+block\a
+```
+""".replace("\a", " "),
     ),
     pluginRuleTest(
         "unordered_list_item_empty_line_no_spaces",

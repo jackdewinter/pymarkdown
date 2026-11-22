@@ -92,7 +92,7 @@ Before you install PyMarkdown, make sure your environment meets the basic requir
 
 ### What Are The Minimum Requirements?
 
-This project requires Python 3.10 or later.
+This project requires Python 3.11 or later.
 
 ### How Do I Install PyMarkdown?
 

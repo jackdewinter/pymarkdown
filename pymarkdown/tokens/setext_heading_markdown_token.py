@@ -2,10 +2,16 @@
 Module to provide for an encapsulation of the setext heading element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -222,42 +228,77 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_start_setext_heading_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
+
+        transform_state.is_in_setext_block = True
+
         setext_token = cast(SetextHeadingMarkdownToken, next_token)
 
-        token_parts = [output_html]
-        if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            token_parts.append(ParserHelper.newline_character)
-        token_parts.extend(
-            ["<h", "1" if setext_token.heading_character == "=" else "2", ">"]
+        if output_parts and output_parts[-1].get_raw_html_text() in ["</ol>", "</ul>"]:
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(
+            HtmlOpenTagItem("h1" if setext_token.heading_character == "=" else "h2")
         )
-        transform_state.is_in_setext_block = True
-        return "".join(token_parts)
+
+        return SetextHeadingMarkdownToken.__handle_start_setext_heading_token_old(
+            output_html, setext_token
+        )
 
     @staticmethod
     def __handle_end_setext_heading_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = next_token
 
-        fenced_token_index = transform_state.actual_token_index - 1
-        while not transform_state.actual_tokens[fenced_token_index].is_setext_heading:
-            fenced_token_index -= 1
-        fenced_token = cast(
+        transform_state.is_in_setext_block = False
+
+        setext_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[setext_token_index].is_setext_heading:
+            setext_token_index -= 1
+        setext_token = cast(
             SetextHeadingMarkdownToken,
-            transform_state.actual_tokens[fenced_token_index],
+            transform_state.actual_tokens[setext_token_index],
         )
+
+        output_parts.append(
+            HtmlCloseTagItem("h1" if setext_token.heading_character == "=" else "h2")
+        )
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return SetextHeadingMarkdownToken.__handle_end_setext_heading_token_old(
+            output_html, setext_token
+        )
+
+    @staticmethod
+    def __handle_start_setext_heading_token_old(
+        output_html: str,
+        setext_token: "SetextHeadingMarkdownToken",
+    ) -> str:
+        token_parts: List[str] = []
+        if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(
+            ["<h", "1" if setext_token.heading_character == "=" else "2", ">"]
+        )
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_setext_heading_token_old(
+        output_html: str, setext_token: "SetextHeadingMarkdownToken"
+    ) -> str:
         token_parts = [
-            output_html,
             "</h",
-            "1" if fenced_token.heading_character == "=" else "2",
+            "1" if setext_token.heading_character == "=" else "2",
             ">",
             ParserHelper.newline_character,
         ]
-        transform_state.is_in_setext_block = False
+        token_parts.insert(0, output_html)
         return "".join(token_parts)

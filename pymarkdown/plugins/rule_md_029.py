@@ -22,6 +22,8 @@ class RuleMd029(RulePlugin):
     consistent numeric prefaces.
     """
 
+    __PLUGIN_ID = "MD029"
+
     __one_style = "one"
     __ordered_style = "ordered"
     __zero_style = "zero"
@@ -50,7 +52,7 @@ class RuleMd029(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="ol-prefix",
-            plugin_id="MD029",
+            plugin_id=RuleMd029.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
             plugin_version="0.6.0",
@@ -204,24 +206,29 @@ class RuleMd029(RulePlugin):
             f"Expected: {expected_number}; Actual: {actual_number}; Style: {style}"
         )
         if context.in_fix_mode:
-            self.register_fix_token_request(
-                context,
-                token,
-                "next_token",
-                "list_start_content",
-                str(expected_number),
-            )
-            if not initial_match and new_number is not None:
-                expected_number_as_string = str(expected_number)
-                new_number_as_string = str(new_number)
-                if delta := len(expected_number_as_string) - len(new_number_as_string):
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "indent_level",
-                        token.indent_level + delta,
-                    )
+            if not context.check_for_pragma_suppression(
+                token.line_number, RuleMd029.__PLUGIN_ID, False
+            ):
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "list_start_content",
+                    str(expected_number),
+                )
+                if not initial_match and new_number is not None:
+                    expected_number_as_string = str(expected_number)
+                    new_number_as_string = str(new_number)
+                    if delta := len(expected_number_as_string) - len(
+                        new_number_as_string
+                    ):
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "indent_level",
+                            token.indent_level + delta,
+                        )
             return list_style, expected_number
         self.report_next_token_error(
             context, token, extra_error_information=extra_error_information

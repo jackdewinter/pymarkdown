@@ -14,7 +14,7 @@
 | `extensions.linter-pragmas.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the extension is enabled. |
 
 ## Summary

@@ -69,7 +69,7 @@ present after the leading hash character (`#`) for the URI:
 | `plugins.no-empty-links.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

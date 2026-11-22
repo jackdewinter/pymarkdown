@@ -3,8 +3,9 @@ Module to work with the rules to keep track of the current container "leading sp
 """
 
 from dataclasses import dataclass
-from typing import List, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
@@ -203,7 +204,11 @@ class LeadingSpaceIndexTracker:
                 break
 
     def get_tokens_block_quote_bleading_space_index(
-        self, token: MarkdownToken, alternate_index: int = -1
+        self,
+        context: Optional[PluginScanContext],
+        token: MarkdownToken,
+        alternate_index: int = -1,
+        use_pragma_adjust: bool = False,
     ) -> int:
         """
         Get the index of the token within the container block quote's bleading_spaces string.
@@ -222,10 +227,21 @@ class LeadingSpaceIndexTracker:
         assert (
             block_quote_token.bleading_spaces is not None
         ), "At least one line should have been processed."
-        return (
-            LeadingSpaceIndexTracker.calculate_token_line_number(token)
-            - block_quote_token.line_number
-        ) - (last_closed_container_info.adjustment - last_closed_container_info.count2)
+
+        token_line_number = LeadingSpaceIndexTracker.calculate_token_line_number(token)
+        line_number_delta = token_line_number - block_quote_token.line_number
+        pragma_delta = 0
+        if use_pragma_adjust:
+            assert context is not None
+            for check_line_number in range(
+                block_quote_token.line_number + 1, token.line_number
+            ):
+                if context.is_pragma_on_line(check_line_number):
+                    pragma_delta += 1
+        closed_container_delta = (
+            last_closed_container_info.adjustment - last_closed_container_info.count2
+        )
+        return line_number_delta - closed_container_delta - pragma_delta
 
     def get_tokens_list_leading_space_index(
         self, token: MarkdownToken, alternate_index: int = -1

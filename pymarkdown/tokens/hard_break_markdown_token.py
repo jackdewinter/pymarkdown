@@ -2,9 +2,14 @@
 Module to provide for an encapsulation of the inline hard line break element.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlItems,
+    HtmlOpenCloseTagItem,
+)
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -112,9 +117,17 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_hard_break_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
+        output_parts.append(HtmlOpenCloseTagItem("br"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return HardBreakMarkdownToken.__handle_hard_break_token_old(output_html)
+
+    @staticmethod
+    def __handle_hard_break_token_old(output_html: str) -> str:
         return "".join([output_html, "<br />", ParserHelper.newline_character])

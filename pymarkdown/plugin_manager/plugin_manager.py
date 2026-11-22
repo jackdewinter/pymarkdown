@@ -18,7 +18,7 @@ from pymarkdown.extensions.pragma_token import (
     GeneralPragmaDisableStart,
     PragmaExtension,
 )
-from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.fix_line_record import FixLineRecord
@@ -54,7 +54,7 @@ class PluginManager:
 
     def __init__(
         self,
-        presentation: MainPresentation,
+        presentation: BasePresentation,
     ) -> None:
         """
         Initialize an instance of the PluginManager class.
@@ -70,9 +70,9 @@ class PluginManager:
         self.__presentation = presentation
 
         self.__document_pragmas: Dict[int, Set[str]] = {}
-        self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
-        self.__general_pragma_ranges: List[Tuple[int, int, str]]
-        self.__pragma_line_numbers: List[int]
+        self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]] = []
+        self.__general_pragma_ranges: List[Tuple[int, int, str]] = []
+        self.__pragma_line_numbers: List[int] = []
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -232,7 +232,9 @@ class PluginManager:
     ) -> ApplicationResult:
         list_re = (
             re.compile(
-                "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
+                "^"
+                + args.list_filter.lower().replace("*", ".*").replace("?", ".")
+                + "$"
             )
             if args.list_filter
             else None
@@ -301,7 +303,7 @@ class PluginManager:
     ) -> ApplicationResult:
         matching_plugins: List[FoundPlugin] = list(
             filter(
-                lambda x: args.info_filter in x.plugin_identifiers,
+                lambda x: args.info_filter.lower() in x.plugin_identifiers,
                 self.__registered_plugins,
             )
         )
@@ -387,34 +389,63 @@ class PluginManager:
         PluginManager.__argparse_subparser.print_help()
         return ApplicationResult.COMMAND_LINE_ERROR
 
+    # pylint: disable=too-many-branches
+    def skip_rule_failure_on_given_line_number(
+        self,
+        line_number: int,
+        rule_id: str,
+        is_error_token_prefaced_by_blank_line: bool,
+        delta_from_start: int,
+    ) -> bool:
+        """Given a line number and the primary ID of a rule plugin to check against, see if
+        that ID is registered as a suppressed line."""
+
+        if delta_from_start:
+            for _ in range(delta_from_start):
+                line_number += 1
+                if line_number in self.__pragma_line_numbers:
+                    line_number += 1
+
+        rule_id = rule_id.lower()
+        if self.__document_pragmas:
+            if line_number in self.__document_pragmas:
+                id_set = self.__document_pragmas[line_number]
+                if rule_id in id_set:
+                    return True
+            if (
+                is_error_token_prefaced_by_blank_line
+                and (line_number - 1) in self.__document_pragmas
+            ):
+                id_set = self.__document_pragmas[line_number - 1]
+                if rule_id in id_set:
+                    return True
+
+        if self.__document_pragma_ranges:
+            for i, j, k in self.__document_pragma_ranges:
+                if i <= line_number <= j and rule_id in k:
+                    return True
+
+        if self.__general_pragma_ranges:
+            for i, j, m in self.__general_pragma_ranges:
+                if i <= line_number <= j and rule_id == m:
+                    return True
+        return False
+
+    # pylint: enable=too-many-branches
+
     def log_scan_failure(self, scan_failure: PluginScanFailure) -> None:
         """
         Log the scan failure in the appropriate format.
         """
 
         rule_id = scan_failure.rule_id.lower()
-        if self.__document_pragmas:
-            if scan_failure.line_number in self.__document_pragmas:
-                id_set = self.__document_pragmas[scan_failure.line_number]
-                if rule_id in id_set:
-                    return
-            if (
-                scan_failure.is_error_token_prefaced_by_blank_line
-                and (scan_failure.line_number - 1) in self.__document_pragmas
-            ):
-                id_set = self.__document_pragmas[scan_failure.line_number - 1]
-                if rule_id in id_set:
-                    return
-
-        if self.__document_pragma_ranges:
-            for i, j, k in self.__document_pragma_ranges:
-                if i <= scan_failure.line_number <= j and rule_id in k:
-                    return
-
-        if self.__general_pragma_ranges:
-            for i, j, m in self.__general_pragma_ranges:
-                if i <= scan_failure.line_number <= j and rule_id == m:
-                    return
+        if self.skip_rule_failure_on_given_line_number(
+            scan_failure.line_number,
+            rule_id,
+            scan_failure.is_error_token_prefaced_by_blank_line,
+            0,
+        ):
+            return
 
         extra_info = (
             f" [{scan_failure.extra_error_information}]"
@@ -422,6 +453,7 @@ class PluginManager:
             else ""
         )
         rule_id = scan_failure.rule_id.upper()
+        rule_url = self.__all_ids[rule_id.lower()].plugin_url
 
         adjusted_failure = PluginScanFailure(
             scan_failure.scan_file,
@@ -432,6 +464,7 @@ class PluginManager:
             scan_failure.rule_description,
             extra_info,
             False,
+            rule_url=rule_url,
         )
         self.__presentation.print_scan_failure(adjusted_failure)
         self.number_of_scan_failures += 1
@@ -440,12 +473,14 @@ class PluginManager:
         self, scan_file: str, line_number: int, pragma_error: str
     ) -> None:
         """
-        Log the pragma failure in the appropriate format.
+        Log the pragma error in the appropriate format.
         """
         self.__presentation.print_pragma_failure(scan_file, line_number, pragma_error)
         self.number_of_pragma_failures += 1
 
-    def compile_pragmas(self, scan_file: str, pragma_lines: Dict[int, str]) -> None:
+    def compile_pragmas(
+        self, scan_file: str, pragma_lines: Dict[int, str], is_document_fix: bool
+    ) -> None:
         """
         Go through the list of extracted pragmas and compile them.
         """
@@ -453,6 +488,7 @@ class PluginManager:
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
 
         self.__pragma_line_numbers = []
+        lpf = None if is_document_fix else self.log_pragma_failure
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -463,7 +499,7 @@ class PluginManager:
                 self.__document_pragma_ranges,
                 self.__general_pragma_ranges,
                 active_general_pragmas,
-                self.log_pragma_failure,
+                lpf,
                 self.__pragma_line_numbers,
             )
         PragmaExtension.end(active_general_pragmas, self.__general_pragma_ranges)
@@ -786,7 +822,7 @@ class PluginManager:
 
         plugin_id = plugin_id.strip().lower()
 
-        plugin_names = []
+        plugin_names: List[str] = []
         for next_name in plugin_name.lower().split(","):
             if next_name := next_name.strip():
                 plugin_names.append(next_name)
@@ -841,7 +877,6 @@ class PluginManager:
                 )
             self.__all_ids[next_key] = plugin_object
 
-    # pylint: disable=too-many-arguments
     def __register_individual_plugin(
         self,
         plugin_instance: RulePlugin,
@@ -878,7 +913,9 @@ class PluginManager:
         ):
             self.__enabled_plugins.append(plugin_object)
 
-    # pylint: enable=too-many-arguments
+    def get_all_ids(self) -> Dict[str, FoundPlugin]:
+        """Get a map of all the Rule Plugins ids, and their matching object."""
+        return self.__all_ids
 
     def __register_plugins(
         self,
@@ -1027,7 +1064,6 @@ class PluginManager:
         for next_plugin in proper_list:
             self.__apply_configuration(next_plugin, properties)
 
-    # pylint: disable=too-many-arguments
     def __check_for_skip_of_plugin(
         self,
         next_plugin: FoundPlugin,
@@ -1051,11 +1087,10 @@ class PluginManager:
 
         return False, context
 
-    # pylint: enable=too-many-arguments
-
     # pylint: disable=too-many-arguments
     def starting_new_file(
         self,
+        context_id: str,
         file_being_started: str,
         actual_tokens: List[MarkdownToken],
         per_file_disabled_identifiers: Optional[Set[str]],
@@ -1093,6 +1128,7 @@ class PluginManager:
                 ) from this_exception
 
         context = PluginScanContext(
+            context_id,
             self,
             file_being_started,
             actual_tokens,

@@ -175,7 +175,6 @@ doing the following.
     ```sh
     pipenv run pymarkdown --enable-extensions markdown-tables,front-matter scan sample.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 We simply use the `--enable-extensions` command-line argument and follow it with

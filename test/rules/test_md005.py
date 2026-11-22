@@ -45,6 +45,41 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_unordered_list_single_level",
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""* Item 1
+<!-- pyml disable-next-line list-indent-->
+ * Item 2
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""* Item 1
+<!-- pyml disable-next-line list-indent-->
+ * Item 2
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_unordered_list_single_level",
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""* Item 1
+<!-- pyml disable-next-line list-indent-->
+ * Item 2
+
+* Item 1
+ * Item 2
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:6:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)",
+        fix_expected_file_contents="""* Item 1
+<!-- pyml disable-next-line list-indent-->
+ * Item 2
+
+* Item 1
+* Item 2
+""",
+    ),
+    pluginRuleTest(
         "good_unordered_list_double_level",
         source_file_name=f"{source_path}good_unordered_list_double_level.md",
     ),

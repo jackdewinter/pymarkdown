@@ -1,68 +1,157 @@
 # Rule - MD007
 
 | Property | Value |
-| --- | -- |
+| --- | --- |
 | Aliases | `md007`, `ul-indent` |
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
 
-Unordered list indentation.
+Ensure unordered list items use consistent indentation.
 
 ## Reasoning
 
-### Readability/Consistency
+### Readability
 
-Existing specifications for Markdown specify that multiple spaces are allowed
-before a list start item. As the use of those existing spaces typically
-causes the list items to start in unexpected locations, there is a good chance
-that the use of those "extra" spaces will just confuse readers. It is instead
-recommended that all unordered list markers start at the first column
-where they are allowed, without any unrequired indentation.
+Markdown allows variable leading spaces before list markers, which can cause unexpected
+rendering and confuse readers. It is recommended that all unordered list markers
+start at the earliest allowed column.
 
-In addition, there are
-[various Markdown parsers](https://babelmark.github.io/?text=%2B+sublist%0A++%2B+sublist%0A)
-that do not acknowledge the start of a sublist without a non-standard amount of indentation
-before the sublist item.  This rule supplies configuration for those situations to
-allow consistent rendering between parsers.
+### Consistency
+
+Certain [Markdown parsers](https://babelmark.github.io/?text=%2B+sublist%0A++%2B+sublist%0A)
+require non-standard indentation to recognize sublists. This rule provides configuration
+options to accommodate these parsers and ensure consistent rendering across tools.
+
+> **Note**: This rule only validates indentation for **unordered** list items.
+> If you require indentation validation for **ordered** lists as well, disable
+> this rule and enable the [PML101 rule](./rule_pml101.md) instead, which supports
+> anchored indentation for both ordered and unordered lists.
 
 ## Examples
 
 ### Failure Scenarios
 
-This rule triggers if any Unordered List element or new List Item element
-does not start with the correct indentation:
+This rule triggers when an unordered list item has incorrect indentation relative
+to its parent or the base indent:
 
 ```Markdown
- * indented with extra space
+ * first item
 
-* indented properly
-   * but sublist is not
+* second item
+   * sublist item
 ```
+
+> **Explanation**: The first item has an extra leading space, violating the base
+> indent of 0. The sublist item uses 3 spaces of indentation, which is not a multiple
+> of the default indent value (2) relative to its parent, or exceeds the expected
+> depth-based calculation depending on configuration.
+
+Unlike the previous example, this case demonstrates a sublist item with insufficient
+indentation, using only 1 space instead of the required default of 2.
+
+```Markdown
+* parent item
+ * sublist with only 1 space
+```
+
+> **Explanation**: The sublist item is indented by only 1 space, which does not
+> match the configured `indent` value of 2. The rule requires that each level of
+> nesting increases indentation by the configured amount. Because 1 is not a multiple
+> of the configured indent relative to the parent, the rule triggers.
+
+Unlike the previous examples, this case involves a deeply nested sublist (three
+levels deep) where the third level is indented by 3 spaces instead of the
+expected 4.
+
+```Markdown
+* level 1
+  * level 2
+   * level 3 with only 3 spaces
+```
+
+> **Explanation**: The third-level sublist item is indented by only 3 spaces from
+> the start of the line. Given a base indent of 0 and an `indent` value of `2`,
+> the expected indentation for the third level is `0 + (3-1)*2 = 4` spaces. The
+> actual indentation of 3 spaces deviates from this calculation, causing the rule
+> to trigger.
+
+Unlike the previous examples, this case involves an unordered list nested inside
+a block quote, where the sublist indentation fails to align with the adjusted base
+indent.
+
+```Markdown
+> * item in block quote
+>  * correct sublist indent
+>   * incorrect sublist with extra space
+```
+
+> **Explanation**: Inside a block quote, the base indent is shifted. The first list
+> item starts at the correct position relative to the block quote marker. The second
+> sublist item uses the correct additional indentation (2 spaces). However, the
+> third sublist item uses 3 additional spaces relative to its parent, exceeding
+> the configured `indent` value of `2`. The rule validates that indentation increments
+> match the configuration regardless of the container context.
+
+Unlike the previous examples, this case involves an unordered list item nested inside
+an ordered list item, where the unordered item is indented by 5 spaces instead of
+the expected 4.
+
+```Markdown
+1. ordered item
+     * unordered item with extra space
+```
+
+> **Explanation**: Inside an ordered list, the base indent for the unordered
+> sublist is determined by the ordered item's content column (3 spaces:
+> `1.` plus a following space). Given `indent = 2` and list depth `1`, the
+> expected indent is `3 + (1-1)*2 = 3` spaces. The actual indent of 5 spaces
+> deviates from this calculation, causing the rule to trigger.
+
+Unlike the previous examples, this case shows the base-level list item inside a
+block quote with an incorrect leading indent.
+
+```Markdown
+>  * item with extra space in block quote
+```
+
+> **Explanation**: Inside a block quote, the base indent for a top-level list item
+> is the column immediately after the `>` marker followed by 1 space. The
+> first item here
+> uses 2 spaces of leading indentation, violating the expected base indent. The
+> rule triggers because the item does not start at the earliest allowed column
+> relative to the block quote context.
 
 ### Correct Scenarios
 
-To correct the above example, simply enforce the required indentation using the
-proper number of space characters:
+This rule does not trigger when all unordered list markers align to the configured
+indent value.
 
 ```Markdown
-* indented with extra space
+* first item
 
-* indented properly
-  * but sublist is not
+* second item
+  * sublist item
 ```
 
-If required, the amount of indentation at each level can be set using the `indent`
-configuration value.  Note that an `indent` value of `3` will make the following
-example correct:
+> **Explanation**: All list markers start at the correct column. The sublist item
+> is indented by `2` spaces relative to its parent, matching the default indent
+> configuration.
+
+Unlike the previous example, this case uses a custom indent value of `3`.
 
 ```Markdown
-* indented properly
-   * but sublist is not
+* first item
+   * sublist item
 ```
 
-but it will also not trigger in the case of a list like this one:
+> **Explanation**: When configured with `indent` equal to `3`, a 3-space indent
+> for the sublist is valid. The rule checks that indentation aligns with the configured
+> multiple.
+
+Unlike the previous examples, this case involves a mixed list with an ordered list
+item breaking the unordered list chain.
 
 ```Markdown
 * indented properly
@@ -70,37 +159,69 @@ but it will also not trigger in the case of a list like this one:
      * indented properly
 ```
 
-The reason for this is that the ordered list breaks up the "chain" of unordered
-lists into two distinct unordered lists, as this rule does not apply to ordered
-list indentations.  If indentation support is also required for ordered lists,
-refer to the selection below on [Python-Markdown Support](#python-markdown-support).
+> **Explanation**: The ordered list item creates a new nesting context. The unordered
+> list item that follows is treated as a sublist of the ordered item, with a base
+> indent determined by the ordered list's content column. Its `2`-space indentation
+> relative to this base matches the configured `indent` value, satisfying the rule.
 
-In addition, there are occasions where parsers expect to start the first level of
-lists with the specified amount of indentation.  For those situations, the `start_indented`
-configuration value can be set to `True` to accommodate these parsers.
+Unlike the previous examples, this case demonstrates the `start_indented` configuration
+set to `True`.
+
+```Markdown
+  * indented at first level
+    * sublist indented correctly
+```
+
+> **Explanation**: When `start_indented` is `True`, the first level of the
+> unordered list is allowed to start with the configured indent value (default
+> `2`). This accommodates parsers that expect all list levels to be indented
+> uniformly. The sublist is indented by another `2` spaces relative to its
+> parent, maintaining consistency.
+
+Unlike the previous examples, this case demonstrates a correctly indented
+unordered list nested inside a block quote, where the base indent is shifted
+by the block quote marker and each sublist level adds the configured `indent`.
+
+```Markdown
+> * item in block quote
+>   * sublist with correct indent
+>     * deeper sublist with correct indent
+```
+
+> **Explanation**: Inside a block quote, the base indent for a top-level list
+> item is the column immediately after the `>` marker and its associated space
+> character. The first item starts
+> at column 3. The second item is indented by `2` spaces relative to its
+> parent, matching the default `indent` value. The third item is indented by
+> another `2` spaces relative to its parent, also matching the configured
+> value. Because each nesting level adds exactly the configured `indent`
+> relative to its parent, the rule does not trigger.
 
 ### Notes
+
+If indentation support is also required for ordered lists,
+refer to the selection below on [Python-Markdown Support](#python-markdown-support).
 
 #### Python-Markdown Support
 
 If you are using [Python-Markdown](https://python-markdown.github.io/) or tools
 that use it such as the popular [MkDocs](https://www.mkdocs.org/), this rule
-should be disabled in favor of enabling the [Pml101 rule](rule_pml101.md).  That
+should be disabled in favor of enabling the [PML101 rule](./rule_pml101.md). That
 rule supports proper anchored list indentation, our name for the indentation method
 that is required to support parsers like the Python-Markdown parser.
 
 #### Unordered Lists Only
 
 The indentation measured by this rule solely covers the indentation for any
-unordered list items.  Therefore, if the following Markdown is scanned under
-normal circumstance:
+unordered list items. Therefore, if the following Markdown is scanned under
+normal circumstances:
 
 ```Markdown
 1. ordered indent
    * unordered indent
 ```
 
-this rule will not be triggered.  However, the following Markdown:
+this rule will not be triggered. However, the following Markdown:
 
 ```Markdown
 1. ordered indent
@@ -110,17 +231,20 @@ this rule will not be triggered.  However, the following Markdown:
 will trigger the rule as it is expecting the unordered list to start at column
 4, not column 5.
 
+> **Note**: For comprehensive indentation checking that includes **ordered**
+> lists, see the [PML101 rule](./rule_pml101.md).
+
 ## Fix Description
 
-Any unordered list item elements and their new list item elements are examined
-to make sure that they start with a multiple of the specified `indent`.  If an
+Each unordered list item and its child items are examined
+to make sure that they start with a multiple of the specified `indent`. If an
 unordered list is started within a block quote or ordered list item, the base indent
-within that element is calculated.  If not in either of those two elements, the
-base indent is `0`.  The number of unordered list item elements (referred to as
+within that element is calculated. If not in either of those two elements, the
+base indent is `0`. The number of unordered list item elements (referred to as
 the list depth) is calculated.
 
-A simple calculation is made to determine the ideal ident: the base indent plus
-the `indent` value multiplied by the list depth minus `1`.  If that value
+A simple calculation is made to determine the ideal indent: the base indent plus
+the `indent` value multiplied by the list depth minus `1`. If that value
 differs from the actual indent, the rule adjusts the list item start element or
 the new list item element to start at that calculated location.
 
@@ -140,7 +264,7 @@ the base indent is `3` and the list depth is `1`. Therefore `3 + (1-1)*2` equals
 ```
 
 The same calculation happens for a new list item for that list, arriving at the same
-list depth, and therefore the same calculated indent.  For any nested lists, the
+list depth, and therefore the same calculated indent. For any nested lists, the
 list depth is increased accordingly, resulting in indents of `5`, `7`, `9`, and
 so on.
 
@@ -152,7 +276,7 @@ so on.
 | `plugins.ul-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `indent` | `integer` | `2` | Number of spaces needed between unordered sublists starts. |
 | `start_indented` | `boolean` | `False` | Whether the first unordered list should be indented. |
@@ -165,7 +289,7 @@ This rule is largely inspired by the MarkdownLint rule
 ### Differences From MarkdownLint Rule
 
 The original rule did not work for Unordered List elements within
-Ordered List elements.  For example, the original rule does not fire
+Ordered List elements. For example, the original rule does not fire
 on the following sample:
 
 ```Markdown

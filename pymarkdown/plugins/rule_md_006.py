@@ -20,6 +20,8 @@ class RuleMd006(RulePlugin):
     start at the beginning of the line.
     """
 
+    __PLUGIN_ID = "MD006"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd006 class.
@@ -33,7 +35,7 @@ class RuleMd006(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="ul-start-left",
-            plugin_id="MD006",
+            plugin_id=RuleMd006.__PLUGIN_ID,
             plugin_enabled_by_default=False,
             plugin_description="Consider starting bulleted lists at the beginning of the line",
             plugin_version="0.5.1",
@@ -87,7 +89,13 @@ class RuleMd006(RulePlugin):
     def __report_or_fix(
         self, context: PluginScanContext, token: MarkdownToken, adjust_amount: int
     ) -> None:
-        if context.in_fix_mode:
+        if not context.in_fix_mode:
+            self.report_next_token_error(context, token)
+            return
+
+        if not context.check_for_pragma_suppression(
+            token.line_number, RuleMd006.__PLUGIN_ID, False
+        ):
             list_start_token = cast(ListStartMarkdownToken, token)
             self.register_fix_token_request(
                 context,
@@ -115,5 +123,3 @@ class RuleMd006(RulePlugin):
                     "extracted_whitespace",
                     list_start_token.extracted_whitespace[:adjust_amount],
                 )
-        else:
-            self.report_next_token_error(context, token)

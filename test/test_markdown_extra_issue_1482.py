@@ -78,7 +78,6 @@ def test_extra_issue_1482_x() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -149,7 +148,6 @@ def test_extra_issue_1482_a() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -224,7 +222,6 @@ def test_extra_issue_1482_b() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -301,7 +298,6 @@ def test_extra_issue_1482_c() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -366,7 +362,6 @@ def test_extra_issue_1482_d() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -446,7 +441,6 @@ def test_extra_issue_1482_e() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -531,7 +525,6 @@ def test_extra_issue_1482_f() -> None:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 

@@ -1,4 +1,7 @@
-mkdocstrings==1.0.4
-mkdocstrings-python==1.16.10
-mkdocs-material==9.7.6
-pymdown-extensions==10.21.3
+mkdocstrings==1.0.6
+mkdocstrings-python==2.0.5
+mkdocs-material==9.7.7
+pymdown-extensions==11.0.2
+
+urllib3>=2.8.0
+certifi>=2026.10.19

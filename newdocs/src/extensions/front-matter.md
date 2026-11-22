@@ -14,7 +14,7 @@
 | `extensions.front-matter.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
 | `allow_blank_lines` | `string` | `False` | Whether blank lines are allowed within the Front-Matter block. |
 

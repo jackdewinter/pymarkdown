@@ -148,7 +148,6 @@ verify this for each release.
     plugins.MD013.enabled = true
     plugins.MD013.line_length = 100
     ```
-
 <!-- pyml enable code-block-style-->
 
 When `--config` is given a file whose extension is not `.json`, `.yaml`, `.yml`,
@@ -239,7 +238,7 @@ values that look numeric from true integers
 or booleans, `--set` uses an optional format prefix:
 
 | Prefix | Type | Examples |
-| -- | -- | -- |
+| --- | --- | --- |
 | (None) | String | `abc` |
 | `$#` | Integer | `$#1` or `$#-1` |
 | `$!` | Boolean | case-insensitive `$!true`, anything else is false |
@@ -280,6 +279,8 @@ The available configuration items are grouped into:
 - [General - `mode.*` + command line](#general) - Global settings.
 - [Logs - `log.*`](#logs) - Settings that affect how logging works.
 - [System - `system.*`](#system) - Settings that affect the entire system.
+- [Scan Command Options - `scan.*`](#scan-command-options) - Setting that affect
+  the `scan` command.
 - [Rule Plugins - `plugins.*` + command line](#rule-plugins) - Settings that affect
   the various Rule Plugins.
 - [Extensions - `extensions.*`](#extensions) - Settings that affect the various
@@ -296,10 +297,10 @@ These items directly affect the collection of configuration values and how they
 are interpreted.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| [(see Configuration File Types)](#configuration-file-types) | `--config {file}`           | String    | Path to the configuration file to use. |
-| [(see Set Command)](#set-command)                           | [`--set {key}={value}`](./user-guide.md#-set-configuration) | String    | Manually set an individual configuration property. |
-| [`mode.strict-config`](#strict-configuration-mode)          | [`--strict-config`](./user-guide.md#-strict-config-configuration) | Boolean   | Throw an error if the configuration is bad, instead of assuming default values. (Default: `false`) |
+| --- | --- | --- | --- |
+| [(see Configuration File Types)](#configuration-file-types) | `--config {file}` | String | Path to the configuration file to use. |
+| [(see Set Command)](#set-command) | [`--set {key}={value}`](./user-guide.md#-set-configuration) | String | Manually set an individual configuration property. |
+| [`mode.strict-config`](#strict-configuration-mode) | [`--strict-config`](./user-guide.md#-strict-config-configuration) | Boolean | Throw an error if the configuration is bad, instead of assuming default values. (Default: `false`) |
 
 These items recap configuration options covered earlier; use the links in the first
 column to jump to the detailed explanations.
@@ -309,9 +310,9 @@ column to jump to the detailed explanations.
 These items affect the logging for PyMarkdown.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| `log.file`        | [--log-file](./user-guide.md#-log-level-with-log-file-logging) | String  | Destination file for log messages. |
-| `log.level`       | [--log-level](./user-guide.md#-log-level-with-log-file-logging) | String | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`)  |
+| --- | --- | --- | --- |
+| `log.file` | [--log-file](./user-guide.md#-log-level-with-log-file-logging) | String | Destination file for log messages. |
+| `log.level` | [--log-level](./user-guide.md#-log-level-with-log-file-logging) | String | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`) |
 | `log.stack-trace` | [--stack-trace](./user-guide.md#-stack-trace-error-reporting) | Boolean | When enabled, prints a stack trace on errors and sets initial logging (config processing) to debug. (Default: `false`) |
 
 #### Basic Logging
@@ -428,15 +429,23 @@ request).
     ```
 <!-- pyml enable code-block-style-->
 
+### Scan Command Options
+
+These items provide options on how the output of the scan command is generated:
+
+| Key | Command Line | Type | Description |
+| --- | --- | --- | --- |
+| `show-urls` | [--urls](./user-guide.md#--urls) | Boolean | Show URLs as part of Rule Failures. |
+
 ### Rule Plugins
 
 These items show the various ways of enabling and disabling Rule Plugins on a global
 level:
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| *special* | [--enable-rules,-e](./user-guide.md#enabling-and-disabling-rule-plugins)   | String    | Comma separated list of Rule Plugins to enable. |
-| *special* | [--disable-rules,-d](./user-guide.md#-enable-rules-disable-rules-rule-plugins)  | String    | Comma separated list of Rule Plugins to disable. |
+| --- | --- | --- | --- |
+| *special* | [--enable-rules,-e](./user-guide.md#enabling-and-disabling-rule-plugins) | String | Comma separated list of Rule Plugins to enable. |
+| *special* | [--disable-rules,-d](./user-guide.md#-enable-rules-disable-rules-rule-plugins) | String | Comma separated list of Rule Plugins to disable. |
 | [`plugins.selectively_enable_rules`](#selectively-enable-rule-plugins) | -- | Boolean | Specify whether to enable selective enable mode. |
 | [`plugins.per-file-ignores`](#per-file-disabling-of-rule-plugins) | -- | Nested | Specify glob paths to match, and Rule Plugins to disable if matched. |
 
@@ -444,14 +453,14 @@ This item points to the Development documentation with instructions for creating
 your own plugins:
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | [`plugins.additional_paths`](./development.md) | --add-plugin | String or String List | Path to a plugin containing a new Rule Plugins to load. |
 
 These items give examples on how specific configuration items can be applied to
 Rule Plugins:
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | [`plugins.{id}.enabled`](#specific-plugin-settings) | -- | Boolean | Specify whether the Rule Plugin is enabled. |
 | [`plugins.{id}.other`](#specific-plugin-settings) | -- | Various | Specify other configuration properties specific to the Rule Plugins. |
 
@@ -559,7 +568,7 @@ With this configuration, all Rule Plugins are disabled except for `MD007`, regar
 of
 the system's default Rule Plugins settings.
 
-##### Per-File Disabling Of Rule Plugins
+##### Per-File Disabling of Rule Plugins
 
 <!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.36**
@@ -571,15 +580,14 @@ The `plugins.per-file-ignores` configuration item takes inspiration from the
 [Flake8 linter](https://flake8.pycqa.org/en/latest/user/options.html#cmdoption-flake8-per-file-ignores)
 and the [Ruff linter](https://docs.astral.sh/ruff/settings/#lint_per-file-ignores),
 in being able to disable the Rule Plugins belonging to a comma-separated set of
-identifiers associated with one ore more matching
+identifiers associated with one or more matching
 paths.
 
 The file paths are specified using the same glob-based syntax as `.gitignore` files
 used with the [`--respect-gitignore` command-line argument](./user-guide.md#-respect-gitignore)
 and the [`--exclude` command-line argument](./user-guide.md#-e-exclude-path_exclusions).
-This feature is strictly for disabling Rule Plugins. It does not enable Rule Plugins
-that are
-currently disabled.
+This feature is strictly for **disabling** Rule Plugins on a per-file basis. It
+has no effect on Rule Plugins that are already disabled globally.
 
 <!-- pyml disable code-block-style-->
 === "Command Line"
@@ -631,6 +639,16 @@ currently disabled.
     plugins.per-file-ignores."changelog/*.md" = ["MD013","MD041"]
     ```
 <!-- pyml enable code-block-style-->
+
+###### Clarification Regarding Per-File Disabling And Case Sensitivity
+
+<!-- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.43**
+
+Starting in version 0.9.43, pattern matching is case-insensitive, so `README.md`
+in your configuration matches `readme.md` on disk, and vice versa. For more information
+on this change, consult [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
+for more information.
 
 #### Adding Rule Plugins
 
@@ -745,8 +763,8 @@ details.
 This item shows how to enable specific extensions:
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| *special* | [--enable-extensions](./user-guide.md#enabling-extensions)   | String    | Comma separated list of extensions to enable. |
+| --- | --- | --- | --- |
+| *special* | [--enable-extensions](./user-guide.md#enabling-extensions) | String | Comma separated list of extensions to enable. |
 
 #### Enable Extensions
 
@@ -813,7 +831,7 @@ also links to each extension's page.
 These items do not fit nicely into any other category.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | -- | [`--continue-on-error`](./user-guide.md#-continue-on-error-error-reporting) | Boolean | Enable PyMarkdown to continue after application errors. |
 | `mode.return_code_scheme` | [`--return-code-scheme`](./user-guide.md#-return-code-scheme-observability) | String | Specify a scheme to use when formulating the return code. |
 

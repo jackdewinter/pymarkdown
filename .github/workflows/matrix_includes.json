@@ -1,11 +1,5 @@
 [
     {
-        "python":"3.10",
-        "platform":"windows-latest",
-        "timeout":15,
-        "runOn":"previous"
-    },
-    {
         "python":"3.11",
         "platform":"windows-latest",
         "timeout":15,
@@ -24,10 +18,16 @@
         "runOn":"current"
     },
     {
-        "python":"3.10",
-        "platform":"ubuntu-latest",
-        "timeout":8,
-        "runOn":"previous"
+        "python":"3.14",
+        "platform":"windows-latest",
+        "timeout":15,
+        "runOn":"current"
+    },
+    {
+        "python":"3.15",
+        "platform":"windows-latest",
+        "timeout":15,
+        "runOn":"current"
     },
     {
         "python":"3.11",
@@ -48,10 +48,16 @@
         "runOn":"current"
     },
     {
-        "python":"3.10",
-        "platform":"macos-latest",
-        "timeout":7,
-        "runOn":"previous"
+        "python":"3.14",
+        "platform":"ubuntu-latest",
+        "timeout":16,
+        "runOn":"current"
+    },
+    {
+        "python":"3.15",
+        "platform":"ubuntu-latest",
+        "timeout":16,
+        "runOn":"current"
     },
     {
         "python":"3.11",
@@ -67,6 +73,18 @@
     },
     {
         "python":"3.13",
+        "platform":"macos-latest",
+        "timeout":7,
+        "runOn":"current"
+    },
+    {
+        "python":"3.14",
+        "platform":"macos-latest",
+        "timeout":7,
+        "runOn":"current"
+    },
+    {
+        "python":"3.15",
         "platform":"macos-latest",
         "timeout":7,
         "runOn":"current"

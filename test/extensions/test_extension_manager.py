@@ -8,7 +8,7 @@ of the tests.
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
-from test.utils import ARGPARSE_X, write_temporary_configuration
+from test.utils import ARGPARSE_X, USAGE_X, write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
@@ -26,7 +26,7 @@ def test_markdown_with_extensions_only(scanner_default: MarkdownScanner) -> None
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: main.py extensions [-h] {list,info} ...
+        expected_output="""usage: {USAGE_X} extensions [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -35,7 +35,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -192,6 +192,45 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = ["-c", configuration_file, "extensions", "list", "f*r"]
+
+        expected_results = ExpectedResults(expected_output="""
+  ID            NAME                   ENABLED    ENABLED    VERSION
+                                       (DEFAULT)  (CURRENT)
+
+  front-matter  Front Matter Metadata  False      False      0.5.0
+
+""")
+
+        # Act
+        execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(expected_results=expected_results)
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_extensions_list_and_filter_by_bad_case_id(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list. With id with bad case.
+    """
+
+    # Arrange
+    supplied_configuration = {"extensions": {"front-matter": {"enabled": False}}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "extensions",
+            "list",
+            "Front-Matter",
+        ]
 
         expected_results = ExpectedResults(expected_output="""
   ID            NAME                   ENABLED    ENABLED    VERSION
@@ -452,9 +491,9 @@ def test_markdown_with_extensions_list_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions list [-h] [--all] [list_filter]
-main.py extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
-""",
+        expected_error="""usage: {USAGE_X} extensions list [-h] [--all] [list_filter]
+{USAGE_X} extensions list: error: argument list_filter: Value '*' is not a valid pattern for an id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -478,9 +517,9 @@ def test_markdown_with_extensions_info_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py extensions info [-h] info_filter
-main.py extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
-""",
+        expected_error="""usage: {USAGE_X} extensions info [-h] info_filter
+{USAGE_X} extensions info: error: argument info_filter: Value 'abc.def' is not a valid id.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -523,6 +562,35 @@ def test_markdown_with_extensions_info_and_found_filter(
 
     # Arrange
     supplied_arguments = ["extensions", "info", "front-matter"]
+
+    expected_results = ExpectedResults(
+        expected_output="""  ITEM               DESCRIPTION
+
+  Id                 front-matter
+  Name               Front Matter Metadata
+  Short Description  Allows metadata to be parsed from document front matter.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/extensions/fr
+                     ont-matter/
+"""
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+def test_markdown_with_extensions_info_and_mixed_case_found_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure the command line interface to extensions
+    info presents information when a valid id is supplied, even if it has the wrong case.
+    """
+
+    # Arrange
+    supplied_arguments = ["extensions", "info", "Front-Matter"]
 
     expected_results = ExpectedResults(
         expected_output="""  ITEM               DESCRIPTION

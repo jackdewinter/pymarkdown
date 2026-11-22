@@ -67,7 +67,7 @@ Quote element, then this rule behaves normally.
 | `plugins.blanks-around-lists.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

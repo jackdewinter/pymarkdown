@@ -3,11 +3,12 @@ Module to provide for an encapsulation of the image element.
 """
 
 import logging
-from typing import Optional, cast
+from typing import Dict, List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.tokens.html_items import HtmlItems, HtmlOpenCloseTagItem
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
@@ -133,25 +134,37 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
     def __handle_image_token(
         cls,
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = transform_state
 
         image_token = cast(ImageStartMarkdownToken, next_token)
-        return "".join(
-            [
-                output_html,
-                '<img src="',
-                image_token.link_uri,
-                '" alt="',
-                image_token.image_alt_text,
-                '" ',
-                (
-                    f'title="{image_token.link_title}" '
-                    if image_token.link_title
-                    else ""
-                ),
-                "/>",
-            ]
-        )
+
+        attributes_map: Dict[str, str] = {
+            "src": image_token.link_uri,
+            "alt": image_token.image_alt_text,
+        }
+        if image_token.link_title:
+            attributes_map["title"] = image_token.link_title
+
+        output_parts.append(HtmlOpenCloseTagItem("img", attributes_map))
+
+        return cls.__handle_image_token_old(output_html, image_token)
+
+    @classmethod
+    def __handle_image_token_old(
+        cls, output_html: str, image_token: "ImageStartMarkdownToken"
+    ) -> str:
+        token_parts = [
+            '<img src="',
+            image_token.link_uri,
+            '" alt="',
+            image_token.image_alt_text,
+            '" ',
+            (f'title="{image_token.link_title}" ' if image_token.link_title else ""),
+            "/>",
+        ]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

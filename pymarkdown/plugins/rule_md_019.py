@@ -21,6 +21,8 @@ class RuleMd019(RulePlugin):
     mark on an atx heading.
     """
 
+    __PLUGIN_ID = "MD019"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd019 class.
@@ -34,7 +36,7 @@ class RuleMd019(RulePlugin):
         """
         return PluginDetailsV2(
             plugin_name="no-multiple-space-atx",
-            plugin_id="MD019",
+            plugin_id=RuleMd019.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces are present after hash character on Atx Heading.",
             plugin_version="0.5.1",
@@ -53,13 +55,17 @@ class RuleMd019(RulePlugin):
     ) -> None:
         assert self.__atx_heading_token is not None
         if context.in_fix_mode:
-            self.register_fix_token_request(
-                context,
-                text_token,
-                "next_token",
-                "extracted_whitespace",
-                " ",
-            )
+
+            if not context.check_for_pragma_suppression(
+                text_token.line_number, RuleMd019.__PLUGIN_ID, False
+            ):
+                self.register_fix_token_request(
+                    context,
+                    text_token,
+                    "next_token",
+                    "extracted_whitespace",
+                    " ",
+                )
         else:
             self.report_next_token_error(context, self.__atx_heading_token)
 

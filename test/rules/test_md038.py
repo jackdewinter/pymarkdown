@@ -34,6 +34,34 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_code_span_trailing",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-code-->
+this is `bad code span ` text
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-code-->
+this is `bad code span ` text
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_code_span_trailing",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-code-->
+this is `bad code span ` text
+
+this is `bad code span ` text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:9: MD038: Spaces inside code span elements (no-space-in-code)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-code-->
+this is `bad code span ` text
+
+this is `bad code span` text
+""",
+    ),
+    pluginRuleTest(
         "bad_code_span_leading",
         source_file_name=f"{source_path}bad_code_span_leading.md",
         source_file_contents="""this is ` bad code span` text

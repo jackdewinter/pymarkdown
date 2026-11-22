@@ -128,7 +128,7 @@ with Commonmark.
 | `plugins.ol-prefix.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
 | `allow_extended_start_values` | `boolean` | `False` | Using the `ordered` style, allows for any integer to start the list. |
@@ -136,7 +136,7 @@ with Commonmark.
 Valid heading styles:
 
 | Style | Description |
-| -- | -- |
+| --- | --- |
 | `one_or_ordered` | Either of the `one` or `ordered` styles below. |
 | `one` | All Ordered List Items must start with `1`. |
 | `ordered` | Starting with `0` or `1`, each List Item must be one greater than its predecessor. |

@@ -120,7 +120,7 @@ will trigger the rule as it is expecting the unordered list to start at column
 | `plugins.ul-indent.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `indent` | `integer` | `2` | Number of spaces needed between unordered sublists starts. |
 | `start_indented` | `boolean` | `False` | Whether the first unordered list should be indented. |

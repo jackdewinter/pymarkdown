@@ -87,7 +87,6 @@ another list</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )
 
 
@@ -198,5 +197,4 @@ another list</li>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
     )

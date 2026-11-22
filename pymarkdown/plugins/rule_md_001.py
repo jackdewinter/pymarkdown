@@ -23,6 +23,8 @@ class RuleMd001(RulePlugin):
     level at a time (going up).
     """
 
+    __PLUGIN_ID = "MD001"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd001 class.
@@ -37,7 +39,7 @@ class RuleMd001(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="heading-increment,header-increment",
-            plugin_id="MD001",
+            plugin_id=RuleMd001.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Heading levels should only increment by one level at a time.",
             plugin_version="0.6.0",
@@ -86,10 +88,16 @@ class RuleMd001(RulePlugin):
                 delta = hash_count - self.__last_heading_count
                 if delta > 1:
                     if context.in_fix_mode:
-                        hash_count = self.__last_heading_count + 1
-                        self.register_fix_token_request(
-                            context, token, "next_token", "hash_count", hash_count
-                        )
+                        if not context.check_for_pragma_suppression(
+                            token.line_number,
+                            RuleMd001.__PLUGIN_ID,
+                            False,
+                            start_token=token,
+                        ):
+                            hash_count = self.__last_heading_count + 1
+                            self.register_fix_token_request(
+                                context, token, "next_token", "hash_count", hash_count
+                            )
                     else:
                         extra_data = f"Expected: h{self.__last_heading_count + 1}; Actual: h{hash_count}"
                         self.report_next_token_error(

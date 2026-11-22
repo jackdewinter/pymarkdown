@@ -21,6 +21,7 @@ scanTests = [
     pluginRuleTest(
         "good_valid_emphasis",
         source_file_name=f"{source_path}good_valid_emphasis.md",
+        disable_rules="md049,md050",
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis",
@@ -91,6 +92,88 @@ this text * is * in italics
 {temp_source_path}:2:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 """,
         fix_expected_file_contents="""this is the first line
+this text *is* in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_start_paragraph",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_bad_surrounding_emphasis_short_non_first_double_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_surrounding_emphasis_short_non_first_start_paragraph",
+        source_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this text * is * in italics
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+{temp_source_path}:4:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this text *is* in italics
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_surrounding_emphasis_short_non_first_within_paragraph",
+        source_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this is the first line
+this text * is * in italics
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+{temp_source_path}:6:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""this is the first line
+<!-- pyml disable-next-line no-space-in-emphasis-->
+this text * is * in italics
+
+this is the first line
 this text *is* in italics
 """,
     ),
@@ -357,6 +440,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_surround",
         source_file_contents="""abc * [link](/url) * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:1:19: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
@@ -368,6 +452,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_surround_extra",
         source_file_contents="""abc *  [link](/url)  * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:1:21: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
@@ -379,6 +464,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_before_fix",
         source_file_contents="""abc * [link](/url)* ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:6: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 """,
@@ -389,6 +475,7 @@ this text __is__ in bold
         "bad_surrounding_emphasis_link_after_fix",
         source_file_contents="""abc *[link](/url) * ghi
 """,
+        disable_rules="MD059",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:18: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 """,

@@ -64,7 +64,7 @@ one of the entities:
 | `plugins.no-trailing-punctuation.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `punctuation` | `string` | `.,;:!。，；：！` | Punctuation characters that are considered sentence ending characters. |
 

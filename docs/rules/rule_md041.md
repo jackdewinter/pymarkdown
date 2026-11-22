@@ -100,7 +100,7 @@ document will not trigger this rule:
 | `plugins.first-line-h1.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
 | `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document.** |

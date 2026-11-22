@@ -8,6 +8,7 @@ from test.markdown_scanner import MarkdownScanner
 from test.pytest_execute import ExpectedResults
 from test.utils import (
     ARGPARSE_X,
+    USAGE_X,
     assert_file_is_as_expected,
     copy_to_temp_file,
     create_temporary_configuration_file,
@@ -42,7 +43,7 @@ def test_markdown_with_plugins_only(scanner_default: MarkdownScanner) -> None:
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_output="""usage: main.py plugins [-h] {list,info} ...
+        expected_output="""usage: {USAGE_X} plugins [-h] {list,info} ...
 
 positional arguments:
   {list,info}
@@ -51,7 +52,7 @@ positional arguments:
 
 {ARGPARSE_X}
   -h, --help   show this help message and exit
-""".replace("{ARGPARSE_X}", ARGPARSE_X),
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -498,6 +499,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
     source_path, abs_source_path = __generate_source_path("end_with_blank_line.md")
     plugin_path = generate_path_to_bad_plugin("bad_starting_new_file.py")
     supplied_arguments = [
+        "--stack-trace",
         "--add-plugin",
         plugin_path,
         "scan",
@@ -507,7 +509,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alte
     expected_results = ExpectedResults(
         return_code=1,
         expected_error=f"""[pse[[fse[BadPluginError encountered while scanning '{abs_source_path}':
-Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.]]]]
+Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
+Caused by: Exception:
+   bad starting_new_file]]]]
 """,
     )
 
@@ -1310,6 +1314,17 @@ def test_markdown_with_plugins_list_only(scanner_default: MarkdownScanner) -> No
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
+  md049   emphasis-style                  True       True       0.5.0    No
+  md050   strong-style                    True       True       0.5.0    No
+  md051   link-fragments                  True       True       0.5.0    No
+  md053   link-image-reference-definitio  True       True       0.5.0    No
+          ns
+  md054   link-image-style                True       True       0.5.0    No
+  md055   table-pipe-style                True       True       0.5.0    No
+  md056   table-column-count              True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.0    No
+  md059   descriptive-link-text           True       True       0.5.0    No
+  md060   table-column-style              True       True       0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1392,6 +1407,17 @@ def test_markdown_with_plugins_list_only_all(scanner_default: MarkdownScanner) -
   md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.2    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
+  md049   emphasis-style                  True       True       0.5.0    No
+  md050   strong-style                    True       True       0.5.0    No
+  md051   link-fragments                  True       True       0.5.0    No
+  md053   link-image-reference-definitio  True       True       0.5.0    No
+          ns
+  md054   link-image-style                True       True       0.5.0    No
+  md055   table-pipe-style                True       True       0.5.0    No
+  md056   table-column-count              True       True       0.5.0    No
+  md058   blanks-around-tables            True       True       0.5.0    No
+  md059   descriptive-link-text           True       True       0.5.0    No
+  md060   table-column-style              True       True       0.5.0    No
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
@@ -1476,6 +1502,17 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md049   emphasis-style                  True       False      0.5.0    No
+  md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
+  md053   link-image-reference-definitio  True       False      0.5.0    No
+          ns
+  md054   link-image-style                True       False      0.5.0    No
+  md055   table-pipe-style                True       False      0.5.0    No
+  md056   table-column-count              True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
   pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
@@ -1564,9 +1601,20 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules(
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md049   emphasis-style                  True       False      0.5.0    No
+  md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
+  md053   link-image-reference-definitio  True       False      0.5.0    No
+          ns
+  md054   link-image-style                True       False      0.5.0    No
+  md055   table-pipe-style                True       False      0.5.0    No
+  md056   table-column-count              True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
 """,
         )
 
@@ -1654,9 +1702,20 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md046   code-block-style                True       False      0.7.0    Yes
   md047   single-trailing-newline         True       False      0.5.2    Yes
   md048   code-fence-style                True       False      0.6.0    Yes
+  md049   emphasis-style                  True       False      0.5.0    No
+  md050   strong-style                    True       False      0.5.0    No
+  md051   link-fragments                  True       False      0.5.0    No
+  md053   link-image-reference-definitio  True       False      0.5.0    No
+          ns
+  md054   link-image-style                True       False      0.5.0    No
+  md055   table-pipe-style                True       False      0.5.0    No
+  md056   table-column-count              True       False      0.5.0    No
+  md058   blanks-around-tables            True       False      0.5.0    No
+  md059   descriptive-link-text           True       False      0.5.0    No
+  md060   table-column-style              True       False      0.5.0    No
   pml100  disallowed-html                 False      False      0.6.0    No
   pml101  list-anchored-indent            False      False      0.6.0    No
-  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No  
+  pml102  disallow-lazy-list-indentation  False      False      0.5.0    No
 """,
     )
 
@@ -1689,7 +1748,8 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine(
   md019  no-multiple-space-atx  True       True       0.5.1    Yes
   md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
-
+  md049  emphasis-style         True       True       0.5.0    No
+  md059  descriptive-link-text  True       True       0.5.0    No
 """,
     )
 
@@ -1776,9 +1836,9 @@ def test_markdown_with_plugins_list_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py plugins list [-h] [--all] [list_filter]
-main.py plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
-""",
+        expected_error="""usage: {USAGE_X} plugins list [-h] [--all] [list_filter]
+{USAGE_X} plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -1803,9 +1863,9 @@ def test_markdown_with_plugins_info_and_bad_filter(
 
     expected_results = ExpectedResults(
         return_code=2,
-        expected_error="""usage: main.py plugins info [-h] info_filter
-main.py plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
-""",
+        expected_error="""usage: {USAGE_X} plugins info [-h] info_filter
+{USAGE_X} plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
+""".replace("{USAGE_X}", USAGE_X),
     )
 
     # Act
@@ -1830,6 +1890,44 @@ def test_markdown_with_plugins_info_and_not_found_filter(
     expected_results = ExpectedResults(
         return_code=1,
         expected_error="Unable to find a plugin with an id or name of 'md00001'.",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_results=expected_results,
+    )
+
+
+def test_markdown_with_plugins_info_and_wrong_case_filter(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure that `plugins list` errors when a valid id or name is not found.
+    """
+
+    # Arrange
+    supplied_arguments = ["plugins", "info", "Md001"]
+
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
+  ITEM               DESCRIPTION
+
+  Id                 md001
+  Name(s)            heading-increment,header-increment
+  Short Description  Heading levels should only increment by one level at a ti
+                     me.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md001.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  front_matter_title  string  "title"
+""",
     )
 
     # Act
@@ -2030,7 +2128,8 @@ def test_markdown_with_plugins_and_alternate_output() -> None:
 
     expected_results = ExpectedResults(
         return_code=1,
-        expected_output=f"""[pso[[psf[{absolute_source_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]""",
+        expected_output=f"[pso[[psf[{absolute_source_path}:3:1: MD001: Heading levels should only increment by one level at a time."
+        + " [Expected: h2; Actual: h3] (heading-increment,header-increment) https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md001.md]]]]",
     )
 
     # Act
@@ -2811,3 +2910,31 @@ def test_markdown_plugins_failures_no_plugins_active_fix(
             expected_error,
             expected_return_code,
         )
+
+
+def test_markdown_with_plugins_list_and_filter_by_wrong_case_plugin_id(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure that `plugins list` lists all plugins with the specified id filter.
+    """
+
+    # Arrange
+    supplied_arguments = ["plugins", "list", "Md019"]
+
+    expected_results = ExpectedResults(
+        return_code=0,
+        expected_output="""
+  ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
+                                (DEFAULT)  (CURRENT)
+
+  md019  no-multiple-space-atx  True       True       0.5.1    Yes
+
+""",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)

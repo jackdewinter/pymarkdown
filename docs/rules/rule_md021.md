@@ -69,7 +69,7 @@ characters do not trigger this rule:
 | `plugins.no-multiple-space-closed-atx.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

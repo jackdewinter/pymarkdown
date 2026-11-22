@@ -59,7 +59,7 @@ starts with a `^` character, this rule will not trigger.
 | `plugins.no-reversed-links.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule

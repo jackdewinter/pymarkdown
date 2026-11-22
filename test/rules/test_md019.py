@@ -51,6 +51,41 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "disabled_bad_multiple_spacing",
+        source_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line no-multiple-space-atx-->
+##  Heading 2
+""",
+        scan_expected_return_code=0,
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line no-multiple-space-atx-->
+##  Heading 2
+""",
+    ),
+    pluginRuleTest(
+        "disabled_and_enabled_bad_multiple_spacing",
+        source_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line no-multiple-space-atx-->
+##  Heading 2
+
+##  Heading 3
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)""",
+        fix_expected_file_contents="""# Heading 1
+
+<!-- pyml disable-next-line no-multiple-space-atx-->
+##  Heading 2
+
+## Heading 3
+""",
+    ),
+    pluginRuleTest(
         "good_multiple_spacing_with_inline",
         source_file_contents="""# Heading *number*  1
 

@@ -80,7 +80,7 @@ code blocks.
 | `plugins.line-length.` |
 
 | Value Name | Type | Default | Description |
-| -- | -- | -- | -- |
+| --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `line_length` | `integer` | `80` | Maximum number of characters on a normal line. |
 | `heading_line_length` | `integer` | `80` | Maximum number of characters on a heading line. |

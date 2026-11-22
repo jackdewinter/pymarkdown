@@ -5,7 +5,6 @@ Module to provide for a simple implementation of a title case algorithm.
 import argparse
 import logging
 import os
-import runpy
 import traceback
 from typing import List, Optional, Tuple, cast
 
@@ -24,12 +23,14 @@ from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.file_scan_helper import FileScanHelper
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.base_presentation import BasePresentation
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
+from pymarkdown.version_helper import VersionHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -44,7 +45,7 @@ class PyMarkdownLint:
 
     def __init__(
         self,
-        presentation: Optional[MainPresentation] = None,
+        presentation: Optional[BasePresentation] = None,
         show_stack_trace: bool = False,
         inherit_logging: bool = False,
         string_to_scan: Optional[str] = None,
@@ -56,7 +57,7 @@ class PyMarkdownLint:
         self.__show_stack_trace = show_stack_trace
         self.__string_to_scan = string_to_scan
 
-        self.__version_number = PyMarkdownLint.__get_semantic_version()
+        # self.__version_number = PyMarkdownLint.__get_semantic_version()
         self.__properties: ApplicationProperties = ApplicationProperties(
             allow_separator_in_keys=True
         )
@@ -78,19 +79,7 @@ class PyMarkdownLint:
         """
         Return the version of the application.
         """
-        return self.__version_number
-
-    @staticmethod
-    def __get_semantic_version() -> str:
-        file_path = __file__
-        assert os.path.isabs(
-            file_path
-        ), "This should hold on all operating systems.  This is to be sure of that assumption."
-        file_path = file_path.replace(os.sep, "/")
-        last_index = file_path.rindex("/")
-        file_path = f"{file_path[: last_index + 1]}version.py"
-        version_meta = runpy.run_path(file_path)
-        return str(version_meta["__version__"])
+        return VersionHelper.get_semantic_version()
 
     def __initialize_subsystems(
         self, direct_args: Optional[List[str]]
@@ -211,17 +200,19 @@ class PyMarkdownLint:
         FileScanHelper.add_argparse_subparser(subparsers, True)
         PluginManager.add_argparse_subparser(subparsers)
         FileScanHelper.add_argparse_subparser(subparsers, False)
-
-        subparsers.add_parser("version", help="version of the application")
+        VersionHelper.add_argparse_subparser(subparsers)
 
         parse_arguments = parser.parse_args(args=direct_args)
 
         if not parse_arguments.primary_subparser:
             parser.print_help()
             ReturnCodeHelper.exit_application(ApplicationResult.COMMAND_LINE_ERROR)
-        elif parse_arguments.primary_subparser == "version":
-            print(f"{self.__version_number}")
-            ReturnCodeHelper.exit_application(ApplicationResult.SUCCESS)
+        elif (
+            parse_arguments.primary_subparser == VersionHelper.argparse_subparser_name()
+        ):
+            ReturnCodeHelper.exit_application(
+                VersionHelper.handle_argparse_subparser(parse_arguments)
+            )
         return parse_arguments
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
@@ -393,6 +384,7 @@ class PyMarkdownLint:
             self.__show_stack_trace,
             self.__handle_error,
             self.__properties,
+            show_urls=hasattr(args, "show_urls") and args.show_urls,
         )
         did_fix_any_files, did_fail_any_file, no_plugins_active_for_fix = (
             fsh.process_files_to_scan(

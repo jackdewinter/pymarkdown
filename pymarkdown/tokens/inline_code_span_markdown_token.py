@@ -2,11 +2,17 @@
 Module to provide for an encapsulation of the inline code span element.
 """
 
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.tokens.html_items import (
+    CodeSpanItem,
+    HtmlCloseTagItem,
+    HtmlItems,
+    HtmlOpenTagItem,
+)
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
@@ -210,6 +216,7 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
     @staticmethod
     def __handle_inline_code_span_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
@@ -237,11 +244,20 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
                 span_index = next_bar_index + 1
             span_text = new_span_text
 
-        return "".join(
-            [
-                output_html,
-                "<code>",
-                ParserHelper.resolve_all_from_text(span_text),
-                "</code>",
-            ]
+        output_parts.append(HtmlOpenTagItem("code"))
+        output_parts.append(CodeSpanItem(ParserHelper.resolve_all_from_text(span_text)))
+        output_parts.append(HtmlCloseTagItem("code"))
+
+        return InlineCodeSpanMarkdownToken.__handle_inline_code_span_token_old(
+            output_html, span_text
         )
+
+    @staticmethod
+    def __handle_inline_code_span_token_old(output_html: str, span_text: str) -> str:
+        token_parts = [
+            "<code>",
+            ParserHelper.resolve_all_from_text(span_text),
+            "</code>",
+        ]
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)

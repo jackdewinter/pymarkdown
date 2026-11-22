@@ -422,6 +422,12 @@ class ListBlockCreateNewHandler:
         POGGER.debug("alt_adj_ws-->:$:<", alt_adj_ws)
         exws = alt_adj_ws if adj_ws is None else new_token.extracted_whitespace
 
+        if not container_level_tokens and (
+            parser_state.token_document
+            and parser_state.token_document[-1].is_list_start
+        ):
+            return
+
         # Replace the "other" list start token with a new list item token.
         # The overwritting of the value of new_token is specifically called for.
         replacement_token = NewListItemMarkdownToken(

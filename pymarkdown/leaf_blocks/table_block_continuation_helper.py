@@ -288,8 +288,10 @@ class TableBlockContinuationHelper:
         )
         new_tokens.append(start_row_token)
 
-        column_number = base_column_number + int(
-            next_table_row.did_start_with_separator
+        column_number = (
+            base_column_number
+            + len(next_table_row.extracted_whitespace)
+            + int(next_table_row.did_start_with_separator)
         )
 
         for next_column_index, next_column in enumerate(abc):
@@ -822,6 +824,9 @@ class TableBlockContinuationHelper:
 
         line_to_store = remaining_line_to_parse
         if not was_started:
+            POGGER.debug(">>original_stack_depth>:$:<", original_stack_depth)
+            POGGER.debug(">>original_document_depth>:$:<", original_document_depth)
+
             POGGER.debug(">>parse_table>>marking start")
             new_token = TableBlockStackToken(extracted_whitespace, position_marker)
             parser_state.token_stack.append(new_token)

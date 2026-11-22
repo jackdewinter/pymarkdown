@@ -18,13 +18,15 @@ class RuleMd038(RulePlugin):
     Class to implement a plugin that looks for leading and trailing spaces within code spans.
     """
 
+    __PLUGIN_ID = "MD038"
+
     def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
         return PluginDetailsV2(
             plugin_name="no-space-in-code",
-            plugin_id="MD038",
+            plugin_id=RuleMd038.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside code span elements",
             plugin_version="0.5.1",
@@ -53,17 +55,20 @@ class RuleMd038(RulePlugin):
             )
         if has_leading != has_trailing or has_leading:
             if context.in_fix_mode:
-                adjusted_span_text = code_span_token.span_text
-                if has_leading:
-                    adjusted_span_text = adjusted_span_text[1:]
-                if has_trailing:
-                    adjusted_span_text = adjusted_span_text[:-1]
-                self.register_fix_token_request(
-                    context,
-                    token,
-                    "next_token",
-                    "span_text",
-                    adjusted_span_text,
-                )
+                if not context.check_for_pragma_suppression(
+                    token.line_number, RuleMd038.__PLUGIN_ID, False
+                ):
+                    adjusted_span_text = code_span_token.span_text
+                    if has_leading:
+                        adjusted_span_text = adjusted_span_text[1:]
+                    if has_trailing:
+                        adjusted_span_text = adjusted_span_text[:-1]
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "span_text",
+                        adjusted_span_text,
+                    )
             else:
                 self.report_next_token_error(context, token)

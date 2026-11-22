@@ -22,6 +22,8 @@ class RuleMd030(RulePlugin):
     Class to implement a plugin that ensures consistent spacing after the list markers.
     """
 
+    __PLUGIN_ID = "MD030"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd030 class.
@@ -44,7 +46,7 @@ class RuleMd030(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="list-marker-space",
-            plugin_id="MD030",
+            plugin_id=RuleMd030.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
             plugin_version="0.6.0",
@@ -173,13 +175,16 @@ class RuleMd030(RulePlugin):
         adjust_amount: int,
     ) -> None:
         if context.in_fix_mode:
-            self.register_fix_token_request(
-                context,
-                token,
-                "next_token",
-                "indent_level",
-                token.indent_level - adjust_amount,
-            )
+            if not context.check_for_pragma_suppression(
+                token.line_number, RuleMd030.__PLUGIN_ID, False
+            ):
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "indent_level",
+                    token.indent_level - adjust_amount,
+                )
             self.__frank.register(token, adjust_amount)
         else:
             self.report_next_token_error(

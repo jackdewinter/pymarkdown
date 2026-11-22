@@ -61,7 +61,7 @@ possible for all users, this page assumes that:
 
 - you are comfortable using the command line in your favorite shell and
   understanding commands like "go to your project root directory and run this"
-- Python 3.10+ is installed and available on your `PATH`
+- Python 3.11+ is installed and available on your `PATH`
 - you know whether you need to use a **Python package manager** like Pipenv
   to install PyMarkdown, and if you want to install it as a **development-only dependency**
 - if you plan to install PyMarkdown via Pre-Commit, the basic usage and configuration
@@ -85,7 +85,6 @@ Enter one of the following commands at the command line:
     ```sh
     pipenv install pymarkdownlnt
     ```
-
 <!-- pyml enable code-block-style-->
 
 If you are using Pipenv as your **Python package manager** and would like
@@ -123,7 +122,7 @@ In general, the command is of the form:
 
 Before jumping to other docs, verify:
 
-1. `python --version` shows Python 3.10 or higher.
+1. `python --version` shows Python 3.11 or higher.
 2. `pip show pymarkdownlnt` (or `pipenv graph | grep pymarkdownlnt`) shows
    the package installed.
 
@@ -213,7 +212,6 @@ Enter one of the following commands at the command line:
     ```sh
     pipenv run pymarkdown scan sample.md
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### Step 3: Verify The Output
@@ -278,7 +276,6 @@ path:
     ```sh
     pipenv run pymarkdown scan {directory}/
     ```
-
 <!-- pyml enable code-block-style-->
 
 To scan `{directory}` and all subdirectories, add `--recurse`:
@@ -295,7 +292,6 @@ To scan `{directory}` and all subdirectories, add `--recurse`:
     ```sh
     pipenv run pymarkdown scan --recurse {directory}/
     ```
-
 <!-- pyml enable code-block-style-->
 
 ### What You Can Do Now
@@ -356,4 +352,4 @@ For a full reference of commands and options:
 - Start with the [User Guide](../user-guide.md), especially:
     - [Scanning options](../user-guide.md#basic-scanning)
     - [Fixing options](../user-guide.md#basic-fixing)
-    - [Configuration basics](../user-guide.md#basic-configuration)
+    - [Configuration basics](../user-guide.md#rule-plugins)

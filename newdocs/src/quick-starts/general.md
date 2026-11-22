@@ -92,7 +92,6 @@ option with no other arguments.
 Run the following command in a terminal or command prompt:
 
 <!-- pyml disable code-block-style-->
-
 === "Global Python Install"
 
     ```sh
@@ -104,7 +103,6 @@ Run the following command in a terminal or command prompt:
     ```sh
     pipenv run pymarkdown --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 When you run this command, you will see output similar to the following:
@@ -181,7 +179,6 @@ run `pymarkdown <command> --help` (for example, `pymarkdown scan --help` or
 For the `scan` command, run the following command in a terminal or command prompt:
 
 <!-- pyml disable code-block-style-->
-
 === "Global Python Install"
 
     ```sh
@@ -193,7 +190,6 @@ For the `scan` command, run the following command in a terminal or command promp
     ```sh
     pipenv run pymarkdown scan --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 When executed, this will return the following information:

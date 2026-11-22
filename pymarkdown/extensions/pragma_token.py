@@ -22,6 +22,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
+from pymarkdown.tokens.html_items import HtmlItems
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
@@ -157,12 +158,21 @@ class PragmaExtension(ParserExtension):
         document_pragma_ranges: List[Tuple[int, int, Set[str]]],
         general_pragma_ranges: List[Tuple[int, int, str]],
         active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
-        log_pragma_failure: LogPragmaFailureProtocol,
+        log_pragma_failure: Optional[LogPragmaFailureProtocol],
         actual_pragma_line_numbers: List[int],
     ) -> None:
         """
         Compile a single pragma line, validating it before adding it to the dictionary of pragmas.
         """
+        if not log_pragma_failure:
+
+            def log_pragma_failure_impl(
+                scan_file: str, line_number: int, pragma_error: str
+            ) -> None:
+                _ = (scan_file, line_number, pragma_error)
+
+            log_pragma_failure = log_pragma_failure_impl
+
         if next_line_number > 0:
             prefix_length = len(PragmaToken.pragma_prefix)
             actual_line_number = next_line_number
@@ -541,12 +551,21 @@ class PragmaToken(MarkdownToken):
         return self.__pragma_lines
 
     def adjust_pragma_line_number(
-        self, initial_line_number: int, new_line_number: int
+        self,
+        initial_line_number: int,
+        new_line_number: int,
+        old_pragma: Optional[str] = None,
     ) -> None:
         """Perform an adjustment to the line number of a given pragma."""
-        old_pragma = self.__pragma_lines[initial_line_number]
+        if not old_pragma:
+            old_pragma = self.__pragma_lines[initial_line_number]
         del self.__pragma_lines[initial_line_number]
         self.__pragma_lines[new_line_number] = old_pragma
+        self.__compose_extra_data_field()
+
+    def remove_pragma_line_number(self, line_number: int) -> None:
+        """Remove a given pragma, by line number, from the list."""
+        del self.__pragma_lines[line_number]
         self.__compose_extra_data_field()
 
     def register_for_markdown_transform(
@@ -578,9 +597,10 @@ class PragmaToken(MarkdownToken):
     @staticmethod
     def __handle_pragma_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = (transform_state, next_token)
+        _ = (transform_state, next_token, output_parts)
 
         return output_html

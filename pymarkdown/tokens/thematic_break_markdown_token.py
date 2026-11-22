@@ -2,12 +2,18 @@
 Module to provide for an encapsulation of the thematic break element.
 """
 
-from typing import Optional, Union, cast
+from typing import List, Optional, Union, cast
 
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.tokens.html_items import (
+    FormatOnlyNewLineHtmlItem,
+    HtmlBlockItem,
+    HtmlItems,
+    HtmlOpenCloseTagItem,
+)
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -131,13 +137,39 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
     @staticmethod
     def __handle_thematic_break_token(
         output_html: str,
+        output_parts: List[HtmlItems],
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
         _ = (next_token, transform_state)
 
-        token_parts = [output_html]
+        if (
+            output_parts
+            and not isinstance(output_parts[-1], FormatOnlyNewLineHtmlItem)
+            and not (
+                isinstance(output_parts[-1], HtmlBlockItem)
+                and output_parts[-1]
+                .get_raw_html_text()
+                .endswith(ParserHelper.newline_character)
+            )
+        ):
+            output_parts.append(FormatOnlyNewLineHtmlItem())
+        output_parts.append(HtmlOpenCloseTagItem("hr"))
+        output_parts.append(FormatOnlyNewLineHtmlItem())
+
+        return ThematicBreakMarkdownToken.__handle_thematic_break_token_old(
+            output_html,
+        )
+
+    @staticmethod
+    def __handle_thematic_break_token_old(
+        output_html: str,
+    ) -> str:
+        token_parts: List[str] = []
+
         if output_html and output_html[-1] != ParserHelper.newline_character:
             token_parts.append(ParserHelper.newline_character)
+
         token_parts.extend(["<hr />", ParserHelper.newline_character])
+        token_parts.insert(0, output_html)
         return "".join(token_parts)

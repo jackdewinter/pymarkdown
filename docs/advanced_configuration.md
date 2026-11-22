@@ -573,7 +573,7 @@ has precedence, not just individual configuration properties.
 These directly affect the collection of configuration values and how they are interpreted.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | --                    | --config {file}           | string    | Path to the configuration file to use. |
 | --                    | --set {key}={value}       | string    | Manually set an individual configuration property. |
 | mode.strict-config    | --strict-config           | boolean   | Throw an error if the configuration is bad, instead of assuming default values. (Default: `false`) |
@@ -583,7 +583,7 @@ These directly affect the collection of configuration values and how they are in
 These affect the logging for the application.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | log.file          | --log-file        | string  | Destination file for log messages. |
 | log.level         | --log-level       | string* | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`)  |
 | log.stack-trace | --stack-trace | boolean | if an error occurs, print out the stack trace for debug purposes.  Also sets the initial logging (config processing) to debug. (Default: `false`) |
@@ -617,7 +617,7 @@ includes the combined stack trace function has not yet been initialized, the
 These affect the collection of rule plugins and whether they are called.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | *special* | --enable-rules,-e   | string    | Comma separated list of rules to enable. |
 | *special* | --disable-rules,-d  | string    | Comma separated list of rules to disable. |
 | plugins.additional_paths | --add-plugin     | string    | Path to a plugin containing a new rule to apply. |
@@ -641,7 +641,7 @@ the paths.
 This configuration affects how document front matter is interpreted for the parser.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | `extensions.front-matter.enabled` | - | Boolean | Enable the parser to recognize front-matter. |
 
 For more information on Markdown Front-Matter, see [this document](/docs/extensions/front-matter.md).
@@ -651,7 +651,7 @@ For more information on Markdown Front-Matter, see [this document](/docs/extensi
 This configuration affects whether HTML-style comments can be interpreted as linter commands.
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | `extensions.linter-pragmas.enabled` | - | Boolean | Enable the parser to recognize pragmas. |
 
 For more information on PyMarkdown Pragmas, see [this document](/docs/extensions/pragmas.md).
@@ -659,7 +659,7 @@ For more information on PyMarkdown Pragmas, see [this document](/docs/extensions
 ### Plugins Section
 
 | Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
+| --- | --- | --- | --- |
 | `plugins.{id}.enabled` | --enable-rules, --disable-rules | Boolean | Enable the rule. |
 | `plugins.{id}.other` | - | Various | Specify other configuration properties specific to the rule. |
 
@@ -688,7 +688,7 @@ To that extent, the information about the return code is categorized into one of
 five categories.  These categories are:
 
 | Category Name | Description |
-| --- | -- |
+| --- | --- |
 | Success | The requested operation completed without any issues. |
 | No-Files-Warning | Requested arguments produced no files to scan.* |
 | Scan-Triggered-At-Least-Once-Warning | At least one rule was triggered when scanning. |

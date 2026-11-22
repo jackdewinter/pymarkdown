@@ -427,7 +427,7 @@ class InlineProcessor:
                 ParserHelper.newline_character
             )
             split_index = lsi_tracker.get_tokens_block_quote_bleading_space_index(
-                text_token
+                None, text_token
             )
         else:
             list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])

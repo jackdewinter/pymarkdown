@@ -73,7 +73,6 @@ option prints help text for the command-line options and arguments available in
     ```sh
     pipenv run pymarkdown fix --help
     ```
-
 <!-- pyml enable code-block-style-->
 
 ## Fix Mode Commands
@@ -115,7 +114,6 @@ the current directory:
     ```sh
     pipenv run pymarkdown fix **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 Aside from the fact that commands starting with `scan` run in **scan** mode and
@@ -143,7 +141,7 @@ The full list is also available in our [User Guide](../user-guide.md#rule-plugin
 for easy reference.
 
 | Rule ID & Link | Human-Readable Identifier | Short Description |
-| -- | -- | -- |
+| --- | --- | --- |
 | [MD001](../plugins/rule_md001.md#fix-description) | `heading-increment`, `header-increment` | Heading levels should only increment by one level at a time. |
 | [MD004](../plugins/rule_md004.md#fix-description) | `ul-style` | Inconsistent Unordered List Start style. |
 | [MD005](../plugins/rule_md005.md#fix-description) | `list-indent` | Inconsistent indentation for list items at the same level. |
@@ -354,7 +352,6 @@ To apply any available fixes with the same pattern, first scan:
     ```sh
     pipenv run pymarkdown scan **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 Review the reported Rule Failures, then run:
@@ -371,7 +368,6 @@ Review the reported Rule Failures, then run:
     ```sh
     pipenv run pymarkdown fix **/docs
     ```
-
 <!-- pyml enable code-block-style-->
 
 to apply fixes for any Rule Plugins that support the **autofix** capability to

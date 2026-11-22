@@ -24,6 +24,8 @@ class RuleMd004(RulePlugin):
     style used for Unordered List elements.
     """
 
+    __PLUGIN_ID = "MD004"
+
     __consistent_style = "consistent"
     __asterisk_style = "asterisk"
     __plus_style = "plus"
@@ -54,7 +56,7 @@ class RuleMd004(RulePlugin):
         return PluginDetailsV3(
             # bullet, ul
             plugin_name="ul-style",
-            plugin_id="MD004",
+            plugin_id=RuleMd004.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent Unordered List Start style",
             plugin_version="0.6.0",
@@ -109,21 +111,28 @@ class RuleMd004(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken, this_start_style: str
     ) -> None:
         if context.in_fix_mode:
-            if (
-                self.__actual_style_type[self.__current_list_level]
-                == RuleMd004.__plus_style
+            if not context.check_for_pragma_suppression(
+                token.line_number, RuleMd004.__PLUGIN_ID, False
             ):
-                new_start_sequence = "+"
-            elif (
-                self.__actual_style_type[self.__current_list_level]
-                == RuleMd004.__dash_style
-            ):
-                new_start_sequence = "-"
-            else:
-                new_start_sequence = "*"
-            self.register_fix_token_request(
-                context, token, "next_token", "list_start_sequence", new_start_sequence
-            )
+                if (
+                    self.__actual_style_type[self.__current_list_level]
+                    == RuleMd004.__plus_style
+                ):
+                    new_start_sequence = "+"
+                elif (
+                    self.__actual_style_type[self.__current_list_level]
+                    == RuleMd004.__dash_style
+                ):
+                    new_start_sequence = "-"
+                else:
+                    new_start_sequence = "*"
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "list_start_sequence",
+                    new_start_sequence,
+                )
         else:
             extra_data = (
                 f"Expected: {self.__actual_style_type[self.__current_list_level]}; "

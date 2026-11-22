@@ -23,6 +23,8 @@ class RuleMd010(RulePlugin):
     Class to implement a plugin that looks for hard tabs in the files.
     """
 
+    __PLUGIN_ID = "MD010"
+
     def __init__(self) -> None:
         """
         Initialize an instance of the RuleMd010 class.
@@ -41,7 +43,7 @@ class RuleMd010(RulePlugin):
         """
         return PluginDetailsV3(
             plugin_name="no-hard-tabs",
-            plugin_id="MD010",
+            plugin_id=RuleMd010.__PLUGIN_ID,
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
             plugin_version="0.6.1",
@@ -103,6 +105,7 @@ class RuleMd010(RulePlugin):
         elif token.is_fenced_code_block_end:
             self.__last_fenced_code_end_token = cast(EndMarkdownToken, token)
 
+    # pylint: disable=chained-comparison
     def __is_line_inside_of_fenced_code_block(self) -> bool:
         is_inside_of_fenced_code_block = False
         leaf_token = self.__leaf_tokens[self.__leaf_token_index]
@@ -122,6 +125,8 @@ class RuleMd010(RulePlugin):
                 and self.__line_index < end_code_block_line_number
             )
         return is_inside_of_fenced_code_block
+
+    # pylint: enable=chained-comparison
 
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """
@@ -159,7 +164,10 @@ class RuleMd010(RulePlugin):
             do_process = False
         if do_process:
             if context.in_fix_mode:
-                context.set_current_fix_line(TabHelper.detabify_string(line))
+                if not context.check_for_pragma_suppression(
+                    context.line_number, RuleMd010.__PLUGIN_ID, False
+                ):
+                    context.set_current_fix_line(TabHelper.detabify_string(line))
             else:
                 next_index = line.find("\t", 0)
                 while next_index != -1:
