@@ -2001,6 +2001,26 @@ Y | Yes |
         enable_extensions="markdown-tables",
     ),
     pluginRuleTest(
+        "good_explicit_compact_column_style_with_zero_width_column",
+        source_file_contents="""| Character | Meaning |
+| --- | --- |
+| Y | \u200b |
+| N | No |
+""",
+        set_args=["plugins.md060.style=compact"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
+        "good_explicit_compact_column_style_with_zero_width_title_column",
+        source_file_contents="""| \u200b | Meaning |
+| --- | --- |
+| Y | Yes |
+| N | No |
+""",
+        set_args=["plugins.md060.style=compact"],
+        enable_extensions="markdown-tables",
+    ),
+    pluginRuleTest(
         "bad_explicit_compact_column_style_with_tight_second_column",
         source_file_contents="""| Character | Meaning |
 | --- | --- |
