@@ -28,6 +28,7 @@ class PendingContainerFixes:
     repeat_count: int
 
 
+# pylint: disable=too-many-instance-attributes
 class RuleMd012(RulePlugin):
     """
     Class to implement a plugin that looks for multiple blank lines in the files.
@@ -47,6 +48,8 @@ class RuleMd012(RulePlugin):
         self.__captured_blank_line: List[MarkdownToken] = []
         self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
         self.__container_fix_map: Dict[MarkdownToken, List[PendingContainerFixes]] = {}
+
+        self.__include_pragmas = True
 
     def get_details(self) -> PluginDetails:
         """
@@ -78,6 +81,11 @@ class RuleMd012(RulePlugin):
                 "maximum",
                 1,
                 valid_value_fn=self.__validate_maximum,
+            )
+        )
+        self.__include_pragmas = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "include_pragmas", False
             )
         )
 
@@ -245,9 +253,6 @@ class RuleMd012(RulePlugin):
                     del split_spaces[pending_container_fixes.leading_space_index]
                 del value_list[-1]
 
-            # if not context.check_for_pragma_suppression(
-            #     end_token.start_markdown_token.line_number, RuleMd012.__PLUGIN_ID, False
-            # ):
             self.register_fix_token_request(
                 context,
                 end_token.start_markdown_token,
@@ -255,7 +260,6 @@ class RuleMd012(RulePlugin):
                 token_part_name,
                 "\n".join(split_spaces),
             )
-            # end if
 
     def completed_file(self, context: PluginScanContext) -> None:
         """
@@ -263,20 +267,36 @@ class RuleMd012(RulePlugin):
         """
         self.__check_for_excess_blank_lines(context)
 
-    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
-        """
-        Event that a new token is being processed.
-        """
+    def __next_token_blank_line_prefix(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
         if token.is_blank_line:
-            self.__blank_line_count += 1
+            if self.__include_pragmas and (
+                self.__last_blank_line is not None
+                and (token.line_number - self.__last_blank_line.line_number) != 1
+            ):
+                self.__check_for_excess_blank_lines(context)
+                self.__already_fired = False
+
+                self.__blank_line_count = 1
+                self.__captured_blank_line.clear()
+            else:
+                self.__blank_line_count += 1
             self.__captured_blank_line.append(token)
             self.__last_blank_line = token
         elif self.__blank_line_count:
             self.__check_for_excess_blank_lines(context)
-            self.__blank_line_count = 0
-            self.__last_blank_line = None
             self.__already_fired = False
             self.__captured_blank_line.clear()
+
+            self.__blank_line_count = 0
+            self.__last_blank_line = None
+
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
+        """
+        Event that a new token is being processed.
+        """
+        self.__next_token_blank_line_prefix(context, token)
 
         if token.is_block_quote_end or token.is_list_end:
             self.__process_pending_container_end_fixes(context, token)
@@ -293,3 +313,6 @@ class RuleMd012(RulePlugin):
         elif token.is_new_list_item:
             self.__leading_space_index_tracker.nudge_list_container(token)
         self.__leading_space_index_tracker.track_since_last_non_end_token(token)
+
+
+# pylint: enable=too-many-instance-attributes

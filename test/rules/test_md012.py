@@ -2163,6 +2163,345 @@ z
 </div>
 """,
     ),
+    pluginRuleTest(  # Atx single pragma single
+        "issue-1751-xx",
+        source_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Atx double pragma single
+        "issue-1751-xa",
+        source_file_contents="""# Title
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 2; Below] (blanks-around-headings,blanks-around-headers)
+{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Atx single pragma double
+        "issue-1751-xb",
+        source_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""# Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Para single pragma single
+        "issue-1751-ax",
+        source_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Para double pragma single
+        "issue-1751-aa",
+        source_file_contents="""Title
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Para single pragma double
+        "issue-1751-ab",
+        source_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""Title
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Thematic single pragma single
+        "issue-1751-bx",
+        source_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # Thematic double pragma single
+        "issue-1751-ba",
+        source_file_contents="""------------
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # Thematic single pragma double
+        "issue-1751-bb",
+        source_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""------------
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # fcb single pragma single
+        "issue-1751-cx",
+        source_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # fcb double pragma single
+        "issue-1751-ca",
+        source_file_contents="""```text
+text
+```
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # fcb single pragma double
+        "issue-1751-cb",
+        source_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""```text
+text
+```
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # html single pragma single
+        "issue-1751-dx",
+        source_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # html double pragma single
+        "issue-1751-da",
+        source_file_contents="""<!--
+html block
+-->
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # html single pragma double
+        "issue-1751-db",
+        source_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""<!--
+html block
+-->
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # lrd single pragma single
+        "issue-1751-ex",
+        source_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+        disable_rules="",
+    ),
+    pluginRuleTest(  # lrd double pragma single
+        "issue-1751-ea",
+        source_file_contents="""[fred](/flintstone)
+
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
+    pluginRuleTest(  # lrd single pragma double
+        "issue-1751-eb",
+        source_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+
+Some text.
+""",
+        set_args=["plugins.md012.include_pragmas=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="",
+        fix_expected_file_contents="""[fred](/flintstone)
+
+<!-- pyml disable-num-lines 2 line-length -->
+
+Some text.
+""",
+    ),
 ]
 
 
