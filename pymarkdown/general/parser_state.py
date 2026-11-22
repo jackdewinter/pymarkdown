@@ -408,11 +408,11 @@ class ParserState:
             False,
         )
 
-        POGGER.debug(f"self.token_stack = {self.token_stack}")
+        POGGER.debug("self.token_stack = $", self.token_stack)
         POGGER.debug(
             f"parser_state.original_stack_depth = {self.__original_stack_depth}"
         )
-        POGGER.debug(f"self.token_document = {self.token_document}")
+        POGGER.debug("self.token_document = $", self.token_document)
         POGGER.debug(
             f"parser_state.original_document_depth, = {self.__original_document_depth}"
         )
