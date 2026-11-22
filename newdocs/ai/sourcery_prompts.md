@@ -232,7 +232,7 @@ Suggested areas to focus on are:
 - Example quality with explanations and integration into document
 - Audience Awareness and Onboarding for new users
 Rate each one of these areas with a score from 0 to 5.
-`````
+``````
 
 ## xxxx
 

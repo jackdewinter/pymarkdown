@@ -342,7 +342,9 @@
         "pymarkdown/plugins/rule_md_011.py": {
             "too-many-boolean-expressions": 1
         },
-        "pymarkdown/plugins/rule_md_012.py": {},
+        "pymarkdown/plugins/rule_md_012.py": {
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/plugins/rule_md_013.py": {
             "too-many-instance-attributes": 1
         },
@@ -592,7 +594,7 @@
         "pymarkdown/version_helper.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 33,
+        "too-many-instance-attributes": 34,
         "too-many-public-methods": 5,
         "too-many-arguments": 276,
         "too-few-public-methods": 57,
