@@ -380,6 +380,64 @@ def test_md036_bad_valid_emphasis_headings_in_list(
 
 
 @pytest.mark.rules
+def test_md036_good_proper_emphasis_as_list_item(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make sure this rule does not trigger with a list item that
+    consists only of emphasized text.
+    """
+
+    # Arrange
+    source_path, _ = __generate_source_path("proper_emphasis_as_list_item.md")
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults()
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
+@pytest.mark.parametrize(
+    "source_file_name,should_trigger",
+    [
+        ("emphasis_list_same_line.md", False),
+        ("emphasis_list_next_line.md", True),
+        ("emphasis_list_blank_line.md", True),
+        ("emphasis_list_hard_break.md", True),
+    ],
+)
+def test_md036_list_item_following_text(
+    scanner_default: MarkdownScanner, source_file_name: str, should_trigger: bool
+) -> None:
+    """Distinguish inline emphasis from a list heading with following body text."""
+
+    # Arrange
+    source_path, abs_source_path = __generate_source_path(source_file_name)
+    expected_results = (
+        ExpectedResults(
+            return_code=1,
+            expected_output=f"{abs_source_path}:3:3: MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)",
+        )
+        if should_trigger
+        else ExpectedResults()
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=["scan", source_path])
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
 def test_md036_bad_valid_emphasis_headings_in_block_quote(
     scanner_default: MarkdownScanner,
 ) -> None:
