@@ -21,6 +21,14 @@
 - [Issue 1612](https://github.com/jackdewinter/pymarkdown/issues/1612)
     - Fixed rule Md036 to not report standalone emphasized list items as
       headings.
+- [Issue 1749](https://github.com/jackdewinter/pymarkdown/issues/1749)
+    - Table cells containing only whitespace no longer have that whitespace
+      counted as both leading and trailing whitespace, which caused rule md060
+      to report false `Expected-Column` errors for aligned tables with empty
+      columns.
+    - Rule md060 now decides whether a cell is empty from its content, not its
+      display width, so cells holding only zero-width characters are not
+      treated as empty.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

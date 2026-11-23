@@ -446,7 +446,7 @@ class SimpleStyleEvaluator(TableStyleEvaluator, ABC):
 
             data_length = self._skip_over_inline_tokens(column_header_item)
 
-            end_token_ws = column_header_item.end_token.extracted_whitespace
+            end_token_ws = self.__calculate_end_whitespace(column_header_item)
             did_end_with_separator = end_token_ws.endswith("|")
             if did_end_with_separator:
                 end_token_ws = end_token_ws[:-1]
@@ -459,6 +459,20 @@ class SimpleStyleEvaluator(TableStyleEvaluator, ABC):
                         False,
                     )
                 )
+
+    @staticmethod
+    def __is_column_item_empty(column_item: CollectedTableHeaderItem) -> bool:
+        return all(
+            inner_token.is_text and not cast(TextMarkdownToken, inner_token).token_text
+            for inner_token in column_item.inner_tokens
+        )
+
+    @staticmethod
+    def __calculate_end_whitespace(column_item: CollectedTableHeaderItem) -> str:
+        end_token_ws = column_item.end_token.extracted_whitespace
+        if SimpleStyleEvaluator.__is_column_item_empty(column_item):
+            end_token_ws = column_item.start_token.extracted_whitespace + end_token_ws
+        return end_token_ws
 
     def __evaluate_separator_row(
         self,
@@ -587,7 +601,7 @@ class SimpleStyleEvaluator(TableStyleEvaluator, ABC):
 
             data_length = self._skip_over_inline_tokens(row_column_item)
 
-            end_token_ws = row_column_item.end_token.extracted_whitespace
+            end_token_ws = self.__calculate_end_whitespace(row_column_item)
             did_end_with_separator = end_token_ws.endswith("|")
             if did_end_with_separator:
                 end_token_ws = end_token_ws[:-1]

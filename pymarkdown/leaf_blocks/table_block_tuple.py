@@ -29,6 +29,7 @@ class TableColumn:
         d = len(text) - 1 if (text[-1] == "|" and not is_last) else len(text)
         _, new_end_index = ParserHelper.collect_backwards_while_spaces(text, d)
         assert new_end_index is not None
+        new_end_index = max(new_end_index, new_start_index)
         self.trailing_whitespace = text[new_end_index:]
         self.text = text[new_start_index:new_end_index]
 
