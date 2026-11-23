@@ -46,6 +46,7 @@ class RuleMd036(RulePlugin):
         self.__start_token: Optional[MarkdownToken] = None
         self.__list_depth: int = 0
         self.__pending_list_item_start_token: Optional[MarkdownToken] = None
+        self.__allow_single_in_list = False
 
     def get_details(self) -> PluginDetails:
         """
@@ -68,6 +69,12 @@ class RuleMd036(RulePlugin):
         self.__punctuation = self.plugin_configuration.get_string_property_with_default(
             "punctuation", ".,;:!?。，；：？"
         )
+        self.__allow_single_in_list = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "allow_single_in_list",
+                False,
+            )
+        )
 
     def query_config(self) -> List[QueryConfigItem]:
         """
@@ -75,6 +82,7 @@ class RuleMd036(RulePlugin):
         """
         return [
             QueryConfigItem("punctuation", self.__punctuation),
+            QueryConfigItem("allow_single_in_list", self.__allow_single_in_list),
         ]
 
     def starting_new_file(self) -> None:
@@ -122,21 +130,25 @@ class RuleMd036(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> RuleMd036States:
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
-        if token.is_paragraph_end:
-            assert self.__start_token is not None
-            if self.__list_depth:
-                self.__pending_list_item_start_token = self.__start_token
-            else:
-                self.report_next_token_error(context, self.__start_token)
-        elif self.__list_depth and (
-            token.is_inline_hard_break
-            or (
-                token.is_text
-                and cast(TextMarkdownToken, token).token_text.startswith(
-                    ParserHelper.newline_character
+        if self.__allow_single_in_list:
+            if token.is_paragraph_end:
+                assert self.__start_token is not None
+                if self.__list_depth:
+                    self.__pending_list_item_start_token = self.__start_token
+                else:
+                    self.report_next_token_error(context, self.__start_token)
+            elif self.__list_depth and (
+                token.is_inline_hard_break
+                or (
+                    token.is_text
+                    and cast(TextMarkdownToken, token).token_text.startswith(
+                        ParserHelper.newline_character
+                    )
                 )
-            )
-        ):
+            ):
+                assert self.__start_token is not None
+                self.report_next_token_error(context, self.__start_token)
+        elif token.is_paragraph_end:
             assert self.__start_token is not None
             self.report_next_token_error(context, self.__start_token)
         return new_state
@@ -164,7 +176,8 @@ class RuleMd036(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        self.__handle_pending_list_item(context, token)
+        if self.__allow_single_in_list:
+            self.__handle_pending_list_item(context, token)
 
         if self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH:
             new_state = self.__handle_look_for_parapgraph(token)
