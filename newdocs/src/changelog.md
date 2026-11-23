@@ -10,11 +10,17 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1751](https://github.com/jackdewinter/pymarkdown/issues/1751)
+    - Added `include_pragmas` flag for Md012 that allows it to treat
+      pragmas as real text in its blank line calculations
+    - This provides compatiblity with formatters such as [Prettier](https://prettier.io/)
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1612](https://github.com/jackdewinter/pymarkdown/issues/1612)
+    - Fixed rule Md036 to not report standalone emphasized list items as
+      headings.
 - [Issue 1749](https://github.com/jackdewinter/pymarkdown/issues/1749)
     - Table cells containing only whitespace no longer have that whitespace
       counted as both leading and trailing whitespace, which caused rule md060
@@ -28,8 +34,9 @@
 ### Changed
 
 - [Issue 1511](https://github.com/jackdewinter/pymarkdown/issues/1511)
-
-- None
+    - pattern matching and file names are now **BOTH** put through a lowercase
+      filter to ensure that any patterns and filenames can be match irrespective
+      of case
 
 ## Version 0.9.42 - 2026-11-15
 

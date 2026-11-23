@@ -337,7 +337,7 @@ guides.
 
 These tools are not required, but they can automate PyMarkdown in your workflow.
 
-- **Git and Pre‑Commit**
+- **Git and Pre‑Commit:**
   If you want PyMarkdown to run automatically each time you commit changes, you
   can set it up with Pre‑Commit, a tool that manages pre-commit hooks in your Git
   repositories.
