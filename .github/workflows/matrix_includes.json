@@ -74,7 +74,7 @@
     {
         "python":"3.13",
         "platform":"macos-latest",
-        "timeout":7,
+        "timeout":10,
         "runOn":"current"
     },
     {
