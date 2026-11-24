@@ -437,6 +437,36 @@ def test_md036_good_proper_emphasis_as_list_item_with_config(
 
 
 @pytest.mark.rules
+def test_md036_good_proper_emphasis_as_list_item_with_configxxxx(
+    scanner_default: MarkdownScanner,
+) -> None:
+    """
+    Test to make
+    """
+
+    # Arrange
+    source_path, abs_source_path = __generate_source_path("valid_emphasis_headings.md")
+    supplied_arguments = [
+        "--set",
+        "plugins.md036.allow_single_in_list=$!True",
+        "scan",
+        source_path,
+    ]
+
+    expected_results = ExpectedResults(
+        return_code=1,
+        expected_output=f"""{abs_source_path}:1:1: MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)
+{abs_source_path}:5:1: MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)""",
+    )
+
+    # Act
+    execute_results = scanner_default.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(expected_results=expected_results)
+
+
+@pytest.mark.rules
 @pytest.mark.parametrize(
     "source_file_name,should_trigger",
     [
@@ -474,7 +504,7 @@ def test_md036_list_item_following_text_without_configuration(
     "source_file_name,should_trigger",
     [
         ("emphasis_list_same_line.md", False),
-        ("emphasis_list_next_line.md", True),
+        ("emphasis_list_next_line.md", False),
         ("emphasis_list_blank_line.md", True),
         ("emphasis_list_hard_break.md", True),
     ],

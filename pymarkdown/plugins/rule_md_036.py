@@ -59,7 +59,7 @@ class RuleMd036(RulePlugin):
             plugin_description="Emphasis possibly used instead of a heading element.",
             plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md036.md",
-            plugin_configuration="punctuation",
+            plugin_configuration="punctuation,allow_single_in_list",
         )
 
     def initialize_from_config(self) -> None:
@@ -130,25 +130,19 @@ class RuleMd036(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> RuleMd036States:
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
-        if self.__allow_single_in_list:
-            if token.is_paragraph_end:
-                assert self.__start_token is not None
-                if self.__list_depth:
-                    self.__pending_list_item_start_token = self.__start_token
-                else:
-                    self.report_next_token_error(context, self.__start_token)
-            elif self.__list_depth and (
-                token.is_inline_hard_break
-                or (
-                    token.is_text
-                    and cast(TextMarkdownToken, token).token_text.startswith(
-                        ParserHelper.newline_character
-                    )
-                )
-            ):
-                assert self.__start_token is not None
+        if self.__allow_single_in_list and token.is_paragraph_end:
+            assert self.__start_token is not None
+            if self.__list_depth:
+                self.__pending_list_item_start_token = self.__start_token
+            else:
                 self.report_next_token_error(context, self.__start_token)
-        elif token.is_paragraph_end:
+        elif (
+            self.__allow_single_in_list
+            and self.__list_depth
+            and token.is_inline_hard_break
+            or not self.__allow_single_in_list
+            and token.is_paragraph_end
+        ):
             assert self.__start_token is not None
             self.report_next_token_error(context, self.__start_token)
         return new_state

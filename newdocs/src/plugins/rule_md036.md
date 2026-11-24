@@ -130,7 +130,7 @@ like a heading.
 > emphasized line `**this does trigger**` inside the list item is
 > evaluated the same way as a top-level line. The blank line that follows
 > visually isolates it from the paragraph that continues on the next line,
-> so it appears heading-like — exactly the situation the rule is designed
+> so it appears heading-like &mdash; exactly the situation the rule is designed
 > to catch. The single-line, entirely-emphasized, no-configured-trailing-
 > punctuation criteria all apply, so the line is flagged.
 
@@ -250,7 +250,7 @@ content.
 | --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `punctuation` | `string` | `.,;:!?。，；：？` | Punctuation characters (ASCII and CJK full-width) that are considered sentence-ending characters. |
-| `allow_single_in_list` | `boolean` | `False` | Whether the single . |
+| `allow_single_in_list` | `boolean` | `False` | Whether the single emphasis in list item logic is enabled. |
 
 ## Origination of Rule
 
