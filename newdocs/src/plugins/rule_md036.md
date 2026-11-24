@@ -111,6 +111,29 @@ Lorem ipsum dolor sit amet...
 > The line therefore fails on the same criteria as the earlier examples: single
 > line, entirely emphasized, no configured trailing punctuation.
 
+Unlike the previous example, this case combines a list item with a
+blank line immediately after the emphasized line, reflecting the
+behavior change introduced by
+[issue 1612](https://github.com/jackdewinter/pymarkdown/issues/1612).
+For this scenario to apply, `allow_single_in_list` must be set to `True`.
+When that is the case and the blank line is present, the emphasized line
+is visually separated from the paragraph that follows, making it look
+like a heading.
+
+```Markdown
+- **this does trigger**
+
+  trigger
+```
+
+> **Explanation**: With `allow_single_in_list` set to `True`, the
+> emphasized line `**this does trigger**` inside the list item is
+> evaluated the same way as a top-level line. The blank line that follows
+> visually isolates it from the paragraph that continues on the next line,
+> so it appears heading-like &mdash; exactly the situation the rule is designed
+> to catch. The single-line, entirely-emphasized, no-configured-trailing-
+> punctuation criteria all apply, so the line is flagged.
+
 ### Correct Scenarios
 
 This rule does not trigger when the emphasized text spans multiple lines, since
@@ -185,6 +208,29 @@ Consectetur adipiscing elit, sed do eiusmod.
 > running text is a normal, expected use of Markdown and is not confused with a
 > heading.
 
+Unlike the previous example, this case places emphasized text inside a
+list item, but the emphasized text is immediately followed by a
+continuation line (no blank line), reflecting the behavior change
+introduced by
+[issue 1612](https://github.com/jackdewinter/pymarkdown/issues/1612).
+For this scenario to apply, `allow_single_in_list` must be set to `True`.
+When that is the case and the list item continues directly into the next
+line, the emphasized text does not visually appear as a heading.
+
+```Markdown
+- **this does not trigger**
+- **this does not**
+  trigger
+```
+
+> **Explanation**: With `allow_single_in_list` set to `True`, both list
+> items that begin with emphasized text are still not flagged, because each
+> is immediately followed by a continuation on the next line with no blank
+> line between them. As rendered, the emphasized text flows into the
+> following line as part of the same paragraph, so it does not mimic a
+> heading. Because the emphasized text is not visually isolated, the rule
+> does not flag these lines even though each line is entirely emphasized.
+
 ## Fix Description
 
 A line that is fully emphasized may be intentional emphasis rather than a misused
@@ -204,6 +250,7 @@ content.
 | --- | --- | --- | --- |
 | `enabled` | `boolean` | `True` | Whether the Rule Plugin is enabled. |
 | `punctuation` | `string` | `.,;:!?。，；：？` | Punctuation characters (ASCII and CJK full-width) that are considered sentence-ending characters. |
+| `allow_single_in_list` | `boolean` | `False` | Whether the single emphasis in list item logic is enabled. |
 
 ## Origination of Rule
 

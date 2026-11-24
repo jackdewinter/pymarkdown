@@ -1412,7 +1412,7 @@
         },
         {
             "name": "test.rules.test_md036",
-            "totalTests": 15,
+            "totalTests": 27,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
