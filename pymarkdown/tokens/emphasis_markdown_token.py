@@ -2,7 +2,7 @@
 Module to provide for an encapsulation of the inline emphasis element.
 """
 
-from typing import List, Optional, cast
+from typing import List, Optional, Union, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.tokens.html_items import HtmlCloseTagItem, HtmlItems, HtmlOpenTagItem
@@ -21,12 +21,15 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline emphasis element.
     """
 
+    # pylint: disable-next=too-many-arguments
     def __init__(
         self,
         emphasis_length: int,
         emphasis_character: str,
         line_number: int = 0,
         column_number: int = 0,
+        preceding_character: Optional[str] = None,
+        following_character: Optional[str] = None,
     ) -> None:
         """
         Initialize an instance of the EmphasisMarkdownToken class.
@@ -35,16 +38,35 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
             emphasis_length,
             emphasis_character,
         )
+        # The characters immediately before the opener and after the closer of
+        # this emphasis span, taken from the source text.  They are not part of
+        # the token's identity, so they are deliberately left out of
+        # __compose_extra_data_field: a fix that swaps the delimiter character
+        # relies on them to tell whether the emphasis still resolves, but two
+        # spans of the same shape remain equal for transform purposes.
+        self.__preceding_character, self.__following_character = (
+            preceding_character,
+            following_character,
+        )
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
-            MarkdownToken.extra_data_separator.join(
-                [str(emphasis_length), emphasis_character]
-            ),
+            None,
             line_number=line_number,
             column_number=column_number,
             requires_end_token=True,
             can_force_close=False,
+        )
+        self.__compose_extra_data_field()
+
+    def __compose_extra_data_field(self) -> None:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        self._set_extra_data(
+            MarkdownToken.extra_data_separator.join(
+                [str(self.__emphasis_length), self.__emphasis_character]
+            )
         )
 
     # pylint: disable=protected-access
@@ -70,6 +92,33 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         Returns the character used for the current emphasis text.
         """
         return self.__emphasis_character
+
+    @property
+    def preceding_character(self) -> Optional[str]:
+        """
+        Returns the source character directly before the opening delimiter, or
+        None if this emphasis was not built from source delimiters.
+        """
+        return self.__preceding_character
+
+    @property
+    def following_character(self) -> Optional[str]:
+        """
+        Returns the source character directly after the closing delimiter, or
+        None if this emphasis was not built from source delimiters.
+        """
+        return self.__following_character
+
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if (
+            field_name == "emphasis_character"
+            and isinstance(field_value, str)
+            and field_value in ["*", "_"]
+        ):
+            self.__emphasis_character = field_value
+            self.__compose_extra_data_field()
+            return True
+        return super()._modify_token(field_name, field_value)
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol

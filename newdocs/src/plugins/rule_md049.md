@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | --- |
 | Aliases | `md049`, `emphasis-style` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -114,7 +114,24 @@ This is *another* emphasis.
 
 ## Fix Description
 
-The implementation for this feature is tracked [with this issue](https://github.com/jackdewinter/pymarkdown/issues/1676).
+Emphasis spans will be rewritten to use the delimiter character required by the
+`style` configuration. If `style` is `consistent`, every span after the first is
+converted to match the delimiter used by the first emphasis span in the document.
+If `style` is `asterisk`, all spans are converted to use asterisks (`*`). If `style`
+is `underscore`, all spans are converted to use underscores (`_`). Only the
+delimiter characters themselves are replaced; the emphasized text is left untouched.
+
+Two cases are reported but not fixed:
+
+- A span that sits inside a word. Underscores may not split a word, so turning
+  `foo*i*bar` into `foo_i_bar` would show the underscores as literal text and
+  lose the emphasis entirely.
+- A span inside an inline link's label whose delimiter cannot be located in the
+  label text. Link labels are rehydrated from a cached copy of the label, so a
+  span that cannot be pinpointed in that copy is skipped rather than guessed at.
+
+Emphasis inside an inline link's label is otherwise fixed, by rewriting the
+label text that the link rehydrates from.
 
 ## Configuration
 

@@ -52,6 +52,14 @@
 - [Issue 1726](https://github.com/jackdewinter/pymarkdown/issues/1726)
     - Added `version --extended` to provide clear information about where the application
       is being executed, to be able to paste into bug reports.
+- [Issue 1676](https://github.com/jackdewinter/pymarkdown/issues/1676)
+    - Added autofix support for MD049 (emphasis-style), rewriting inline emphasis
+      spans to the delimiter required by the `style` configuration.
+    - The fix leaves a span alone when rewriting it would stop it being emphasis:
+      underscore delimiters may not split a word, so `foo*i*bar` is reported but
+      not touched instead of being turned into literal underscores.
+    - The fix now reaches emphasis inside an inline link's label, which kept its
+      original delimiters before because the label is rehydrated from a cache.
 - [Issue 1739](https://github.com/jackdewinter/pymarkdown/issues/1739)
     - Added `--urls` to `scan` command to append the URL of the plugin rule being
       triggered to the Rule Failure report.

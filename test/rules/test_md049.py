@@ -4,7 +4,9 @@ Module to provide tests related to the MD049 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
+    execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
@@ -52,6 +54,10 @@ This is the _another_ emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:13: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is *one* emphasis.
+
+This is the *another* emphasis.
+""",
     ),
     pluginRuleTest(
         "good_default_with_consistent_underscore_emphasis",
@@ -68,6 +74,10 @@ This is the *another* emphasis.
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:13: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""This is _one_ emphasis.
+
+This is the _another_ emphasis.
 """,
     ),
     pluginRuleTest(
@@ -88,6 +98,10 @@ This is the _another_ emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:13: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is *one* emphasis.
+
+This is the *another* emphasis.
+""",
     ),
     pluginRuleTest(
         "bad_consistent_with_different_asterisk_emphasis_and_strikethrough",
@@ -104,6 +118,12 @@ This is the _another_ emphasis.
         use_strict_config=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
+""",
+        fix_expected_file_contents="""This is ~strikethrough~ emphasis. (should not affect consistent)
+
+This is *one* emphasis.
+
+This is the *another* emphasis.
 """,
     ),
     pluginRuleTest(
@@ -124,6 +144,10 @@ This is the *another* emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:13: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is _one_ emphasis.
+
+This is the _another_ emphasis.
+""",
     ),
     pluginRuleTest(
         "bad_consistent_with_different_underscore_emphasis_and_strikethrough",
@@ -140,6 +164,12 @@ This is the *another* emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:13: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is ~strikethrough~ emphasis. (should not affect consistent)
+
+This is _one_ emphasis.
+
+This is the _another_ emphasis.
+""",
     ),
     pluginRuleTest(
         "good_asterisk_with_asterisk_emphasis",
@@ -155,6 +185,8 @@ This is the *another* emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:9: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is *one* emphasis.
+""",
     ),
     pluginRuleTest(
         "bad_asterisk_with_strikethrough_emphasis",
@@ -168,6 +200,10 @@ This is _one_ emphasis.
         ],
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD049: Emphasis style [Expected: asterisk; Actual: underscore] (emphasis-style)
+""",
+        fix_expected_file_contents="""This is ~strikethrough~.
+
+This is *one* emphasis.
 """,
     ),
     pluginRuleTest(
@@ -184,6 +220,8 @@ This is _one_ emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:9: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is _one_ emphasis.
+""",
     ),
     pluginRuleTest(
         "bad_underscore_with_strikethrough_emphasis",
@@ -198,6 +236,82 @@ This is *one* emphasis.
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:9: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
 """,
+        fix_expected_file_contents="""This is ~strikethrough~.
+
+This is _one_ emphasis.
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_between_words_is_left_alone",
+        source_file_contents="""foo*i*bar
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:4: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""foo*i*bar
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_before_word_is_left_alone",
+        source_file_contents="""*i*bar
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""*i*bar
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_after_word_is_left_alone",
+        source_file_contents="""foo*i*
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:4: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_output="",  # Nothing got fixed
+        fix_expected_return_code=0,  # Nothing got fixed
+        fix_expected_file_contents="""foo*i*
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_between_punctuation_is_fixed",
+        source_file_contents="""(*i*)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""(_i_)
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_inside_link_label_is_fixed",
+        source_file_contents="""[*i*](http://example.com)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""[_i_](http://example.com)
+""",
+    ),
+    pluginRuleTest(
+        "bad_underscore_inside_link_label_leaves_strong_alone",
+        source_file_contents="""[**b** *i*](http://example.com)
+""",
+        set_args=["plugins.md049.style=underscore"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:8: MD049: Emphasis style [Expected: underscore; Actual: asterisk] (emphasis-style)
+""",
+        fix_expected_file_contents="""[**b** _i_](http://example.com)
+""",
     ),
 ]
 
@@ -209,6 +323,17 @@ def test_md049_scan(test: pluginRuleTest) -> None:
     Execute a parameterized scan test for plugin md001.
     """
     execute_scan_test(test, "md049")
+
+
+@pytest.mark.rules
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
+def test_md049_fix(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md049.
+    """
+    execute_fix_test(test)
 
 
 @pytest.mark.rules
