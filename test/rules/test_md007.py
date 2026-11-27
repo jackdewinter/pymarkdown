@@ -152,6 +152,157 @@ This is a test
         source_file_name=f"{source_path}good_list_indentation_in_double_block_quote.md",
     ),
     pluginRuleTest(
+        "separated_lists_in_block_quote",
+        source_file_contents="""# asd
+
+> asd
+>
+> - asd
+>
+> asd
+>
+> - asd
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# asd
+
+> asd
+>
+> - asd
+>
+> asd
+>
+> - asd
+""",
+    ),
+    pluginRuleTest(
+        "bad_indent_after_separated_nested_lists_in_block_quote",
+        disable_rules=__plugin_disable_md027,
+        source_file_contents="""> > - first
+> >    - nested
+> >
+> > Paragraph.
+> >
+> >   - second
+""",
+        set_args=["plugins.md007.indent=$#3"],
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:6:7: MD007: Unordered list indentation [Expected: 0, Actual=2] (ul-indent)",
+        fix_expected_file_contents="""> > - first
+> >    - nested
+> >
+> > Paragraph.
+> >
+> > - second
+""",
+    ),
+    pluginRuleTest(
+        "separated_lists_after_nested_block_quote_in_list",
+        disable_rules=__plugin_disable_md027,
+        source_file_contents="""> - first
+>   > Quoted text.
+>   > Continued.
+>
+> Paragraph.
+>
+> - second
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""> - first
+>   > Quoted text.
+>   > Continued.
+>
+> Paragraph.
+>
+> - second
+""",
+    ),
+    pluginRuleTest(
+        "list_item_with_varying_block_quote_prefix",
+        disable_rules=__plugin_disable_md027,
+        source_file_contents="""# Demo
+
+  > - Parent
+>   - Child
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# Demo
+
+  > - Parent
+>   - Child
+""",
+    ),
+    pluginRuleTest(
+        "list_at_start_of_nested_block_quote",
+        disable_rules="md005,md027,md030",
+        source_file_contents="""# Demo
+
+  >  >  -  one
+> >    - sub
+> > - two
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# Demo
+
+  >  >  -  one
+> >    - sub
+> > - two
+""",
+    ),
+    pluginRuleTest(
+        "separated_lists_preserve_following_siblings_in_nested_block_quote",
+        disable_rules="md005,md027,md030",
+        source_file_contents="""# Demo
+
+  >  > - earlier
+  >  >
+  >  > Para
+  >  >
+  >  >  -  one
+> >    - sub
+> > - two
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# Demo
+
+  >  > - earlier
+  >  >
+  >  > Para
+  >  >
+  >  >  -  one
+> >    - sub
+> > - two
+""",
+    ),
+    pluginRuleTest(
+        "separated_lists_respect_configured_start_indent",
+        disable_rules=__plugin_disable_md027,
+        set_args=["plugins.md007.start_indented=$!True"],
+        source_file_contents="""# Demo
+
+>   - first
+>
+> Paragraph.
+>
+>   - second
+""",
+        fix_expected_return_code=0,
+        fix_expected_output="",
+        fix_expected_file_contents="""# Demo
+
+>   - first
+>
+> Paragraph.
+>
+>   - second
+""",
+    ),
+    pluginRuleTest(
         "good_unordered_list_in_ordered_list",
         source_file_name=f"{source_path}good_unordered_list_in_ordered_list.md",
         disable_rules=__plugin_disable_md030,

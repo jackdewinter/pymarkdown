@@ -275,6 +275,16 @@ class RuleMd007(RulePlugin):
         # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number=" + \
         #   f"{calculated_column_number},block_quote_base={block_quote_base}")
         if adjusted_column_number > calculated_column_number:
+            # The quote line counter can lag after a list closes. For an outer
+            # list in a quote, the marker's own whitespace rules out an excess.
+            container_stack = self.__container_manager.container_token_stack
+            if (
+                container_stack
+                and all(container.is_block_quote_start for container in container_stack)
+                and len(cast(ListStartMarkdownToken, token).extracted_whitespace)
+                <= calculated_column_number
+            ):
+                return
             if context.in_fix_mode:
                 self.__check_apply_fix(
                     context, token, adjusted_column_number, calculated_column_number
